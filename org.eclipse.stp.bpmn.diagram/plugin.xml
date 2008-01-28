@@ -1,0 +1,1126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+
+<!--
+ Copyright (c) 2007, Intalio Inc.
+ All rights reserved. This program and the accompanying materials
+ are made available under the terms of the Eclipse Public License v1.0
+ which accompanies this distribution, and is available at
+ http://www.eclipse.org/legal/epl-v10.html
+ 
+ Contributors:
+     Intalio Inc. - initial API and implementation
+-->
+<plugin>
+   <extension-point id="EAnnotationDecorator" name="EAnnotationDecorator" schema="schema/EAnnotationDecorator.exsd"/>
+   <extension-point id="DecorationFilter" name="DecorationFilter" schema="schema/DecorationFilter.exsd"/>
+   <extension-point id="SecondarySemanticHintProcessor" name="SecondarySemanticHintProcessor" schema="schema/SecondarySemanticHintProcessor.exsd"/>
+
+   <extension point="org.eclipse.core.runtime.preferences">
+      <initializer class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer"/>
+   </extension>
+
+  <extension point="org.eclipse.team.core.fileTypes">
+      <fileTypes
+         type="text"
+         extension="bpmn_diagram">
+      </fileTypes>
+  </extension>
+
+   <extension point="org.eclipse.emf.ecore.extension_parser">
+      <parser
+         type="bpmn_diagram"
+         class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory">
+      </parser>
+   </extension>
+
+
+   <extension point="org.eclipse.ui.editors">
+     <editor
+        id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID"
+        name="%editor.name.0"
+        icon="icons/obj16/BpmnDiagramFile.gif"
+        extensions="bpmn_diagram"
+        default="true"
+        class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor"
+        matchingStrategy="org.eclipse.stp.bpmn.diagram.part.BpmnMatchingStrategy"
+        contributorClass="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramActionBarContributor"
+        symbolicFontName="org.eclipse.stp.bpmn.diagram.fontDefinition.Appearance.defaultFont">
+     </editor>
+   </extension>
+
+   <extension point="org.eclipse.ui.newWizards">
+  	  <wizard
+  	     name="%wizard.name.0"
+  	     icon="icons/obj16/BpmnDiagramFile.gif"
+  	     category="org.eclipse.stp.wizards.category"
+  	     class="org.eclipse.stp.bpmn.diagram.part.BpmnCreationWizard"
+  	     id="org.eclipse.stp.bpmn.diagram.part.BpmnCreationWizardID">
+  	  	 <description>
+  	  		%wizard.description.0
+  	  	 </description>  
+      </wizard>
+   </extension>
+
+   <extension point="org.eclipse.ui.popupMenus">
+      <objectContribution
+            id="org.eclipse.stp.bpmn.diagram.ui.objectContribution.IFile1"
+            nameFilter="*.bpmn"
+            objectClass="org.eclipse.core.resources.IFile">
+         <action
+               label="%action.label.0"
+               class="org.eclipse.stp.bpmn.diagram.part.BpmnInitDiagramFileAction"
+               menubarPath="additions"
+               enablesFor="1"
+               id="org.eclipse.stp.bpmn.diagram.part.BpmnInitDiagramFileActionID">
+         </action>
+      </objectContribution>  
+      <objectContribution
+            adaptable="false"
+            id="org.eclipse.stp.bpmn.diagram.ui.objectContribution.BpmnDiagramEditPart2"
+            objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart">
+         <action
+               class="org.eclipse.stp.bpmn.diagram.part.BpmnLoadResourceAction"
+               enablesFor="1"
+               id="org.eclipse.stp.bpmn.diagram.part.BpmnLoadResourceActionID"
+               label="%action.label.1"
+               menubarPath="additions">
+         </action>
+      </objectContribution>                      
+  </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnContributionItemProvider">
+         <Priority name="Low">
+         </Priority>
+         <partContribution
+               class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor">
+            <partAction menubarPath="/file/print" id="printPreviewAction">
+            </partAction>
+         </partContribution>
+      </contributionItemProvider>
+      <contributionItemProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContributionItemProvider"
+            checkPluginLoaded="false">
+         <Priority name="Low"/>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityName2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.GroupNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.LaneNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.PoolNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationName2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.DataObject2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectName2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.GroupName2EditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+            <popupPredefinedItem id="deleteFromModelAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeNameEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+            <popupPredefinedItem id="deleteFromModelAction" remove="true"/>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart"/>
+            <popupPredefinedItem id="deleteFromDiagramAction" remove="true"/>
+         </popupContribution>
+      </contributionItemProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.action.globalActionHandlerProviders">
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramGlobalActionHandlerProvider"
+         id="BpmnPresentation">
+         <Priority name="Lowest"/>
+         <ViewId id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="delete"/>
+            </ElementType>
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart">
+               <GlobalActionId actionId="save"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.printing.render.providers.DiagramWithPrintGlobalActionHandlerProvider"
+         id="BpmnPresentationPrint">
+         <Priority name="Lowest"/>
+         <ViewId id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="print"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+         class="org.eclipse.gmf.runtime.diagram.ui.providers.ide.providers.DiagramIDEGlobalActionHandlerProvider"
+         id="BpmnPresentationIDE">
+         <Priority name="Lowest"/>
+         <ViewId id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="bookmark"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+      <GlobalActionHandlerProvider
+            class="org.eclipse.gmf.runtime.diagram.ui.render.providers.DiagramUIRenderGlobalActionHandlerProvider"
+            id="BpmnRender">
+         <Priority name="Lowest"/>
+         <ViewId id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID">
+            <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
+               <GlobalActionId actionId="cut"/>
+               <GlobalActionId actionId="copy"/>
+               <GlobalActionId actionId="paste"/>
+            </ElementType>
+         </ViewId>
+      </GlobalActionHandlerProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.core.viewProviders">
+      <viewProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnViewProvider">
+         <Priority name="Lowest"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Diagram" semanticHints="Bpmn"/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Node" semanticHints=""/>
+         <context viewClass="org.eclipse.gmf.runtime.notation.Edge" semanticHints=""/>
+      </viewProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.editpartProviders">
+      <editpartProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnEditPartProvider">
+         <Priority name="Low"/>
+		  <!-- higher priority than the default one.
+ added manually try to override the DiagramEditPartProvider
+			  does not seem to do much. if we don't add this then it is not calling it for the
+			  creation of the root! -->
+		 <object class="org.eclipse.gmf.runtime.notation.View" id="ShapesByType">
+			<method name="getType()" value="Note, Text">
+			</method>
+		 </object>
+      </editpartProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnPaletteProvider">
+         <Priority name="Lowest"/>
+         <editor id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID"/>
+      </paletteProvider>
+   </extension>
+   <extension point="org.eclipse.gmf.runtime.diagram.ui.paletteProviders">
+      <paletteProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.DefaultPaletteProvider">
+         <Priority name="High"/>
+         <contribution>
+               <predefinedEntry id="standardGroup/zoomTool"  remove="true"/>
+               <predefinedEntry id="standardGroup/noteStack/noteTool" remove="true"/>
+			   <predefinedEntry id="standardGroup/noteStack/textTool" remove="true"/>
+			   <predefinedEntry id="standardGroup/noteStack/noteattachmentTool" remove="true"/>
+            </contribution>
+      </paletteProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.ui.modelingAssistantProviders">
+      <modelingAssistantProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnModelingAssistantProvider">
+         <Priority name="Lowest"/>
+      </modelingAssistantProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.properties.propertiesProviders">
+      <PropertiesProvider
+            verifyPluginLoaded="false"
+            class="org.eclipse.stp.bpmn.diagram.providers.BpmnPropertyProvider">
+         <Priority name="Lowest"/>
+      </PropertiesProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.iconProviders">
+      <IconProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnIconProvider">
+         <Priority name="Low"/>
+      </IconProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.parserProviders">
+      <ParserProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnParserProvider">
+         <Priority name="Lowest"/>
+      </ParserProvider>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypes">
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               eclass="BpmnDiagram"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.BpmnDiagramEditHelper"
+               id="org.eclipse.stp.bpmn.diagram.BpmnDiagram_79"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               name="BPMN Diagram">
+            <param name="semanticHint" value="79"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.Activity_2001"
+               name="Task"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Activity"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.ActivityEditHelper">
+            <param name="semanticHint" value="2001"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.SubProcess_2002"
+               name="SubProcess"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="SubProcess"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.SubProcessEditHelper">
+            <param name="semanticHint" value="2002"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <specializationType
+               id="org.eclipse.stp.bpmn.diagram.Activity_2003"
+               name="Task"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.ActivityEditHelperAdvice">
+            <specializes id="org.eclipse.stp.bpmn.diagram.Activity_2001"/>
+            <param name="semanticHint" value="2003"/>
+         </specializationType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.TextAnnotation_2004"
+               name="Text Annotation"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="TextAnnotation"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.TextAnnotationEditHelper">
+            <param name="semanticHint" value="2004"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.DataObject_2005"
+               name="Data Object"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="DataObject"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.DataObjectEditHelper">
+            <param name="semanticHint" value="2005"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.Group_2006"
+               name="Group"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Group"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.GroupEditHelper">
+            <param name="semanticHint" value="2006"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.Lane_2007"
+               name="Lane"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Lane"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.LaneEditHelper">
+            <param name="semanticHint" value="2007"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.Pool_1001"
+               name="Pool"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Pool"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.PoolEditHelper">
+            <param name="semanticHint" value="1001"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <specializationType
+               id="org.eclipse.stp.bpmn.diagram.TextAnnotation_1002"
+               name="Text Annotation"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.TextAnnotationEditHelperAdvice">
+            <specializes id="org.eclipse.stp.bpmn.diagram.TextAnnotation_2004"/>
+            <param name="semanticHint" value="1002"/>
+         </specializationType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <specializationType
+               id="org.eclipse.stp.bpmn.diagram.DataObject_1003"
+               name="Data Object"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.DataObjectEditHelperAdvice">
+            <specializes id="org.eclipse.stp.bpmn.diagram.DataObject_2005"/>
+            <param name="semanticHint" value="1003"/>
+         </specializationType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <specializationType
+               id="org.eclipse.stp.bpmn.diagram.Group_1004"
+               name="Group"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.GroupEditHelperAdvice">
+            <specializes id="org.eclipse.stp.bpmn.diagram.Group_2006"/>
+            <param name="semanticHint" value="1004"/>
+         </specializationType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.SequenceEdge_3001"
+               name="Sequence Flow"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="SequenceEdge"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.SequenceEdgeEditHelper">
+            <param name="semanticHint" value="3001"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.MessagingEdge_3002"
+               name="Message Flow"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="MessagingEdge"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.MessagingEdgeEditHelper">
+            <param name="semanticHint" value="3002"/>
+         </metamodelType>
+      </metamodel>
+
+      <metamodel nsURI="http://stp.eclipse.org/bpmn">
+         <metamodelType
+               id="org.eclipse.stp.bpmn.diagram.Association_3003"
+               name="Association"
+               kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
+               eclass="Association"
+               edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.AssociationEditHelper">
+            <param name="semanticHint" value="3003"/>
+         </metamodelType>
+      </metamodel>
+   </extension>
+
+   <extension point="org.eclipse.gmf.runtime.emf.type.core.elementTypeBindings">
+      <clientContext id="BpmnClientContext">
+         <enablement>
+            <test
+               property="org.eclipse.gmf.runtime.emf.core.editingDomain"
+               value="org.eclipse.stp.bpmn.diagram.EditingDomain"/>
+         </enablement>
+      </clientContext> 
+      <binding context="BpmnClientContext">
+         <elementType ref="org.eclipse.stp.bpmn.diagram.BpmnDiagram_79"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Activity_2001"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.SubProcess_2002"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Activity_2003"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.TextAnnotation_2004"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.DataObject_2005"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Group_2006"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Lane_2007"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Pool_1001"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.TextAnnotation_1002"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.DataObject_1003"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Group_1004"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.SequenceEdge_3001"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.MessagingEdge_3002"/>
+         <elementType ref="org.eclipse.stp.bpmn.diagram.Association_3003"/>
+         <advice ref="org.eclipse.gmf.runtime.diagram.core.advice.notationDepdendents"/>
+      </binding>
+   </extension>
+   <extension point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders">
+      <MarkerNavigationProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnMarkerNavigationProvider">
+         <MarkerType name="org.eclipse.stp.bpmn.diagram.diagnostic"/>
+         <Priority name="Lowest"/>
+      </MarkerNavigationProvider>
+   </extension>
+   <extension id="diagnostic" name="Bpmn Plugin problems" point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.problemmarker"/>
+      <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
+      <persistent value="true"/>
+   </extension>   
+   <extension id="ValidationContributionItemProvider" name="Validation"
+      point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider checkPluginLoaded="true"
+         class="org.eclipse.stp.bpmn.diagram.providers.BpmnValidationProvider">
+         <Priority name="Lowest"/>
+         <partContribution id="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorID">
+            <partMenuGroup menubarPath="/diagramMenu/" id="validationGroup"/>
+            <partAction id="validateAction" menubarPath="/diagramMenu/validationGroup"/>
+         </partContribution>
+      </contributionItemProvider>
+   </extension>
+   <extension id="validationDecoratorProvider" name="ValidationDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <decoratorProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnValidationDecoratorProvider">
+         <Priority name="Lowest"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension>
+
+
+
+<!-- manually set -->
+<extension point="org.eclipse.ui.preferencePages">
+   <page
+         name="%PreferencePage.Root.Diagrams"
+         class="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage"
+         id="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage">
+   </page>
+   <page
+         name="%PreferencePage.Appearance"
+         category="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage"
+         class="org.eclipse.stp.bpmn.preferences.BpmnAppearancePreferencePage"
+         id="org.eclipse.stp.bpmn.preferences.BpmnAppearancePreferencePage">
+   </page>     
+   <page
+         name="%PreferencePage.Connections"
+         category="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage"
+         class="org.eclipse.stp.bpmn.preferences.BpmnConnectionsPreferencePage"
+         id="org.eclipse.stp.bpmn.preferences.BpmnConnectionsPreferencePage">
+   </page>    
+   <page
+         name="%PreferencePage.RulerGrid"
+         category="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage"
+         class="org.eclipse.stp.bpmn.preferences.BpmnRulerGridPreferencePage"
+         id="org.eclipse.stp.bpmn.preferences.BpmnRulerGridPreferencePage">
+   </page>
+   <page
+		name="%PreferencePage.Printing"
+		category="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage"
+		class="org.eclipse.stp.bpmn.preferences.BpmnPrintingPreferencePage"
+		id="org.eclipse.stp.bpmn.preferences.BpmnPrintingPreferencePage">
+   </page>
+   <page
+		name="%PreferencePage.Pathmaps"
+		category="org.eclipse.stp.bpmn.preferences.BpmnDiagramsPreferencePage"
+		class="org.eclipse.gmf.runtime.emf.ui.preferences.PathmapsPreferencePage"
+		id="org.eclipse.stp.bpmn.preferences.BpmnPathmapsPreferencePage">
+   </page>
+</extension>
+<extension
+      point="org.eclipse.ui.fontDefinitions">
+   <fontDefinition
+         id="org.eclipse.stp.bpmn.diagram.fontDefinition.Appearance.defaultFont"
+         label="%fontDefinition.label.0"
+         value="Arial-regular-9"/>
+</extension>
+
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyContributor">
+      <propertyContributor
+            contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
+            <!-- 
+            typeMapper="org.eclipse.stp.bpmn.properties.EAnnotationsTypeMapper"> -->
+         <propertyCategory category="Annotations"/>
+      </propertyContributor>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertyTabs">
+      <propertyTabs contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
+         <propertyTab
+               category="Annotations"
+               id="Annotations"
+               indented="false"
+               label="Annotations"/>
+      </propertyTabs>
+   </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
+         <propertySection
+               class="org.eclipse.stp.bpmn.properties.EAnnotationsMapSection"
+               id="Annotations Map"
+               tab="Annotations">
+               <!-- Unfortunately, the typeMapper is overridden
+               		https://www.eclipse.org/bugs/show_bug.cgi?id=158607 -->
+            <input type="org.eclipse.stp.bpmn.Identifiable"/>
+            <input type="org.eclipse.emf.ecore.EObject"/>
+            <input type="java.lang.Object"/>
+         </propertySection>
+      </propertySections>
+   </extension>
+   
+   <!-- Register the clipboard support for the BPMN metamodel 
+   no need to register a special resource as GMFResource are already used
+   both for the domain model and the diagram notation -->
+   <extension point="org.eclipse.gmf.runtime.emf.clipboard.core.clipboardSupport">
+      <factory
+            class="org.eclipse.stp.bpmn.clipboard.BpmnClipboardFactory"
+            nsURI="http://stp.eclipse.org/bpmn"
+            priority="medium"/>
+      <factory
+            class="org.eclipse.stp.bpmn.clipboard.BpmnClipboardFactory"
+            nsURI="http://www.eclipse.org/gmf/runtime/1.0.0/notation"
+            priority="medium"/>
+   </extension>
+   
+   <extension id="presentationLayoutProvider" name="%ext.presentationLayoutProvider" point="org.eclipse.gmf.runtime.diagram.ui.layoutProviders">
+      <layoutProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.LeftRightProvider">
+         <Priority name="Low">
+         </Priority>
+      </layoutProvider>
+      <layoutProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.internal.RadialProvider">
+         <Priority name="Low">
+         </Priority>
+      </layoutProvider>
+	  <layoutProvider class="org.eclipse.gmf.runtime.diagram.ui.providers.CompositeLeftRightProvider">
+         <Priority name="Low"/>
+      </layoutProvider>
+   </extension>
+   <extension id="eannotationDecoratorProvider" name="EAnnotationsDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <decoratorProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnEAnnotationDecoratorProvider">
+         <Priority name="Low"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension>
+   <extension
+         point="org.eclipse.gmf.runtime.common.ui.services.action.contributionItemProviders">
+      <contributionItemProvider
+            checkPluginLoaded="true"
+            class="org.eclipse.stp.bpmn.diagram.providers.BpmnDiagramActionProvider">
+         <Priority name="Low">
+         </Priority>
+         <partContribution class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor"> 
+         	<partMenu menubarPath="/diagramMenu/formatGroup" toolbarPath="/toolbarViewGroup" id="groupMenu">
+            </partMenu>
+            <partMenuGroup menubarPath="/diagramMenu/groupMenu/" toolbarPath="/groupMenu/" id="groupGroup">
+            </partMenuGroup>
+             <partAction menubarPath="/diagramMenu/groupMenu/groupGroup" toolbarPath="/groupMenu/groupGroup" id="groupAction">
+            </partAction>
+            <partAction menubarPath="/diagramMenu/groupMenu/groupGroup" toolbarPath="/groupMenu/groupGroup" id="ungroupAction">
+            </partAction>
+            <partAction
+                  id="arrangeSelectionAction2"
+                  menubarPath="/diagramMenu/arrangeMenu/arrangeGroup"/>
+            <partAction
+                  id="toolbarArrangeSelectionAction2"
+                  toolbarPath="/arrangeMenu/arrangeGroup"/>
+         </partContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart">
+            </popupStructuredContributionCriteria>
+            <popupAction path="/formatMenu" id="resetBendpointsAction">
+            </popupAction>
+         </popupContribution>
+         <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupMenu path="/formatMenu/miscellaneousGroup" id="groupMenu">
+            </popupMenu>    
+            <popupMenuGroup path="/formatMenu/groupMenu/" id="groupGroup">
+            </popupMenuGroup>             
+            <popupAction path="/formatMenu/groupMenu/groupGroup" id="groupAction">
+            </popupAction>   
+             <popupAction path="/formatMenu/groupMenu/groupGroup" id="ungroupAction">
+            </popupAction>
+             <popupPredefinedItem
+                   id="arrangeSelectionAction"
+                   path="/diagramMenu/arrangeMenu/arrangeGroup"
+                   remove="true">
+             </popupPredefinedItem>
+             <popupAction
+                   id="arrangeRecursivelySelectionAction"
+                   path="/diagramMenu/arrangeMenu/arrangeGroup">
+             </popupAction>              
+         </popupContribution>
+         <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupAction
+                  id="setDefaultEdgeAction"
+                  path="/additionsGroup">
+            </popupAction>
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart"
+                  objectCount="1">
+               <method
+                     name="isConditional()"
+                     value="true">
+               </method>
+            </popupStructuredContributionCriteria>
+         </popupContribution>
+         <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupAction
+                  id="setLoopAction"
+                  path="/additionsGroup">
+            </popupAction>
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart"
+                  objectCount="1">
+            </popupStructuredContributionCriteria>
+         </popupContribution>
+         <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupAction
+                  id="setLoopAction"
+                  path="/additionsGroup">
+            </popupAction>
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart"
+                  objectCount="1">
+            </popupStructuredContributionCriteria>
+         </popupContribution>
+        <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupMenu
+                  id="ActivityTypes"
+                  path="/editGroup">
+            </popupMenu>
+            
+            <popupMenuGroup
+                  id="ActivityTypesGroup"
+                  path="/ActivityTypes/"
+                  separator="false">
+            </popupMenuGroup>
+            
+            <popupMenu
+                  id="ActivityTypes_Tasks" 
+                  path="/ActivityTypes/ActivityTypesGroup">
+            </popupMenu>
+            
+            <popupMenuGroup
+                  id="group0"
+                  path="/ActivityTypes/ActivityTypes_Tasks/"
+                  separator="false">
+            </popupMenuGroup>
+            <popupMenu
+                  id="ActivityTypes_Gateways" 
+                  path="/ActivityTypes/ActivityTypesGroup">
+            </popupMenu>
+            
+            <popupMenuGroup
+                  id="group0"
+                  path="/ActivityTypes/ActivityTypes_Gateways/"
+                  separator="false">
+            </popupMenuGroup>
+            
+            <popupMenu
+                  id="ActivityTypes_StartEvents" 
+                  path="/ActivityTypes/ActivityTypesGroup">
+            </popupMenu>
+            
+            <popupMenuGroup
+                  id="group0"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/"
+                  separator="false">
+            </popupMenuGroup>
+            
+            <popupMenu
+                  id="ActivityTypes_IntermediateEvents" 
+                  path="/ActivityTypes/ActivityTypesGroup">
+            </popupMenu>
+            
+            <popupMenuGroup
+                  id="group0"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/"
+                  separator="false">
+            </popupMenuGroup>
+            <popupMenu
+                  id="ActivityTypes_EndEvents" 
+                  path="/ActivityTypes/ActivityTypesGroup">
+            </popupMenu>
+            
+            <popupMenuGroup
+                  id="group0"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/"
+                  separator="false">
+            </popupMenuGroup>
+            <popupStructuredContributionCriteria
+            		objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart"
+                  	objectCount="1">
+            </popupStructuredContributionCriteria>
+            
+         <popupAction
+                  id="setActivityTypeToTask"
+                  path="/ActivityTypes/ActivityTypes_Tasks/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToGatewayDataBasedExclusive"
+                  path="/ActivityTypes/ActivityTypes_Gateways/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToGatewayEventBasedExclusive"
+                  path="/ActivityTypes/ActivityTypes_Gateways/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToGatewayDataBasedInclusive"
+                  path="/ActivityTypes/ActivityTypes_Gateways/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToGatewayParallel"
+                  path="/ActivityTypes/ActivityTypes_Gateways/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventStartEmpty"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventStartMessage"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventStartRule"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventStartTimer"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/group0">
+            </popupAction>
+           
+            <popupAction
+                  id="setActivityTypeToEventIntermediateEmpty"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventIntermediateMessage"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventIntermediateTimer"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventIntermediateError"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventIntermediateCompensation"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventIntermediateRule"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndEmpty"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndMessage"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndError"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndCompensation"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndTerminate"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            
+            <!-- still to early. People haven't seen the light yet, -->
+            <!--popupAction
+                  id="setActivityTypeToSubProcess"
+                  path="/ActivityTypes/ActivityTypes_Tasks/group0">
+            </popupAction-->
+         </popupContribution>
+         
+      <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+        <popupMenu id="AssociationDirectionTypes" path="/editGroup">
+        </popupMenu>
+        <popupMenuGroup id="AssociationDirectionTypesGroup" path="/AssociationDirectionTypes/" separator="false">
+        </popupMenuGroup>
+        <popupStructuredContributionCriteria
+        		objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart"
+              	objectCount="1">
+        </popupStructuredContributionCriteria>
+     	<popupAction id="setAssociationDirectionTypeToNone" path="/AssociationDirectionTypes/AssociationDirectionTypesGroup">
+        </popupAction>
+     	<popupAction id="setAssociationDirectionTypeToFrom" path="/AssociationDirectionTypes/AssociationDirectionTypesGroup">
+        </popupAction>
+     	<popupAction id="setAssociationDirectionTypeToTo" path="/AssociationDirectionTypes/AssociationDirectionTypesGroup">
+        </popupAction>
+     	<popupAction id="setAssociationDirectionTypeToBoth" path="/AssociationDirectionTypes/AssociationDirectionTypesGroup">
+        </popupAction>
+      </popupContribution>
+         
+         
+        <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupMenu
+                 id="org.eclipse.ui.OpenWithMenu"
+                 path="/additionsGroup">
+           </popupMenu>
+           <popupPredefinedItem
+                 id="org.eclipse.ui.OpenWithMenu"
+                 path="additionsGroup"
+                 remove="false">
+           </popupPredefinedItem>
+        </popupContribution>
+        <partContribution
+              class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor">
+           <partAction
+                 global="false"
+                 id="CopyToImageAction"
+                 menubarPath="fileMenu/export">
+           </partAction>
+        </partContribution>
+        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupPredefinedItem id="allCompartmentsAction" path="/filtersMenu/compartmentMenu/allCompartmentsGroup" remove="true"/>
+           <popupPredefinedItem id="noCompartmentsAction" path="/filtersMenu/compartmentMenu/allCompartmentsGroup" remove="true"/>
+           <popupPredefinedItem id="sortfilterAction" path="/filtersMenu/expandFilterGroup" remove="true"/>
+           <popupPredefinedItem id="showConnectorLabels" path="/filtersMenu/connectorLabelMenu/allConnectorLabelsGroup" remove="true"/>
+           <popupPredefinedItem id="hideConnectorLabels" path="/filtersMenu/connectorLabelMenu/allConnectorLabelsGroup" remove="true"/>
+           <popupPredefinedItem id="connectorLabelMenu" path="/filtersMenu/expandFilterGroup" remove="true"/>
+           <popupPredefinedItem id="compartmentMenu" path="/filtersMenu/expandFilterGroup" remove="true"/>
+           <popupPredefinedItem id="showCompartmentTitle" path="/filtersMenu/miscellaneousGroup" remove="true"/>
+           <popupPredefinedItem id="filtersMenu" path="/diagramMenu/filterGroup" remove="true"/>
+           <popupPredefinedItem id="expandFilterGroup" path="/diagramMenu/filtersMenu/" remove="true"/>
+           <popupPredefinedItem id="relationshipsGroup" path="/diagramMenu/filtersMenu/" remove="true"/>
+           <popupPredefinedItem id="miscellaneousGroup" path="/diagramMenu/filtersMenu/" remove="true"/>
+           <popupPredefinedItem id="additions" path="/diagramMenu/filtersMenu/" remove="true"/>
+           <popupPredefinedItem id="addNoteLinkAction" path="/addGroup" remove="true"/>
+           <popupPredefinedItem id="addNoteAction" path="/diagramAddmenu/addDiagramGeneralGroup" remove="true"/>
+           <popupPredefinedItem id="addTextAction" path="/diagramAddmenu/addDiagramGeneralGroup" remove="true"/>
+        </popupContribution>
+        <!-- now contributed through the filter decorations menu -->
+        <!--partContribution class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor">
+           <partAction
+                 id="FilterDecorationsAction"
+                 menubarPath="/diagramMenu/filtersGroup"
+                 toolbarPath="/toolbarFilterGroup"/>
+        </partContribution-->
+        <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupStructuredContributionCriteria objectCount="1"/>
+           <popupAction
+                 id="deleteFileLinkAction"
+                 path="/editGroup"/>
+        </popupContribution>
+        <partContribution class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor">
+           <partMenu
+                 id="FilterDecorationsMenuManager"
+                 menubarPath="/diagramMenu/filtersGroup"
+                 toolbarPath="/toolbarFilterGroup"/>
+        </partContribution>
+        <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupAction
+                 id="SubProcessCollapseStyleToolbarAction"
+                 path="/formatMenu/sizeGroup">
+           </popupAction>
+           <popupStructuredContributionCriteria
+                 objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart"
+                 objectCount="1">
+           </popupStructuredContributionCriteria>
+        </popupContribution>
+        <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupMenu
+                 id="changeEdgeOrderMenu"
+                 path="/formatMenu/miscellaneousGroup">
+           </popupMenu>
+           <popupMenuGroup
+                 id="group1"
+                 path="/formatMenu/changeEdgeOrderMenu/">
+           </popupMenuGroup>
+           <popupMenu
+                 id="changeEdgeOrderMenu_source"
+                 path="/formatMenu/changeEdgeOrderMenu/group1">
+           </popupMenu>
+           <popupMenu
+                 id="changeEdgeOrderMenu_target"
+                 path="/formatMenu/changeEdgeOrderMenu/group1">
+           </popupMenu>
+           <popupMenuGroup
+                 id="source_group"
+                 path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_source/">
+           </popupMenuGroup>
+           <popupMenuGroup
+                 id="target_group"
+                 path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_target/">
+           </popupMenuGroup>
+           <popupAction
+                 id="changeEdgeOrderMenu_source_up"
+                 path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_source/source_group">
+           </popupAction>
+           <popupAction
+                 id="changeEdgeOrderMenu_source_down"
+                 path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_source/source_group">
+           </popupAction>
+           <popupAction
+                 id="changeEdgeOrderMenu_target_up"
+                 path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_target/target_group">
+           </popupAction>
+           <popupAction
+                 id="changeEdgeOrderMenu_target_down"
+                 path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_target/target_group">
+           </popupAction>
+        </popupContribution>
+         
+      </contributionItemProvider>
+   </extension>
+   <extension
+         point="org.eclipse.stp.bpmn.diagram.EAnnotationDecorator">
+      <decorator
+            class="org.eclipse.stp.bpmn.dnd.file.FileEAnnotationDecorator"
+            source="genericFile">
+      </decorator>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.core.resources.IResource"
+            class="org.eclipse.stp.bpmn.dnd.file.File2AnnotationAdapterFactory">
+         <adapter
+               type="org.eclipse.stp.bpmn.dnd.IDnDHandler">
+         </adapter>
+      </factory>
+   </extension>
+	
+	
+   <!--extension id="validationDecoratorProvider" name="ValidationDecorations" point="org.eclipse.gmf.runtime.diagram.ui.decoratorProviders">
+      <decoratorProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnValidationDecoratorProvider">
+         <Priority name="Lowest"/>
+         <object class="org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart(org.eclipse.gmf.runtime.diagram.ui)" id="PRIMARY_VIEW"/>
+         <context decoratorTargets="PRIMARY_VIEW"/>
+      </decoratorProvider>
+   </extension-->
+   <extension
+         point="org.eclipse.ui.exportWizards">
+      <category
+            id="org.eclipse.stp"
+            name="%category.name.0">
+      </category>
+      <wizard
+            category="org.eclipse.stp"
+            class="org.eclipse.stp.bpmn.export.ImageExportWizard"
+            icon="/icons/obj16/BpmnDiagramFile.gif"
+            id="org.eclipse.stp.bpmn.diagram.export.image"
+            name="%wizard.name.1">
+         <description>%wizard.description.1</description>
+         <selection
+               class="org.eclipse.core.resources.IFile"
+               name="*.bpmn_diagram">
+         </selection>
+      </wizard>
+   </extension>
+   <extension
+         point="org.eclipse.stp.bpmn.diagram.DecorationFilter">
+      <filter
+            icon="icons/obj16/file_obj.gif"
+            id="org.eclipse.stp.bpmn.diagram.filter.genericFileFilter"
+            name="File Attachment"
+            onByDefault="false">
+         <source value="genericFile"/>
+      </filter>
+   </extension>
+   <extension
+         point="org.eclipse.stp.bpmn.diagram.SecondarySemanticHintProcessor">
+      <SecondarySemanticHintProcessor
+            class="org.eclipse.stp.bpmn.commands.SecondarySemanticHintProcessorForAssociationDirection">
+      </SecondarySemanticHintProcessor>
+   </extension>
+   
+   <extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <file-association
+            content-type="org.eclipse.core.runtime.xml"
+            file-extensions="bpmn,bpmn_diagram">
+      </file-association>
+   </extension>
+   
+   
+</plugin>
