@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.2"?>
+<plugin>
+   <extension
+         point="org.eclipse.core.runtime.adapters">
+      <factory
+            adaptableType="org.eclipse.core.resources.IFile"
+            class="org.eclipse.stp.bpmn.samples.bpel2bpmn.BPEL2BPMNAdapterFactory">
+         <adapter
+               type="org.eclipse.stp.bpmn.dnd.IDnDHandler">
+         </adapter>
+      </factory>
+   </extension>
+   <extension
+         point="org.eclipse.ui.startup">
+      <startup
+            class="org.eclipse.stp.bpmn.samples.bpel2bpmn.AdapterFactoryLoader">
+      </startup>
+   </extension>
+
+</plugin>

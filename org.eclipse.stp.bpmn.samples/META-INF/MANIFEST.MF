@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipse STP BPMN Samples Plug-in (Incubation)
+Bundle-SymbolicName: org.eclipse.stp.bpmn.samples;singleton:=true
+Bundle-Version: 0.7.1.qualifier
+Bundle-Activator: org.eclipse.stp.bpmn.samples.SamplesPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.stp.bpmn,
+ org.eclipse.stp.bpmn.diagram,
+ org.eclipse.stp.bpmn.edit,
+ org.eclipse.stp.bpmn.validation
+Eclipse-LazyStart: true
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
