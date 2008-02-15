@@ -1234,12 +1234,13 @@ public class ActivityPainter {
     
     public static void paintSignal(Graphics graphics, ActivityFigure fig, PrecisionRectangle innerRect) {
         
-        innerRect = calcInnerRectangle(fig.getBounds().getCopy(), graphics.getLineWidth());
+//        innerRect = calcInnerRectangle(fig.getBounds().getCopy(), graphics.getLineWidth());
         double innerWidth = innerRect.width/Math.sqrt(2);
+        innerWidth = Math.round(innerWidth);
         double innerx = (innerRect.preciseWidth - innerWidth)/2;
-        innerRect.setWidth(innerWidth - innerWidth/10);
-        innerRect.setHeight(innerWidth - innerWidth/16);
-        innerRect.setX(innerRect.preciseX + innerx/2 + innerWidth/10);
+        innerRect.setWidth(innerWidth);
+        innerRect.setHeight(innerWidth);
+        innerRect.setX(innerRect.preciseX + innerx);
         innerRect.setY(innerRect.preciseY + innerx);
         
         PointList pl = new PointList();
