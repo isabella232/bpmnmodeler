@@ -18,7 +18,6 @@ import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.DirectionType;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.BpmnMessages;
 
 /**

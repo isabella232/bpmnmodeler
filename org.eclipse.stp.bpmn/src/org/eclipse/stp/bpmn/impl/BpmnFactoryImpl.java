@@ -33,7 +33,6 @@ import org.eclipse.stp.bpmn.DirectionType;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Group;
 import org.eclipse.stp.bpmn.Identifiable;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
