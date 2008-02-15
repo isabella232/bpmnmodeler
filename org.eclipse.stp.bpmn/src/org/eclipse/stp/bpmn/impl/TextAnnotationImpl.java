@@ -26,22 +26,22 @@ import org.eclipse.stp.bpmn.TextAnnotation;
  */
 public class TextAnnotationImpl extends ArtifactImpl implements TextAnnotation {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected TextAnnotationImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return BpmnPackage.Literals.TEXT_ANNOTATION;
-	}
+        return BpmnPackage.Literals.TEXT_ANNOTATION;
+    }
 
 } //TextAnnotationImpl

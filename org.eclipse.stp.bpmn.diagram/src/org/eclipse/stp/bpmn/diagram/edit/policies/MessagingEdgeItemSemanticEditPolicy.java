@@ -84,8 +84,8 @@ public class MessagingEdgeItemSemanticEditPolicy extends
                                     //is the orderedMessage... which is never removed
                                     //directly.
                         (eRef.isDerived() && 
-                                (BpmnPackage.ACTIVITY__OUTGOING_MESSAGES == eRef.getFeatureID()
-                                        || BpmnPackage.ACTIVITY__INCOMING_MESSAGES == eRef.getFeatureID()/*
+                                (BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES == eRef.getFeatureID()
+                                        || BpmnPackage.MESSAGE_VERTEX__INCOMING_MESSAGES == eRef.getFeatureID()/*
                                         || BpmnPackage.ACTIVITY__ORDERED_MESSAGES == eRef.getFeatureID()*/)
                                 || (eRef.isChangeable() && !eRef.isDerived() &&
                                         !eRef.isContainment() && 

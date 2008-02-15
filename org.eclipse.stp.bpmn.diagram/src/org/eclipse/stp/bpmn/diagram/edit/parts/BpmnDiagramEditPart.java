@@ -33,6 +33,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnDiagramCanonicalEditPolicy;
@@ -188,5 +189,26 @@ public class BpmnDiagramEditPart extends DiagramEditPart {
 //    }
     
     
-    
+    @Override
+    protected List getModelChildren() {
+        Object model = getModel();
+        if (model != null && model instanceof View) {
+            List list = ((View) model).getVisibleChildren();
+            List res = new ArrayList();
+            List artifacts = new ArrayList();
+            for (Object object : list) {
+                Node node = (Node) object;
+               if (node.getType().equals(Integer.toString(Group2EditPart.VISUAL_ID)) ||
+                       node.getType().equals(Integer.toString(DataObject2EditPart.VISUAL_ID)) ||
+                       node.getType().equals(Integer.toString(TextAnnotation2EditPart.VISUAL_ID))) {
+                    artifacts.add(object);
+                } else {
+                    res.add(object);
+                }
+            }
+            res.addAll(artifacts);
+            return res;
+        }
+        return Collections.EMPTY_LIST;
+    }
 }

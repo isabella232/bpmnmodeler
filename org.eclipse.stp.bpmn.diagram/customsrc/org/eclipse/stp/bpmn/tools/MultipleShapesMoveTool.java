@@ -33,8 +33,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.Graph;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
@@ -202,7 +202,7 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
             _container = (IGraphicalEditPart) _container.getParent();
         }
         if (_container instanceof SubProcessEditPart ||
-                (_container.resolveSemanticElement() instanceof IdentifiableNode && 
+                (_container.resolveSemanticElement() instanceof AssociationTarget && 
                         !(_container.resolveSemanticElement() instanceof Graph))) {
             IGraphicalEditPart parent = findParent(_container.getParent());
             if (parent != null) {

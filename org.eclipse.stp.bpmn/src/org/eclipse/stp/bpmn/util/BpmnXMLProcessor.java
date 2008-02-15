@@ -26,30 +26,30 @@ import org.eclipse.stp.bpmn.BpmnPackage;
  */
 public class BpmnXMLProcessor extends XMLProcessor {
     /**
-	 * Public constructor to instantiate the helper.
-	 * <!-- begin-user-doc -->
+     * Public constructor to instantiate the helper.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public BpmnXMLProcessor() {
-		super((EPackage.Registry.INSTANCE));
-		BpmnPackage.eINSTANCE.eClass();
-	}
+        super((EPackage.Registry.INSTANCE));
+        BpmnPackage.eINSTANCE.eClass();
+    }
     
     /**
-	 * Register for "*" and "xml" file extensions the BpmnResourceFactoryImpl factory.
-	 * <!-- begin-user-doc -->
+     * Register for "*" and "xml" file extensions the BpmnResourceFactoryImpl factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				protected Map<String, Resource.Factory> getRegistrations() {
-		if (registrations == null) {
-			super.getRegistrations();
-			registrations.put(XML_EXTENSION, new BpmnResourceFactoryImpl());
-			registrations.put(STAR_EXTENSION, new BpmnResourceFactoryImpl());
-		}
-		return registrations;
-	}
+        if (registrations == null) {
+            super.getRegistrations();
+            registrations.put(XML_EXTENSION, new BpmnResourceFactoryImpl());
+            registrations.put(STAR_EXTENSION, new BpmnResourceFactoryImpl());
+        }
+        return registrations;
+    }
 
 } //BpmnXMLProcessor

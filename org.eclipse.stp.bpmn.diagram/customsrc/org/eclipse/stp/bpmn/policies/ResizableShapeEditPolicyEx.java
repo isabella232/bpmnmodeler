@@ -231,6 +231,9 @@ abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolicy {
     @Override
     protected Command getAutoSizeCommand(Request request) {
     	EObject semantic = ((IGraphicalEditPart) getHost()).resolveSemanticElement();
+    	if (semantic == null) {
+    	    return super.getAutoSizeCommand(request);
+    	}
         IElementType type = ElementTypeRegistry.getInstance().
             getElementType(semantic);
         if (semantic instanceof Activity) {

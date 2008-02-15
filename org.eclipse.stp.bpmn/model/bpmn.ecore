@@ -3,34 +3,11 @@
     xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" name="bpmn"
     nsURI="http://stp.eclipse.org/bpmn" nsPrefix="bpmn">
-  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="#//Vertex #//NamedBpmnObject">
+  <eClassifiers xsi:type="ecore:EClass" name="Activity" eSuperTypes="#//Vertex #//MessageVertex">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="Activity"/>
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="orderedMessages" unique="false"
-        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="group"/>
-        <details key="name" value="orderedMessages:9"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="incomingMessages" upperBound="-1"
-        eType="#//MessagingEdge" volatile="true" transient="true" derived="true" eOpposite="#//MessagingEdge/target">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="incomingMessages"/>
-        <details key="group" value="#orderedMessages:9"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingMessages" upperBound="-1"
-        eType="#//MessagingEdge" volatile="true" transient="true" derived="true" eOpposite="#//MessagingEdge/source">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="outgoingMessages"/>
-        <details key="group" value="#orderedMessages:9"/>
-      </eAnnotations>
-    </eStructuralFeatures>
     <eStructuralFeatures xsi:type="ecore:EReference" name="groups" upperBound="-1"
         eType="#//Group" eOpposite="#//Group/activities">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -100,6 +77,9 @@
     <eLiterals name="GatewayDataBasedInclusive" value="27"/>
     <eLiterals name="GatewayParallel" value="28"/>
     <eLiterals name="GatewayComplex" value="29"/>
+    <eLiterals name="EventStartSignal" value="30"/>
+    <eLiterals name="EventIntermediateSignal" value="31"/>
+    <eLiterals name="EventEndSignal" value="32"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EDataType" name="ActivityTypeObject" instanceClassName="org.eclipse.emf.common.util.Enumerator">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
@@ -159,11 +139,24 @@
         <details key="name" value="source"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//IdentifiableNode"
-        eOpposite="#//IdentifiableNode/associations">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//AssociationTarget"
+        eOpposite="#//AssociationTarget/associations">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="target"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="AssociationTarget" eSuperTypes="#//Identifiable">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="AssociationTarget"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="associations" upperBound="-1"
+        eType="#//Association" eOpposite="#//Association/target">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="associations"/>
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
@@ -220,7 +213,7 @@
       <details key="baseType" value="direction_._type"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Graph" eSuperTypes="#//IdentifiableNode #//ArtifactsContainer">
+  <eClassifiers xsi:type="ecore:EClass" name="Graph" eSuperTypes="#//AssociationTarget #//ArtifactsContainer">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="Graph"/>
       <details key="kind" value="elementOnly"/>
@@ -266,20 +259,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="IdentifiableNode" eSuperTypes="#//Identifiable">
-    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-      <details key="name" value="IdentifiableNode"/>
-      <details key="kind" value="elementOnly"/>
-    </eAnnotations>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="associations" upperBound="-1"
-        eType="#//Association" eOpposite="#//Association/target">
-      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
-        <details key="kind" value="element"/>
-        <details key="name" value="associations"/>
-      </eAnnotations>
-    </eStructuralFeatures>
-  </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Lane" eSuperTypes="#//Identifiable #//NamedBpmnObject">
+  <eClassifiers xsi:type="ecore:EClass" name="Lane" eSuperTypes="#//AssociationTarget #//NamedBpmnObject">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="Lane"/>
       <details key="kind" value="elementOnly"/>
@@ -298,7 +278,36 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="MessagingEdge" eSuperTypes="#//Identifiable #//NamedBpmnObject">
+  <eClassifiers xsi:type="ecore:EClass" name="MessageVertex" eSuperTypes="#//NamedBpmnObject #//Identifiable">
+    <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+      <details key="name" value="MessageVertex"/>
+      <details key="kind" value="elementOnly"/>
+    </eAnnotations>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="orderedMessages" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EFeatureMapEntry">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="group"/>
+        <details key="name" value="orderedMessages:5"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="incomingMessages" upperBound="-1"
+        eType="#//MessagingEdge" volatile="true" transient="true" derived="true" eOpposite="#//MessagingEdge/target">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="incomingMessages"/>
+        <details key="group" value="#orderedMessages:5"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="outgoingMessages" upperBound="-1"
+        eType="#//MessagingEdge" volatile="true" transient="true" derived="true" eOpposite="#//MessagingEdge/source">
+      <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
+        <details key="kind" value="element"/>
+        <details key="name" value="outgoingMessages"/>
+        <details key="group" value="#orderedMessages:5"/>
+      </eAnnotations>
+    </eStructuralFeatures>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="MessagingEdge" eSuperTypes="#//AssociationTarget #//NamedBpmnObject">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="MessagingEdge"/>
       <details key="kind" value="elementOnly"/>
@@ -310,15 +319,15 @@
         <details key="name" value="bpmnDiagram"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//Activity"
-        eOpposite="#//Activity/outgoingMessages">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//MessageVertex"
+        eOpposite="#//MessageVertex/outgoingMessages">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="source"/>
       </eAnnotations>
     </eStructuralFeatures>
-    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//Activity"
-        eOpposite="#//Activity/incomingMessages">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="target" eType="#//MessageVertex"
+        eOpposite="#//MessageVertex/incomingMessages">
       <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
         <details key="kind" value="attribute"/>
         <details key="name" value="target"/>
@@ -349,7 +358,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//Graph #//NamedBpmnObject">
+  <eClassifiers xsi:type="ecore:EClass" name="Pool" eSuperTypes="#//Graph #//MessageVertex">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="Pool"/>
       <details key="kind" value="elementOnly"/>
@@ -369,7 +378,7 @@
       </eAnnotations>
     </eStructuralFeatures>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="SequenceEdge" eSuperTypes="#//Identifiable #//NamedBpmnObject">
+  <eClassifiers xsi:type="ecore:EClass" name="SequenceEdge" eSuperTypes="#//AssociationTarget #//NamedBpmnObject">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="SequenceEdge"/>
       <details key="kind" value="elementOnly"/>
@@ -451,7 +460,7 @@
       <details key="kind" value="elementOnly"/>
     </eAnnotations>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Vertex" eSuperTypes="#//IdentifiableNode">
+  <eClassifiers xsi:type="ecore:EClass" name="Vertex" eSuperTypes="#//AssociationTarget">
     <eAnnotations source="http:///org/eclipse/emf/ecore/util/ExtendedMetaData">
       <details key="name" value="Vertex"/>
       <details key="kind" value="elementOnly"/>

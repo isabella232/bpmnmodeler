@@ -12,36 +12,30 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.StackLayout;
-
+import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
-
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-
 import org.eclipse.gef.requests.CreateRequest;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
-
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-
 import org.eclipse.gmf.runtime.notation.View;
-
 import org.eclipse.stp.bpmn.diagram.edit.policies.Group2CanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Group2GraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Group2ItemSemanticEditPolicy;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
-import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy;
-import org.eclipse.stp.bpmn.policies.ResizableArtifactEditPolicy;
+import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
+import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
+import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
+import org.eclipse.stp.bpmn.policies.ResizableGroupEditPolicy;
+import org.eclipse.stp.bpmn.tools.GroupDragTracker;
 
 /**
  * @generated
@@ -71,9 +65,9 @@ public class Group2EditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @generated
+     * @generated not
      */
-    protected void createDefaultEditPolicies() {
+    protected void createDefaultEditPoliciesGen() {
         super.createDefaultEditPolicies();
         installEditPolicy(EditPolicyRoles.SEMANTIC_ROLE,
                 new Group2ItemSemanticEditPolicy());
@@ -84,6 +78,31 @@ public class Group2EditPart extends ShapeNodeEditPart {
         installEditPolicy(EditPolicy.LAYOUT_ROLE, createLayoutEditPolicy());
     }
 
+    /**
+     * @generated NOT
+     * Extending the edit policies for darg and drop, handles, connections.
+     */
+    protected void createDefaultEditPolicies() {
+        createDefaultEditPoliciesGen();
+        // replace ConnectionHandleEditPolicy with our own
+        installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE,
+                createConnectionHandlerEditPolicy());
+        // adding default drag and drop edit policy
+        installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
+                new BpmnDragDropEditPolicy(this));
+        // adding an open edit policy
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
+                new OpenFileEditPolicy());
+    }
+    
+    /**
+     * Ability to override the ConnectionHandleEditPolicy.
+     * @generated NOT
+     */
+    protected DiagramAssistantEditPolicy createConnectionHandlerEditPolicy() {
+        return new ConnectionHandleEditPolicyEx();
+    }
+    
     /**
      * @generated
      */
@@ -294,7 +313,14 @@ public class Group2EditPart extends ShapeNodeEditPart {
      */
     @Override
     public EditPolicy getPrimaryDragEditPolicy() {
-        return new ResizableArtifactEditPolicy();
+        return new ResizableGroupEditPolicy();
     }
 
+    /**
+     * @generated NOT
+     */
+    @Override
+    public DragTracker getDragTracker(Request request) {
+        return new GroupDragTracker(this);
+    }
 }

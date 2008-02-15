@@ -19,9 +19,13 @@ import java.util.List;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -46,13 +50,6 @@ public class PoolItemProvider
 		IItemLabelProvider,	
 		IItemPropertySource {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -68,12 +65,59 @@ public class PoolItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public List getPropertyDescriptors(Object object) {
+	@Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
+            addIncomingMessagesPropertyDescriptor(object);
+            addOutgoingMessagesPropertyDescriptor(object);
         }
         return itemPropertyDescriptors;
+    }
+
+    /**
+     * This adds a property descriptor for the Incoming Messages feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addIncomingMessagesPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_MessageVertex_incomingMessages_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"),
+                 BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Outgoing Messages feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addOutgoingMessagesPropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_MessageVertex_outgoingMessages_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"),
+                 BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES,
+                 true,
+                 false,
+                 true,
+                 null,
+                 null,
+                 null));
     }
 
     /**
@@ -84,12 +128,27 @@ public class PoolItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Collection getChildrenFeatures(Object object) {
+	@Override
+    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
+            childrenFeatures.add(BpmnPackage.Literals.MESSAGE_VERTEX__ORDERED_MESSAGES);
             childrenFeatures.add(BpmnPackage.Literals.POOL__LANES);
         }
         return childrenFeatures;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    protected EStructuralFeature getChildFeature(Object object, Object child) {
+        // Check the type of the specified child object and return the proper feature to use for
+        // adding (see {@link AddCommand}) it as a child.
+
+        return super.getChildFeature(object, child);
     }
 
     /**
@@ -98,8 +157,9 @@ public class PoolItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Pool")); //$NON-NLS-1$
+	@Override
+    public Object getImage(Object object) {
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Pool"));
     }
 
     /**
@@ -108,11 +168,12 @@ public class PoolItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getText(Object object) {
+	@Override
+    public String getText(Object object) {
         String label = ((Pool)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_Pool_type") : //$NON-NLS-1$
-            getString("_UI_Pool_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_Pool_type") :
+            getString("_UI_Pool_type") + " " + label;
     }
 
     /**
@@ -122,10 +183,12 @@ public class PoolItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void notifyChanged(Notification notification) {
+	@Override
+    public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
         switch (notification.getFeatureID(Pool.class)) {
+            case BpmnPackage.POOL__ORDERED_MESSAGES:
             case BpmnPackage.POOL__LANES:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), true, false));
                 return;
@@ -134,14 +197,29 @@ public class PoolItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	@Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
+
+        newChildDescriptors.add
+            (createChildParameter
+                (BpmnPackage.Literals.MESSAGE_VERTEX__ORDERED_MESSAGES,
+                 FeatureMapUtil.createEntry
+                    (BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES,
+                     BpmnFactory.eINSTANCE.createMessagingEdge())));
+
+        newChildDescriptors.add
+            (createChildParameter
+                (BpmnPackage.Literals.MESSAGE_VERTEX__ORDERED_MESSAGES,
+                 FeatureMapUtil.createEntry
+                    (BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES,
+                     BpmnFactory.eINSTANCE.createMessagingEdge())));
 
         newChildDescriptors.add
             (createChildParameter
@@ -150,12 +228,42 @@ public class PoolItemProvider
     }
 
     /**
+     * This returns the label text for {@link org.eclipse.emf.edit.command.CreateChildCommand}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
+        Object childFeature = feature;
+        Object childObject = child;
+
+        if (childFeature instanceof EStructuralFeature && FeatureMapUtil.isFeatureMap((EStructuralFeature)childFeature)) {
+            FeatureMap.Entry entry = (FeatureMap.Entry)childObject;
+            childFeature = entry.getEStructuralFeature();
+            childObject = entry.getValue();
+        }
+
+        boolean qualify =
+            childFeature == BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES ||
+            childFeature == BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES;
+
+        if (qualify) {
+            return getString
+                ("_UI_CreateChild_text2",
+                 new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
+        }
+        return super.getCreateChildText(owner, feature, child, selection);
+    }
+
+    /**
      * Return the resource locator for this item provider's resources.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public ResourceLocator getResourceLocator() {
+	@Override
+    public ResourceLocator getResourceLocator() {
         return BpmnEditPlugin.INSTANCE;
     }
 

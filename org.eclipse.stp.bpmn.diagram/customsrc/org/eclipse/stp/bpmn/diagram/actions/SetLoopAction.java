@@ -114,6 +114,18 @@ public class SetLoopAction extends AbstractActionHandler {
 		if (selection.getFirstElement() instanceof IGraphicalEditPart) {
 			EObject object = ((IGraphicalEditPart) selection.getFirstElement()).
 			getNotationView().getElement();
+			if (object instanceof SubProcess) {
+                String name = ((SubProcess) object).getName() == null ? 
+                        BpmnDiagramMessages.SetLoopAction_subprocess_default
+                        : ((SubProcess) object).getName();
+                if (((SubProcess) object).isLooping()) {
+                    setText(BpmnDiagramMessages.bind(BpmnDiagramMessages.SetLoopAction_non_looping_sp, name)); 
+                } else {
+                    setText(BpmnDiagramMessages.bind(BpmnDiagramMessages.SetLoopAction_looping_sp, name)); 
+                }
+                setEnabled(true);
+                return;
+            }
 			if (object instanceof Activity) {
 				if (((Activity) object).getActivityType().getValue() == 
 						ActivityType.TASK) {
@@ -127,18 +139,6 @@ public class SetLoopAction extends AbstractActionHandler {
 					setEnabled(true);
 					return;
 				}
-			}
-			if (object instanceof SubProcess) {
-				String name = ((SubProcess) object).getName() == null ? 
-						BpmnDiagramMessages.SetLoopAction_subprocess_default
-						: ((SubProcess) object).getName();
-				if (((SubProcess) object).isLooping()) {
-					setText(BpmnDiagramMessages.bind(BpmnDiagramMessages.SetLoopAction_non_looping_sp, name)); 
-				} else {
-					setText(BpmnDiagramMessages.bind(BpmnDiagramMessages.SetLoopAction_looping_sp, name)); 
-				}
-				setEnabled(true);
-				return;
 			}
 		}
 		setText(BpmnDiagramMessages.SetLoopAction_disabled);

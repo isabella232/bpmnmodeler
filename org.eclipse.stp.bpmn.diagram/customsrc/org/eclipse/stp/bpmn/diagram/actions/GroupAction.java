@@ -23,12 +23,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.gef.EditDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeCompartmentEditPart;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.viewers.ISelection;
@@ -36,6 +39,7 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
+import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
@@ -211,11 +215,37 @@ public class GroupAction extends AbstractGroupUngroupAction {
         internalConnections.clear();
         externalSrcConnections.clear();
         externalTgtConnections.clear();
-        for (Object editPart : strSelection.toList()) {
-            if (editPart instanceof GraphicalEditPart &&
-                    !(editPart instanceof Activity2EditPart) &&
-                    !(editPart instanceof ITextAwareEditPart)//this will skip the labels
+        
+        //EDGE-2030: get the sub-processes selected.
+        //any element that is selected and that is contained inside one of
+        //those selected sub-processes will be removed from the selection to group.
+        Set<SubProcess> selectedSubProcesses = null;
+        
+        List selectionEp = strSelection.toList();
+        for (Object editPart : selectionEp) {
+            if (editPart instanceof SubProcessEditPart) {
+                SubProcess sp = (SubProcess)
+                    ((SubProcessEditPart)editPart).resolveSemanticElement();
+                if (selectedSubProcesses == null) {
+                    selectedSubProcesses = new HashSet<SubProcess>();
+                }
+                selectedSubProcesses.add(sp);
+            }
+        }
+        
+        for (Object editPart : selectionEp) {
+            if (editPart instanceof GraphicalEditPart
+                  &&  !(editPart instanceof Activity2EditPart)
+                  &&  !(editPart instanceof ITextAwareEditPart)
+                  &&  !(editPart instanceof ShapeCompartmentEditPart)//this will skip the labels
                     ) {
+                if (selectedSubProcesses != null) {
+                    //make sure the shape is not contained in a selected sub-process (EDGE-2030)
+                    EObject eo = (EObject) ((GraphicalEditPart)editPart).resolveSemanticElement();
+                    if (eo != null && selectedSubProcesses.contains(eo.eContainer())) {
+                        continue;
+                    }
+                }
                 //this will not take into account the selected connections
                 editParts.add((GraphicalEditPart) editPart);
             }
@@ -501,14 +531,15 @@ public class GroupAction extends AbstractGroupUngroupAction {
         if (sel != null && sel instanceof IStructuredSelection) {
             IStructuredSelection structSel = (IStructuredSelection)sel;
             if (structSel.getFirstElement() instanceof GraphicalEditPart) {
-                IEditPartSelectionFilter filter =
-                    ((BpmnDiagramEditDomain)
-                            ((GraphicalEditPart)structSel.getFirstElement()).getViewer()
-                                .getEditDomain()).getActionSelectionFilter();
-                if (filter == null) {
-                    return sel;
+                EditDomain domain = ((GraphicalEditPart)structSel.getFirstElement()).getViewer().getEditDomain();
+                if (domain instanceof BpmnDiagramEditDomain) {
+                    IEditPartSelectionFilter filter =
+                        ((BpmnDiagramEditDomain) domain).getActionSelectionFilter();
+                        if (filter == null) {
+                            return sel;
+                        }
+                        return filter.filterSelection(ACTION_ID, structSel);
                 }
-                return filter.filterSelection(ACTION_ID, structSel);
             }
         }
         return sel;

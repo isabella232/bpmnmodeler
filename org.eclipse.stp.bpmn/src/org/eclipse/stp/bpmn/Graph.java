@@ -30,43 +30,43 @@ import org.eclipse.emf.common.util.EList;
  * @model extendedMetaData="name='Graph' kind='elementOnly'"
  * @generated
  */
-public interface Graph extends IdentifiableNode, ArtifactsContainer {
+public interface Graph extends AssociationTarget, ArtifactsContainer {
     /**
-	 * Returns the value of the '<em><b>Vertices</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.stp.bpmn.Vertex}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Vertex#getGraph <em>Graph</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Vertices</b></em>' containment reference list.
+     * The list contents are of type {@link org.eclipse.stp.bpmn.Vertex}.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Vertex#getGraph <em>Graph</em>}'.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Vertices</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Vertices</em>' containment reference list.
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getGraph_Vertices()
-	 * @see org.eclipse.stp.bpmn.Vertex#getGraph
-	 * @model opposite="graph" containment="true"
-	 *        extendedMetaData="kind='element' name='vertices'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Vertices</em>' containment reference list.
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getGraph_Vertices()
+     * @see org.eclipse.stp.bpmn.Vertex#getGraph
+     * @model opposite="graph" containment="true"
+     *        extendedMetaData="kind='element' name='vertices'"
+     * @generated
+     */
     EList<Vertex> getVertices();
 
     /**
-	 * Returns the value of the '<em><b>Sequence Edges</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.stp.bpmn.SequenceEdge}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.SequenceEdge#getGraph <em>Graph</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Sequence Edges</b></em>' containment reference list.
+     * The list contents are of type {@link org.eclipse.stp.bpmn.SequenceEdge}.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.SequenceEdge#getGraph <em>Graph</em>}'.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Sequence Edges</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Sequence Edges</em>' containment reference list.
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getGraph_SequenceEdges()
-	 * @see org.eclipse.stp.bpmn.SequenceEdge#getGraph
-	 * @model opposite="graph" containment="true"
-	 *        extendedMetaData="kind='element' name='sequenceEdges'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Sequence Edges</em>' containment reference list.
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getGraph_SequenceEdges()
+     * @see org.eclipse.stp.bpmn.SequenceEdge#getGraph
+     * @model opposite="graph" containment="true"
+     *        extendedMetaData="kind='element' name='sequenceEdges'"
+     * @generated
+     */
     EList<SequenceEdge> getSequenceEdges();
 
 } // Graph

@@ -37,6 +37,8 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescrip
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
@@ -71,6 +73,15 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	                    request.getSizeDelta().equals(new Dimension(0, 0)))) {
 	        return null;
 	    }
+	 // let's skip groups, they do not resize the pool.
+        boolean onlyContainsGroups = true;
+        for (Object o : request.getEditParts()) {
+            onlyContainsGroups = onlyContainsGroups && (
+                    o instanceof GroupEditPart || o instanceof Group2EditPart);
+        }
+        if (onlyContainsGroups) {
+            return super.getResizeChildrenCommand(request);
+        }
 		//calculate maxWidth
 		int maxWidth = /*PoolEditPart.POOL_WIDTH*/ 200;
 		// put child parts in a map, referenced by their bounds
@@ -80,6 +91,9 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		
 		for (Object child : getHost().getChildren()) {
 			IGraphicalEditPart childPart = (IGraphicalEditPart) child;
+			if (!(child instanceof PoolEditPart)) {
+			    continue;
+			}
 			Rectangle rect = childPart.getFigure().getBounds().getCopy();
 			
 			if (request.getEditParts() != null && 
@@ -137,6 +151,21 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			
 			Command co = createChangeConstraintCommand(part, key);
 			command.add(co);
+			
+			if (request.getEditParts().contains(part)) {
+			    PoolPoolCompartmentEditPart compartment = 
+			        (PoolPoolCompartmentEditPart) part.getChildBySemanticHint(
+			                BpmnVisualIDRegistry.getType(
+                    PoolPoolCompartmentEditPart.VISUAL_ID));
+			    if (compartment != null) {
+			        ChangeBoundsRequest laneUpdateRequest = new ChangeBoundsRequest(
+			                RequestConstants.REQ_RESIZE_CHILDREN);
+			        laneUpdateRequest.setEditParts(part);
+			        laneUpdateRequest.setMoveDelta(request.getMoveDelta().getCopy());
+			        laneUpdateRequest.setSizeDelta(request.getSizeDelta().getCopy());
+			        command.add(compartment.getCommand(laneUpdateRequest));
+			    }
+			}
 			y += key.height;
 			
 			// if the pool is resized in the northern direction, shapes should be moved south as an opposite
@@ -145,13 +174,15 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			    if (request.getEditParts() != null && request.getEditParts().contains(part)) {
 			        final IGraphicalEditPart comp = part.getChildBySemanticHint(BpmnVisualIDRegistry.getType(
 			                PoolPoolCompartmentEditPart.VISUAL_ID));
-			        final int ymove = request.getSizeDelta().height;
+			        if (comp != null) { // if comp is null this wasn't a pool in the first place
+			            int ymove = request.getSizeDelta().height;
 			            for (Object child : comp.getChildren()) {
 			                IGraphicalEditPart ep = (IGraphicalEditPart) child;
 			                Rectangle rect = ep.getFigure().getBounds().getCopy();
 			                rect.y += ymove;
 			                command.add(createChangeConstraintCommand(ep, rect));
 			            }
+			        }
 			    }
 			}
 		}
@@ -203,6 +234,7 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		CompoundCommand co = new CompoundCommand();
 		co.add(super.getCreateCommand(request));
 		ChangeBoundsRequest req = new ChangeBoundsRequest();
+		req.setType(RequestConstants.REQ_RESIZE_CHILDREN);
 		// find if there is a pool below.
 		Rectangle addedThing = ((Rectangle) getConstraintFor(request));
 		List children = ((IGraphicalEditPart) getHost()).getChildren();

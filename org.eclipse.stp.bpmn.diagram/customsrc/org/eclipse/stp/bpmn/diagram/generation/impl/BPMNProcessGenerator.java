@@ -47,13 +47,13 @@ import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.ArtifactsContainer;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.BpmnFactory;
 import org.eclipse.stp.bpmn.DataObject;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Group;
 import org.eclipse.stp.bpmn.Identifiable;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
@@ -323,7 +323,7 @@ public class BPMNProcessGenerator implements IProcessGenerator {
 	 * 
 	 */
 	public Association addAssociation(final Artifact source, 
-			final IdentifiableNode target) {
+			final AssociationTarget target) {
 		InternalRecordingCommand command = new InternalRecordingCommand() {
 
 			@Override

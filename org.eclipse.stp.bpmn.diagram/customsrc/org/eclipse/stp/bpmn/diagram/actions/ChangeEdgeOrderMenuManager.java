@@ -20,11 +20,13 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
@@ -239,7 +241,11 @@ public class ChangeEdgeOrderMenuManager extends ActionMenuManager {
                             }
                             return CommandResult.newOKCommandResult();
                         }};
-             return new ICommandProxy(command);
+             CompoundCommand compound = new CompoundCommand();
+             compound.add(new ICommandProxy(command));
+             compound.add(((SequenceEdgeEditPart) sel).getCommand(
+                     new Request(RequestConstants.REQ_REFRESH)));
+             return compound;
         }
 
         @Override

@@ -25,7 +25,6 @@ import org.eclipse.emf.common.util.Enumerator;
  * @see org.eclipse.stp.bpmn.BpmnPackage#getActivityType()
  * @model extendedMetaData="name='ActivityType'"
  * @generated
- * WARNING! we have i18n'ed most of the activity types names.
  */
 public enum ActivityType implements Enumerator
 {
@@ -298,496 +297,568 @@ public enum ActivityType implements Enumerator
      * @generated not
      * @ordered
      */
-	GATEWAY_COMPLEX_LITERAL(29, BpmnMessages.ActivityType_complex, "GatewayComplex"); //$NON-NLS-1$
+	GATEWAY_COMPLEX_LITERAL(29, BpmnMessages.ActivityType_complex, "GatewayComplex"), /**
+     * The '<em><b>Event Start Signal</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #EVENT_START_SIGNAL
+     * @generated
+     * @ordered
+     */
+    EVENT_START_SIGNAL_LITERAL(30, "EventStartSignal", "EventStartSignal"), /**
+     * The '<em><b>Event Intermediate Signal</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #EVENT_INTERMEDIATE_SIGNAL
+     * @generated
+     * @ordered
+     */
+    EVENT_INTERMEDIATE_SIGNAL_LITERAL(31, "EventIntermediateSignal", "EventIntermediateSignal"), /**
+     * The '<em><b>Event End Signal</b></em>' literal object.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #EVENT_END_SIGNAL
+     * @generated
+     * @ordered
+     */
+    EVENT_END_SIGNAL_LITERAL(32, "EventEndSignal", "EventEndSignal"); //$NON-NLS-1$
 	/**
-* The '<em><b>Task</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Task</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Task</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #TASK_LITERAL
-* @model name="Task"
-* @generated
-* @ordered
-*/
+     * @see #TASK_LITERAL
+     * @model name="Task"
+     * @generated
+     * @ordered
+     */
 	public static final int TASK = 0;
 
 	/**
-* The '<em><b>Sub Process</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Sub Process</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Sub Process</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #SUB_PROCESS_LITERAL
-* @model name="SubProcess"
-* @generated
-* @ordered
-*/
+     * @see #SUB_PROCESS_LITERAL
+     * @model name="SubProcess"
+     * @generated
+     * @ordered
+     */
 	public static final int SUB_PROCESS = 1;
 
 	/**
-* The '<em><b>Event Start Empty</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Empty</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Start Empty</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_START_EMPTY_LITERAL
-* @model name="EventStartEmpty"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_START_EMPTY_LITERAL
+     * @model name="EventStartEmpty"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_START_EMPTY = 2;
 
 	/**
-* The '<em><b>Event Start Message</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Message</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Start Message</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_START_MESSAGE_LITERAL
-* @model name="EventStartMessage"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_START_MESSAGE_LITERAL
+     * @model name="EventStartMessage"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_START_MESSAGE = 3;
 
 	/**
-* The '<em><b>Event Start Rule</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Rule</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Start Rule</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_START_RULE_LITERAL
-* @model name="EventStartRule"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_START_RULE_LITERAL
+     * @model name="EventStartRule"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_START_RULE = 4;
 
 	/**
-* The '<em><b>Event Start Timer</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Timer</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event Start Timer</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_START_TIMER_LITERAL
-* @model name="EventStartTimer"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_START_TIMER_LITERAL
+     * @model name="EventStartTimer"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_START_TIMER = 5;
 
 	/**
-* The '<em><b>Event Start Link</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Link</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event Start Link</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_START_LINK_LITERAL
-* @model name="EventStartLink"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_START_LINK_LITERAL
+     * @model name="EventStartLink"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_START_LINK = 6;
 
 	/**
-* The '<em><b>Event Start Multiple</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Multiple</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event Start Multiple</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_START_MULTIPLE_LITERAL
-* @model name="EventStartMultiple"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_START_MULTIPLE_LITERAL
+     * @model name="EventStartMultiple"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_START_MULTIPLE = 7;
 
 	/**
-* The '<em><b>Event Intermediate Empty</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Empty</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Empty</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_EMPTY_LITERAL
-* @model name="EventIntermediateEmpty"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_EMPTY_LITERAL
+     * @model name="EventIntermediateEmpty"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_EMPTY = 8;
 
 	/**
-* The '<em><b>Event Intermediate Message</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Message</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Message</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_MESSAGE_LITERAL
-* @model name="EventIntermediateMessage"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_MESSAGE_LITERAL
+     * @model name="EventIntermediateMessage"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_MESSAGE = 9;
 
 	/**
-* The '<em><b>Event Intermediate Timer</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Timer</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Timer</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_TIMER_LITERAL
-* @model name="EventIntermediateTimer"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_TIMER_LITERAL
+     * @model name="EventIntermediateTimer"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_TIMER = 10;
 
 	/**
-* The '<em><b>Event Intermediate Error</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Error</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Error</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_ERROR_LITERAL
-* @model name="EventIntermediateError"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_ERROR_LITERAL
+     * @model name="EventIntermediateError"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_ERROR = 11;
 
 	/**
-* The '<em><b>Event Intermediate Compensation</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Compensation</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Compensation</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_COMPENSATION_LITERAL
-* @model name="EventIntermediateCompensation"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_COMPENSATION_LITERAL
+     * @model name="EventIntermediateCompensation"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_COMPENSATION = 12;
 
 	/**
-* The '<em><b>Event Intermediate Rule</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Rule</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Rule</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_RULE_LITERAL
-* @model name="EventIntermediateRule"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_RULE_LITERAL
+     * @model name="EventIntermediateRule"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_RULE = 13;
 
 	/**
-* The '<em><b>Event Intermediate Link</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Link</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event Intermediate Link</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_LINK_LITERAL
-* @model name="EventIntermediateLink"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_LINK_LITERAL
+     * @model name="EventIntermediateLink"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_INTERMEDIATE_LINK = 14;
 
 	/**
-* The '<em><b>Event Intermediate Multiple</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Multiple</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event Intermediate Multiple</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_MULTIPLE_LITERAL
-* @model name="EventIntermediateMultiple"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_MULTIPLE_LITERAL
+     * @model name="EventIntermediateMultiple"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_INTERMEDIATE_MULTIPLE = 15;
 
 	/**
-* The '<em><b>Event Intermediate Cancel</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Intermediate Cancel</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event Intermediate Cancel</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_INTERMEDIATE_CANCEL_LITERAL
-* @model name="EventIntermediateCancel"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_INTERMEDIATE_CANCEL_LITERAL
+     * @model name="EventIntermediateCancel"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_INTERMEDIATE_CANCEL = 16;
 
 	/**
-* The '<em><b>Event End Empty</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Empty</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event End Empty</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_END_EMPTY_LITERAL
-* @model name="EventEndEmpty"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_EMPTY_LITERAL
+     * @model name="EventEndEmpty"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_END_EMPTY = 17;
 
 	/**
-* The '<em><b>Event End Message</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Message</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event End Message</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_END_MESSAGE_LITERAL
-* @model name="EventEndMessage"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_MESSAGE_LITERAL
+     * @model name="EventEndMessage"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_END_MESSAGE = 18;
 
 	/**
-* The '<em><b>Event End Error</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Error</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event End Error</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_END_ERROR_LITERAL
-* @model name="EventEndError"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_ERROR_LITERAL
+     * @model name="EventEndError"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_END_ERROR = 19;
 
 	/**
-* The '<em><b>Event End Compensation</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Compensation</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event End Compensation</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_END_COMPENSATION_LITERAL
-* @model name="EventEndCompensation"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_COMPENSATION_LITERAL
+     * @model name="EventEndCompensation"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_END_COMPENSATION = 20;
 
 	/**
-* The '<em><b>Event End Terminate</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Terminate</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event End Terminate</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_END_TERMINATE_LITERAL
-* @model name="EventEndTerminate"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_TERMINATE_LITERAL
+     * @model name="EventEndTerminate"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_END_TERMINATE = 21;
 
 	/**
-* The '<em><b>Event End Link</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Link</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event End Link</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_END_LINK_LITERAL
-* @model name="EventEndLink"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_LINK_LITERAL
+     * @model name="EventEndLink"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_END_LINK = 22;
 
 	/**
-* The '<em><b>Event End Multiple</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Multiple</b></em>' literal value.
+     * <!-- begin-user-doc -->
 * <p>
 * If the meaning of '<em><b>Event End Multiple</b></em>' literal object isn't clear,
 * there really should be more of a description here...
 * </p>
 * <!-- end-user-doc -->
-* @see #EVENT_END_MULTIPLE_LITERAL
-* @model name="EventEndMultiple"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_MULTIPLE_LITERAL
+     * @model name="EventEndMultiple"
+     * @generated
+     * @ordered
+     */
 public static final int EVENT_END_MULTIPLE = 23;
 
 	/**
-* The '<em><b>Event End Cancel</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event End Cancel</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Event End Cancel</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #EVENT_END_CANCEL_LITERAL
-* @model name="EventEndCancel"
-* @generated
-* @ordered
-*/
+     * @see #EVENT_END_CANCEL_LITERAL
+     * @model name="EventEndCancel"
+     * @generated
+     * @ordered
+     */
 	public static final int EVENT_END_CANCEL = 24;
 
 	/**
-* The '<em><b>Gateway Data Based Exclusive</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Gateway Data Based Exclusive</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Gateway Data Based Exclusive</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL
-* @model name="GatewayDataBasedExclusive"
-* @generated
-* @ordered
-*/
+     * @see #GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL
+     * @model name="GatewayDataBasedExclusive"
+     * @generated
+     * @ordered
+     */
 	public static final int GATEWAY_DATA_BASED_EXCLUSIVE = 25;
 
 	/**
-* The '<em><b>Gateway Event Based Exclusive</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Gateway Event Based Exclusive</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Gateway Event Based Exclusive</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #GATEWAY_EVENT_BASED_EXCLUSIVE_LITERAL
-* @model name="GatewayEventBasedExclusive"
-* @generated
-* @ordered
-*/
+     * @see #GATEWAY_EVENT_BASED_EXCLUSIVE_LITERAL
+     * @model name="GatewayEventBasedExclusive"
+     * @generated
+     * @ordered
+     */
 	public static final int GATEWAY_EVENT_BASED_EXCLUSIVE = 26;
 
 	/**
-* The '<em><b>Gateway Data Based Inclusive</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Gateway Data Based Inclusive</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Gateway Data Based Inclusive</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #GATEWAY_DATA_BASED_INCLUSIVE_LITERAL
-* @model name="GatewayDataBasedInclusive"
-* @generated
-* @ordered
-*/
+     * @see #GATEWAY_DATA_BASED_INCLUSIVE_LITERAL
+     * @model name="GatewayDataBasedInclusive"
+     * @generated
+     * @ordered
+     */
 	public static final int GATEWAY_DATA_BASED_INCLUSIVE = 27;
 
 	/**
-* The '<em><b>Gateway Parallel</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Gateway Parallel</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Gateway Parallel</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #GATEWAY_PARALLEL_LITERAL
-* @model name="GatewayParallel"
-* @generated
-* @ordered
-*/
+     * @see #GATEWAY_PARALLEL_LITERAL
+     * @model name="GatewayParallel"
+     * @generated
+     * @ordered
+     */
 	public static final int GATEWAY_PARALLEL = 28;
 
 	/**
-* The '<em><b>Gateway Complex</b></em>' literal value.
-* <!-- begin-user-doc -->
+     * The '<em><b>Gateway Complex</b></em>' literal value.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of '<em><b>Gateway Complex</b></em>' literal object isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-* @see #GATEWAY_COMPLEX_LITERAL
-* @model name="GatewayComplex"
-* @generated
-* @ordered
-*/
+     * @see #GATEWAY_COMPLEX_LITERAL
+     * @model name="GatewayComplex"
+     * @generated
+     * @ordered
+     */
 	public static final int GATEWAY_COMPLEX = 29;
 
 	/**
-* An array of all the '<em><b>Activity Type</b></em>' enumerators.
-* <!-- begin-user-doc -->
+     * The '<em><b>Event Start Signal</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>Event Start Signal</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #EVENT_START_SIGNAL_LITERAL
+     * @model name="EventStartSignal"
+     * @generated
+     * @ordered
+     */
+    public static final int EVENT_START_SIGNAL = 30;
+
+    /**
+     * The '<em><b>Event Intermediate Signal</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>Event Intermediate Signal</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #EVENT_INTERMEDIATE_SIGNAL_LITERAL
+     * @model name="EventIntermediateSignal"
+     * @generated
+     * @ordered
+     */
+    public static final int EVENT_INTERMEDIATE_SIGNAL = 31;
+
+    /**
+     * The '<em><b>Event End Signal</b></em>' literal value.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of '<em><b>Event End Signal</b></em>' literal object isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @see #EVENT_END_SIGNAL_LITERAL
+     * @model name="EventEndSignal"
+     * @generated
+     * @ordered
+     */
+    public static final int EVENT_END_SIGNAL = 32;
+
+    /**
+     * An array of all the '<em><b>Activity Type</b></em>' enumerators.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-* @generated
-*/
+     * @generated
+     */
 	private static final ActivityType[] VALUES_ARRAY =
 	    new ActivityType[] {
-TASK_LITERAL,
-SUB_PROCESS_LITERAL,
-EVENT_START_EMPTY_LITERAL,
-EVENT_START_MESSAGE_LITERAL,
-EVENT_START_RULE_LITERAL,
-EVENT_START_TIMER_LITERAL,
-EVENT_START_LINK_LITERAL,
-EVENT_START_MULTIPLE_LITERAL,
-EVENT_INTERMEDIATE_EMPTY_LITERAL,
-EVENT_INTERMEDIATE_MESSAGE_LITERAL,
-EVENT_INTERMEDIATE_TIMER_LITERAL,
-EVENT_INTERMEDIATE_ERROR_LITERAL,
-EVENT_INTERMEDIATE_COMPENSATION_LITERAL,
-EVENT_INTERMEDIATE_RULE_LITERAL,
-EVENT_INTERMEDIATE_LINK_LITERAL,
-EVENT_INTERMEDIATE_MULTIPLE_LITERAL,
-EVENT_INTERMEDIATE_CANCEL_LITERAL,
-EVENT_END_EMPTY_LITERAL,
-EVENT_END_MESSAGE_LITERAL,
-EVENT_END_ERROR_LITERAL,
-EVENT_END_COMPENSATION_LITERAL,
-EVENT_END_TERMINATE_LITERAL,
-EVENT_END_LINK_LITERAL,
-EVENT_END_MULTIPLE_LITERAL,
-EVENT_END_CANCEL_LITERAL,
-GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL,
-GATEWAY_EVENT_BASED_EXCLUSIVE_LITERAL,
-GATEWAY_DATA_BASED_INCLUSIVE_LITERAL,
-GATEWAY_PARALLEL_LITERAL,
-GATEWAY_COMPLEX_LITERAL,
-};
+            TASK_LITERAL,
+            SUB_PROCESS_LITERAL,
+            EVENT_START_EMPTY_LITERAL,
+            EVENT_START_MESSAGE_LITERAL,
+            EVENT_START_RULE_LITERAL,
+            EVENT_START_TIMER_LITERAL,
+            EVENT_START_LINK_LITERAL,
+            EVENT_START_MULTIPLE_LITERAL,
+            EVENT_INTERMEDIATE_EMPTY_LITERAL,
+            EVENT_INTERMEDIATE_MESSAGE_LITERAL,
+            EVENT_INTERMEDIATE_TIMER_LITERAL,
+            EVENT_INTERMEDIATE_ERROR_LITERAL,
+            EVENT_INTERMEDIATE_COMPENSATION_LITERAL,
+            EVENT_INTERMEDIATE_RULE_LITERAL,
+            EVENT_INTERMEDIATE_LINK_LITERAL,
+            EVENT_INTERMEDIATE_MULTIPLE_LITERAL,
+            EVENT_INTERMEDIATE_CANCEL_LITERAL,
+            EVENT_END_EMPTY_LITERAL,
+            EVENT_END_MESSAGE_LITERAL,
+            EVENT_END_ERROR_LITERAL,
+            EVENT_END_COMPENSATION_LITERAL,
+            EVENT_END_TERMINATE_LITERAL,
+            EVENT_END_LINK_LITERAL,
+            EVENT_END_MULTIPLE_LITERAL,
+            EVENT_END_CANCEL_LITERAL,
+            GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL,
+            GATEWAY_EVENT_BASED_EXCLUSIVE_LITERAL,
+            GATEWAY_DATA_BASED_INCLUSIVE_LITERAL,
+            GATEWAY_PARALLEL_LITERAL,
+            GATEWAY_COMPLEX_LITERAL,
+            EVENT_START_SIGNAL_LITERAL,
+            EVENT_INTERMEDIATE_SIGNAL_LITERAL,
+            EVENT_END_SIGNAL_LITERAL,
+        };
 
 	/**
 	 * An array of all the '<em><b>Activity Type</b></em>'
@@ -804,6 +875,7 @@ GATEWAY_COMPLEX_LITERAL,
             EVENT_START_LINK_LITERAL,
             EVENT_START_MULTIPLE_LITERAL,
             EVENT_START_TIMER_LITERAL,
+            EVENT_START_SIGNAL_LITERAL,
 			EVENT_INTERMEDIATE_EMPTY_LITERAL,
 			EVENT_INTERMEDIATE_MESSAGE_LITERAL,
 			EVENT_INTERMEDIATE_TIMER_LITERAL,
@@ -813,6 +885,7 @@ GATEWAY_COMPLEX_LITERAL,
             EVENT_INTERMEDIATE_CANCEL_LITERAL,
             EVENT_INTERMEDIATE_LINK_LITERAL,
             EVENT_INTERMEDIATE_MULTIPLE_LITERAL,
+            EVENT_INTERMEDIATE_SIGNAL_LITERAL,
 			EVENT_END_EMPTY_LITERAL,
 			EVENT_END_MESSAGE_LITERAL,
 			EVENT_END_ERROR_LITERAL,
@@ -820,7 +893,8 @@ GATEWAY_COMPLEX_LITERAL,
 			EVENT_END_TERMINATE_LITERAL,
             EVENT_END_CANCEL_LITERAL,
             EVENT_END_LINK_LITERAL,
-            EVENT_END_MULTIPLE_LITERAL
+            EVENT_END_MULTIPLE_LITERAL,
+            EVENT_END_SIGNAL_LITERAL
 		};
 
 	/**
@@ -877,11 +951,11 @@ GATEWAY_COMPLEX_LITERAL,
 	};
 
 	/**
-* A public read-only list of all the '<em><b>Activity Type</b></em>' enumerators.
-* <!-- begin-user-doc -->
+     * A public read-only list of all the '<em><b>Activity Type</b></em>' enumerators.
+     * <!-- begin-user-doc -->
 * <!-- end-user-doc -->
-* @generated
-*/
+     * @generated
+     */
 public static final List<ActivityType> VALUES = Collections.unmodifiableList(Arrays.asList(VALUES_ARRAY));
 
 	/**
@@ -940,131 +1014,134 @@ public static final List<ActivityType> VALUES = Collections.unmodifiableList(Arr
 	}
 
 	/**
-* Returns the '<em><b>Activity Type</b></em>' literal with the specified name.
-* <!-- begin-user-doc -->
+     * Returns the '<em><b>Activity Type</b></em>' literal with the specified name.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-* @generated
-*/
+     * @generated
+     */
 	public static ActivityType getByName(String name) {
-for (int i = 0; i < VALUES_ARRAY.length; ++i) {
-ActivityType result = VALUES_ARRAY[i];
-if (result.getName().equals(name)) {
-	return result;
-}
-}
-return null;
-}
+        for (int i = 0; i < VALUES_ARRAY.length; ++i) {
+            ActivityType result = VALUES_ARRAY[i];
+            if (result.getName().equals(name)) {
+                return result;
+            }
+        }
+        return null;
+    }
 
 	/**
-* Returns the '<em><b>Activity Type</b></em>' literal with the specified integer value.
-* <!-- begin-user-doc -->
+     * Returns the '<em><b>Activity Type</b></em>' literal with the specified integer value.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-* @generated
-*/
+     * @generated
+     */
 	public static ActivityType get(int value) {
-switch (value) {
-case TASK: return TASK_LITERAL;
-case SUB_PROCESS: return SUB_PROCESS_LITERAL;
-case EVENT_START_EMPTY: return EVENT_START_EMPTY_LITERAL;
-case EVENT_START_MESSAGE: return EVENT_START_MESSAGE_LITERAL;
-case EVENT_START_RULE: return EVENT_START_RULE_LITERAL;
-case EVENT_START_TIMER: return EVENT_START_TIMER_LITERAL;
-case EVENT_START_LINK: return EVENT_START_LINK_LITERAL;
-case EVENT_START_MULTIPLE: return EVENT_START_MULTIPLE_LITERAL;
-case EVENT_INTERMEDIATE_EMPTY: return EVENT_INTERMEDIATE_EMPTY_LITERAL;
-case EVENT_INTERMEDIATE_MESSAGE: return EVENT_INTERMEDIATE_MESSAGE_LITERAL;
-case EVENT_INTERMEDIATE_TIMER: return EVENT_INTERMEDIATE_TIMER_LITERAL;
-case EVENT_INTERMEDIATE_ERROR: return EVENT_INTERMEDIATE_ERROR_LITERAL;
-case EVENT_INTERMEDIATE_COMPENSATION: return EVENT_INTERMEDIATE_COMPENSATION_LITERAL;
-case EVENT_INTERMEDIATE_RULE: return EVENT_INTERMEDIATE_RULE_LITERAL;
-case EVENT_INTERMEDIATE_LINK: return EVENT_INTERMEDIATE_LINK_LITERAL;
-case EVENT_INTERMEDIATE_MULTIPLE: return EVENT_INTERMEDIATE_MULTIPLE_LITERAL;
-case EVENT_INTERMEDIATE_CANCEL: return EVENT_INTERMEDIATE_CANCEL_LITERAL;
-case EVENT_END_EMPTY: return EVENT_END_EMPTY_LITERAL;
-case EVENT_END_MESSAGE: return EVENT_END_MESSAGE_LITERAL;
-case EVENT_END_ERROR: return EVENT_END_ERROR_LITERAL;
-case EVENT_END_COMPENSATION: return EVENT_END_COMPENSATION_LITERAL;
-case EVENT_END_TERMINATE: return EVENT_END_TERMINATE_LITERAL;
-case EVENT_END_LINK: return EVENT_END_LINK_LITERAL;
-case EVENT_END_MULTIPLE: return EVENT_END_MULTIPLE_LITERAL;
-case EVENT_END_CANCEL: return EVENT_END_CANCEL_LITERAL;
-case GATEWAY_DATA_BASED_EXCLUSIVE: return GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL;
-case GATEWAY_EVENT_BASED_EXCLUSIVE: return GATEWAY_EVENT_BASED_EXCLUSIVE_LITERAL;
-case GATEWAY_DATA_BASED_INCLUSIVE: return GATEWAY_DATA_BASED_INCLUSIVE_LITERAL;
-case GATEWAY_PARALLEL: return GATEWAY_PARALLEL_LITERAL;
-case GATEWAY_COMPLEX: return GATEWAY_COMPLEX_LITERAL;
-}
-return null;
-}
+        switch (value) {
+            case TASK: return TASK_LITERAL;
+            case SUB_PROCESS: return SUB_PROCESS_LITERAL;
+            case EVENT_START_EMPTY: return EVENT_START_EMPTY_LITERAL;
+            case EVENT_START_MESSAGE: return EVENT_START_MESSAGE_LITERAL;
+            case EVENT_START_RULE: return EVENT_START_RULE_LITERAL;
+            case EVENT_START_TIMER: return EVENT_START_TIMER_LITERAL;
+            case EVENT_START_LINK: return EVENT_START_LINK_LITERAL;
+            case EVENT_START_MULTIPLE: return EVENT_START_MULTIPLE_LITERAL;
+            case EVENT_INTERMEDIATE_EMPTY: return EVENT_INTERMEDIATE_EMPTY_LITERAL;
+            case EVENT_INTERMEDIATE_MESSAGE: return EVENT_INTERMEDIATE_MESSAGE_LITERAL;
+            case EVENT_INTERMEDIATE_TIMER: return EVENT_INTERMEDIATE_TIMER_LITERAL;
+            case EVENT_INTERMEDIATE_ERROR: return EVENT_INTERMEDIATE_ERROR_LITERAL;
+            case EVENT_INTERMEDIATE_COMPENSATION: return EVENT_INTERMEDIATE_COMPENSATION_LITERAL;
+            case EVENT_INTERMEDIATE_RULE: return EVENT_INTERMEDIATE_RULE_LITERAL;
+            case EVENT_INTERMEDIATE_LINK: return EVENT_INTERMEDIATE_LINK_LITERAL;
+            case EVENT_INTERMEDIATE_MULTIPLE: return EVENT_INTERMEDIATE_MULTIPLE_LITERAL;
+            case EVENT_INTERMEDIATE_CANCEL: return EVENT_INTERMEDIATE_CANCEL_LITERAL;
+            case EVENT_END_EMPTY: return EVENT_END_EMPTY_LITERAL;
+            case EVENT_END_MESSAGE: return EVENT_END_MESSAGE_LITERAL;
+            case EVENT_END_ERROR: return EVENT_END_ERROR_LITERAL;
+            case EVENT_END_COMPENSATION: return EVENT_END_COMPENSATION_LITERAL;
+            case EVENT_END_TERMINATE: return EVENT_END_TERMINATE_LITERAL;
+            case EVENT_END_LINK: return EVENT_END_LINK_LITERAL;
+            case EVENT_END_MULTIPLE: return EVENT_END_MULTIPLE_LITERAL;
+            case EVENT_END_CANCEL: return EVENT_END_CANCEL_LITERAL;
+            case GATEWAY_DATA_BASED_EXCLUSIVE: return GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL;
+            case GATEWAY_EVENT_BASED_EXCLUSIVE: return GATEWAY_EVENT_BASED_EXCLUSIVE_LITERAL;
+            case GATEWAY_DATA_BASED_INCLUSIVE: return GATEWAY_DATA_BASED_INCLUSIVE_LITERAL;
+            case GATEWAY_PARALLEL: return GATEWAY_PARALLEL_LITERAL;
+            case GATEWAY_COMPLEX: return GATEWAY_COMPLEX_LITERAL;
+            case EVENT_START_SIGNAL: return EVENT_START_SIGNAL_LITERAL;
+            case EVENT_INTERMEDIATE_SIGNAL: return EVENT_INTERMEDIATE_SIGNAL_LITERAL;
+            case EVENT_END_SIGNAL: return EVENT_END_SIGNAL_LITERAL;
+        }
+        return null;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private final int value;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private final String name;
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	private final String literal;
 
 	/**
-* Only this class can construct instances.
-* <!-- begin-user-doc -->
+     * Only this class can construct instances.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-* @generated
-*/
+     * @generated
+     */
 	private ActivityType(int value, String name, String literal) {
-		this.value = value;
-		this.name = name;
-		this.literal = literal;
-	}
+        this.value = value;
+        this.name = name;
+        this.literal = literal;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public int getValue() {
-	  return value;
-	}
+      return value;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getName() {
-	  return name;
-	}
+      return name;
+    }
 
 	/**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public String getLiteral() {
-	  return literal;
-	}
+      return literal;
+    }
 
 	/**
-	 * Returns the literal value of the enumerator, which is its string representation.
-	 * <!-- begin-user-doc -->
+     * Returns the literal value of the enumerator, which is its string representation.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public String toString() {
-		return literal;
-	}
+        return literal;
+    }
 }

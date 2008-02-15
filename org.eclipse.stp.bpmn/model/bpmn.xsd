@@ -29,7 +29,7 @@
 	</xsd:complexType>
 
 <!-- equivalent to a marker interface used for both vertex and graph -->
-	<xsd:complexType name="IdentifiableNode">
+	<xsd:complexType name="AssociationTarget">
 		<xsd:complexContent>
 			<xsd:extension base="bpmn:Identifiable">
 	        	<xsd:sequence>
@@ -53,7 +53,7 @@
 also contains artifacts -->	
 	<xsd:complexType name="Graph" ecore:implements="bpmn:ArtifactsContainer">
 		<xsd:complexContent>
-			<xsd:extension base="bpmn:IdentifiableNode">
+			<xsd:extension base="bpmn:AssociationTarget">
 	        	<xsd:sequence>
 	            	<xsd:element ecore:opposite="graph" maxOccurs="unbounded" minOccurs="0" name="vertices" type="bpmn:Vertex"/>
 	            	<xsd:element ecore:opposite="graph" maxOccurs="unbounded" minOccurs="0" name="sequenceEdges" type="bpmn:SequenceEdge"/>
@@ -64,7 +64,7 @@ also contains artifacts -->
 	
 	<xsd:complexType name="Vertex">
 		<xsd:complexContent>
-			<xsd:extension base="bpmn:IdentifiableNode">
+			<xsd:extension base="bpmn:AssociationTarget">
 				<xsd:sequence>
 		            <xsd:element ecore:opposite="source" ecore:reference="bpmn:SequenceEdge" maxOccurs="unbounded" minOccurs="0" name="outgoingEdges" type="xsd:anyURI"/>
 		            <xsd:element ecore:opposite="target" ecore:reference="bpmn:SequenceEdge" maxOccurs="unbounded" minOccurs="0" name="incomingEdges" type="xsd:anyURI"/>
@@ -74,9 +74,21 @@ also contains artifacts -->
 	    </xsd:complexContent>
 	</xsd:complexType>
 	
+	<xsd:complexType name="MessageVertex" ecore:implements="bpmn:Identifiable">
+		<xsd:complexContent>
+			<xsd:extension base="bpmn:NamedBpmnObject">
+			<!-- see page 5 of http://www.eclipse.org/modeling/emf/docs/overviews/FeatureMap.pdf -->
+	    			<xsd:choice maxOccurs="unbounded" minOccurs="0" ecore:name="orderedMessages">
+	    				<xsd:element ecore:reference="bpmn:MessagingEdge" ecore:opposite="target" maxOccurs="unbounded" minOccurs="0" name="incomingMessages" type="xsd:anyURI"/>
+            			<xsd:element ecore:reference="bpmn:MessagingEdge" ecore:opposite="source" maxOccurs="unbounded" minOccurs="0" name="outgoingMessages" type="xsd:anyURI"/>
+            		</xsd:choice>
+	    	</xsd:extension>
+	    </xsd:complexContent>
+	</xsd:complexType>
+	
     <xsd:complexType name="SequenceEdge" ecore:implements="bpmn:NamedBpmnObject">
 		<xsd:complexContent>
-			<xsd:extension base="bpmn:Identifiable">
+			<xsd:extension base="bpmn:AssociationTarget">
 		    	<xsd:attribute ecore:opposite="sequenceEdges" ecore:reference="bpmn:Graph" name="graph" type="xsd:anyURI"/>
 		    	<xsd:attribute ecore:opposite="outgoingSequenceEdges" ecore:reference="bpmn:Vertex" name="source" type="xsd:anyURI"/>
 		    	<xsd:attribute ecore:opposite="incomingSequenceEdges" ecore:reference="bpmn:Vertex" name="target" type="xsd:anyURI"/>
@@ -105,7 +117,7 @@ also contains artifacts -->
     </xsd:complexType>
     
     <!-- pool is jus a graph with a reference to the bpmnDiagram -->
-    <xsd:complexType name="Pool" ecore:implements="bpmn:NamedBpmnObject">
+    <xsd:complexType name="Pool" ecore:implements="bpmn:MessageVertex">
     	<xsd:complexContent>
 	    	<xsd:extension base="bpmn:Graph">
 		        <xsd:sequence>
@@ -124,15 +136,10 @@ also contains artifacts -->
     	The drawback is that the code generated needs to be customized with a lot of
     	structural constraints. The advantage is that it will be possible to morph nodes into
     	one another in the diagram -->
-    <xsd:complexType name="Activity" ecore:implements="bpmn:NamedBpmnObject">
+    <xsd:complexType name="Activity" ecore:implements="bpmn:MessageVertex">
     	<xsd:complexContent>
 	    	<xsd:extension base="bpmn:Vertex">
 	    		<xsd:sequence>
-	    		<!-- see page 5 of http://www.eclipse.org/modeling/emf/docs/overviews/FeatureMap.pdf -->
-	    			<xsd:choice maxOccurs="unbounded" minOccurs="0" ecore:name="orderedMessages">
-	    				<xsd:element ecore:reference="bpmn:MessagingEdge" ecore:opposite="target" maxOccurs="unbounded" minOccurs="0" name="incomingMessages" type="xsd:anyURI"/>
-            			<xsd:element ecore:reference="bpmn:MessagingEdge" ecore:opposite="source" maxOccurs="unbounded" minOccurs="0" name="outgoingMessages" type="xsd:anyURI"/>
-            		</xsd:choice>
             		<xsd:element ecore:opposite="groups" ecore:reference="bpmn:Group"
             			 maxOccurs="unbounded" minOccurs="0" name="groups" type="xsd:anyURI"/>
  	    		</xsd:sequence>
@@ -173,11 +180,11 @@ also contains artifacts -->
     <!-- messaging edges are completly different -->
     <xsd:complexType name="MessagingEdge" ecore:implements="bpmn:NamedBpmnObject">
 		<xsd:complexContent>
-			<xsd:extension base="bpmn:Identifiable">
+			<xsd:extension base="bpmn:AssociationTarget">
 		    	<!-- the messaging edges in this diagram -->
 		    	<xsd:attribute ecore:opposite="messages" ecore:reference="bpmn:BpmnDiagram" name="bpmnDiagram" type="xsd:anyURI"/>
-		    	<xsd:attribute ecore:opposite="outgoingMessages" ecore:reference="bpmn:Activity" name="source" type="xsd:anyURI"/>
-		    	<xsd:attribute ecore:opposite="incomingMessages" ecore:reference="bpmn:Activity" name="target" type="xsd:anyURI"/>
+		    	<xsd:attribute ecore:opposite="outgoingMessages" ecore:reference="bpmn:MessageVertex" name="source" type="xsd:anyURI"/>
+		    	<xsd:attribute ecore:opposite="incomingMessages" ecore:reference="bpmn:MessageVertex" name="target" type="xsd:anyURI"/>
 	    	</xsd:extension>
 	    </xsd:complexContent>
     </xsd:complexType>
@@ -185,7 +192,7 @@ also contains artifacts -->
     <!-- lanes -->
     <xsd:complexType name="Lane" ecore:implements="bpmn:NamedBpmnObject">
 		<xsd:complexContent>
-			<xsd:extension base="bpmn:Identifiable">
+			<xsd:extension base="bpmn:AssociationTarget">
 	        	<xsd:sequence>
 					<xsd:element ecore:reference="bpmn:Activity" maxOccurs="unbounded" minOccurs="0" name="activities" type="bpmn:Activity"/>
 				</xsd:sequence>
@@ -210,7 +217,7 @@ also contains artifacts -->
       		<xsd:enumeration value="EventStartLink"/>
       		<xsd:enumeration value="EventStartMultiple"/>
       		
-      		<!-- intermediate event -->
+      		<!-- intermediate events -->
       		<xsd:enumeration value="EventIntermediateEmpty"/>
       		<xsd:enumeration value="EventIntermediateMessage"/>
       		<xsd:enumeration value="EventIntermediateTimer"/>
@@ -238,6 +245,10 @@ also contains artifacts -->
       		<xsd:enumeration value="GatewayParallel"/>
       		<xsd:enumeration value="GatewayComplex"/>
       		
+      		<!--  BPMN 1.1 signal event -->
+      		<xsd:enumeration value="EventStartSignal"/>
+      		<xsd:enumeration value="EventIntermediateSignal"/>
+      		<xsd:enumeration value="EventEndSignal"/>
     	</xsd:restriction>
   	</xsd:simpleType>
   	
@@ -255,7 +266,7 @@ also contains artifacts -->
 			<xsd:extension base="ecore:EModelElement">
 			<!-- we only support association from an 
 					identifiable-node (pool, activity, sub-process) to an artifact -->
-		    	<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:IdentifiableNode" name="target" type="xsd:anyURI"/>
+		    	<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:AssociationTarget" name="target" type="xsd:anyURI"/>
 	    		<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:Artifact" name="source" type="xsd:anyURI"/>
 				<xsd:attribute name="direction">
 				    <xsd:simpleType>

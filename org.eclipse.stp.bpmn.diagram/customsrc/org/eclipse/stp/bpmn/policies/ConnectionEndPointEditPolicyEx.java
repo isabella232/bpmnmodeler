@@ -23,10 +23,12 @@ import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.RequestConstants;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.ConnectionEndpointEditPolicy;
 import org.eclipse.gef.handles.ConnectionHandle;
 import org.eclipse.gef.tools.ConnectionEndpointTracker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.Vertex;
@@ -54,7 +56,7 @@ public class ConnectionEndPointEditPolicyEx extends ConnectionEndpointEditPolicy
         list.add(new ConnectionStartHandleEx((ConnectionEditPart)getHost()));
         return list;
     }
-    
+
     /**
      * we override ConnectionEndHandle, but since it is a final class,
      * we have to copy all its contents, see bug #212935 for details
@@ -105,14 +107,14 @@ public class ConnectionEndPointEditPolicyEx extends ConnectionEndpointEditPolicy
         }
 
     }
-    
+
     /**
      * Overridding ConnectionStartHandle to change the tracker created.
      * @author <a href="http://www.intalio.com">Intalio Inc.</a>
      * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
      */
     private class ConnectionStartHandleEx extends ConnectionHandle {
-        
+
         /**
          * Creates a new ConnectionStartHandle, sets its owner to <code>owner</code>,
          * and sets its locator to a {@link ConnectionLocator}.
@@ -154,8 +156,8 @@ public class ConnectionEndPointEditPolicyEx extends ConnectionEndpointEditPolicy
             return tracker;
         }
 
-        }
-    
+    }
+
     /**
      * A subclass implementation of ConnectionEndPointTracker
      * to override its getTargetEditPart method in the case that we want
@@ -169,42 +171,71 @@ public class ConnectionEndPointEditPolicyEx extends ConnectionEndpointEditPolicy
         public ConnectionEndpointTrackerEx(ConnectionEditPart cep) {
             super(cep);
         }
-        
-        /**
-         * this is the interesting method down here,
-         * where we select the subprocess instead of a shapes inside of it.
-         */
-        @Override
-        protected EditPart getTargetEditPart() {
+
+    protected boolean updateTargetUnderMouse() {
+        if (!isTargetLocked()) {
+            EditPart editPart = getCurrentViewer().findObjectAtExcluding(
+                    getLocation(),
+                    getExclusionSet(),
+                    getTargetingConditional());
             if (getConnectionEditPart() instanceof SequenceEdgeEditPart) {
                 Graph g = ((SequenceEdge) ((SequenceEdgeEditPart) getConnectionEditPart()).
                         resolveSemanticElement()).getGraph();
-                if (super.getTargetEditPart() instanceof IGraphicalEditPart && 
-                        ((IGraphicalEditPart) super.getTargetEditPart()).resolveSemanticElement() instanceof Vertex) {
-                    Vertex target = (Vertex) ((IGraphicalEditPart) super.getTargetEditPart()).
-                    resolveSemanticElement();
+                
+                if (editPart instanceof IGraphicalEditPart && 
+                        !(((IGraphicalEditPart) editPart).resolveSemanticElement() instanceof Vertex)) {
+                    // it might be possible that no shape is available just under the cursor.
+                    // when changing the order of edges, we want to make possible that
+                    // people can drag the edge at the top of the shape, and at the bottom of the shape,
+                    // to the point that it isn't on the shape anymore.
+                    // this is particularly important for gateways
+                    // to do this let's try to find if an edit part is present in the 20 pixels up or down from the current mouse location.
+                    int offset = MapModeUtil.getMapMode(getConnection()).LPtoDP(20);
+                    editPart = getConnectionEditPart().getViewer().findObjectAt(getCurrentInput().
+                            getMouseLocation().getCopy().getTranslated(0, offset));
+                    if (editPart instanceof IGraphicalEditPart && 
+                            !(((IGraphicalEditPart) editPart).resolveSemanticElement() instanceof Vertex)) {
+                        editPart = getConnectionEditPart().getViewer().findObjectAt(getCurrentInput().
+                                getMouseLocation().getCopy().getTranslated(0, -offset));
+                    }
+                }
+
+                if (editPart instanceof IGraphicalEditPart && 
+                        ((IGraphicalEditPart) editPart).resolveSemanticElement() instanceof Vertex) {
+                    Vertex target = (Vertex) ((IGraphicalEditPart) editPart).resolveSemanticElement();
                     if (!target.getGraph().equals(g)) {
                         IGraphicalEditPart newT = findParentTarget(super.getTargetEditPart(), g);
                         if (newT != null) {
-                            return newT;
+                            editPart = newT;
                         }
                     }
                 }
             }
-            return super.getTargetEditPart();
-        }
-        
-        private IGraphicalEditPart findParentTarget(EditPart currentTarget, Graph toComplyWith) {
-            if (!(currentTarget instanceof IGraphicalEditPart)) {
-                return null;
-            }
-            if (currentTarget instanceof SubProcessEditPart && 
-                    toComplyWith.equals(((Vertex) ((IGraphicalEditPart) currentTarget).
-                            resolveSemanticElement()).getGraph())) {
-                return (IGraphicalEditPart) currentTarget;
-            }
-            return findParentTarget(currentTarget.getParent(), toComplyWith);
-        }
-        
+            if (editPart != null)
+                editPart = editPart.getTargetEditPart(getTargetRequest());
+            boolean changed = getTargetEditPart() != editPart;
+            setTargetEditPart(editPart);
+            return changed;
+        } else
+            return false;
     }
+    private IGraphicalEditPart findParentTarget(EditPart currentTarget, Graph toComplyWith) {
+        if (!(currentTarget instanceof IGraphicalEditPart)) {
+            return null;
+        }
+        if (currentTarget instanceof SubProcessEditPart && 
+                toComplyWith.equals(((Vertex) ((IGraphicalEditPart) currentTarget).
+                        resolveSemanticElement()).getGraph())) {
+            return (IGraphicalEditPart) currentTarget;
+        }
+        return findParentTarget(currentTarget.getParent(), toComplyWith);
+    }
+
+    @Override
+    protected Command getCommand() {
+        Command co = super.getCommand();
+        return co;
+    }
+
+}
 }

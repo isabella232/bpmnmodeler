@@ -32,76 +32,76 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface SubProcess extends Activity, Graph {
     /**
-	 * Returns the value of the '<em><b>Event Handlers</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.stp.bpmn.Activity}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Activity#getEventHandlerFor <em>Event Handler For</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Event Handlers</b></em>' containment reference list.
+     * The list contents are of type {@link org.eclipse.stp.bpmn.Activity}.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Activity#getEventHandlerFor <em>Event Handler For</em>}'.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Event Handlers</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Event Handlers</em>' containment reference list.
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getSubProcess_EventHandlers()
-	 * @see org.eclipse.stp.bpmn.Activity#getEventHandlerFor
-	 * @model opposite="eventHandlerFor" containment="true"
-	 *        extendedMetaData="kind='element' name='eventHandlers'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Event Handlers</em>' containment reference list.
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getSubProcess_EventHandlers()
+     * @see org.eclipse.stp.bpmn.Activity#getEventHandlerFor
+     * @model opposite="eventHandlerFor" containment="true"
+     *        extendedMetaData="kind='element' name='eventHandlers'"
+     * @generated
+     */
     EList<Activity> getEventHandlers();
 
     /**
-	 * Returns the value of the '<em><b>Is Transaction</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Is Transaction</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Is Transaction</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Is Transaction</em>' attribute.
-	 * @see #isSetIsTransaction()
-	 * @see #unsetIsTransaction()
-	 * @see #setIsTransaction(boolean)
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getSubProcess_IsTransaction()
-	 * @model unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean"
-	 *        extendedMetaData="kind='attribute' name='isTransaction'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Is Transaction</em>' attribute.
+     * @see #isSetIsTransaction()
+     * @see #unsetIsTransaction()
+     * @see #setIsTransaction(boolean)
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getSubProcess_IsTransaction()
+     * @model unsettable="true" dataType="org.eclipse.emf.ecore.xml.type.Boolean"
+     *        extendedMetaData="kind='attribute' name='isTransaction'"
+     * @generated
+     */
     boolean isIsTransaction();
 
     /**
-	 * Sets the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isIsTransaction <em>Is Transaction</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isIsTransaction <em>Is Transaction</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>Is Transaction</em>' attribute.
-	 * @see #isSetIsTransaction()
-	 * @see #unsetIsTransaction()
-	 * @see #isIsTransaction()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>Is Transaction</em>' attribute.
+     * @see #isSetIsTransaction()
+     * @see #unsetIsTransaction()
+     * @see #isIsTransaction()
+     * @generated
+     */
     void setIsTransaction(boolean value);
 
     /**
-	 * Unsets the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isIsTransaction <em>Is Transaction</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Unsets the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isIsTransaction <em>Is Transaction</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isSetIsTransaction()
-	 * @see #isIsTransaction()
-	 * @see #setIsTransaction(boolean)
-	 * @generated
-	 */
+     * @see #isSetIsTransaction()
+     * @see #isIsTransaction()
+     * @see #setIsTransaction(boolean)
+     * @generated
+     */
     void unsetIsTransaction();
 
     /**
-	 * Returns whether the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isIsTransaction <em>Is Transaction</em>}' attribute is set.
-	 * <!-- begin-user-doc -->
+     * Returns whether the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isIsTransaction <em>Is Transaction</em>}' attribute is set.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return whether the value of the '<em>Is Transaction</em>' attribute is set.
-	 * @see #unsetIsTransaction()
-	 * @see #isIsTransaction()
-	 * @see #setIsTransaction(boolean)
-	 * @generated
-	 */
+     * @return whether the value of the '<em>Is Transaction</em>' attribute is set.
+     * @see #unsetIsTransaction()
+     * @see #isIsTransaction()
+     * @see #setIsTransaction(boolean)
+     * @generated
+     */
     boolean isSetIsTransaction();
 
 } // SubProcess

@@ -384,18 +384,19 @@ public class TextAnnotationNameEditPart extends CompartmentEditPart implements
         }
         return parser;
     }
-
+    
     /**
-     * @generated
+     * @generated NOT: override the text cell editor class to support enter+shift and enter+alt to enter newlines.
      */
     protected DirectEditManager getManager() {
         if (manager == null) {
-            setManager(new TextDirectEditManager(this, TextDirectEditManager
+            setManager(new TextDirectEditManager(this, BpmnEditPartFactory
                     .getTextCellEditorClass(this), BpmnEditPartFactory
                     .getTextCellEditorLocator(this)));
         }
         return manager;
     }
+
 
     /**
      * @generated

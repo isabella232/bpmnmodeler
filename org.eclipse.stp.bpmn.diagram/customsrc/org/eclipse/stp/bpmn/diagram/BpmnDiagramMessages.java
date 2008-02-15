@@ -150,6 +150,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnDiagramsPreferencePage_author;
 
+    public static String BpmnDiagramsPreferencePage_bpmn_style;
+
     public static String BpmnDiagramsPreferencePage_collapse_expand_policy_label;
 
     public static String BpmnDiagramsPreferencePage_connection_assistant_appareance_delay_error_message;

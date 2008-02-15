@@ -137,6 +137,10 @@ public class BpmnDiagramPreferenceInitializer extends
     public static String PREF_SEQ_ROUTE_SMOOTH_FACTOR =  "bpmn.sequence.Connectors.route.smoothness"; //$NON-NLS-1$
     
     /**
+     * whether shapes should be shown in a BPMN 1.0 or BPMN 1.1 style.
+     */
+    public static final String PREF_BPMN1_1_STYLE = "bpmn.1.1.style";
+    /**
      * Initializes all the generic diagram preferences with their default
      * values. Override to initialize new preferences added.
      * 
@@ -183,6 +187,8 @@ public class BpmnDiagramPreferenceInitializer extends
             getPreferenceStore(),
             IPreferenceConstants.PREF_LINE_COLOR,
             lineColor.getRGB());
+        
+        getPreferenceStore().setDefault(PREF_BPMN1_1_STYLE, true);
     }
 
     /**

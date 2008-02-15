@@ -17,6 +17,7 @@ import org.eclipse.emf.ecore.provider.EModelElementItemProvider;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -40,13 +41,6 @@ public class IdentifiableItemProvider
         IItemLabelProvider,	
         IItemPropertySource {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -62,7 +56,8 @@ public class IdentifiableItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public List getPropertyDescriptors(Object object) {
+    @Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -82,8 +77,8 @@ public class IdentifiableItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Identifiable_iD_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Identifiable_iD_feature", "_UI_Identifiable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Identifiable_iD_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Identifiable_iD_feature", "_UI_Identifiable_type"),
                  BpmnPackage.Literals.IDENTIFIABLE__ID,
                  true,
                  false,
@@ -99,8 +94,9 @@ public class IdentifiableItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Identifiable")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Identifiable"));
     }
 
     /**
@@ -109,11 +105,12 @@ public class IdentifiableItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getText(Object object) {
         String label = ((Identifiable)object).getID();
         return label == null || label.length() == 0 ?
-            getString("_UI_Identifiable_type") : //$NON-NLS-1$
-            getString("_UI_Identifiable_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_Identifiable_type") :
+            getString("_UI_Identifiable_type") + " " + label;
     }
 
     /**
@@ -123,6 +120,7 @@ public class IdentifiableItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
@@ -135,13 +133,14 @@ public class IdentifiableItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+    @Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
     }
 
@@ -151,6 +150,7 @@ public class IdentifiableItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ResourceLocator getResourceLocator() {
         return BpmnEditPlugin.INSTANCE;
     }

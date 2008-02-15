@@ -21,12 +21,13 @@ import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartFactory;
+import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.tools.CellEditorLocator;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewType;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
@@ -203,6 +204,20 @@ public class BpmnEditPartFactory implements EditPartFactory {
             return new LabelCellEditorLocator((Label) figure);
         }
     }
+    /**
+     * @param source the <code>GraphicalEditPart</code> that is used to determine which
+     * <code>CellEditor</code> class to use.
+     * @return the <code>Class</code> of the <code>CellEditor</code> to use for the text editing.
+     */
+    public static final Class getTextCellEditorClass(GraphicalEditPart source){
+        IFigure figure = source.getFigure();
+                
+        if (figure instanceof WrapLabel && ((WrapLabel) figure).isTextWrapped())
+            return WrapTextCellEditorEx.class;
+        
+        return TextCellEditorEx.class;
+    }
+    
 
     /**
      * @generated

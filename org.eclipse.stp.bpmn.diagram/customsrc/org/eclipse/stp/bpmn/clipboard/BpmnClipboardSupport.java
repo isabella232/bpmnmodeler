@@ -580,7 +580,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     											act.getOutgoingMessages());
     									messages.remove(me);
     									act.eSet(
-    											BpmnPackage.eINSTANCE.getActivity_OutgoingMessages(),
+    											BpmnPackage.eINSTANCE.getMessageVertex_OutgoingMessages(),
     											messages);
 //  									List ordered = new ArrayList(act.getOrderedMessages());
 //  									ordered.remove(me);
@@ -617,7 +617,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     											act.getIncomingMessages());
     									messages.remove(me);
     									act.eSet(
-    											BpmnPackage.eINSTANCE.getActivity_IncomingMessages(),
+    											BpmnPackage.eINSTANCE.getMessageVertex_IncomingMessages(),
     											messages);
 //  									List ordered = new ArrayList(act.getOrderedMessages());
 //  									ordered.remove(me);

@@ -30,10 +30,10 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Identifiable;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
@@ -381,7 +381,7 @@ public class Activity2ItemSemanticEditPolicy extends
                          && ((FeatureMap.Entry) source.
                             getOrderedMessages().get(0))
                                .getEStructuralFeature().getFeatureID() ==
-                                BpmnPackage.ACTIVITY__OUTGOING_MESSAGES) {
+                                BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES) {
                         break;
                     }
                 case ActivityType.EVENT_END_COMPENSATION:
@@ -429,7 +429,7 @@ public class Activity2ItemSemanticEditPolicy extends
                         MessagingEdge firstMsgOfSource =
                         (MessagingEdge) fentry.getValue();
                         if (fentry.getEStructuralFeature().getFeatureID() ==
-                            BpmnPackage.ACTIVITY__INCOMING_MESSAGES &&
+                            BpmnPackage.MESSAGE_VERTEX__INCOMING_MESSAGES &&
                                 firstMsgOfSource.getSource() == target) {
                         // a little bent to the spec
                         // let's let the events be able to reply
@@ -532,7 +532,7 @@ public class Activity2ItemSemanticEditPolicy extends
             Association newElement = (Association) super
                     .doDefaultElementCreation();
             if (newElement != null) {
-                newElement.setTarget((IdentifiableNode) getTarget());
+                newElement.setTarget((AssociationTarget) getTarget());
                 newElement.setSource((Artifact) getSource());
             }
             return newElement;

@@ -21,10 +21,10 @@ import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
@@ -32,15 +32,10 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.tools.PoolResizeTracker;
@@ -168,15 +163,16 @@ public class ResizablePoolEditPolicy extends ResizableShapeEditPolicyEx {
         size.width = Math.max(size.width, minSize.width);
         size.height = Math.max(size.height, minSize.height);
         
-		ICommand resizeCommand = new SetBoundsCommand(editingDomain, 
-			DiagramUIMessages.SetAutoSizeCommand_Label,
-			new EObjectAdapter((View) getHost().getModel()), 
-			size);
-		return new ICommandProxy(resizeCommand);
+        ChangeBoundsRequest req = new ChangeBoundsRequest();
+        req.setEditParts(Collections.singletonList(getHost()));
+        req.setMoveDelta(new Point(0, 0));
+        Dimension currentSize = getHostFigure().getSize().getCopy();
+        req.setSizeDelta(new Dimension(size.width - currentSize.width, size.height - currentSize.height));
+        return getResizeCommand(req);
 	}
     
     /**
-     * Copied from PoolResizeTracker.
+     * Copied from PoolResizeTracker, but this time we care about lanes.
      * @param parts
      * @return the minimal dimension for the pool
      */
@@ -193,6 +189,9 @@ public class ResizablePoolEditPolicy extends ResizableShapeEditPolicyEx {
                 IGraphicalEditPart poolCompartment = pool
                         .getChildBySemanticHint(Integer
                                 .toString(PoolPoolCompartmentEditPart.VISUAL_ID));
+                if (poolCompartment == null) {
+                    continue;
+                }
                 int nameWidth = poolCompartment.getFigure().getBounds().x + 1;
                 
                 // now take in account the shapes in the pool

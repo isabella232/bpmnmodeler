@@ -993,6 +993,24 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                 figure.repaint();
             }
         }
+        if (NotationPackage.eINSTANCE.getSize_Width().equals(notification.getFeature()) ||
+                NotationPackage.eINSTANCE.getSize_Height().equals(notification.getFeature()) ||
+                NotationPackage.eINSTANCE.getLocation_X().equals(notification.getFeature()) ||
+                NotationPackage.eINSTANCE.getLocation_Y().equals(notification.getFeature()) ||
+                NotationPackage.eINSTANCE.getLocation().equals(notification.getFeature()) ||
+                NotationPackage.eINSTANCE.getLayoutConstraint().equals(notification.getFeature())) {
+            for (Object e : getSourceConnections()) {
+                if (e instanceof ConnectionEditPart) {
+                    ((ConnectionEditPart) e).getTarget().refresh();
+                }
+            }
+            for (Object e : getTargetConnections()) {
+                if (e instanceof ConnectionEditPart) {
+                    ((ConnectionEditPart) e).getSource().refresh();
+                }
+            }
+            refresh();
+        }
         super.handleNotificationEvent(notification);
     }
 
@@ -1130,6 +1148,9 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             int ind = 0;
             totalLength = outEdges.size();
             for (SequenceEdge edge : outEdges) {
+                if (!ActivityEditPart.isOrderImportant(this)) {
+                    i = ActivityEditPart.calculateBestPosition(edge, true, (Node) getModel());
+                }
                 setAnchorIndex(connIndex, edge, i, totalLength, true);
                 ind++;
             }
@@ -1139,6 +1160,9 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             int ind = 0;
             totalLength = inEdges.size();
             for (SequenceEdge edge : inEdges) {
+                if (!ActivityEditPart.isOrderImportant(this)) {
+                    i = ActivityEditPart.calculateBestPosition(edge, false, (Node) getModel());
+                }
                 setAnchorIndex(connIndex, edge, i, totalLength, false);
                 ind++;
             }

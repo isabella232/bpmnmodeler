@@ -43,245 +43,243 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  *
  * @generated
  */
-public class VertexImpl extends IdentifiableNodeImpl implements Vertex {
+public class VertexImpl extends AssociationTargetImpl implements Vertex {
     /**
-	 * The cached value of the '{@link #getOutgoingEdges() <em>Outgoing Edges</em>}' reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getOutgoingEdges() <em>Outgoing Edges</em>}' reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getOutgoingEdges()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getOutgoingEdges()
+     * @generated
+     * @ordered
+     */
     protected EList<SequenceEdge> outgoingEdges;
 
     /**
-	 * The cached value of the '{@link #getIncomingEdges() <em>Incoming Edges</em>}' reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getIncomingEdges() <em>Incoming Edges</em>}' reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getIncomingEdges()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getIncomingEdges()
+     * @generated
+     * @ordered
+     */
     protected EList<SequenceEdge> incomingEdges;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected VertexImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				protected EClass eStaticClass() {
-		return BpmnPackage.Literals.VERTEX;
-	}
+        return BpmnPackage.Literals.VERTEX;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<SequenceEdge> getOutgoingEdges() {
-		if (outgoingEdges == null) {
-			outgoingEdges = new EObjectWithInverseResolvingEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__OUTGOING_EDGES, BpmnPackage.SEQUENCE_EDGE__SOURCE);
-		}
-		return outgoingEdges;
-	}
+        if (outgoingEdges == null) {
+            outgoingEdges = new EObjectWithInverseResolvingEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__OUTGOING_EDGES, BpmnPackage.SEQUENCE_EDGE__SOURCE);
+        }
+        return outgoingEdges;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<SequenceEdge> getIncomingEdges() {
-		if (incomingEdges == null) {
-			incomingEdges = new EObjectWithInverseResolvingEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__INCOMING_EDGES, BpmnPackage.SEQUENCE_EDGE__TARGET);
-		}
-		return incomingEdges;
-	}
+        if (incomingEdges == null) {
+            incomingEdges = new EObjectWithInverseResolvingEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__INCOMING_EDGES, BpmnPackage.SEQUENCE_EDGE__TARGET);
+        }
+        return incomingEdges;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public Graph getGraph() {
-		if (eContainerFeatureID != BpmnPackage.VERTEX__GRAPH) return null;
-		return (Graph)eContainer();
-	}
+        if (eContainerFeatureID != BpmnPackage.VERTEX__GRAPH) return null;
+        return (Graph)eContainer();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public NotificationChain basicSetGraph(Graph newGraph, NotificationChain msgs) {
-		msgs = eBasicSetContainer((InternalEObject)newGraph, BpmnPackage.VERTEX__GRAPH, msgs);
-		return msgs;
-	}
+        msgs = eBasicSetContainer((InternalEObject)newGraph, BpmnPackage.VERTEX__GRAPH, msgs);
+        return msgs;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setGraph(Graph newGraph) {
-		if (newGraph != eInternalContainer() || (eContainerFeatureID != BpmnPackage.VERTEX__GRAPH && newGraph != null)) {
-			if (EcoreUtil.isAncestor(this, newGraph))
-				throw new IllegalArgumentException(BpmnMessages.bind(
-						BpmnMessages.VertexImpl_recursiveContainment,
-						toString()));
-			NotificationChain msgs = null;
-			if (eInternalContainer() != null)
-				msgs = eBasicRemoveFromContainer(msgs);
-			if (newGraph != null)
-				msgs = ((InternalEObject)newGraph).eInverseAdd(this, BpmnPackage.GRAPH__VERTICES, Graph.class, msgs);
-			msgs = basicSetGraph(newGraph, msgs);
-			if (msgs != null) msgs.dispatch();
-		}
-		else if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.VERTEX__GRAPH, newGraph, newGraph));
-	}
+        if (newGraph != eInternalContainer() || (eContainerFeatureID != BpmnPackage.VERTEX__GRAPH && newGraph != null)) {
+            if (EcoreUtil.isAncestor(this, newGraph))
+                throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
+            NotificationChain msgs = null;
+            if (eInternalContainer() != null)
+                msgs = eBasicRemoveFromContainer(msgs);
+            if (newGraph != null)
+                msgs = ((InternalEObject)newGraph).eInverseAdd(this, BpmnPackage.GRAPH__VERTICES, Graph.class, msgs);
+            msgs = basicSetGraph(newGraph, msgs);
+            if (msgs != null) msgs.dispatch();
+        }
+        else if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.VERTEX__GRAPH, newGraph, newGraph));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.VERTEX__OUTGOING_EDGES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingEdges()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.VERTEX__INCOMING_EDGES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingEdges()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.VERTEX__GRAPH:
-				if (eInternalContainer() != null)
-					msgs = eBasicRemoveFromContainer(msgs);
-				return basicSetGraph((Graph)otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.VERTEX__OUTGOING_EDGES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingEdges()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.VERTEX__INCOMING_EDGES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getIncomingEdges()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.VERTEX__GRAPH:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetGraph((Graph)otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.VERTEX__OUTGOING_EDGES:
-				return ((InternalEList<?>)getOutgoingEdges()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.VERTEX__INCOMING_EDGES:
-				return ((InternalEList<?>)getIncomingEdges()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.VERTEX__GRAPH:
-				return basicSetGraph(null, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.VERTEX__OUTGOING_EDGES:
+                return ((InternalEList<?>)getOutgoingEdges()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.VERTEX__INCOMING_EDGES:
+                return ((InternalEList<?>)getIncomingEdges()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.VERTEX__GRAPH:
+                return basicSetGraph(null, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-		switch (eContainerFeatureID) {
-			case BpmnPackage.VERTEX__GRAPH:
-				return eInternalContainer().eInverseRemove(this, BpmnPackage.GRAPH__VERTICES, Graph.class, msgs);
-		}
-		return super.eBasicRemoveFromContainerFeature(msgs);
-	}
+        switch (eContainerFeatureID) {
+            case BpmnPackage.VERTEX__GRAPH:
+                return eInternalContainer().eInverseRemove(this, BpmnPackage.GRAPH__VERTICES, Graph.class, msgs);
+        }
+        return super.eBasicRemoveFromContainerFeature(msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case BpmnPackage.VERTEX__OUTGOING_EDGES:
-				return getOutgoingEdges();
-			case BpmnPackage.VERTEX__INCOMING_EDGES:
-				return getIncomingEdges();
-			case BpmnPackage.VERTEX__GRAPH:
-				return getGraph();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case BpmnPackage.VERTEX__OUTGOING_EDGES:
+                return getOutgoingEdges();
+            case BpmnPackage.VERTEX__INCOMING_EDGES:
+                return getIncomingEdges();
+            case BpmnPackage.VERTEX__GRAPH:
+                return getGraph();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case BpmnPackage.VERTEX__OUTGOING_EDGES:
-				getOutgoingEdges().clear();
-				getOutgoingEdges().addAll((Collection<? extends SequenceEdge>)newValue);
-				return;
-			case BpmnPackage.VERTEX__INCOMING_EDGES:
-				getIncomingEdges().clear();
-				getIncomingEdges().addAll((Collection<? extends SequenceEdge>)newValue);
-				return;
-			case BpmnPackage.VERTEX__GRAPH:
-				setGraph((Graph)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case BpmnPackage.VERTEX__OUTGOING_EDGES:
+                getOutgoingEdges().clear();
+                getOutgoingEdges().addAll((Collection<? extends SequenceEdge>)newValue);
+                return;
+            case BpmnPackage.VERTEX__INCOMING_EDGES:
+                getIncomingEdges().clear();
+                getIncomingEdges().addAll((Collection<? extends SequenceEdge>)newValue);
+                return;
+            case BpmnPackage.VERTEX__GRAPH:
+                setGraph((Graph)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public void eUnset(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.VERTEX__OUTGOING_EDGES:
-				getOutgoingEdges().clear();
-				return;
-			case BpmnPackage.VERTEX__INCOMING_EDGES:
-				getIncomingEdges().clear();
-				return;
-			case BpmnPackage.VERTEX__GRAPH:
-				setGraph((Graph)null);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.VERTEX__OUTGOING_EDGES:
+                getOutgoingEdges().clear();
+                return;
+            case BpmnPackage.VERTEX__INCOMING_EDGES:
+                getIncomingEdges().clear();
+                return;
+            case BpmnPackage.VERTEX__GRAPH:
+                setGraph((Graph)null);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.VERTEX__OUTGOING_EDGES:
-				return outgoingEdges != null && !outgoingEdges.isEmpty();
-			case BpmnPackage.VERTEX__INCOMING_EDGES:
-				return incomingEdges != null && !incomingEdges.isEmpty();
-			case BpmnPackage.VERTEX__GRAPH:
-				return getGraph() != null;
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.VERTEX__OUTGOING_EDGES:
+                return outgoingEdges != null && !outgoingEdges.isEmpty();
+            case BpmnPackage.VERTEX__INCOMING_EDGES:
+                return incomingEdges != null && !incomingEdges.isEmpty();
+            case BpmnPackage.VERTEX__GRAPH:
+                return getGraph() != null;
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //VertexImpl

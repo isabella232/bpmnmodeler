@@ -18,6 +18,7 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -43,13 +44,6 @@ public class NamedBpmnObjectItemProvider
         IItemLabelProvider,	
         IItemPropertySource {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -65,7 +59,8 @@ public class NamedBpmnObjectItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public List getPropertyDescriptors(Object object) {
+    @Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -87,8 +82,8 @@ public class NamedBpmnObjectItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_documentation_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -109,8 +104,8 @@ public class NamedBpmnObjectItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_name_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -131,8 +126,8 @@ public class NamedBpmnObjectItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_ncname_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
                  true,
                  false,
@@ -148,8 +143,9 @@ public class NamedBpmnObjectItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/NamedBpmnObject")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/NamedBpmnObject"));
     }
 
     /**
@@ -158,11 +154,12 @@ public class NamedBpmnObjectItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getText(Object object) {
         String label = ((NamedBpmnObject)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_NamedBpmnObject_type") : //$NON-NLS-1$
-            getString("_UI_NamedBpmnObject_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_NamedBpmnObject_type") :
+            getString("_UI_NamedBpmnObject_type") + " " + label;
     }
 
     /**
@@ -172,6 +169,7 @@ public class NamedBpmnObjectItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
@@ -186,13 +184,14 @@ public class NamedBpmnObjectItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+    @Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
     }
 
@@ -202,6 +201,7 @@ public class NamedBpmnObjectItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ResourceLocator getResourceLocator() {
         return BpmnEditPlugin.INSTANCE;
     }

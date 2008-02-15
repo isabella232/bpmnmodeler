@@ -35,12 +35,13 @@ public class ConnectionAnchorFactory implements IConnectionAnchorFactory {
 
     public static ConnectionAnchorFactory INSTANCE = new ConnectionAnchorFactory();
     
+    private IModelAwareAnchorSupport modelAwareAnchorSupport = new BpmnAwareAnchorSupport();
     /**
      * @return The object in charge of computing the coordinates of a
      * model aware anchor
      */
     protected IModelAwareAnchorSupport getModelAwareAnchorSupport() {
-        return BpmnAwareAnchorSupport.INSTANCE;
+        return modelAwareAnchorSupport;
     }
     
     /**

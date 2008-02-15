@@ -28,22 +28,22 @@ import org.eclipse.emf.ecore.EObject;
  */
 public interface ArtifactsContainer extends NamedBpmnObject {
     /**
-	 * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list.
-	 * The list contents are of type {@link org.eclipse.stp.bpmn.Artifact}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Artifact#getArtifactsContainer <em>Artifacts Container</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Artifacts</b></em>' containment reference list.
+     * The list contents are of type {@link org.eclipse.stp.bpmn.Artifact}.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Artifact#getArtifactsContainer <em>Artifacts Container</em>}'.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Artifacts</em>' containment reference list isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>Artifacts</em>' containment reference list.
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getArtifactsContainer_Artifacts()
-	 * @see org.eclipse.stp.bpmn.Artifact#getArtifactsContainer
-	 * @model opposite="artifactsContainer" containment="true"
-	 *        extendedMetaData="kind='element' name='artifacts'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Artifacts</em>' containment reference list.
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getArtifactsContainer_Artifacts()
+     * @see org.eclipse.stp.bpmn.Artifact#getArtifactsContainer
+     * @model opposite="artifactsContainer" containment="true"
+     *        extendedMetaData="kind='element' name='artifacts'"
+     * @generated
+     */
     EList<Artifact> getArtifacts();
 
 } // ArtifactsContainer

@@ -34,243 +34,243 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  */
 public class NamedBpmnObjectImpl extends EObjectImpl implements NamedBpmnObject {
     /**
-	 * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
     protected static final String DOCUMENTATION_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
     protected String documentation = DOCUMENTATION_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
     protected static final String NAME_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
     protected String name = NAME_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getNcname()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getNcname()
+     * @generated
+     * @ordered
+     */
     protected static final String NCNAME_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getNcname()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getNcname()
+     * @generated
+     * @ordered
+     */
     protected String ncname = NCNAME_EDEFAULT;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected NamedBpmnObjectImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				protected EClass eStaticClass() {
-		return BpmnPackage.Literals.NAMED_BPMN_OBJECT;
-	}
+        return BpmnPackage.Literals.NAMED_BPMN_OBJECT;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getDocumentation() {
-		return documentation;
-	}
+        return documentation;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setDocumentation(String newDocumentation) {
-		String oldDocumentation = documentation;
-		documentation = newDocumentation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION, oldDocumentation, documentation));
-	}
+        String oldDocumentation = documentation;
+        documentation = newDocumentation;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION, oldDocumentation, documentation));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.NAMED_BPMN_OBJECT__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.NAMED_BPMN_OBJECT__NAME, oldName, name));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getNcname() {
-		return ncname;
-	}
+        return ncname;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setNcname(String newNcname) {
-		String oldNcname = ncname;
-		ncname = newNcname;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.NAMED_BPMN_OBJECT__NCNAME, oldNcname, ncname));
-	}
+        String oldNcname = ncname;
+        ncname = newNcname;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.NAMED_BPMN_OBJECT__NCNAME, oldNcname, ncname));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
-				return getDocumentation();
-			case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
-				return getName();
-			case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
-				return getNcname();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
+                return getDocumentation();
+            case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
+                return getName();
+            case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
+                return getNcname();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
-				setDocumentation((String)newValue);
-				return;
-			case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
-				setName((String)newValue);
-				return;
-			case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
-				setNcname((String)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
+                setDocumentation((String)newValue);
+                return;
+            case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
+                setName((String)newValue);
+                return;
+            case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
+                setNcname((String)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public void eUnset(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
-				setDocumentation(DOCUMENTATION_EDEFAULT);
-				return;
-			case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
-				setNcname(NCNAME_EDEFAULT);
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
+                setDocumentation(DOCUMENTATION_EDEFAULT);
+                return;
+            case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
+                setNcname(NCNAME_EDEFAULT);
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
-				return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
-			case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
-				return NCNAME_EDEFAULT == null ? ncname != null : !NCNAME_EDEFAULT.equals(ncname);
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION:
+                return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
+            case BpmnPackage.NAMED_BPMN_OBJECT__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME:
+                return NCNAME_EDEFAULT == null ? ncname != null : !NCNAME_EDEFAULT.equals(ncname);
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(BpmnMessages.NamedBpmnObjectImpl_doc);
-		result.append(documentation);
-		result.append(BpmnMessages.NamedBpmnObjectImpl_name);
-		result.append(name);
-		result.append(BpmnMessages.NamedBpmnObjectImpl_ncname);
-		result.append(ncname);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (documentation: ");
+        result.append(documentation);
+        result.append(", name: ");
+        result.append(name);
+        result.append(", ncname: ");
+        result.append(ncname);
+        result.append(')');
+        return result.toString();
+    }
 
 } //NamedBpmnObjectImpl

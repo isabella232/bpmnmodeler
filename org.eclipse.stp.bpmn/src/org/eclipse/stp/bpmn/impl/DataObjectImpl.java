@@ -21,22 +21,22 @@ import org.eclipse.stp.bpmn.DataObject;
  */
 public class DataObjectImpl extends ArtifactImpl implements DataObject {
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected DataObjectImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return BpmnPackage.Literals.DATA_OBJECT;
-	}
+        return BpmnPackage.Literals.DATA_OBJECT;
+    }
 
 } //DataObjectImpl

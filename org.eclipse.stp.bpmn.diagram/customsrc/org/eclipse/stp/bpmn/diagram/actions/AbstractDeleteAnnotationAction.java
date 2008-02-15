@@ -161,15 +161,15 @@ public abstract class AbstractDeleteAnnotationAction extends AbstractActionHandl
 	            		(IGraphicalEditPart)
 	            		((IStructuredSelection) selection).getFirstElement();
 	            	if (part != null && part.getNotationView() != null) {
-	            		EModelElement elt = (EModelElement)
-	            		part.getNotationView().getElement();
+	            	    if (part.resolveSemanticElement() instanceof EModelElement) {
+	            	        EModelElement elt = (EModelElement) part.resolveSemanticElement();
 
-	            		if (
-	            	elt.getEAnnotation(getAnnotationSource()) != null) {
-	            			selectedElt = elt;
-	            			selectedPart = part;
-	            			return;
-	            		}
+	            	        if (elt.getEAnnotation(getAnnotationSource()) != null) {
+	            	            selectedElt = elt;
+	            	            selectedPart = part;
+	            	            return;
+	            	        }
+	            	    }
 	            	}
 	            }
 	        }

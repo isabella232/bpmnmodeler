@@ -38,9 +38,9 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Graph;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.Vertex;
@@ -64,7 +64,9 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
         Pool pool = (Pool) view.getElement();
         
         IDiagramGraphicalViewer viewer = (IDiagramGraphicalViewer) getHost().getViewer();
-        destroyMessagingEdges(pool,viewer,command);
+        if (pool != null) {
+            destroyMessagingEdges(pool, viewer, command);
+        }
         command.add(getMSLWrapper(new DestroyElementCommand(req) {
 
             protected EObject getElementToDestroy() {
@@ -176,7 +178,7 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
             Association newElement = (Association) super
                     .doDefaultElementCreation();
             if (newElement != null) {
-                newElement.setTarget((IdentifiableNode) getTarget());
+                newElement.setTarget((AssociationTarget) getTarget());
                 newElement.setSource((Artifact) getSource());
             }
             return newElement;

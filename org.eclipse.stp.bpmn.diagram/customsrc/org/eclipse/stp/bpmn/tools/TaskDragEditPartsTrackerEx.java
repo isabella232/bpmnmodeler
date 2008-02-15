@@ -34,10 +34,13 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Artifact;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.swt.graphics.Cursor;
 
 /**
@@ -120,7 +123,7 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
         		return false;
         	}
         	for (Object msg : a.getOutgoingMessages()) {
-        		Activity target = ((MessagingEdge) msg).getTarget();
+        	    MessageVertex target = ((MessagingEdge) msg).getTarget();
         		if (targetPool.equals(getPool(target))) {
         			// you cannot move your activity to a pool
         			// on which you have a connection
@@ -129,7 +132,7 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
         	}
         		
         	for (Object msg : a.getIncomingMessages()) {
-        		Activity src = ((MessagingEdge) msg).getSource();
+        	    MessageVertex src = ((MessagingEdge) msg).getSource();
         		if (targetPool.equals(getPool(src))) {
         			// you cannot move your activity to a pool
         			// on which you have a connection
@@ -241,7 +244,9 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
         if (isMove() && DO_FIX_LOCATION_TO_AVOID_OVERLAP &&
                 getTargetEditPart() != null && getTargetEditPart() instanceof IGraphicalEditPart) {
             IGraphicalEditPart currTarget = (IGraphicalEditPart) getTargetEditPart();
-            if (currTarget instanceof DataObjectEditPart) {
+            if (currTarget instanceof DataObjectEditPart || 
+                    currTarget instanceof GroupEditPart || 
+                    currTarget instanceof Group2EditPart) {
                 //nevermind overlaps with dataobjecteditpart
                 //act as if they are transparent
                 currTarget = (IGraphicalEditPart)currTarget.getParent();
@@ -261,7 +266,9 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
                 srcEp.getFigure().translateToAbsolute(_tmp2);
                 for (Object ep : currTarget.getChildren()) {
                     if (ep != srcEp && ep instanceof IGraphicalEditPart &&
-                            !(ep instanceof DataObjectEditPart)) {
+                            !((ep instanceof DataObjectEditPart) || 
+                                    (ep instanceof GroupEditPart) || 
+                                    (ep instanceof Group2EditPart))) {
                         IGraphicalEditPart sibling = (IGraphicalEditPart)ep;
                         _tmp.setBounds(sibling.getFigure().getBounds());
                         sibling.getFigure().translateToAbsolute(_tmp);

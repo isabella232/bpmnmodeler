@@ -17,9 +17,10 @@
 package org.eclipse.stp.bpmn.tools;
 
 import java.lang.reflect.Field;
+import java.util.Collections;
 
-import org.eclipse.draw2d.Cursors;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
@@ -31,11 +32,13 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.SelectionTool;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
+import org.eclipse.gef.tools.TargetingTool;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
@@ -44,8 +47,6 @@ import org.eclipse.stp.bpmn.dnd.file.FileDnDConstants;
 import org.eclipse.stp.bpmn.policies.PopupBarEditPolicyEx;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
-import org.eclipse.swt.events.MouseEvent;
-import org.eclipse.swt.graphics.Cursor;
 
 /**
  * Extends the default selection tool and overrides it to behave in this manner:
@@ -167,8 +168,7 @@ public class SelectionToolEx extends SelectionTool {
     @Override
     protected boolean handleKeyDown(KeyEvent e) {
     	if (e.stateMask == SWT.CTRL && e.keyCode == ' ') {
-    		EditPartViewer viewer = getCurrentViewer();
-            EditPart part = viewer.findObjectAt(getLocation());
+            EditPart part = getTargetEditPart();
             if (!(part instanceof IGraphicalEditPart)) {
                 return super.handleKeyDown(e);
             }
@@ -258,4 +258,38 @@ public class SelectionToolEx extends SelectionTool {
         super.mouseMove(me, viewer);
     }*/
     
+    /**
+     * Overridden for groups. We only select them when the cursor
+     * is placed at less than 5 pixels from the border of the groups,
+     * otherwise the parent of the group is selected.
+     */
+    @Override
+    protected boolean updateTargetUnderMouse() {
+        boolean updated = super.updateTargetUnderMouse();
+
+        if (getTargetEditPart() instanceof GroupEditPart || 
+                getTargetEditPart() instanceof Group2EditPart) {
+            IGraphicalEditPart part = (IGraphicalEditPart) getTargetEditPart();
+            Rectangle rect = part.getFigure().getBounds().getCopy();
+            Point loc = getLocation().getCopy();
+//          part.getFigure().translateToAbsolute(rect);
+            part.getFigure().translateToRelative(loc);
+            boolean onX = Math.abs(loc.x - rect.x) < 5 ||
+            Math.abs(loc.x - (rect.x + rect.width)) < 5;
+            boolean onY = Math.abs(loc.y - rect.y) < 5 ||
+            Math.abs(loc.y - (rect.y + rect.height)) < 5;
+            if (!(onX || onY)) {
+                EditPart res = part.getViewer().findObjectAtExcluding(
+                        getLocation(), Collections.singletonList(part.getFigure()), 
+                        new EditPartViewer.Conditional() {
+
+                            public boolean evaluate(EditPart editpart) {
+                                return editpart.isSelectable();
+                            }});
+                setTargetEditPart(res);
+                updated = true;
+            }
+        }
+        return updated;
+    }
 }

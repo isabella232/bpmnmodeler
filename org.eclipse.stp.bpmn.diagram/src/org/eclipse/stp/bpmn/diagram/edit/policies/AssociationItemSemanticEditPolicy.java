@@ -18,7 +18,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.stp.bpmn.Association;
-import org.eclipse.stp.bpmn.IdentifiableNode;
+import org.eclipse.stp.bpmn.AssociationTarget;
 
 /**
  * @generated
@@ -40,7 +40,7 @@ public class AssociationItemSemanticEditPolicy extends
             protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info)
             throws ExecutionException {
                 Association el = (Association) super.getElementToDestroy();
-                IdentifiableNode a = null;
+                AssociationTarget a = null;
                 if (el.getTarget() != null) {
                     a = el.getTarget();
                 }

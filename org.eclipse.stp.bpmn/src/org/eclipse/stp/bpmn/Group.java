@@ -26,22 +26,22 @@ import org.eclipse.emf.common.util.EList;
  */
 public interface Group extends Artifact {
     /**
-	 * Returns the value of the '<em><b>Activities</b></em>' reference list.
-	 * The list contents are of type {@link org.eclipse.stp.bpmn.Activity}.
-	 * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Activity#getGroups <em>Groups</em>}'.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>Activities</b></em>' reference list.
+     * The list contents are of type {@link org.eclipse.stp.bpmn.Activity}.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Activity#getGroups <em>Groups</em>}'.
+     * <!-- begin-user-doc -->
 	 * <p>
 	 * If the meaning of the '<em>Activities</em>' reference list isn't clear,
 	 * there really should be more of a description here...
 	 * </p>
 	 * <!-- end-user-doc -->
-	 * @return the value of the '<em>Activities</em>' reference list.
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getGroup_Activities()
-	 * @see org.eclipse.stp.bpmn.Activity#getGroups
-	 * @model opposite="groups" resolveProxies="false"
-	 *        extendedMetaData="kind='element' name='activities'"
-	 * @generated
-	 */
+     * @return the value of the '<em>Activities</em>' reference list.
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getGroup_Activities()
+     * @see org.eclipse.stp.bpmn.Activity#getGroups
+     * @model opposite="groups" resolveProxies="false"
+     *        extendedMetaData="kind='element' name='activities'"
+     * @generated
+     */
 	EList<Activity> getActivities();
 
 } // Group

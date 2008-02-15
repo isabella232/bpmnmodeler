@@ -43,6 +43,8 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.stp.bpmn.Artifact;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
@@ -73,9 +75,8 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
         return p;
     }
     
-    private int divideByZoom(int i) {
-        ZoomManager zoom = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
-        return (int) Math.floor(i/zoom.getZoom());
+    private double getZoom() {
+        return ((DiagramRootEditPart) getHost().getRoot()).getZoomManager().getZoom();
     }
     
     private Dimension divideByZoom(Dimension p) {
@@ -94,6 +95,16 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
         if (request.getMoveDelta().x == 0 && request.getMoveDelta().y == 0 &&
                 request.getSizeDelta().width == 0 && request.getSizeDelta().height == 0) {
             return null;
+        }
+        
+     // let's skip groups, they do not resize the subprocess.
+        boolean onlyContainsGroups = true;
+        for (Object o : request.getEditParts()) {
+            onlyContainsGroups = onlyContainsGroups && (
+                    o instanceof GroupEditPart || o instanceof Group2EditPart);
+        }
+        if (onlyContainsGroups) {
+            return super.getResizeChildrenCommand(request);
         }
         
     	List<Request> requests = chunkNegativeMove(request);
@@ -186,24 +197,23 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
     		return null;
     	}
     	boolean isNegative = false;
-		Point maxMove = new Point(request.getMoveDelta().x, 
-				request.getMoveDelta().y);
+		Point maxMove = divideByZoom(request.getMoveDelta().getCopy());
 		for (Object ep : request.getEditParts()) {
 			Point loc = ((GraphicalEditPart) ep).getFigure().getBounds().
 				getLocation().getCopy();
-			int xmove = loc.x + request.getMoveDelta().x - INSETS.left;
+			int xmove = (int) (loc.x + request.getMoveDelta().x/getZoom() - INSETS.left);
 			if (xmove <= 0) {
 				maxMove.x =  -loc.x + INSETS.left ;
 				isNegative = true;
 			}
-			int ymove = loc.y + request.getMoveDelta().y - INSETS.top;
+			int ymove = (int) (loc.y + request.getMoveDelta().y/getZoom() - INSETS.top);
 			if (ymove <= 0) {
 				maxMove.y = -loc.y + INSETS.top;
 				isNegative = true;
 			}
 		}
-		Point p = new Point(request.getMoveDelta().x - maxMove.x, 
-				request.getMoveDelta().y - maxMove.y);
+		Point p = new Point(request.getMoveDelta().x/getZoom() - maxMove.x, 
+				request.getMoveDelta().y/getZoom() - maxMove.y);
 		request.setMoveDelta(maxMove);
 //		 one last test. Maybe the move is negative and going too far.
 		// we have modified the request already
@@ -216,6 +226,7 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
 			// |___________________
 			
 			int toobigy = request.getMoveDelta().y + request.getSizeDelta().height;
+			toobigy /= getZoom();
 			int maxHeight = 0;
 			for (Object ep : request.getEditParts()) {
 				maxHeight = Math.max(maxHeight, ((GraphicalEditPart) ep).
@@ -237,6 +248,7 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
 			 */
 			
 			int toobigx = request.getMoveDelta().x + request.getSizeDelta().width;
+			toobigx /= getZoom();
 			int maxWidth = 0;
 			for (Object ep : request.getEditParts()) {
 				maxWidth = Math.max(maxWidth, ((GraphicalEditPart) ep).
@@ -375,20 +387,17 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
     		}
     		
     		Rectangle r = part.getFigure().getBounds().getCopy();
-//    		getHostFigure().translateToAbsolute(r);
-//    		getHostFigure().translateToRelative(r); // no don't 
     		int w = r.x + r.width;
     		if (request.getEditParts().contains(part) || 
     		        getHost().getViewer().getSelectedEditParts().contains(part)) {
-    			w += divideByZoom(request.getSizeDelta()).width + 
-    			    divideByZoom(request.getMoveDelta()).x;
+    			w += (request.getSizeDelta().width + request.getMoveDelta().x)/getZoom();
     		} 
     		dim.width = Math.max(dim.width, w);
     		int h = r.y + r.height;
     		if (request.getEditParts().contains(part) || 
                     getHost().getViewer().getSelectedEditParts().contains(part)) {
-    			h += divideByZoom(request.getSizeDelta()).height + 
-    			    divideByZoom(request.getMoveDelta()).y;
+    			h += (request.getSizeDelta().height + 
+    			    request.getMoveDelta().y)/getZoom();
     		}
     		dim.height = Math.max(dim.height, h);
     	}
@@ -399,6 +408,7 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
     	dim.height = dim.height - initialdim.height + 
     	    spFigure.getFigureSubProcessBorderFigure().getBorderHeight() + 
     	    spFigure.getFigureSubProcessNameFigure().getBounds().height  + INSETS.getHeight();
+    	
     	dim.width = Math.max(dim.width, 0);
     	dim.height = Math.max(dim.height, 0);
     	
@@ -477,8 +487,8 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
         
         for (Object child : getHost().getChildren()) {
             IGraphicalEditPart part = (IGraphicalEditPart) child;
-            if (request.getEditParts().contains(part)) {
-                continue; // TODO support collision on multi selection
+            if (getHost().getRoot().getViewer().getSelectedEditParts().contains(part)) {
+                continue;
             }
             //compute a slitghly smaller bound as we want to allow a small overlap.
             Rectangle childInnerBounds = new Rectangle(part.getFigure().getBounds());
@@ -572,6 +582,14 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
             Rectangle requestedNewBounds,
             IGraphicalEditPart overlappingPart,
             CompoundCommand theCommand) {
+        if (movedPart instanceof GroupEditPart || 
+                movedPart instanceof Group2EditPart) {
+            return false;
+        } else if (overlappingPart instanceof GroupEditPart || 
+                overlappingPart instanceof Group2EditPart) {
+            return false;
+        }
+        
         return true;
     }
 

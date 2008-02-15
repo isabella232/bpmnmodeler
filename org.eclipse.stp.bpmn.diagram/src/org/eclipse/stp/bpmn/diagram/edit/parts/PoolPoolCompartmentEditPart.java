@@ -22,6 +22,7 @@ import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EMap;
@@ -36,6 +37,7 @@ import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.SnapToGuides;
 import org.eclipse.gef.SnapToHelper;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.rulers.RulerProvider;
 import org.eclipse.gef.tools.DeselectAllTracker;
@@ -48,10 +50,12 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.policies.PoolPoolCompartmentCanonicalEditPolicy;
@@ -232,15 +236,19 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
         if (model != null && model instanceof View) {
             List list = ((View) model).getVisibleChildren();
             List res = new ArrayList();
+            List groups = new ArrayList();
             for (Object object : list) {
                 Node node = (Node) object;
                 if (node.getType().equals(
                         Integer.toString(LaneEditPart.VISUAL_ID))) {
                     res.add(0, object);
+                } else if (node.getType().equals(Integer.toString(GroupEditPart.VISUAL_ID))) {
+                    groups.add(object);
                 } else {
                     res.add(object);
                 }
             }
+            res.addAll(groups);
             return res;
         }
         return Collections.EMPTY_LIST;
@@ -313,7 +321,9 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
     
     
     /**
-     * @notgenerated
+     * @generated NOT
+     * -handles the collapse expand notification.
+     * -makes sure the lanes will fit with all the available space on lane deletion
      */
     @Override
     protected void handleNotificationEvent(Notification event) {
@@ -321,6 +331,28 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
         if (NotationPackage.eINSTANCE.getDrawerStyle_Collapsed()
                 .equals(feature)) {
             handleCollapseExpand();
+        } else if (event.getEventType() == Notification.REMOVE || 
+                        event.getEventType() == Notification.REMOVE_MANY) {
+            boolean isLane = false;
+            if (event.getOldValue() instanceof List) {
+                for (Object elt : (List) event.getOldValue()) {
+                    if (elt instanceof Node && 
+                            Integer.toString(LaneEditPart.VISUAL_ID).equals(((Node) elt).getType())) {
+                        isLane = true;
+                        break;
+                    }
+                }
+            } else {
+                isLane = event.getOldValue() instanceof Node && 
+                    Integer.toString(LaneEditPart.VISUAL_ID).equals(((Node) event.getOldValue()).getType());
+            }
+            if (isLane) {
+                ChangeBoundsRequest dummyRequest = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE_CHILDREN);
+                dummyRequest.setEditParts(Collections.EMPTY_LIST);
+                dummyRequest.setMoveDelta(Point.SINGLETON.getCopy());
+                dummyRequest.setSizeDelta(Dimension.SINGLETON.getCopy());
+                getCommand(dummyRequest).execute();
+            }
         }
         super.handleNotificationEvent(event);
     }

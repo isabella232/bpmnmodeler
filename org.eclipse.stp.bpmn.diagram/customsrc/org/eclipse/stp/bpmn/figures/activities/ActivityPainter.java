@@ -24,10 +24,13 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.TextFlow;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip.IToolTipProvider;
 import org.eclipse.swt.SWT;
 
@@ -39,6 +42,10 @@ import org.eclipse.swt.SWT;
  */
 public class ActivityPainter {
     
+    private static boolean isBPMN11On() {
+        return BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().getBoolean(
+                BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
+    }
     /**
      * Paints the specified activity figure.
      * 
@@ -48,6 +55,8 @@ public class ActivityPainter {
      *            activity figure to be painted.
      */
     public static void paint(Graphics graphics, ActivityFigure fig) {
+        graphics.setBackgroundColor(fig.getBackgroundColor());
+        graphics.setForegroundColor(fig.getForegroundColor());
         PrecisionRectangle innerRect = null;
         switch (fig.getActivityType()) {
         case ActivityType.EVENT_START_EMPTY:
@@ -56,6 +65,7 @@ public class ActivityPainter {
         case ActivityType.EVENT_START_LINK:
         case ActivityType.EVENT_START_MULTIPLE:
         case ActivityType.EVENT_START_TIMER:
+        case ActivityType.EVENT_START_SIGNAL:
             innerRect = paintEventStart(graphics, fig);
             break;
         case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
@@ -67,6 +77,7 @@ public class ActivityPainter {
         case ActivityType.EVENT_INTERMEDIATE_CANCEL:
         case ActivityType.EVENT_INTERMEDIATE_LINK:
         case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
+        case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
             innerRect = paintEventIntermediate(graphics, fig);
             break;
         case ActivityType.EVENT_END_COMPENSATION:
@@ -77,6 +88,7 @@ public class ActivityPainter {
         case ActivityType.EVENT_END_CANCEL:
         case ActivityType.EVENT_END_MULTIPLE:
         case ActivityType.EVENT_END_LINK:
+        case ActivityType.EVENT_END_SIGNAL:
             innerRect = paintEventEnd(graphics, fig);
             break;
         case ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE:
@@ -100,12 +112,17 @@ public class ActivityPainter {
             paintLink(graphics, fig, innerRect);
             break;
         case ActivityType.EVENT_START_MULTIPLE:
-            paintStar(graphics, fig, innerRect);
+            if (isBPMN11On()) {
+                paintPentagon(graphics, fig, innerRect);
+            } else {
+                paintStar(graphics, fig, innerRect);
+            }
+            break;
         case ActivityType.EVENT_START_TIMER:
             paintTimer(graphics, fig, innerRect);
             break;
         case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
-            paintCompensation(graphics, fig);
+            paintCompensation(graphics, fig, innerRect);
             break;
         case ActivityType.EVENT_INTERMEDIATE_EMPTY:
             break;
@@ -123,14 +140,19 @@ public class ActivityPainter {
             break;
         case ActivityType.EVENT_INTERMEDIATE_CANCEL:
             paintCancelX(graphics, fig, innerRect);
+            break;
         case ActivityType.EVENT_INTERMEDIATE_LINK:
             paintLink(graphics, fig, innerRect);
             break;
         case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
-            paintStar(graphics, fig, innerRect);
+            if (isBPMN11On()) {
+                paintPentagon(graphics, fig, innerRect);
+            } else {
+                paintStar(graphics, fig, innerRect);
+            }
             break;
         case ActivityType.EVENT_END_COMPENSATION:
-            paintCompensation(graphics, fig);
+            paintCompensation(graphics, fig, innerRect);
             break;
         case ActivityType.EVENT_END_EMPTY:
             break;
@@ -147,7 +169,11 @@ public class ActivityPainter {
             paintCancelX(graphics, fig, innerRect);
             break;
         case ActivityType.EVENT_END_MULTIPLE:
-            paintStar(graphics, fig, innerRect);
+            if (isBPMN11On()) {
+                paintPentagon(graphics, fig, innerRect);
+            } else {
+                paintStar(graphics, fig, innerRect);
+            }
             break;
         case ActivityType.EVENT_END_LINK:
             paintLink(graphics, fig, innerRect);
@@ -156,23 +182,63 @@ public class ActivityPainter {
             paintGatewayX(graphics, fig, innerRect);
             break;
         case ActivityType.GATEWAY_DATA_BASED_INCLUSIVE:
-            // TODO: what is it again?
             paintBoldOval(graphics, fig, innerRect);
             break;
         case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
-            paintStar(graphics, fig, innerRect);
+            if (isBPMN11On()) {
+                paintBpmn11EvendBasedGateway(graphics, fig, innerRect);
+            } else {
+                paintStar(graphics, fig, innerRect);
+            }
             break;
         case ActivityType.GATEWAY_PARALLEL:
             paintPlus(graphics, fig, innerRect);
             break;
         case ActivityType.GATEWAY_COMPLEX:
             paintComplex(graphics, fig, innerRect);
+            break;
+        case ActivityType.EVENT_START_SIGNAL:
+        case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
+        case ActivityType.EVENT_END_SIGNAL:
+            paintSignal(graphics, fig, innerRect);
+            break;
         }
         if (fig.isLooping()) {
             paintLoopInsideFigure(graphics, fig.getBounds(), fig);
         }
     }
 
+    public static void paintPentagon(Graphics graphics, ActivityFigure fig,
+            PrecisionRectangle innerRect) {
+        paintPentagon(graphics, !fig.isCatching(), innerRect);
+    }
+    
+    public static void paintPentagon(Graphics graphics, boolean fill,
+            PrecisionRectangle innerRect) {
+        double innerWidth = innerRect.width/Math.sqrt(2);
+        double innerx = (innerRect.preciseWidth - innerWidth)/2;
+        PrecisionRectangle rect = new PrecisionRectangle();
+        rect.setWidth(innerWidth);
+        rect.setHeight(innerWidth - innerWidth/5);
+        rect.setX(innerRect.preciseX + innerx);
+        rect.setY(innerRect.preciseY + innerx + innerWidth/10);
+        
+        PointList pl = new PointList();
+        pl.addPoint(new Point(rect.getTopLeft().x, rect.getTopLeft().y + rect.height/3));
+        pl.addPoint(rect.getTop());
+        pl.addPoint(new Point(rect.getTopRight().x, rect.getTopRight().y + rect.height/3));
+        pl.addPoint(new Point(rect.getBottomRight().x - rect.width/6, rect.getBottomRight().y));
+        pl.addPoint(new Point(rect.getBottomLeft().x + rect.width/6, rect.getBottomLeft().y));
+        
+        graphics.pushState();
+        if (fill) {
+            graphics.setBackgroundColor(ColorConstants.black);
+           graphics.fillPolygon(pl); 
+        } else {
+            graphics.drawPolygon(pl);
+        }
+        graphics.popState();
+    }
     /**
      * Paints gateway
      * 
@@ -260,6 +326,7 @@ public class ActivityPainter {
         return newRect;
     }
 
+    
     /**
      * Paints intermediate event figure.
      * 
@@ -269,6 +336,7 @@ public class ActivityPainter {
      *            event figure to be painted.
      * @return The inner most rectangle in which something was painted.
      */
+    
     public static PrecisionRectangle paintEventIntermediate(Graphics graphics,
             ActivityFigure fig) {
         graphics.pushState();
@@ -282,7 +350,7 @@ public class ActivityPainter {
         
         PrecisionRectangle outerCircle = calcInnerRectangle(rect, graphics.getLineWidth());
         
-        PrecisionRectangle precRect = outerCircle.getPreciseCopy();
+        PrecisionRectangle innerCircle = outerCircle.getPreciseCopy();
         
         double ddW = outerCircle.preciseWidth/10;
         double ddH = outerCircle.preciseHeight/10;
@@ -293,15 +361,13 @@ public class ActivityPainter {
 //            ddH = Math.min(3/graphics.getAbsoluteScale(),outerCircle.preciseHeight/4);
 //        }
         
-        shrink(precRect, ddW, ddH);
-        outerCircle = precRect.getPreciseCopy();
-        shrink(outerCircle, -ddW, -ddH);
+        shrink(innerCircle, ddW, ddH);
         
-        graphics.drawOval(precRect);
+        graphics.drawOval(innerCircle);
         graphics.drawOval(outerCircle);
 
         graphics.popState();
-        return precRect;
+        return innerCircle;
     }
 
 
@@ -333,7 +399,7 @@ public class ActivityPainter {
     }
 
     /**
-     * Paints terminate figure (filled black circle) inside end activity fidure.
+     * Paints terminate figure (filled black circle) inside end activity figure.
      * 
      * @param graphics
      *            The Graphics object used for painting
@@ -348,9 +414,16 @@ public class ActivityPainter {
 //        graphics.setForegroundColor(ColorConstants.black);
         graphics.setBackgroundColor(ColorConstants.darkGray);
 
-        shrink(innerRect, innerRect.preciseWidth / 5.0, innerRect.preciseHeight / 5.0);
-        innerRect.x++;
-        innerRect.y++;
+        shrink(innerRect, innerRect.preciseWidth / 4.5, innerRect.preciseHeight / 4.5, false);
+        if (innerRect.width - Math.floor(innerRect.width)>= 0.5) {
+            innerRect.x++;
+        }
+        if (innerRect.height - Math.floor(innerRect.height)>= 0.5) {
+            innerRect.y++;
+        }
+        innerRect.updateInts();
+//        innerRect.x ++;
+//        innerRect.y ++;
         graphics.fillOval(innerRect);
 
         graphics.popState();
@@ -367,8 +440,9 @@ public class ActivityPainter {
     public static void paintMessage(Graphics graphics, ActivityFigure fig,
             PrecisionRectangle innerRect) {
         int lineWidth = MapModeUtil.getMapMode(fig).LPtoDP(1);
-        paintMessage(graphics, innerRect, lineWidth);
+        paintMessage(graphics, innerRect, lineWidth, fig.isCatching());
     }
+    
     /**
      * Pains message figure (envelope) inside event figure.
      * 
@@ -379,6 +453,20 @@ public class ActivityPainter {
      */
     public static void paintMessage(Graphics graphics,
             PrecisionRectangle innerRect, int lineWidth) {
+        paintMessage(graphics, innerRect, lineWidth, false);
+    }
+    /**
+     * Pains message figure (envelope) inside event figure.
+     * 
+     * @param graphics
+     *            The Graphics object used for painting
+     * @param fig
+     *            event figure.
+     *  @param isCatching
+     *            whether the figure should show as a catch
+     */
+    public static void paintMessage(Graphics graphics,
+            PrecisionRectangle innerRect, int lineWidth, boolean isCatching) {
         graphics.pushState();
 
         graphics.setForegroundColor(ColorConstants.black);
@@ -389,8 +477,12 @@ public class ActivityPainter {
         shrink(innerRect, innerRect.preciseWidth/6.0,
                 innerRect.preciseHeight/4.5);
         
-        graphics.drawRectangle(innerRect);
-
+        if (!isCatching && isBPMN11On()) {
+            graphics.fillRectangle(innerRect);
+            graphics.setForegroundColor(ColorConstants.white);
+        } else {
+            graphics.drawRectangle(innerRect);
+        }
         // System.err.println("After: " + rect.width);
         // ok. now just need to compute 2 point around the center:
         // basically it is the center -1 on the y and + 1 on the x
@@ -410,34 +502,47 @@ public class ActivityPainter {
      * @param fig
      *            event figure.
      */
-    public static void paintCompensation(Graphics graphics, IFigure fig) {
-        Rectangle rect = fig.getBounds().getCopy();
-
-        // shrink to the same size of rectangle than the message
-        rect.shrink(rect.width / 4,// *12/22,
-                rect.height * (22 - 10) / (22 * 2));// *12/22;
-        rect.translate(-rect.width / 16, 0);
-        paintCompensation(graphics, rect);
+    public static void paintCompensation(Graphics graphics, ActivityFigure fig, PrecisionRectangle innerRect) {
+        
+        double innerWidth = innerRect.width/Math.sqrt(2);
+        double innerx = (innerRect.preciseWidth - innerWidth)/2;
+        innerRect.setWidth(innerWidth);
+        innerRect.setHeight(innerWidth);
+        innerRect.setX(innerRect.preciseX + innerx/2);
+        innerRect.setY(innerRect.preciseY + innerx);
+        paintCompensation(graphics, innerRect, fig.isCatching());
     }
         
-    public static void paintCompensation(Graphics graphics, Rectangle rect) {   
+    public static void paintCompensation(Graphics graphics, Rectangle rect) {
+        paintCompensation(graphics, rect, false);
+    }
+    
+    public static void paintCompensation(Graphics graphics, Rectangle rect, boolean isCatching) {   
         graphics.pushState();
         // linewidth is 1/22 of the figure. rectangle width is 12 for 22:
         // and height is 10 for 22
         graphics.setBackgroundColor(ColorConstants.darkGray);
         graphics.setForegroundColor(ColorConstants.darkGray);
-        
+//        graphics.fillRectangle(rect);
         PointList pl = new PointList(3);
-        pl.addPoint(rect.getLeft());
-        pl.addPoint(rect.getTop());
-        pl.addPoint(rect.getBottom());
-        graphics.fillPolygon(pl);
+        pl.addPoint(rect.getLeft().getCopy());
+        pl.addPoint(rect.getTop().getCopy());
+        pl.addPoint(rect.getBottom().getCopy());
+        if (isCatching && isBPMN11On()) {
+            graphics.setLineWidth(2);
+            graphics.drawPolygon(pl);
+        } else {
+            graphics.fillPolygon(pl);
+        }
         pl = new PointList(3);
         pl.addPoint(rect.getCenter());
         pl.addPoint(rect.getTopRight());
         pl.addPoint(rect.getBottomRight());
-        graphics.fillPolygon(pl);
-
+        if (isCatching && isBPMN11On()) {
+            graphics.drawPolygon(pl);
+        } else {
+            graphics.fillPolygon(pl);
+        }
         graphics.popState();
     }
 
@@ -510,11 +615,19 @@ public class ActivityPainter {
     
     private static final void shrink(PrecisionRectangle rect, 
             double w, double h) {
+        shrink(rect, 
+                w, h, true);
+    }
+    
+    private static final void shrink(PrecisionRectangle rect, 
+            double w, double h, boolean shouldUpdateInts) {
         rect.setX(rect.preciseX + w);
         rect.setY(rect.preciseY + h);
         rect.setWidth(rect.preciseWidth - 2.0 * w);
         rect.setHeight(rect.preciseHeight - 2.0 * h);
-        rect.updateInts();
+        if (shouldUpdateInts) {
+            rect.updateInts();
+        }
     }
 
     /**
@@ -527,10 +640,14 @@ public class ActivityPainter {
         Rectangle rect = fig.getBounds().getCopy();
         rect.shrink(rect.width / 4, rect.height / 4);
         // graphics.drawRoundRectangle(rect, 6, 6);
-        paintError(graphics, rect);
+        paintError(graphics, rect, fig.isCatching());
     }
     
     public static void paintError(Graphics graphics, Rectangle rect) {
+        paintError(graphics, rect, false);
+    }
+    
+    public static void paintError(Graphics graphics, Rectangle rect, boolean isCatching) {
         graphics.pushState();
         // linewidth is 1/22 of the figure. rectangle width is 12 for 22:
         // and height is 10 for 22
@@ -556,7 +673,11 @@ public class ActivityPainter {
         pl.addPoint(rect.getTopRight());
         pl.addPoint(twobis);
         pl.addPoint(one);
-        graphics.fillPolygon(pl);
+        if (isCatching && isBPMN11On()) {
+            graphics.drawPolygon(pl);
+        } else {
+            graphics.fillPolygon(pl);
+        }
 
         graphics.popState();
     }
@@ -788,7 +909,7 @@ public class ActivityPainter {
 
 //        rect = new PrecisionRectangle(fig.getBounds());
         
-        double lineWidth = rect.preciseWidth * graphics.getAbsoluteScale()/4;
+        double lineWidth = rect.preciseWidth /4;
         shrink(rect, 3.0* rect.preciseWidth / 15,
                      3.0* rect.preciseHeight / 15);
         try {
@@ -796,11 +917,30 @@ public class ActivityPainter {
         } catch (Throwable t) {
             //never mind! the print graphics object does not support this.
         }
-        graphics.setLineWidth((int)Math.floor(lineWidth));
         
-        graphics.drawLine(rect.getTopLeft(), rect.getBottomRight());
-        graphics.drawLine(rect.getTopRight(), rect.getBottomLeft());
         
+        if (fig.isCatching() && isBPMN11On()) {
+            int half = (int) (lineWidth/2);
+            PointList pointList = new PointList();
+            pointList.addPoint(rect.getTopLeft().getCopy().translate(-half, half));
+            pointList.addPoint(rect.getTopLeft().getCopy().translate(half, -half));
+            pointList.addPoint(rect.getTop().getCopy().translate(0, half));
+            pointList.addPoint(rect.getTopRight().getCopy().translate(-half, -half));
+            pointList.addPoint(rect.getTopRight().getCopy().translate(half, half));
+            pointList.addPoint(rect.getRight().getCopy().translate(-half, 0));
+            pointList.addPoint(rect.getBottomRight().getCopy().translate(half, -half));
+            pointList.addPoint(rect.getBottomRight().getCopy().translate(-half, half));
+            pointList.addPoint(rect.getBottom().getCopy().translate(0, -half));
+            pointList.addPoint(rect.getBottomLeft().getCopy().translate(half, half));
+            pointList.addPoint(rect.getBottomLeft().getCopy().translate(-half, -half));
+            pointList.addPoint(rect.getLeft().getCopy().translate(half, 0));
+            graphics.drawPolygon(pointList);
+        } else {
+            lineWidth *= graphics.getAbsoluteScale();
+            graphics.setLineWidth((int)Math.floor(lineWidth));
+            graphics.drawLine(rect.getTopLeft(), rect.getBottomRight());
+            graphics.drawLine(rect.getTopRight(), rect.getBottomLeft());
+        }
         graphics.popState();
     }
 
@@ -1070,4 +1210,51 @@ public class ActivityPainter {
         };
     }
     
+    public static void paintBpmn11EvendBasedGateway(Graphics graphics, ActivityFigure fig, 
+            PrecisionRectangle innerRect) {
+        PrecisionRectangle ovalCopy = new PrecisionRectangle();
+        double fixedDelta = innerRect.preciseWidth/12;
+        double delta = (innerRect.preciseWidth * (1- 1/Math.sqrt(2)) + fixedDelta)/2;
+        ovalCopy.setX(innerRect.preciseX + delta);
+        ovalCopy.setY(innerRect.preciseY + delta);
+        ovalCopy.setWidth(innerRect.preciseWidth/Math.sqrt(2) - fixedDelta);
+        ovalCopy.setHeight(ovalCopy.preciseWidth);
+        graphics.drawOval(ovalCopy);
+        
+        fixedDelta = innerRect.preciseWidth/6;
+        delta = (innerRect.preciseWidth * (1- 1/Math.sqrt(2)) + fixedDelta)/2;
+        ovalCopy.setX(innerRect.preciseX + delta);
+        ovalCopy.setY(innerRect.preciseY + delta);
+        ovalCopy.setWidth(innerRect.preciseWidth/Math.sqrt(2) - fixedDelta);
+        ovalCopy.setHeight(ovalCopy.preciseWidth);
+        
+        graphics.drawOval(ovalCopy);
+        paintPentagon(graphics, false, ovalCopy);
+    }
+    
+    public static void paintSignal(Graphics graphics, ActivityFigure fig, PrecisionRectangle innerRect) {
+        
+        innerRect = calcInnerRectangle(fig.getBounds().getCopy(), graphics.getLineWidth());
+        double innerWidth = innerRect.width/Math.sqrt(2);
+        double innerx = (innerRect.preciseWidth - innerWidth)/2;
+        innerRect.setWidth(innerWidth - innerWidth/10);
+        innerRect.setHeight(innerWidth - innerWidth/16);
+        innerRect.setX(innerRect.preciseX + innerx/2 + innerWidth/10);
+        innerRect.setY(innerRect.preciseY + innerx);
+        
+        PointList pl = new PointList();
+        pl.addPoint(innerRect.getTop().getCopy());
+        pl.addPoint(innerRect.getBottomRight().getCopy());
+        pl.addPoint(innerRect.getBottomLeft().getCopy());
+        graphics.pushState();
+        graphics.setBackgroundColor(ColorConstants.black);
+        graphics.setForegroundColor(ColorConstants.black);
+        if (fig.isCatching()) {
+            graphics.drawPolygon(pl);
+        } else {
+//            graphics.fillRectangle(innerRect);
+            graphics.fillPolygon(pl);
+        }
+        graphics.popState();
+    }
 }

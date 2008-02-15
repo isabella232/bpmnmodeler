@@ -11,25 +11,11 @@
  */
 package org.eclipse.stp.bpmn.policies;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
-import org.eclipse.gef.Request;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.handles.AbstractHandle;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
-import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.tools.ActivityResizeTracker;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
 
@@ -39,12 +25,6 @@ import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
  */
 public class ResizableArtifactEditPolicy extends ResizableShapeEditPolicyEx {
 
-	/*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.stp.bpmn.policies.ResizableShapeEditPolicyEx#createHandle(org.eclipse.gef.GraphicalEditPart,
-     *      int)
-     */
     protected Handle createHandle(GraphicalEditPart owner, int direction) {
         return new ActivityResizeHandle(owner, direction);
     }

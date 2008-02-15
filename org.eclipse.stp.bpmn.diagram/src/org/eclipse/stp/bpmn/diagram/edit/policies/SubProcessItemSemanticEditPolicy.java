@@ -26,8 +26,8 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnPackage;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SubProcess;
@@ -419,7 +419,7 @@ public class SubProcessItemSemanticEditPolicy extends
             Association newElement = (Association) super
                     .doDefaultElementCreation();
             if (newElement != null) {
-                newElement.setTarget((IdentifiableNode) getTarget());
+                newElement.setTarget((AssociationTarget) getTarget());
                 newElement.setSource((Artifact) getSource());
             }
             return newElement;

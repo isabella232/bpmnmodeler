@@ -105,6 +105,19 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
         super(view);
     }
 
+
+    /**
+     * performas direct edit
+     */
+    protected void performDirectEdit() {
+        try {
+        super.performDirectEdit();
+        }catch (Throwable t) {
+            t.printStackTrace();
+            throw (RuntimeException)t;
+        }
+    }
+    
     /**
      * @generated
      */
@@ -379,17 +392,16 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
     }
 
     /**
-     * @generated
+     * @generated NOT: ovrride the manager to support enter+shift and enter+alt to enter newlines.
      */
     protected DirectEditManager getManager() {
         if (manager == null) {
-            setManager(new TextDirectEditManager(this, TextDirectEditManager
+            setManager(new TextDirectEditManager(this, BpmnEditPartFactory
                     .getTextCellEditorClass(this), BpmnEditPartFactory
                     .getTextCellEditorLocator(this)));
         }
         return manager;
     }
-
     /**
      * @generated
      */
@@ -646,6 +658,9 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
     @Override
     public boolean isSelectable() {
         Activity activity = (Activity) resolveSemanticElement();
+        if (activity == null) {
+            return false;
+        }
         if (activity.getActivityType().getValue() == ActivityType.TASK) {
             return false;
         } else {

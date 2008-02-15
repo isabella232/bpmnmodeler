@@ -21,7 +21,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.stp.bpmn.IdentifiableNode;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
@@ -90,7 +90,7 @@ public class TextAnnotationItemSemanticEditPolicy extends
      */
     protected Command getCreateCompleteIncomingAssociation3003Command(
             CreateRelationshipRequest req) {
-        if (!(req.getTarget() instanceof IdentifiableNode)) {
+        if (!(req.getTarget() instanceof AssociationTarget)) {
             return UnexecutableCommand.INSTANCE;
         }
         return new Command() {

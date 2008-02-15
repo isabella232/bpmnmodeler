@@ -23,182 +23,191 @@ import org.eclipse.emf.ecore.EFactory;
  */
 public interface BpmnFactory extends EFactory {
     /**
-	 * The singleton instance of the factory.
-	 * <!-- begin-user-doc -->
+     * The singleton instance of the factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     BpmnFactory eINSTANCE = org.eclipse.stp.bpmn.impl.BpmnFactoryImpl.init();
 
     /**
-	 * Returns a new object of class '<em>Activity</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Activity</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Activity</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Activity</em>'.
+     * @generated
+     */
     Activity createActivity();
 
     /**
-	 * Returns a new object of class '<em>Artifact</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Artifact</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Artifact</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Artifact</em>'.
+     * @generated
+     */
 	Artifact createArtifact();
 
     /**
-	 * Returns a new object of class '<em>Artifacts Container</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Artifacts Container</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Artifacts Container</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Artifacts Container</em>'.
+     * @generated
+     */
     ArtifactsContainer createArtifactsContainer();
 
     /**
-	 * Returns a new object of class '<em>Association</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Association</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Association</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Association</em>'.
+     * @generated
+     */
 	Association createAssociation();
 
     /**
-	 * Returns a new object of class '<em>Diagram</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Association Target</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Diagram</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Association Target</em>'.
+     * @generated
+     */
+    AssociationTarget createAssociationTarget();
+
+    /**
+     * Returns a new object of class '<em>Diagram</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Diagram</em>'.
+     * @generated
+     */
     BpmnDiagram createBpmnDiagram();
 
     /**
-	 * Returns a new object of class '<em>Data Object</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Data Object</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Data Object</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Data Object</em>'.
+     * @generated
+     */
 	DataObject createDataObject();
 
     /**
-	 * Returns a new object of class '<em>Graph</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Graph</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Graph</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Graph</em>'.
+     * @generated
+     */
     Graph createGraph();
 
     /**
-	 * Returns a new object of class '<em>Group</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Group</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Group</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Group</em>'.
+     * @generated
+     */
 	Group createGroup();
 
     /**
-	 * Returns a new object of class '<em>Identifiable</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Identifiable</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Identifiable</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Identifiable</em>'.
+     * @generated
+     */
     Identifiable createIdentifiable();
 
     /**
-	 * Returns a new object of class '<em>Identifiable Node</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Lane</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Identifiable Node</em>'.
-	 * @generated
-	 */
-    IdentifiableNode createIdentifiableNode();
-
-    /**
-	 * Returns a new object of class '<em>Lane</em>'.
-	 * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Lane</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Lane</em>'.
+     * @generated
+     */
     Lane createLane();
 
     /**
-	 * Returns a new object of class '<em>Messaging Edge</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Message Vertex</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Messaging Edge</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Message Vertex</em>'.
+     * @generated
+     */
+    MessageVertex createMessageVertex();
+
+    /**
+     * Returns a new object of class '<em>Messaging Edge</em>'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return a new object of class '<em>Messaging Edge</em>'.
+     * @generated
+     */
     MessagingEdge createMessagingEdge();
 
     /**
-	 * Returns a new object of class '<em>Named Bpmn Object</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Named Bpmn Object</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Named Bpmn Object</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Named Bpmn Object</em>'.
+     * @generated
+     */
     NamedBpmnObject createNamedBpmnObject();
 
     /**
-	 * Returns a new object of class '<em>Pool</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Pool</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Pool</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Pool</em>'.
+     * @generated
+     */
     Pool createPool();
 
     /**
-	 * Returns a new object of class '<em>Sequence Edge</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Sequence Edge</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sequence Edge</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Sequence Edge</em>'.
+     * @generated
+     */
     SequenceEdge createSequenceEdge();
 
     /**
-	 * Returns a new object of class '<em>Sub Process</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Sub Process</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Sub Process</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Sub Process</em>'.
+     * @generated
+     */
     SubProcess createSubProcess();
 
     /**
-	 * Returns a new object of class '<em>Text Annotation</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Text Annotation</em>'.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Text Annotation</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Text Annotation</em>'.
+     * @generated
+     */
 	TextAnnotation createTextAnnotation();
 
     /**
-	 * Returns a new object of class '<em>Vertex</em>'.
-	 * <!-- begin-user-doc -->
+     * Returns a new object of class '<em>Vertex</em>'.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return a new object of class '<em>Vertex</em>'.
-	 * @generated
-	 */
+     * @return a new object of class '<em>Vertex</em>'.
+     * @generated
+     */
     Vertex createVertex();
 
     /**
-	 * Returns the package supported by this factory.
-	 * <!-- begin-user-doc -->
+     * Returns the package supported by this factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @return the package supported by this factory.
-	 * @generated
-	 */
+     * @return the package supported by this factory.
+     * @generated
+     */
     BpmnPackage getBpmnPackage();
 
 } //BpmnFactory

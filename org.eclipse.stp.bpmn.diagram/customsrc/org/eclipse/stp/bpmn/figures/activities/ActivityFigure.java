@@ -31,7 +31,7 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
  * @author hmalphettes
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
-public class ActivityFigure extends Shape {
+public abstract class ActivityFigure extends Shape {
 
     private int _activityType = ActivityType.TASK;
 
@@ -120,4 +120,11 @@ public class ActivityFigure extends Shape {
         revalidate();
         repaint();
     }
+    
+    /**
+     * 
+     * @return true if the activity figure represents 
+     * a handler
+     */
+    public abstract boolean isCatching();
 }

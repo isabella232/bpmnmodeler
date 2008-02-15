@@ -42,13 +42,6 @@ import org.eclipse.stp.bpmn.util.BpmnAdapterFactory;
  */
 public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implements ComposeableAdapterFactory, IChangeNotifier, IDisposable {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * This keeps track of the root adapter factory that delegates to this adapter factory.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -70,7 +63,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	protected Collection supportedTypes = new ArrayList();
+	protected Collection<Object> supportedTypes = new ArrayList<Object>();
 
     /**
      * This constructs an instance.
@@ -83,7 +76,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
         supportedTypes.add(IStructuredItemContentProvider.class);
         supportedTypes.add(ITreeItemContentProvider.class);
         supportedTypes.add(IItemLabelProvider.class);
-        supportedTypes.add(IItemPropertySource.class);		
+        supportedTypes.add(IItemPropertySource.class);
     }
 
     /**
@@ -100,7 +93,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createActivityAdapter() {
+	@Override
+    public Adapter createActivityAdapter() {
         if (activityItemProvider == null) {
             activityItemProvider = new ActivityItemProvider(this);
         }
@@ -122,6 +116,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createArtifactAdapter() {
         if (artifactItemProvider == null) {
             artifactItemProvider = new ArtifactItemProvider(this);
@@ -144,6 +139,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createArtifactsContainerAdapter() {
         if (artifactsContainerItemProvider == null) {
             artifactsContainerItemProvider = new ArtifactsContainerItemProvider(this);
@@ -166,12 +162,36 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createAssociationAdapter() {
         if (associationItemProvider == null) {
             associationItemProvider = new AssociationItemProvider(this);
         }
 
         return associationItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.eclipse.stp.bpmn.AssociationTarget} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected AssociationTargetItemProvider associationTargetItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.eclipse.stp.bpmn.AssociationTarget}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createAssociationTargetAdapter() {
+        if (associationTargetItemProvider == null) {
+            associationTargetItemProvider = new AssociationTargetItemProvider(this);
+        }
+
+        return associationTargetItemProvider;
     }
 
     /**
@@ -188,7 +208,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createBpmnDiagramAdapter() {
+	@Override
+    public Adapter createBpmnDiagramAdapter() {
         if (bpmnDiagramItemProvider == null) {
             bpmnDiagramItemProvider = new BpmnDiagramItemProvider(this);
         }
@@ -210,6 +231,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createDataObjectAdapter() {
         if (dataObjectItemProvider == null) {
             dataObjectItemProvider = new DataObjectItemProvider(this);
@@ -232,7 +254,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createGraphAdapter() {
+	@Override
+    public Adapter createGraphAdapter() {
         if (graphItemProvider == null) {
             graphItemProvider = new GraphItemProvider(this);
         }
@@ -254,6 +277,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createGroupAdapter() {
         if (groupItemProvider == null) {
             groupItemProvider = new GroupItemProvider(this);
@@ -276,34 +300,13 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createIdentifiableAdapter() {
         if (identifiableItemProvider == null) {
             identifiableItemProvider = new IdentifiableItemProvider(this);
         }
 
         return identifiableItemProvider;
-    }
-
-    /**
-     * This keeps track of the one adapter used for all {@link org.eclipse.stp.bpmn.IdentifiableNode} instances.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    protected IdentifiableNodeItemProvider identifiableNodeItemProvider;
-
-    /**
-     * This creates an adapter for a {@link org.eclipse.stp.bpmn.IdentifiableNode}.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public Adapter createIdentifiableNodeAdapter() {
-        if (identifiableNodeItemProvider == null) {
-            identifiableNodeItemProvider = new IdentifiableNodeItemProvider(this);
-        }
-
-        return identifiableNodeItemProvider;
     }
 
     /**
@@ -320,12 +323,36 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createLaneAdapter() {
+	@Override
+    public Adapter createLaneAdapter() {
         if (laneItemProvider == null) {
             laneItemProvider = new LaneItemProvider(this);
         }
 
         return laneItemProvider;
+    }
+
+    /**
+     * This keeps track of the one adapter used for all {@link org.eclipse.stp.bpmn.MessageVertex} instances.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected MessageVertexItemProvider messageVertexItemProvider;
+
+    /**
+     * This creates an adapter for a {@link org.eclipse.stp.bpmn.MessageVertex}.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    @Override
+    public Adapter createMessageVertexAdapter() {
+        if (messageVertexItemProvider == null) {
+            messageVertexItemProvider = new MessageVertexItemProvider(this);
+        }
+
+        return messageVertexItemProvider;
     }
 
     /**
@@ -342,6 +369,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createMessagingEdgeAdapter() {
         if (messagingEdgeItemProvider == null) {
             messagingEdgeItemProvider = new MessagingEdgeItemProvider(this);
@@ -364,6 +392,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createNamedBpmnObjectAdapter() {
         if (namedBpmnObjectItemProvider == null) {
             namedBpmnObjectItemProvider = new NamedBpmnObjectItemProvider(this);
@@ -386,7 +415,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createPoolAdapter() {
+	@Override
+    public Adapter createPoolAdapter() {
         if (poolItemProvider == null) {
             poolItemProvider = new PoolItemProvider(this);
         }
@@ -408,6 +438,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createSequenceEdgeAdapter() {
         if (sequenceEdgeItemProvider == null) {
             sequenceEdgeItemProvider = new SequenceEdgeItemProvider(this);
@@ -430,7 +461,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createSubProcessAdapter() {
+	@Override
+    public Adapter createSubProcessAdapter() {
         if (subProcessItemProvider == null) {
             subProcessItemProvider = new SubProcessItemProvider(this);
         }
@@ -452,6 +484,7 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Adapter createTextAnnotationAdapter() {
         if (textAnnotationItemProvider == null) {
             textAnnotationItemProvider = new TextAnnotationItemProvider(this);
@@ -474,7 +507,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter createVertexAdapter() {
+	@Override
+    public Adapter createVertexAdapter() {
         if (vertexItemProvider == null) {
             vertexItemProvider = new VertexItemProvider(this);
         }
@@ -507,7 +541,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public boolean isFactoryForType(Object type) {
+	@Override
+    public boolean isFactoryForType(Object type) {
         return supportedTypes.contains(type) || super.isFactoryForType(type);
     }
 
@@ -517,7 +552,8 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Adapter adapt(Notifier notifier, Object type) {
+	@Override
+    public Adapter adapt(Notifier notifier, Object type) {
         return super.adapt(notifier, this);
     }
 
@@ -526,10 +562,11 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Object adapt(Object object, Object type) {
+	@Override
+    public Object adapt(Object object, Object type) {
         if (isFactoryForType(type)) {
             Object adapter = super.adapt(object, type);
-            if (!(type instanceof Class) || (((Class)type).isInstance(adapter))) {
+            if (!(type instanceof Class) || (((Class<?>)type).isInstance(adapter))) {
                 return adapter;
             }
         }
@@ -582,13 +619,14 @@ public class BpmnItemProviderAdapterFactory extends BpmnAdapterFactory implement
         if (artifactItemProvider != null) artifactItemProvider.dispose();
         if (artifactsContainerItemProvider != null) artifactsContainerItemProvider.dispose();
         if (associationItemProvider != null) associationItemProvider.dispose();
+        if (associationTargetItemProvider != null) associationTargetItemProvider.dispose();
         if (bpmnDiagramItemProvider != null) bpmnDiagramItemProvider.dispose();
         if (dataObjectItemProvider != null) dataObjectItemProvider.dispose();
         if (graphItemProvider != null) graphItemProvider.dispose();
         if (groupItemProvider != null) groupItemProvider.dispose();
         if (identifiableItemProvider != null) identifiableItemProvider.dispose();
-        if (identifiableNodeItemProvider != null) identifiableNodeItemProvider.dispose();
         if (laneItemProvider != null) laneItemProvider.dispose();
+        if (messageVertexItemProvider != null) messageVertexItemProvider.dispose();
         if (messagingEdgeItemProvider != null) messagingEdgeItemProvider.dispose();
         if (namedBpmnObjectItemProvider != null) namedBpmnObjectItemProvider.dispose();
         if (poolItemProvider != null) poolItemProvider.dispose();

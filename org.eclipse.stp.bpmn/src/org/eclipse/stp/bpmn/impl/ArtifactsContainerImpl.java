@@ -39,133 +39,133 @@ import org.eclipse.stp.bpmn.BpmnPackage;
  */
 public class ArtifactsContainerImpl extends NamedBpmnObjectImpl implements ArtifactsContainer {
     /**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getArtifacts()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getArtifacts()
+     * @generated
+     * @ordered
+     */
     protected EList<Artifact> artifacts;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected ArtifactsContainerImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				protected EClass eStaticClass() {
-		return BpmnPackage.Literals.ARTIFACTS_CONTAINER;
-	}
+        return BpmnPackage.Literals.ARTIFACTS_CONTAINER;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<Artifact> getArtifacts() {
-		if (artifacts == null) {
-			artifacts = new EObjectContainmentWithInverseEList<Artifact>(Artifact.class, this, BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS, BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER);
-		}
-		return artifacts;
-	}
+        if (artifacts == null) {
+            artifacts = new EObjectContainmentWithInverseEList<Artifact>(Artifact.class, this, BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS, BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER);
+        }
+        return artifacts;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getArtifacts()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getArtifacts()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
-				return ((InternalEList<?>)getArtifacts()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
+                return ((InternalEList<?>)getArtifacts()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
-				return getArtifacts();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
+                return getArtifacts();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
-				getArtifacts().clear();
-				getArtifacts().addAll((Collection<? extends Artifact>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
+                getArtifacts().clear();
+                getArtifacts().addAll((Collection<? extends Artifact>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public void eUnset(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
-				getArtifacts().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
+                getArtifacts().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
-				return artifacts != null && !artifacts.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS:
+                return artifacts != null && !artifacts.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //ArtifactsContainerImpl

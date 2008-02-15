@@ -16,6 +16,7 @@ import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -31,20 +32,13 @@ import org.eclipse.stp.bpmn.SequenceEdge;
  * @generated
  */
 public class SequenceEdgeItemProvider
-    extends IdentifiableItemProvider
+    extends AssociationTargetItemProvider
     implements	
         IEditingDomainItemProvider,	
         IStructuredItemContentProvider,	
         ITreeItemContentProvider,	
         IItemLabelProvider,	
         IItemPropertySource {
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
     /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
@@ -61,13 +55,15 @@ public class SequenceEdgeItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public List getPropertyDescriptors(Object object) {
+    @Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
             addDocumentationPropertyDescriptor(object);
             addNamePropertyDescriptor(object);
             addNcnamePropertyDescriptor(object);
+            addConditionTypePropertyDescriptor(object);
             addIsDefaultPropertyDescriptor(object);
             addSourcePropertyDescriptor(object);
             addTargetPropertyDescriptor(object);
@@ -86,8 +82,8 @@ public class SequenceEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_documentation_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -108,8 +104,8 @@ public class SequenceEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_SequenceEdge_isDefault_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_isDefault_feature", "_UI_SequenceEdge_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_SequenceEdge_isDefault_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_isDefault_feature", "_UI_SequenceEdge_type"),
                  BpmnPackage.Literals.SEQUENCE_EDGE__IS_DEFAULT,
                  true,
                  false,
@@ -130,8 +126,8 @@ public class SequenceEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_name_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -152,9 +148,31 @@ public class SequenceEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_ncname_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
+                 true,
+                 false,
+                 false,
+                 ItemPropertyDescriptor.GENERIC_VALUE_IMAGE,
+                 null,
+                 null));
+    }
+
+    /**
+     * This adds a property descriptor for the Condition Type feature.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    protected void addConditionTypePropertyDescriptor(Object object) {
+        itemPropertyDescriptors.add
+            (createItemPropertyDescriptor
+                (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
+                 getResourceLocator(),
+                 getString("_UI_SequenceEdge_conditionType_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_conditionType_feature", "_UI_SequenceEdge_type"),
+                 BpmnPackage.Literals.SEQUENCE_EDGE__CONDITION_TYPE,
                  true,
                  false,
                  false,
@@ -174,8 +192,8 @@ public class SequenceEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_SequenceEdge_source_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_source_feature", "_UI_SequenceEdge_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_SequenceEdge_source_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_source_feature", "_UI_SequenceEdge_type"),
                  BpmnPackage.Literals.SEQUENCE_EDGE__SOURCE,
                  true,
                  false,
@@ -196,8 +214,8 @@ public class SequenceEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_SequenceEdge_target_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_target_feature", "_UI_SequenceEdge_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_SequenceEdge_target_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SequenceEdge_target_feature", "_UI_SequenceEdge_type"),
                  BpmnPackage.Literals.SEQUENCE_EDGE__TARGET,
                  true,
                  false,
@@ -213,8 +231,9 @@ public class SequenceEdgeItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/SequenceEdge")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/SequenceEdge"));
     }
 
     /**
@@ -223,11 +242,12 @@ public class SequenceEdgeItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getText(Object object) {
         String label = ((SequenceEdge)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_SequenceEdge_type") : //$NON-NLS-1$
-            getString("_UI_SequenceEdge_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_SequenceEdge_type") :
+            getString("_UI_SequenceEdge_type") + " " + label;
     }
 
     /**
@@ -237,6 +257,7 @@ public class SequenceEdgeItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
@@ -244,6 +265,7 @@ public class SequenceEdgeItemProvider
             case BpmnPackage.SEQUENCE_EDGE__DOCUMENTATION:
             case BpmnPackage.SEQUENCE_EDGE__NAME:
             case BpmnPackage.SEQUENCE_EDGE__NCNAME:
+            case BpmnPackage.SEQUENCE_EDGE__CONDITION_TYPE:
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
                 fireNotifyChanged(new ViewerNotification(notification, notification.getNotifier(), false, true));
                 return;
@@ -252,13 +274,14 @@ public class SequenceEdgeItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+    @Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
     }
 
@@ -268,6 +291,7 @@ public class SequenceEdgeItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ResourceLocator getResourceLocator() {
         return BpmnEditPlugin.INSTANCE;
     }

@@ -423,6 +423,15 @@ public class Activity2EditPart extends ShapeNodeEditPart {
             myUseLocalCoordinates = useLocalCoordinates;
         }
 
+        /**
+         * @generated NOT
+         * always catching
+         */
+        @Override
+        public boolean isCatching() {
+            return true;
+        }
+
     }
     /**
      * Override to for a more specialized tooltip

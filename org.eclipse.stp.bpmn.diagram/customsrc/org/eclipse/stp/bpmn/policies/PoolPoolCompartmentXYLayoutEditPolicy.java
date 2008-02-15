@@ -60,6 +60,8 @@ import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
@@ -110,45 +112,77 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
      * @see org.eclipse.gef.editpolicies.ConstrainedLayoutEditPolicy#getResizeChildrenCommand(org.eclipse.gef.requests.ChangeBoundsRequest)
      */
     protected Command getResizeChildrenCommand(ChangeBoundsRequest request) {
-    	
         CompoundCommand resize = new CompoundCommand();
-        
-        Map<IGraphicalEditPart, Rectangle> map = new HashMap<IGraphicalEditPart, Rectangle>();
-        SortedSet<Rectangle> set = new TreeSet<Rectangle>(new RectanglesComparator());
-        
-        fillMapAndSet(map, set, request, resize);
+        // let's skip groups, they do not resize the pool.
+        boolean onlyContainsGroups = !request.getEditParts().isEmpty();
+        boolean onlyContainsLanes = true; // true by default as no part is included in the request when the lane is deleted
 
-        if (map.isEmpty()) {
-        	
-        	CompoundCommand negativeCommand = chunkNegativeMove(request);
-        	if (negativeCommand != null) {
-        		return negativeCommand;
-        	}
-        	CompoundCommand command = new CompoundCommand();
-        	command.add(super.getResizeChildrenCommand(request));
-        	boolean unexec = avoidOverlap(request, command);
-        	if (unexec) {
-        	    return UnexecutableCommand.INSTANCE;
-        	}
-//      	make sure that the children won't be bigger than the pool.
-        	// to do that, build a request for the pool to be resized, 
-        	// and address it to the diagram.
-        	ChangeBoundsRequest req = new ChangeBoundsRequest(
-        			RequestConstants.REQ_RESIZE_CHILDREN);
-        	req.setEditParts(getHost().getParent());
-        	req.setCenteredResize(true);
-        	req.setSizeDelta(getMinSizeForPool(request));
-        	command.add(getHost().getParent().getParent().getCommand(req));
-        	makeSnapBackCommands(command, request);
-        	return command;
-        } else {
-        	doLayout(request, map, set, resize, null);
+        // true if the pool has been resized, and is making a callback to get the lanes to resize.
+        boolean poolResize = false;
+        for (Object o : request.getEditParts()) {
+            onlyContainsGroups = onlyContainsGroups && (
+                    o instanceof GroupEditPart || o instanceof Group2EditPart);
+            onlyContainsLanes = onlyContainsLanes && o instanceof LaneEditPart;
+
+            if (o == getHost().getParent()) {
+                onlyContainsGroups = false;
+                onlyContainsLanes = true;
+                poolResize = true;
+                break;
+            }
         }
         
-     // we want to have labels snap back to their original places
+        if (onlyContainsGroups) {
+            return super.getResizeChildrenCommand(request);
+        }
+        if (onlyContainsLanes) {
+            Map<IGraphicalEditPart, Rectangle> map = new HashMap<IGraphicalEditPart, Rectangle>();
+            SortedSet<Rectangle> set = new TreeSet<Rectangle>(new RectanglesComparator());
+            fillMapAndSet(map, set, request, resize);
+            if (!map.isEmpty()) {
+                doLayout(request, map, set, resize, null);
+            } else {
+                return null;
+            }
+        } else {
+            // eliminate the lanes from the request
+            List parts = new ArrayList();
+            for (Object o : request.getEditParts()) {
+                if (!(o instanceof LaneEditPart)) {
+                    parts.add(o);
+                }
+            }
+            request.setEditParts(parts);
+
+
+            CompoundCommand negativeCommand = chunkNegativeMove(request);
+            if (negativeCommand != null) {
+                return negativeCommand;
+            }
+            resize.add(super.getResizeChildrenCommand(request));
+            boolean unexec = avoidOverlap(request, resize);
+            if (unexec) {
+                return UnexecutableCommand.INSTANCE;
+            }
+        }
+        if (poolResize) {
+            return resize.unwrap();
+        }
+//      make sure that the children won't be bigger than the pool.
+        // to do that, build a request for the pool to be resized, 
+        // and address it to the diagram.
+        ChangeBoundsRequest req = new ChangeBoundsRequest(
+                RequestConstants.REQ_RESIZE_CHILDREN);
+        req.setEditParts(getHost().getParent());
+        req.setCenteredResize(true);
+        req.setSizeDelta(getMinSizeForPool(request));
+        resize.add(getHost().getParent().getParent().getCommand(req));
+        // we want to have labels snap back to their original places
         // when a sequence edge or a messaging edge is moved.
         // TODO make this a preference.
         makeSnapBackCommands(resize, request);
+
+
         return resize.unwrap();
     }
     
@@ -171,6 +205,14 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
             Rectangle requestedNewBounds,
             IGraphicalEditPart overlappingPart,
             CompoundCommand theCommand) {
+        if (movedPart instanceof GroupEditPart || 
+                movedPart instanceof Group2EditPart) {
+            return false;
+        } else if (overlappingPart instanceof GroupEditPart || 
+                overlappingPart instanceof Group2EditPart) {
+            return false;
+        }
+        
         return true;
     }
 
@@ -215,8 +257,9 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
         
         for (Object child : getHost().getChildren()) {
             IGraphicalEditPart part = (IGraphicalEditPart) child;
-            if (request.getEditParts().contains(part)) {
-                continue; // TODO support collision on multi selection
+            
+            if (getHost().getRoot().getViewer().getSelectedEditParts().contains(part)) {
+                continue;
             }
             //compute a slitghly smaller bound as we want to allow a small overlap.
             Rectangle childInnerBounds = new Rectangle(part.getFigure().getBounds());
@@ -348,27 +391,14 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
     		}
     		
     	}
-    	
-    	Dimension initialdim = ((GraphicalEditPart) getHost()).getFigure().getSize().getCopy();
+    	Dimension initialdim = ((GraphicalEditPart) ((GraphicalEditPart) getHost()).getParent()).getFigure().getSize().getCopy();
     	
     	
     	Point loc = request.getLocation().getCopy();
-    	getHostFigure().translateToAbsolute(loc);
-//    	getHostFigure().translateToRelative(loc);
-    	Rectangle rect = getHostFigure().getParent().getBounds().getCopy();
-    	getHostFigure().translateToAbsolute(rect);
-//        if (getHost().getRoot() instanceof DiagramRootEditPart) {
-//            ZoomManager zoom = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
-//            rect.x = (int) (rect.x * zoom.getZoom());
-//            rect.y = (int) (rect.y * zoom.getZoom());
-//            loc.x = (int) (loc.x * zoom.getZoom());
-//            loc.y = (int) (loc.y * zoom.getZoom());
-//        }
-    	loc.x = loc.x - rect.x;
-    	loc.y = loc.y - rect.y;
-    	dim.width = Math.max(dim.width, loc.x + requestSize.width - initialdim.width
+        getHostFigure().translateToRelative(loc);
+    	dim.width = (int) Math.max(dim.width, loc.x + requestSize.width - initialdim.width
     			+ INSETS.getWidth());
-    	dim.height = Math.max(dim.height, loc.y + requestSize.height - initialdim.height
+    	dim.height = (int) Math.max(dim.height, loc.y + requestSize.height - initialdim.height
     			 + INSETS.getHeight());
     	
 //    	 now calculate the delta.
@@ -385,34 +415,26 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
     private Dimension getMinSizeForPool(ChangeBoundsRequest request) {
     	Dimension initialdim = ((GraphicalEditPart) getHost()).getFigure().getSize().getCopy();
     	Dimension dim = new Dimension(0,0);
-//        ZoomManager zoom = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
     	for (Object child : getHost().getChildren()) {
     		IGraphicalEditPart part = (IGraphicalEditPart) child;
     		Rectangle r = part.getFigure().getBounds().getCopy();
-    		int w = (int) (r.x + r.width); //* zoom.getZoom());
+    		int w = (int) (r.x + r.width);
     		if (request.getEditParts().contains(part)) {
-    			w += request.getSizeDelta().width + request.getMoveDelta().x;
-    			w += 300; //added to have larger pools no matter what.
+    			w += (request.getSizeDelta().width + request.getMoveDelta().x) / _zoom.getZoom();
+    			w += 300;
     		}
     		if (dim.width < w) {
     			dim.width = w;
     		}
     		int h = r.y + r.height;
     		if (request.getEditParts().contains(part)) {
-    			h += request.getSizeDelta().height + request.getMoveDelta().y;
+    			h += (request.getSizeDelta().height + request.getMoveDelta().y) / _zoom.getZoom();
     		}
     		if (dim.height < h) {
     			dim.height = h;
     		}
     	}
     	
-//        if (getHost().getRoot() instanceof DiagramRootEditPart) {
-//            ZoomManager zoom = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
-//            initialdim.width = (int) (initialdim.width * zoom.getZoom());
-//            initialdim.height = (int) (initialdim.height * zoom.getZoom());
-//            dim.width = (int) (dim.width * zoom.getZoom());
-//            dim.height = (int) (dim.height * zoom.getZoom());
-//        }
     	// now calculate the delta.
     	dim.width = (int) (dim.width - initialdim.width + INSETS.getWidth());
     	dim.height = (int) (dim.height - initialdim.height + INSETS.getHeight());
@@ -452,22 +474,22 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
             IGraphicalEditPart child = (IGraphicalEditPart) iter.next();
             int x = 0;
             if (child instanceof LaneEditPart && 
-                    child.resolveSemanticElement().eResource() != null) {
+                    child.resolveSemanticElement() != null) {
                 Rectangle bounds;
                 if (children.contains(child)) {
                     bounds = (Rectangle) translateToModelConstraint(getConstraintFor(
                             request, child));
                     bounds.x = x;
                 } else {
-                    int y = ((Integer) child
+                    int y = (Integer) child
                             .getStructuralFeatureValue(NotationPackage.eINSTANCE
-                                    .getLocation_Y())).intValue();
-                    int width = ((Integer) child
+                                    .getLocation_Y());
+                    int width = (Integer) child
                             .getStructuralFeatureValue(NotationPackage.eINSTANCE
-                                    .getSize_Width())).intValue();
-                    int height = ((Integer) child
+                                    .getSize_Width());
+                    int height = (Integer) child
                             .getStructuralFeatureValue(NotationPackage.eINSTANCE
-                                    .getSize_Height())).intValue();
+                                    .getSize_Height());
                     bounds = new Rectangle(x, y, width, height);
                 }
 
@@ -684,32 +706,32 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
     protected Command getCreateCommand(CreateRequest request) {
     	// change the location of the request if in the insets. or negative
     	Point loc = request.getLocation().getCopy();
-    	
-        Point here = getHostFigure().getBounds().getCopy().getLocation();
-        
+    	Point here = getHostFigure().getParent().getBounds().getCopy().getLocation();
+        getHostFigure().getParent().translateToAbsolute(here);
         getHostFigure().translateToAbsolute(loc);
-    	getHostFigure().translateToAbsolute(here);
-        
+        getHostFigure().translateToRelative(loc);
         if (getHost().getRoot() instanceof DiagramRootEditPart) {
             ZoomManager zoom = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
-            loc.x = (int) (loc.x / zoom.getZoom());
-            loc.y = (int) (loc.y / zoom.getZoom());
+            loc.x /= zoom.getZoom();
+            loc.y /= zoom.getZoom();
+            here.x /= zoom.getZoom();
+            here.y /= zoom.getZoom();
         }
-    	loc.x = loc.x - here.x;
-		loc.y = loc.y - here.y;
-    	if (loc.x < INSETS.left) {
-    		int correction = INSETS.left - loc.x + 1;
+    	loc.x -= here.x;
+		loc.y -= here.y;
+    	if (loc.x < 0) {
+    		int correction = - loc.x + 1;
     		if (correction < 0) {
     			correction = 0; // no offset
     		}
-    		request.getLocation().x += correction;
+    		request.getLocation().x += Math.floor(correction/ _zoom.getZoom()) + 1;
     	}
-    	if (loc.y < INSETS.top) {
-    		int correction = INSETS.top - loc.y;
+    	if (loc.y < 0) {
+    		int correction = - loc.y + 1;
     		if (correction < 0) {
     			correction = 0; // no offset
     		}
-    		request.getLocation().y += correction;
+    		request.getLocation().y += Math.floor(correction/ _zoom.getZoom()) + 1;
     	}
         CreateViewRequest req = (CreateViewRequest) request;
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost())

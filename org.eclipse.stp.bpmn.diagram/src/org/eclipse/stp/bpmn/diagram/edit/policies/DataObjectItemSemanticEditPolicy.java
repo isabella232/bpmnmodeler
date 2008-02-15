@@ -26,8 +26,8 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnPackage;
-import org.eclipse.stp.bpmn.IdentifiableNode;
 import org.eclipse.stp.bpmn.commands.CreateRelationshipCommandEx;
 import org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
@@ -195,7 +195,7 @@ public class DataObjectItemSemanticEditPolicy extends
             Association newElement = (Association) super
                     .doDefaultElementCreation();
             if (newElement != null) {
-                newElement.setTarget((IdentifiableNode) getTarget());
+                newElement.setTarget((AssociationTarget) getTarget());
                 newElement.setSource((Artifact) getSource());
             }
             return newElement;

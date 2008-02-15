@@ -81,14 +81,6 @@ implements INodeFigureAnchorTerminalUpdatable {
         return super.getConnectionAnchors();
     }
 
-    public int getNumberOfTargetConnections() {
-        return super.getConnectionAnchors().size();
-    }
-
-    public int getNumberOfSourceConnections() {
-        return super.getConnectionAnchors().size();
-    }
-    
     /**
      * Returns a new anchor for this node figure.
      * 

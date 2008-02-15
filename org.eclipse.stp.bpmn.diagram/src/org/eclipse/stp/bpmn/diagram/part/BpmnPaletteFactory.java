@@ -56,6 +56,7 @@ import org.osgi.framework.Bundle;
 @SuppressWarnings("unchecked") //$NON-NLS-1$
 public class BpmnPaletteFactory {
 
+
     /**
      * @generated
      */
@@ -161,9 +162,55 @@ public class BpmnPaletteFactory {
         paletteContainer1.add(createStartMessage2CreationTool());
         paletteContainer1.add(createStartRule3CreationTool());
         paletteContainer1.add(createStartTimer4CreationTool());
+        paletteContainer1.add(createStartSignal5CreationTool());
+        paletteContainer1.add(createStartMultiple6CreationTool());
+        paletteContainer1.add(createStartLink7CreationTool());
         return paletteContainer1;
     }
     
+    /**
+     * @generated NOT
+     */
+    private PaletteEntry createStartLink7CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(START_LINK);
+        ImageDescriptor largeImage = findLargeImgDescr(START_LINK);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx
+        .wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_START_LINK_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Link start", 
+                "Create a link start event", smallImage, largeImage,
+                elementTypes) {
+        };
+
+        return result;
+    }
+    
+    /**
+     * @generated NOT
+     */
+    private PaletteEntry createStartMultiple6CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(START_MULTIPLE);
+        ImageDescriptor largeImage = findLargeImgDescr(START_MULTIPLE);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx
+        .wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_START_MULTIPLE_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Multiple start event", 
+                "Create a multiple start event", smallImage, largeImage,
+                elementTypes) {
+        };
+
+        return result;
+    }
     /**
      * @generated NOT
      */
@@ -185,6 +232,28 @@ public class BpmnPaletteFactory {
 
         return result;
     }
+    
+    /**
+     * @generated NOT
+     */
+    private PaletteEntry createStartSignal5CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(START_SIGNAL);
+        ImageDescriptor largeImage = findLargeImgDescr(START_SIGNAL);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx
+        .wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_START_SIGNAL_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Signal start event", 
+                "Create a signal start event", smallImage, largeImage,
+                elementTypes) {
+        };
+
+        return result;
+    }
     /**
      * @generated NOT todo: re-do this through the gmftool file.
      */
@@ -198,7 +267,55 @@ public class BpmnPaletteFactory {
         paletteContainer2.add(createIntermediateCompensation8CreationTool());
         paletteContainer2.add(createIntermediateRule9CreationTool());
         paletteContainer2.add(createIntermediateCancel10CreationTool());
+        paletteContainer2.add(createIntermediateSignal11CreationTool());
+        paletteContainer2.add(createIntermediateMultiple12CreationTool());
+        paletteContainer2.add(createIntermediateLink13CreationTool());
         return paletteContainer2;
+    }
+    
+    /**
+     * @generated NOT
+     */
+    private PaletteEntry createIntermediateLink13CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(INTERMEDIATE_LINK);
+        ImageDescriptor largeImage = findLargeImgDescr(INTERMEDIATE_LINK);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_INTERMEDIATE_LINK_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Link intermediate event", 
+                "Create a link intermediate event", smallImage, largeImage,
+                elementTypes) {
+        };
+        
+        return result;
+    }
+    
+    /**
+     * @generated NOT
+     */
+    private PaletteEntry createIntermediateMultiple12CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(INTERMEDIATE_MULTIPLE);
+        ImageDescriptor largeImage = findLargeImgDescr(INTERMEDIATE_MULTIPLE);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_INTERMEDIATE_MULTIPLE_LITERAL.getLiteral());
+        elementTypes.add(activity);
+        elementTypes.add(ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2003,
+                ActivityType.EVENT_INTERMEDIATE_MULTIPLE_LITERAL.getLiteral()));
+
+        ToolEntry result = new NodeToolEntry("Multiple intermediate event", 
+                "Create a multiple intermediate event", smallImage, largeImage,
+                elementTypes) {
+        };
+        
+        return result;
     }
     /**
      * @generated NOT todo: re-do this through the gmftool file.
@@ -211,10 +328,68 @@ public class BpmnPaletteFactory {
         paletteContainer3.add(createEndError12CreationTool());
         paletteContainer3.add(createEndCompensation13CreationTool());
         paletteContainer3.add(createEndTerminate14CreationTool());
-        
+        paletteContainer3.add(createEndSignal15CreationTool());
+        paletteContainer3.add(createEndMultiple16CreationTool());
+        paletteContainer3.add(createEndCancel17CreationTool());
+        paletteContainer3.add(createEndLink18CreationTool());
         return paletteContainer3;
     }
 
+    private PaletteEntry createEndLink18CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(END_LINK);
+        ImageDescriptor largeImage = findLargeImgDescr(END_LINK);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_END_LINK_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Link end", 
+                "Create a link end event", smallImage, largeImage,
+                elementTypes) {
+        };
+        
+        return result;
+    }
+    
+    private PaletteEntry createEndCancel17CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(END_CANCEL);
+        ImageDescriptor largeImage = findLargeImgDescr(END_CANCEL);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_END_CANCEL_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Cancel end", 
+                "Create a cancel end event", smallImage, largeImage,
+                elementTypes) {
+        };
+        
+        return result;
+    }
+    /**
+     * @generated NOT
+     */
+    private PaletteEntry createEndMultiple16CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(END_MULTIPLE);
+        ImageDescriptor largeImage = findLargeImgDescr(END_MULTIPLE);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_END_MULTIPLE_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Multiple end event", 
+                "Create a multiple end event", smallImage, largeImage,
+                elementTypes) {
+        };
+        
+        return result;
+    }
     /**
      * @generated
      */
@@ -1078,6 +1253,10 @@ public class BpmnPaletteFactory {
     public static final String END_EMPTY = "end_empty"; //$NON-NLS-1$
     public static final String END_ERROR = "end_error"; //$NON-NLS-1$
     public static final String END_MESSAGE = "end_message"; //$NON-NLS-1$
+    public static final String END_SIGNAL = "end_signal"; //$NON-NLS-1$
+    public static final String END_MULTIPLE = "end_multiple"; //$NON-NLS-1$
+    public static final String END_CANCEL = "end_cancel"; //$NON-NLS-1$
+    public static final String END_LINK = "end_link"; //$NON-NLS-1$
     public static final String END_TERMINATE = "end_terminate"; //$NON-NLS-1$
     public static final String GATEWAY_COMPLEX = "gateway_complex"; //$NON-NLS-1$
     public static final String GATEWAY_DATABASED_EXCLUSIVE = "gateway_databased_exclusive"; //$NON-NLS-1$
@@ -1085,17 +1264,23 @@ public class BpmnPaletteFactory {
     public static final String GATEWAY_EVENT_BASED = "gateway_event_based"; //$NON-NLS-1$
     public static final String GATEWAY_PARALLEL = "gateway_parallel"; //$NON-NLS-1$
     public static final String INTERMEDIATE_CANCEL = "intermediate_cancel"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_LINK = "intermediate_link"; //$NON-NLS-1$
     public static final String INTERMEDIATE_COMPENSATION = "intermediate_compensation"; //$NON-NLS-1$
     public static final String INTERMEDIATE_EMPTY = "intermediate_empty"; //$NON-NLS-1$
     public static final String INTERMEDIATE_ERROR = "intermediate_error"; //$NON-NLS-1$
     public static final String INTERMEDIATE_MESSAGE = "intermediate_message"; //$NON-NLS-1$
     public static final String INTERMEDIATE_RULE = "intermediate_rule"; //$NON-NLS-1$
     public static final String INTERMEDIATE_TIMER = "intermediate_timer"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_MULTIPLE = "intermediate_multiple"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_SIGNAL = "intermediate_signal"; //$NON-NLS-1$
     public static final String POOL = "pool"; //$NON-NLS-1$
     public static final String START_EMPTY = "start_empty"; //$NON-NLS-1$
     public static final String START_MESSAGE = "start_message"; //$NON-NLS-1$
     public static final String START_RULE = "start_rule"; //$NON-NLS-1$
     public static final String START_TIMER = "start_timer"; //$NON-NLS-1$
+    public static final String START_MULTIPLE = "start_multiple"; //$NON-NLS-1$
+    public static final String START_LINK = "start_link"; //$NON-NLS-1$
+    public static final String START_SIGNAL = "start_signal"; // $NON-NLS-1$
     public static final String SUB_PROCESS = "sub_process"; //$NON-NLS-1$
     public static final String SUB_PROCESS_EXPANDED = "sub_process_expanded"; //$NON-NLS-1$
     public static final String SUB_PROCESS_EXPANDED_LOOPING = "sub_process_expanded_looping"; //$NON-NLS-1$
@@ -1165,9 +1350,56 @@ public class BpmnPaletteFactory {
                         BpmnElementTypes.Activity_2003,
                         ActivityType.EVENT_INTERMEDIATE_CANCEL_LITERAL.getLiteral());
         elementTypes.add(activity);
+        elementTypes.add(ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2001,
+                ActivityType.EVENT_INTERMEDIATE_CANCEL_LITERAL.getLiteral()));
 
         ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_cancel_intermediate_label, 
                 BpmnDiagramMessages.BpmnPaletteFactory_cancel_intermediate_description, smallImage, largeImage, 
+                elementTypes) {
+        };
+
+        return result;
+    }
+    
+    /**
+     * @generated not
+     */
+    private ToolEntry createIntermediateSignal11CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(INTERMEDIATE_SIGNAL);
+        ImageDescriptor largeImage = findLargeImgDescr(INTERMEDIATE_SIGNAL);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                        BpmnElementTypes.Activity_2001,
+                        ActivityType.EVENT_INTERMEDIATE_SIGNAL_LITERAL.getLiteral());
+        elementTypes.add(activity);
+        elementTypes.add(ElementTypeEx.wrap(
+                BpmnElementTypes.Activity_2003,
+                ActivityType.EVENT_INTERMEDIATE_SIGNAL_LITERAL.getLiteral()));
+        ToolEntry result = new NodeToolEntry("Intermediate signal event", 
+                "Create an intermediate signal event", smallImage, largeImage, 
+                elementTypes) {
+        };
+
+        return result;
+    }
+    
+    /**
+     * @generated not
+     */
+    private ToolEntry createEndSignal15CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(END_SIGNAL);
+        ImageDescriptor largeImage = findLargeImgDescr(END_SIGNAL);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                        BpmnElementTypes.Activity_2001,
+                        ActivityType.EVENT_END_SIGNAL_LITERAL.getLiteral());
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("End signal event", 
+                "Create an end signal event", smallImage, largeImage, 
                 elementTypes) {
         };
 

@@ -58,6 +58,7 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin;
+import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin.IValidationMarkerCreationHook;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
@@ -344,8 +345,13 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 			try {
                 IMarker marker = file.createMarker(MARKER_TYPE);
 				marker.setAttribute(IMarker.MESSAGE, message);
-				marker.setAttribute(IMarker.LOCATION, EMFCoreUtil
-						.getQualifiedName(element, true));
+				
+				String location = EMFCoreUtil.getQualifiedName(element, true);
+				if (location.startsWith("<Diagram>::")) {
+				    location = location.substring("<Diagram>::".length());
+				}
+				marker.setAttribute(IMarker.LOCATION, location);
+				
 				marker.setAttribute(
 								org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
 								ViewUtil.getIdStr(view));
@@ -358,6 +364,14 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 				}
 				marker.setAttribute(IMarker.SEVERITY, markerSeverity);
 				marker.setAttribute("code", code); //$NON-NLS-1$
+				
+				List<IValidationMarkerCreationHook> hooks =
+				    BpmnValidationPlugin.getDefault().getCreationMarkerCallBacks();
+				if (hooks != null) {
+				    for (IValidationMarkerCreationHook hook : hooks) {
+				        hook.validationMarkerCreated(marker, element);
+				    }
+				}
 			} catch (CoreException e) {
                 BpmnValidationPlugin.getDefault().getLog().log(
                         new Status(IStatus.ERROR,

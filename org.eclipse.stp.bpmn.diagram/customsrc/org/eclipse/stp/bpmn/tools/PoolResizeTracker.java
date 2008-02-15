@@ -29,12 +29,12 @@ import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.Request;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToHelper;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.swt.SWT;
@@ -256,7 +256,7 @@ public class PoolResizeTracker extends ActivityResizeTracker {
                 Point minChildLocation = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
                 Dimension maxRoomOfChildren = new Dimension(0, 0);
                 for (Object ep : poolCompartment.getChildren()) {
-                	if (ep instanceof IGraphicalEditPart) {
+                	if (ep instanceof IGraphicalEditPart && !(ep instanceof LaneEditPart)) {
                 		// we use the figure as width and lengths may be 
                 		// not initialized on the views objects
                 		IFigure figure = ((IGraphicalEditPart) ep).getFigure();

@@ -85,7 +85,7 @@ public class BpmnDiagramsPreferencePage extends DiagramsPreferencePage {
                 BpmnDiagramPreferenceInitializer.PREF_SP_COLLAPSE_STYLE,
                 BpmnDiagramMessages.BpmnDiagramsPreferencePage_collapse_expand_policy_label,
                 bpmnGlobalGroup);
-            super.addField(collapseStyle);
+        super.addField(collapseStyle);
             
         IntegerFieldEditor delayEd = new IntegerFieldEditor(
                 PREF_CONN_DIAG_ASSISTANT_DELAY_MS,
@@ -94,6 +94,9 @@ public class BpmnDiagramsPreferencePage extends DiagramsPreferencePage {
         delayEd.setErrorMessage(BpmnDiagramMessages.BpmnDiagramsPreferencePage_connection_assistant_appareance_delay_error_message);
         delayEd.setValidRange(0, 20000);
         super.addField(delayEd);
+        
+        addField(new BooleanFieldEditor(BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE,
+                BpmnDiagramMessages.BpmnDiagramsPreferencePage_bpmn_style, bpmnGlobalGroup));
     }
     
 }

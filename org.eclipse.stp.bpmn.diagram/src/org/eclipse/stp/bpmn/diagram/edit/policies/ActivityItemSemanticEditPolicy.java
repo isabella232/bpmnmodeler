@@ -47,11 +47,12 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Identifiable;
-import org.eclipse.stp.bpmn.IdentifiableNode;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
@@ -78,16 +79,16 @@ public class ActivityItemSemanticEditPolicy extends
                     IProgressMonitor monitor, IAdaptable info)
                     throws ExecutionException {
                 Activity act = (Activity)getElementToDestroy();
-                Map<MessagingEdge,Activity> otherActivities =
-                    new HashMap<MessagingEdge,Activity>(act.getOrderedMessages().size());
-                _msgIds = new ArrayList<String>(otherActivities.size());
+                Map<MessagingEdge, MessageVertex> otherMsgVerices =
+                    new HashMap<MessagingEdge, MessageVertex>(act.getOrderedMessages().size());
+                _msgIds = new ArrayList<String>(otherMsgVerices.size());
                 ValueListIterator<Object> msgsIt = act.getOrderedMessages().valueListIterator();
                 while (msgsIt.hasNext()) {
                     MessagingEdge m = (MessagingEdge)msgsIt.next();
                     if (m.getTarget() != act && m.getTarget() != null) {
-                        otherActivities.put(m, m.getTarget());
+                        otherMsgVerices.put(m, m.getTarget());
                     } else if (m.getSource() != act && m.getSource() != null) {
-                        otherActivities.put(m, m.getSource());
+                        otherMsgVerices.put(m, m.getSource());
                     }
                     _msgIds.add(m.getID());
                 }
@@ -96,7 +97,7 @@ public class ActivityItemSemanticEditPolicy extends
                 //when it destroys the messaging edge it does not remove 
                 //the reference to the messaging edge
                 //on the activity on the other side that is not removed.
-                for (Entry<MessagingEdge,Activity> entry : otherActivities.entrySet()) {
+                for (Entry<MessagingEdge, MessageVertex> entry : otherMsgVerices.entrySet()) {
                     msgsIt = entry.getValue().getOrderedMessages().valueListIterator();
                     while (msgsIt.hasNext()) {
                         MessagingEdge m = (MessagingEdge)msgsIt.next();
@@ -568,7 +569,7 @@ public class ActivityItemSemanticEditPolicy extends
                          && ((FeatureMap.Entry) source.
                             getOrderedMessages().get(0))
                               .getEStructuralFeature().getFeatureID() ==
-                                BpmnPackage.ACTIVITY__OUTGOING_MESSAGES) {
+                                BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES) {
                         break;
                     }
                 case ActivityType.EVENT_END_COMPENSATION:
@@ -616,7 +617,7 @@ public class ActivityItemSemanticEditPolicy extends
                         MessagingEdge firstMsgOfSource =
                         (MessagingEdge) fentry.getValue();
                         if (fentry.getEStructuralFeature().getFeatureID() ==
-                            BpmnPackage.ACTIVITY__INCOMING_MESSAGES &&
+                            BpmnPackage.MESSAGE_VERTEX__INCOMING_MESSAGES &&
                                 firstMsgOfSource.getSource() == target) {
                         // a little bent to the spec
                         // let's let the start events be able to reply
@@ -721,7 +722,7 @@ public class ActivityItemSemanticEditPolicy extends
             Association newElement = (Association) super
                     .doDefaultElementCreation();
             if (newElement != null) {
-                newElement.setTarget((IdentifiableNode) getTarget());
+                newElement.setTarget((AssociationTarget) getTarget());
                 newElement.setSource((Artifact) getSource());
             }
             return newElement;

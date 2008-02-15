@@ -40,133 +40,133 @@ import org.eclipse.stp.bpmn.Group;
  */
 public class GroupImpl extends ArtifactImpl implements Group {
     /**
-	 * The cached value of the '{@link #getActivities() <em>Activities</em>}' reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getActivities() <em>Activities</em>}' reference list.
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @see #getActivities()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getActivities()
+     * @generated
+     * @ordered
+     */
 	protected EList<Activity> activities;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	protected GroupImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	protected EClass eStaticClass() {
-		return BpmnPackage.Literals.GROUP;
-	}
+        return BpmnPackage.Literals.GROUP;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	public EList<Activity> getActivities() {
-		if (activities == null) {
-			activities = new EObjectWithInverseEList.ManyInverse<Activity>(Activity.class, this, BpmnPackage.GROUP__ACTIVITIES, BpmnPackage.ACTIVITY__GROUPS);
-		}
-		return activities;
-	}
+        if (activities == null) {
+            activities = new EObjectWithInverseEList.ManyInverse<Activity>(Activity.class, this, BpmnPackage.GROUP__ACTIVITIES, BpmnPackage.ACTIVITY__GROUPS);
+        }
+        return activities;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 	public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.GROUP__ACTIVITIES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getActivities()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.GROUP__ACTIVITIES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getActivities()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.GROUP__ACTIVITIES:
-				return ((InternalEList<?>)getActivities()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.GROUP__ACTIVITIES:
+                return ((InternalEList<?>)getActivities()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case BpmnPackage.GROUP__ACTIVITIES:
-				return getActivities();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case BpmnPackage.GROUP__ACTIVITIES:
+                return getActivities();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 	public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case BpmnPackage.GROUP__ACTIVITIES:
-				getActivities().clear();
-				getActivities().addAll((Collection<? extends Activity>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case BpmnPackage.GROUP__ACTIVITIES:
+                getActivities().clear();
+                getActivities().addAll((Collection<? extends Activity>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public void eUnset(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.GROUP__ACTIVITIES:
-				getActivities().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.GROUP__ACTIVITIES:
+                getActivities().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
 	@Override
 	public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.GROUP__ACTIVITIES:
-				return activities != null && !activities.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.GROUP__ACTIVITIES:
+                return activities != null && !activities.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
 } //GroupImpl

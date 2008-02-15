@@ -106,7 +106,6 @@ public abstract class AbstractViewDnDHandler extends AbstractDnDHandler {
 //                      try {
                         Map<View, View> newNodes = new HashMap<View, View>();
                         Map<View, View> edges = new HashMap<View, View>();
-                        
                         for (EObject eobject : views) {
                             View view = (View) eobject;
                             // first copy the view and its semantic element.
@@ -276,7 +275,7 @@ public abstract class AbstractViewDnDHandler extends AbstractDnDHandler {
 //                try {
                 domain.getCommandStack().execute(command);
                 
-//              finally we arrange the paerts selectively.
+//              finally we arrange the parts selectively.
 //              We try to arrange the parts more concerned, 
 //              ie activities connected together.
                 final List previousEditParts = new ArrayList(part.getChildren());
@@ -317,4 +316,5 @@ public abstract class AbstractViewDnDHandler extends AbstractDnDHandler {
         (hoverPart instanceof SubProcessSubProcessBodyCompartmentEditPart ||
                 hoverPart instanceof PoolPoolCompartmentEditPart);
     }
+        
 }

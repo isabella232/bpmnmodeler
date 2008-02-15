@@ -22,8 +22,10 @@ import java.util.Set;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.figures.activities.LaneFigure;
 
 /**
@@ -60,9 +62,33 @@ public class PoolPoolCompartmentFigure extends NotScrollableShapeCompartmentFigu
         Set<Integer> newCoordsOnLastUpdate = new HashSet<Integer>();
         for (IFigure fig : figs) {
             if (fig instanceof LaneFigure) {
-                Point bottom = fig.getBounds().getBottom();
+                Point bottom = fig.getBounds().getBottom().getCopy();
                 fig.translateToAbsolute(bottom);
-                //don't draw if you are the last bottom line.
+                this.translateToRelative(bottom);
+                
+                graphics.pushState();
+                graphics.setForegroundColor(fig.getForegroundColor());
+                graphics.setBackgroundColor(fig.getBackgroundColor());
+                Rectangle rectangle = new Rectangle();
+                rectangle.width = getBounds().width;
+                rectangle.x = getBounds().x;
+                rectangle.height = fig.getBounds().height;
+                rectangle.y = bottom.y - rectangle.height;
+                if (rectangle.y - PoolPoolCompartmentEditPart.INSETS.getHeight() <= getBounds().y) {
+                    rectangle.height += PoolPoolCompartmentEditPart.INSETS.getHeight();
+                    rectangle.y -= PoolPoolCompartmentEditPart.INSETS.getHeight();
+                }
+                
+                if (bottom.y + PoolPoolCompartmentEditPart.INSETS.getHeight() >= 
+                        getBounds().y + getBounds().height) {
+                    rectangle.height += PoolPoolCompartmentEditPart.INSETS.getHeight();
+                }
+                
+                graphics.fillRectangle(rectangle);
+                
+                bottom = fig.getBounds().getBottom().getCopy();
+                fig.translateToAbsolute(bottom);
+              //don't draw if you are the last bottom line.
                 if (bottom.y + 35 < theBottom.y) {
                     this.translateToRelative(bottom);
                     graphics.drawLine(getBounds().x, bottom.y,
@@ -73,8 +99,12 @@ public class PoolPoolCompartmentFigure extends NotScrollableShapeCompartmentFigu
                         doUpdateRestOfPool = true;
                     }
                 }
+                
+                graphics.popState();
             }
         }
+        doUpdateRestOfPool = doUpdateRestOfPool || 
+            _coordsOnLastUpdate.size() != newCoordsOnLastUpdate.size();
         _coordsOnLastUpdate = newCoordsOnLastUpdate;
         graphics.popState();
         if (doUpdateRestOfPool) {

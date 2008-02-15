@@ -58,6 +58,10 @@ import org.eclipse.stp.bpmn.handles.ConnectionHandleForAssociation;
  */
 public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 
+    /**
+     * static field to show one handle at the time.
+     */
+    private static boolean isHandleCurrentlyShowing = false;
 	/**
 	 * Listens to the owner figure being moved so the handles can be removed
 	 * when this occurs.
@@ -256,6 +260,7 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 	
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
     protected void showDiagramAssistant(Point referencePoint) {
+	    isHandleCurrentlyShowing = true;
 		if (referencePoint == null) {
 			referencePoint = getHostFigure().getBounds().getRight();
 		}
@@ -323,6 +328,7 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 	 * Removes the connection handles.
 	 */
 	protected void hideDiagramAssistant() {
+	    isHandleCurrentlyShowing = false;
 		if (handles == null) {
 			return;
 		}
@@ -355,6 +361,9 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#shouldShowDiagramAssistant()
 	 */
 	protected boolean shouldShowDiagramAssistant(){
+	    if (isHandleCurrentlyShowing) {
+	        return false;
+	    }
         if (getAppearanceDelay() < 0) {
             return false;
         }

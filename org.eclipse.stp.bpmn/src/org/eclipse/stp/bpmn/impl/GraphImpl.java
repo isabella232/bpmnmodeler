@@ -49,430 +49,430 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  *
  * @generated
  */
-public class GraphImpl extends IdentifiableNodeImpl implements Graph {
+public class GraphImpl extends AssociationTargetImpl implements Graph {
     /**
-	 * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
     protected static final String DOCUMENTATION_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getDocumentation() <em>Documentation</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getDocumentation()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getDocumentation()
+     * @generated
+     * @ordered
+     */
     protected String documentation = DOCUMENTATION_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
     protected static final String NAME_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getName() <em>Name</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getName()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getName()
+     * @generated
+     * @ordered
+     */
     protected String name = NAME_EDEFAULT;
 
     /**
-	 * The default value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getNcname()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getNcname()
+     * @generated
+     * @ordered
+     */
     protected static final String NCNAME_EDEFAULT = null;
 
     /**
-	 * The cached value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getNcname() <em>Ncname</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getNcname()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getNcname()
+     * @generated
+     * @ordered
+     */
     protected String ncname = NCNAME_EDEFAULT;
 
     /**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getArtifacts()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getArtifacts()
+     * @generated
+     * @ordered
+     */
     protected EList<Artifact> artifacts;
 
     /**
-	 * The cached value of the '{@link #getVertices() <em>Vertices</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getVertices() <em>Vertices</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getVertices()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVertices()
+     * @generated
+     * @ordered
+     */
     protected EList<Vertex> vertices;
 
     /**
-	 * The cached value of the '{@link #getSequenceEdges() <em>Sequence Edges</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSequenceEdges() <em>Sequence Edges</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getSequenceEdges()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSequenceEdges()
+     * @generated
+     * @ordered
+     */
     protected EList<SequenceEdge> sequenceEdges;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected GraphImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				protected EClass eStaticClass() {
-		return BpmnPackage.Literals.GRAPH;
-	}
+        return BpmnPackage.Literals.GRAPH;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getDocumentation() {
-		return documentation;
-	}
+        return documentation;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setDocumentation(String newDocumentation) {
-		String oldDocumentation = documentation;
-		documentation = newDocumentation;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.GRAPH__DOCUMENTATION, oldDocumentation, documentation));
-	}
+        String oldDocumentation = documentation;
+        documentation = newDocumentation;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.GRAPH__DOCUMENTATION, oldDocumentation, documentation));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getName() {
-		return name;
-	}
+        return name;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setName(String newName) {
-		String oldName = name;
-		name = newName;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.GRAPH__NAME, oldName, name));
-	}
+        String oldName = name;
+        name = newName;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.GRAPH__NAME, oldName, name));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public String getNcname() {
-		return ncname;
-	}
+        return ncname;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setNcname(String newNcname) {
-		String oldNcname = ncname;
-		ncname = newNcname;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.GRAPH__NCNAME, oldNcname, ncname));
-	}
+        String oldNcname = ncname;
+        ncname = newNcname;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.GRAPH__NCNAME, oldNcname, ncname));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<Artifact> getArtifacts() {
-		if (artifacts == null) {
-			artifacts = new EObjectContainmentWithInverseEList<Artifact>(Artifact.class, this, BpmnPackage.GRAPH__ARTIFACTS, BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER);
-		}
-		return artifacts;
-	}
+        if (artifacts == null) {
+            artifacts = new EObjectContainmentWithInverseEList<Artifact>(Artifact.class, this, BpmnPackage.GRAPH__ARTIFACTS, BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER);
+        }
+        return artifacts;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<Vertex> getVertices() {
-		if (vertices == null) {
-			vertices = new EObjectContainmentWithInverseEList<Vertex>(Vertex.class, this, BpmnPackage.GRAPH__VERTICES, BpmnPackage.VERTEX__GRAPH);
-		}
-		return vertices;
-	}
+        if (vertices == null) {
+            vertices = new EObjectContainmentWithInverseEList<Vertex>(Vertex.class, this, BpmnPackage.GRAPH__VERTICES, BpmnPackage.VERTEX__GRAPH);
+        }
+        return vertices;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<SequenceEdge> getSequenceEdges() {
-		if (sequenceEdges == null) {
-			sequenceEdges = new EObjectContainmentWithInverseEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.GRAPH__SEQUENCE_EDGES, BpmnPackage.SEQUENCE_EDGE__GRAPH);
-		}
-		return sequenceEdges;
-	}
+        if (sequenceEdges == null) {
+            sequenceEdges = new EObjectContainmentWithInverseEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.GRAPH__SEQUENCE_EDGES, BpmnPackage.SEQUENCE_EDGE__GRAPH);
+        }
+        return sequenceEdges;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.GRAPH__ARTIFACTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getArtifacts()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.GRAPH__VERTICES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getVertices()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.GRAPH__SEQUENCE_EDGES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getSequenceEdges()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.GRAPH__ARTIFACTS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getArtifacts()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.GRAPH__VERTICES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getVertices()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.GRAPH__SEQUENCE_EDGES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getSequenceEdges()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.GRAPH__ARTIFACTS:
-				return ((InternalEList<?>)getArtifacts()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.GRAPH__VERTICES:
-				return ((InternalEList<?>)getVertices()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.GRAPH__SEQUENCE_EDGES:
-				return ((InternalEList<?>)getSequenceEdges()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.GRAPH__ARTIFACTS:
+                return ((InternalEList<?>)getArtifacts()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.GRAPH__VERTICES:
+                return ((InternalEList<?>)getVertices()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.GRAPH__SEQUENCE_EDGES:
+                return ((InternalEList<?>)getSequenceEdges()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case BpmnPackage.GRAPH__DOCUMENTATION:
-				return getDocumentation();
-			case BpmnPackage.GRAPH__NAME:
-				return getName();
-			case BpmnPackage.GRAPH__NCNAME:
-				return getNcname();
-			case BpmnPackage.GRAPH__ARTIFACTS:
-				return getArtifacts();
-			case BpmnPackage.GRAPH__VERTICES:
-				return getVertices();
-			case BpmnPackage.GRAPH__SEQUENCE_EDGES:
-				return getSequenceEdges();
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case BpmnPackage.GRAPH__DOCUMENTATION:
+                return getDocumentation();
+            case BpmnPackage.GRAPH__NAME:
+                return getName();
+            case BpmnPackage.GRAPH__NCNAME:
+                return getNcname();
+            case BpmnPackage.GRAPH__ARTIFACTS:
+                return getArtifacts();
+            case BpmnPackage.GRAPH__VERTICES:
+                return getVertices();
+            case BpmnPackage.GRAPH__SEQUENCE_EDGES:
+                return getSequenceEdges();
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case BpmnPackage.GRAPH__DOCUMENTATION:
-				setDocumentation((String)newValue);
-				return;
-			case BpmnPackage.GRAPH__NAME:
-				setName((String)newValue);
-				return;
-			case BpmnPackage.GRAPH__NCNAME:
-				setNcname((String)newValue);
-				return;
-			case BpmnPackage.GRAPH__ARTIFACTS:
-				getArtifacts().clear();
-				getArtifacts().addAll((Collection<? extends Artifact>)newValue);
-				return;
-			case BpmnPackage.GRAPH__VERTICES:
-				getVertices().clear();
-				getVertices().addAll((Collection<? extends Vertex>)newValue);
-				return;
-			case BpmnPackage.GRAPH__SEQUENCE_EDGES:
-				getSequenceEdges().clear();
-				getSequenceEdges().addAll((Collection<? extends SequenceEdge>)newValue);
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case BpmnPackage.GRAPH__DOCUMENTATION:
+                setDocumentation((String)newValue);
+                return;
+            case BpmnPackage.GRAPH__NAME:
+                setName((String)newValue);
+                return;
+            case BpmnPackage.GRAPH__NCNAME:
+                setNcname((String)newValue);
+                return;
+            case BpmnPackage.GRAPH__ARTIFACTS:
+                getArtifacts().clear();
+                getArtifacts().addAll((Collection<? extends Artifact>)newValue);
+                return;
+            case BpmnPackage.GRAPH__VERTICES:
+                getVertices().clear();
+                getVertices().addAll((Collection<? extends Vertex>)newValue);
+                return;
+            case BpmnPackage.GRAPH__SEQUENCE_EDGES:
+                getSequenceEdges().clear();
+                getSequenceEdges().addAll((Collection<? extends SequenceEdge>)newValue);
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public void eUnset(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.GRAPH__DOCUMENTATION:
-				setDocumentation(DOCUMENTATION_EDEFAULT);
-				return;
-			case BpmnPackage.GRAPH__NAME:
-				setName(NAME_EDEFAULT);
-				return;
-			case BpmnPackage.GRAPH__NCNAME:
-				setNcname(NCNAME_EDEFAULT);
-				return;
-			case BpmnPackage.GRAPH__ARTIFACTS:
-				getArtifacts().clear();
-				return;
-			case BpmnPackage.GRAPH__VERTICES:
-				getVertices().clear();
-				return;
-			case BpmnPackage.GRAPH__SEQUENCE_EDGES:
-				getSequenceEdges().clear();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.GRAPH__DOCUMENTATION:
+                setDocumentation(DOCUMENTATION_EDEFAULT);
+                return;
+            case BpmnPackage.GRAPH__NAME:
+                setName(NAME_EDEFAULT);
+                return;
+            case BpmnPackage.GRAPH__NCNAME:
+                setNcname(NCNAME_EDEFAULT);
+                return;
+            case BpmnPackage.GRAPH__ARTIFACTS:
+                getArtifacts().clear();
+                return;
+            case BpmnPackage.GRAPH__VERTICES:
+                getVertices().clear();
+                return;
+            case BpmnPackage.GRAPH__SEQUENCE_EDGES:
+                getSequenceEdges().clear();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.GRAPH__DOCUMENTATION:
-				return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
-			case BpmnPackage.GRAPH__NAME:
-				return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
-			case BpmnPackage.GRAPH__NCNAME:
-				return NCNAME_EDEFAULT == null ? ncname != null : !NCNAME_EDEFAULT.equals(ncname);
-			case BpmnPackage.GRAPH__ARTIFACTS:
-				return artifacts != null && !artifacts.isEmpty();
-			case BpmnPackage.GRAPH__VERTICES:
-				return vertices != null && !vertices.isEmpty();
-			case BpmnPackage.GRAPH__SEQUENCE_EDGES:
-				return sequenceEdges != null && !sequenceEdges.isEmpty();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.GRAPH__DOCUMENTATION:
+                return DOCUMENTATION_EDEFAULT == null ? documentation != null : !DOCUMENTATION_EDEFAULT.equals(documentation);
+            case BpmnPackage.GRAPH__NAME:
+                return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
+            case BpmnPackage.GRAPH__NCNAME:
+                return NCNAME_EDEFAULT == null ? ncname != null : !NCNAME_EDEFAULT.equals(ncname);
+            case BpmnPackage.GRAPH__ARTIFACTS:
+                return artifacts != null && !artifacts.isEmpty();
+            case BpmnPackage.GRAPH__VERTICES:
+                return vertices != null && !vertices.isEmpty();
+            case BpmnPackage.GRAPH__SEQUENCE_EDGES:
+                return sequenceEdges != null && !sequenceEdges.isEmpty();
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == NamedBpmnObject.class) {
-			switch (derivedFeatureID) {
-				case BpmnPackage.GRAPH__DOCUMENTATION: return BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION;
-				case BpmnPackage.GRAPH__NAME: return BpmnPackage.NAMED_BPMN_OBJECT__NAME;
-				case BpmnPackage.GRAPH__NCNAME: return BpmnPackage.NAMED_BPMN_OBJECT__NCNAME;
-				default: return -1;
-			}
-		}
-		if (baseClass == ArtifactsContainer.class) {
-			switch (derivedFeatureID) {
-				case BpmnPackage.GRAPH__ARTIFACTS: return BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == NamedBpmnObject.class) {
+            switch (derivedFeatureID) {
+                case BpmnPackage.GRAPH__DOCUMENTATION: return BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION;
+                case BpmnPackage.GRAPH__NAME: return BpmnPackage.NAMED_BPMN_OBJECT__NAME;
+                case BpmnPackage.GRAPH__NCNAME: return BpmnPackage.NAMED_BPMN_OBJECT__NCNAME;
+                default: return -1;
+            }
+        }
+        if (baseClass == ArtifactsContainer.class) {
+            switch (derivedFeatureID) {
+                case BpmnPackage.GRAPH__ARTIFACTS: return BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == NamedBpmnObject.class) {
-			switch (baseFeatureID) {
-				case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION: return BpmnPackage.GRAPH__DOCUMENTATION;
-				case BpmnPackage.NAMED_BPMN_OBJECT__NAME: return BpmnPackage.GRAPH__NAME;
-				case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME: return BpmnPackage.GRAPH__NCNAME;
-				default: return -1;
-			}
-		}
-		if (baseClass == ArtifactsContainer.class) {
-			switch (baseFeatureID) {
-				case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS: return BpmnPackage.GRAPH__ARTIFACTS;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == NamedBpmnObject.class) {
+            switch (baseFeatureID) {
+                case BpmnPackage.NAMED_BPMN_OBJECT__DOCUMENTATION: return BpmnPackage.GRAPH__DOCUMENTATION;
+                case BpmnPackage.NAMED_BPMN_OBJECT__NAME: return BpmnPackage.GRAPH__NAME;
+                case BpmnPackage.NAMED_BPMN_OBJECT__NCNAME: return BpmnPackage.GRAPH__NCNAME;
+                default: return -1;
+            }
+        }
+        if (baseClass == ArtifactsContainer.class) {
+            switch (baseFeatureID) {
+                case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS: return BpmnPackage.GRAPH__ARTIFACTS;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(BpmnMessages.GraphImpl_doc);
-		result.append(documentation);
-		result.append(BpmnMessages.GraphImpl_name);
-		result.append(name);
-		result.append(BpmnMessages.GraphImpl_ncname);
-		result.append(ncname);
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (documentation: ");
+        result.append(documentation);
+        result.append(", name: ");
+        result.append(name);
+        result.append(", ncname: ");
+        result.append(ncname);
+        result.append(')');
+        return result.toString();
+    }
 
 } //GraphImpl

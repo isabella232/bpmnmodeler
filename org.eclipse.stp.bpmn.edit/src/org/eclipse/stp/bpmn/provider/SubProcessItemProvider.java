@@ -20,9 +20,12 @@ import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
 import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -48,13 +51,6 @@ public class SubProcessItemProvider
 		IItemLabelProvider,	
 		IItemPropertySource {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -70,7 +66,8 @@ public class SubProcessItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public List getPropertyDescriptors(Object object) {
+	@Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -90,8 +87,8 @@ public class SubProcessItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_SubProcess_isTransaction_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_SubProcess_isTransaction_feature", "_UI_SubProcess_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_SubProcess_isTransaction_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_SubProcess_isTransaction_feature", "_UI_SubProcess_type"),
                  BpmnPackage.Literals.SUB_PROCESS__IS_TRANSACTION,
                  true,
                  false,
@@ -109,7 +106,8 @@ public class SubProcessItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Collection getChildrenFeatures(Object object) {
+	@Override
+    public Collection<? extends EStructuralFeature> getChildrenFeatures(Object object) {
         if (childrenFeatures == null) {
             super.getChildrenFeatures(object);
             childrenFeatures.add(BpmnPackage.Literals.ARTIFACTS_CONTAINER__ARTIFACTS);
@@ -125,6 +123,7 @@ public class SubProcessItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     protected EStructuralFeature getChildFeature(Object object, Object child) {
         // Check the type of the specified child object and return the proper feature to use for
         // adding (see {@link AddCommand}) it as a child.
@@ -139,7 +138,7 @@ public class SubProcessItemProvider
      * @generated
      */
 	public Object getImageGen(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/SubProcess")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/SubProcess"));
     }
 
     /**
@@ -162,11 +161,12 @@ public class SubProcessItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public String getText(Object object) {
+	@Override
+    public String getText(Object object) {
         String label = ((SubProcess)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_SubProcess_type") : //$NON-NLS-1$
-            getString("_UI_SubProcess_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_SubProcess_type") :
+            getString("_UI_SubProcess_type") + " " + label;
     }
 
     /**
@@ -176,7 +176,8 @@ public class SubProcessItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public void notifyChanged(Notification notification) {
+	@Override
+    public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
         switch (notification.getFeatureID(SubProcess.class)) {
@@ -194,13 +195,14 @@ public class SubProcessItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
-	protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+	@Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
 
         newChildDescriptors.add
@@ -260,17 +262,26 @@ public class SubProcessItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public String getCreateChildText(Object owner, Object feature, Object child, Collection selection) {
+    @Override
+    public String getCreateChildText(Object owner, Object feature, Object child, Collection<?> selection) {
         Object childFeature = feature;
         Object childObject = child;
 
+        if (childFeature instanceof EStructuralFeature && FeatureMapUtil.isFeatureMap((EStructuralFeature)childFeature)) {
+            FeatureMap.Entry entry = (FeatureMap.Entry)childObject;
+            childFeature = entry.getEStructuralFeature();
+            childObject = entry.getValue();
+        }
+
         boolean qualify =
+            childFeature == BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES ||
+            childFeature == BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES ||
             childFeature == BpmnPackage.Literals.GRAPH__VERTICES ||
             childFeature == BpmnPackage.Literals.SUB_PROCESS__EVENT_HANDLERS;
 
         if (qualify) {
             return getString
-                ("_UI_CreateChild_text2", //$NON-NLS-1$
+                ("_UI_CreateChild_text2",
                  new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
         }
         return super.getCreateChildText(owner, feature, child, selection);
@@ -282,7 +293,8 @@ public class SubProcessItemProvider
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public ResourceLocator getResourceLocator() {
+	@Override
+    public ResourceLocator getResourceLocator() {
         return BpmnEditPlugin.INSTANCE;
     }
 

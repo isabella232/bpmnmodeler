@@ -20,7 +20,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.ReorientRelationshipReques
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
-import org.eclipse.stp.bpmn.IdentifiableNode;
+import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.Vertex;
@@ -67,10 +67,10 @@ public class BpmnReorientRelationshipCommand extends Command {
                         return false;
                     }
                 } else {
-                    if (newEnd instanceof IdentifiableNode) {
+                    if (newEnd instanceof AssociationTarget) {
                         return !alreadyConnected(
                                 ((Association)_req.getRelationship()).getSource(),
-                                (IdentifiableNode) newEnd);
+                                (AssociationTarget) newEnd);
                     } else {
                         return false;
                     }
@@ -109,7 +109,7 @@ public class BpmnReorientRelationshipCommand extends Command {
      * @return true if they  are already connected, false
      * otherwise.
      */
-    private boolean alreadyConnected(Artifact src, IdentifiableNode target) {
+    private boolean alreadyConnected(Artifact src, AssociationTarget target) {
         for (Association assoc : src.getAssociations()) {
          if (target.equals(assoc.getTarget())) {
              return true;
@@ -145,7 +145,7 @@ public class BpmnReorientRelationshipCommand extends Command {
             if (_req.getDirection() == ReorientRelationshipRequest.REORIENT_SOURCE) {
                 ((Association)_req.getRelationship()).setSource((Artifact)newEnd);
             } else {
-                ((Association)_req.getRelationship()).setTarget((IdentifiableNode)newEnd);
+                ((Association)_req.getRelationship()).setTarget((AssociationTarget)newEnd);
             }
         } else if (_req.getRelationship() instanceof SequenceEdge) {
             if (_req.getDirection() == ReorientRelationshipRequest.REORIENT_SOURCE) {

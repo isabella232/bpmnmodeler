@@ -65,10 +65,12 @@ public class CreateElementCommandEx extends CreateElementCommand {
                     if (res instanceof Activity || res instanceof SubProcess) {
                         if (BpmnPackage.Literals.ACTIVITY__LOOPING.getName()
                                 .equals(secondarySemanticHint)) {
-                            if (res instanceof Activity) {
-                                ((Activity) res).setLooping(true);
-                            } else {
+                            if (res instanceof SubProcess) {
                                 ((SubProcess) res).setLooping(true);
+                                ((SubProcess) res).setActivityType(ActivityType.SUB_PROCESS_LITERAL);
+                            } else {
+                                ((Activity) res).setLooping(true);
+                                ((Activity) res).setActivityType(ActivityType.TASK_LITERAL);
                             }
                         } else if (res instanceof Activity) {
                             ActivityType at = ActivityType

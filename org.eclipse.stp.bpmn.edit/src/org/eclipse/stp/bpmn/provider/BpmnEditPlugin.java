@@ -27,13 +27,6 @@ import org.eclipse.emf.ecore.provider.EcoreEditPlugin;
  */
 public final class BpmnEditPlugin extends EMFPlugin {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * Keep track of the singleton.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -94,7 +87,8 @@ public final class BpmnEditPlugin extends EMFPlugin {
      * @return the singleton instance.
      * @generated
      */
-	public ResourceLocator getPluginResourceLocator() {
+	@Override
+    public ResourceLocator getPluginResourceLocator() {
         return plugin;
     }
 

@@ -20,6 +20,7 @@ import org.eclipse.emf.ecore.provider.EModelElementItemProvider;
 import org.eclipse.emf.edit.provider.ComposeableAdapterFactory;
 import org.eclipse.emf.edit.provider.IEditingDomainItemProvider;
 import org.eclipse.emf.edit.provider.IItemLabelProvider;
+import org.eclipse.emf.edit.provider.IItemPropertyDescriptor;
 import org.eclipse.emf.edit.provider.IItemPropertySource;
 import org.eclipse.emf.edit.provider.IStructuredItemContentProvider;
 import org.eclipse.emf.edit.provider.ITreeItemContentProvider;
@@ -45,13 +46,6 @@ public class AssociationItemProvider
         IItemLabelProvider,	
         IItemPropertySource {
     /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public static final String copyright = ""; //$NON-NLS-1$
-
-    /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -67,7 +61,8 @@ public class AssociationItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
-    public List getPropertyDescriptors(Object object) {
+    @Override
+    public List<IItemPropertyDescriptor> getPropertyDescriptors(Object object) {
         if (itemPropertyDescriptors == null) {
             super.getPropertyDescriptors(object);
 
@@ -89,8 +84,8 @@ public class AssociationItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Association_direction_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Association_direction_feature", "_UI_Association_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Association_direction_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Association_direction_feature", "_UI_Association_type"),
                  BpmnPackage.Literals.ASSOCIATION__DIRECTION,
                  true,
                  false,
@@ -111,8 +106,8 @@ public class AssociationItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Association_source_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Association_source_feature", "_UI_Association_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Association_source_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Association_source_feature", "_UI_Association_type"),
                  BpmnPackage.Literals.ASSOCIATION__SOURCE,
                  true,
                  false,
@@ -133,8 +128,8 @@ public class AssociationItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Association_target_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Association_target_feature", "_UI_Association_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Association_target_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Association_target_feature", "_UI_Association_type"),
                  BpmnPackage.Literals.ASSOCIATION__TARGET,
                  true,
                  false,
@@ -150,8 +145,9 @@ public class AssociationItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Association")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Association"));
     }
 
     /**
@@ -160,12 +156,13 @@ public class AssociationItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public String getText(Object object) {
         DirectionType labelValue = ((Association)object).getDirection();
         String label = labelValue == null ? null : labelValue.toString();
         return label == null || label.length() == 0 ?
-            getString("_UI_Association_type") : //$NON-NLS-1$
-            getString("_UI_Association_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_Association_type") :
+            getString("_UI_Association_type") + " " + label;
     }
 
     /**
@@ -175,6 +172,7 @@ public class AssociationItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public void notifyChanged(Notification notification) {
         updateChildren(notification);
 
@@ -187,13 +185,14 @@ public class AssociationItemProvider
     }
 
     /**
-     * This adds to the collection of {@link org.eclipse.emf.edit.command.CommandParameter}s
-     * describing all of the children that can be created under this object.
+     * This adds {@link org.eclipse.emf.edit.command.CommandParameter}s describing the children
+     * that can be created under this object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    protected void collectNewChildDescriptors(Collection newChildDescriptors, Object object) {
+    @Override
+    protected void collectNewChildDescriptors(Collection<Object> newChildDescriptors, Object object) {
         super.collectNewChildDescriptors(newChildDescriptors, object);
     }
 
@@ -203,6 +202,7 @@ public class AssociationItemProvider
      * <!-- end-user-doc -->
      * @generated
      */
+    @Override
     public ResourceLocator getResourceLocator() {
         return BpmnEditPlugin.INSTANCE;
     }

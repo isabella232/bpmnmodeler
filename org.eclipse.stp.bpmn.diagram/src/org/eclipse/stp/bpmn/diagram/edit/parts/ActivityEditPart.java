@@ -10,8 +10,12 @@
  */
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.draw2d.BorderLayout;
@@ -37,6 +41,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
@@ -46,7 +51,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.Edge;
+import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
@@ -576,6 +584,24 @@ public class ActivityEditPart extends ShapeNodeEditPart {
                     setActivityTypeAndLabelAndLayout(getPrimaryShape(), activity)) {
                 refreshVisuals();
             }
+            if (NotationPackage.eINSTANCE.getSize_Width().equals(notification.getFeature()) ||
+                    NotationPackage.eINSTANCE.getSize_Height().equals(notification.getFeature()) ||
+                    NotationPackage.eINSTANCE.getLocation_X().equals(notification.getFeature()) ||
+                    NotationPackage.eINSTANCE.getLocation_Y().equals(notification.getFeature()) ||
+                    NotationPackage.eINSTANCE.getLocation().equals(notification.getFeature()) ||
+                    NotationPackage.eINSTANCE.getLayoutConstraint().equals(notification.getFeature())) {
+                for (Object e : getSourceConnections()) {
+                    if (e instanceof ConnectionEditPart) {
+                        ((ConnectionEditPart) e).getTarget().refresh();
+                    }
+                }
+                for (Object e : getTargetConnections()) {
+                    if (e instanceof ConnectionEditPart) {
+                        ((ConnectionEditPart) e).getSource().refresh();
+                    }
+                }
+                refresh();
+            }
         }
         super.handleNotificationEvent(notification);
     }
@@ -608,6 +634,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         }
     }
 
+    
     /**
      * Computes the indexes on the anchors so that they can compute their position.
      * 
@@ -634,13 +661,13 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         for (Iterator<FeatureMap.Entry> it = messages.iterator(); it.hasNext(); ) {
             FeatureMap.Entry msg = it.next();
             switch (msg.getEStructuralFeature().getFeatureID()) {
-            case BpmnPackage.ACTIVITY__OUTGOING_MESSAGES:
+            case BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES:
                 //sourceMsgs.put(msg.getValue(), i);
                 setAnchorIndex(connIndex, (EModelElement)msg.getValue(),
                                i, totalLength, true);
                 i++;
                 break;
-            case BpmnPackage.ACTIVITY__INCOMING_MESSAGES:
+            case BpmnPackage.MESSAGE_VERTEX__INCOMING_MESSAGES:
                 //targetMsgs.put(msg.getValue(), i);
                 setAnchorIndex(connIndex, (EModelElement)msg.getValue(),
                                i, totalLength, false);
@@ -655,6 +682,9 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             int ind = 0;
             totalLength = outEdges.size();
             for (SequenceEdge edge : outEdges) {
+                if (!isOrderImportant(this)) {
+                    i = calculateBestPosition(edge, true, (Node) getModel());
+                }
                 setAnchorIndex(connIndex, edge, i, totalLength, true);
                 ind++;
             }
@@ -664,6 +694,9 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             int ind = 0;
             totalLength = inEdges.size();
             for (SequenceEdge edge : inEdges) {
+                if (!isOrderImportant(this)) {
+                    i = calculateBestPosition(edge, true, (Node) getModel());
+                }
                 setAnchorIndex(connIndex, edge, i, totalLength, false);
                 ind++;
             }
@@ -831,12 +864,21 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             myUseLocalCoordinates = useLocalCoordinates;
         }
 
+        /**
+         * @generated NOT
+         * never a event handler
+         */
+        @Override
+        public boolean isCatching() {
+            return false;
+        }
+
     }
 
-    @Override
     /**
-     * @notgenerated
+     * @generated NOT
      */
+    @Override
     public EditPolicy getPrimaryDragEditPolicy() {
         return new ResizableActivityEditPolicy();
     }
@@ -883,5 +925,65 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             (NamedBpmnObject)resolveSemanticElement(), true);
     }
 
+    /**
+     * 
+     * @param isSource, true if this method should examine the source,
+     * false if it should look at the target
+     * @return true if the order of the edges over the part to examine is important.
+     */
+    public static boolean isOrderImportant(IGraphicalEditPart part) {
+        if (part.resolveSemanticElement() == null) {
+            return false;
+        }
+        ActivityType type = ((Activity) part.resolveSemanticElement()).getActivityType();
+        if (type.equals(ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL) ||
+                type.equals(ActivityType.GATEWAY_DATA_BASED_INCLUSIVE_LITERAL)) {
+            return true;
+        }
+        return false;
+    }
     
+    /**
+     * this method calculates the best position for the edge according to the 
+     * position of the other edges connected to the owner.
+     * @param seqEdge the edge to place
+     * @param isSource whether we are looking at the source or the target
+     * of the edge
+     * @param owner the anchor owner
+     * @return the best position for the edge.
+     */
+    public static int calculateBestPosition(SequenceEdge seqEdge, 
+            boolean isSource, Node owner) {
+        List<View> connections = isSource ? owner.getSourceEdges() : owner.getTargetEdges();
+        List<Node> seqs = new ArrayList<Node>();
+        Node index = null;
+        for (View con : connections) {
+            if (con.getElement() instanceof SequenceEdge) {
+                Node node = (Node) (isSource ? 
+                        ((Edge) con).getTarget() : ((Edge) con).getSource());
+                if (node != null) {
+                    seqs.add(node);
+                    if (con.getElement() == seqEdge) {
+                        index = node;
+                    }
+                }
+            }
+        }
+        Collections.sort(seqs, new Comparator<Node>() {
+
+            public int compare(Node o1, Node o2) {
+                int y1 = ((Location) o1.getLayoutConstraint()).getY();
+                int y2 = ((Location) o2.getLayoutConstraint()).getY();
+                if (y1 < y2) {
+                    return -1;
+                } else if (y1 == y2){
+                    return 0;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        
+        return seqs.indexOf(index);
+    }
 }

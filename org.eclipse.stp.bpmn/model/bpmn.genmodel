@@ -39,6 +39,9 @@
       <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//ActivityType/GatewayDataBasedInclusive"/>
       <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//ActivityType/GatewayParallel"/>
       <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//ActivityType/GatewayComplex"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//ActivityType/EventStartSignal"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//ActivityType/EventIntermediateSignal"/>
+      <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//ActivityType/EventEndSignal"/>
     </genEnums>
     <genEnums ecoreEnum="bpmn.ecore#//DirectionType">
       <genEnumLiterals ecoreEnumLiteral="bpmn.ecore#//DirectionType/None"/>
@@ -55,9 +58,6 @@
     <genDataTypes ecoreDataType="bpmn.ecore#//DirectionTypeObject"/>
     <genDataTypes ecoreDataType="bpmn.ecore#//SequenceFlowConditionTypeObject"/>
     <genClasses ecoreClass="bpmn.ecore#//Activity">
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//Activity/orderedMessages"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/incomingMessages"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/outgoingMessages"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/groups"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//Activity/activityType"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/eventHandlerFor"/>
@@ -76,6 +76,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Association/source"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Association/target"/>
     </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//AssociationTarget">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//AssociationTarget/associations"/>
+    </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//BpmnDiagram">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//BpmnDiagram/pools"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//BpmnDiagram/messages"/>
@@ -93,12 +96,14 @@
     <genClasses ecoreClass="bpmn.ecore#//Identifiable">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//Identifiable/iD"/>
     </genClasses>
-    <genClasses ecoreClass="bpmn.ecore#//IdentifiableNode">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//IdentifiableNode/associations"/>
-    </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//Lane">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Lane/activities"/>
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//Lane/pool"/>
+    </genClasses>
+    <genClasses ecoreClass="bpmn.ecore#//MessageVertex">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EAttribute bpmn.ecore#//MessageVertex/orderedMessages"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//MessageVertex/incomingMessages"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//MessageVertex/outgoingMessages"/>
     </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//MessagingEdge">
       <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//MessagingEdge/bpmnDiagram"/>

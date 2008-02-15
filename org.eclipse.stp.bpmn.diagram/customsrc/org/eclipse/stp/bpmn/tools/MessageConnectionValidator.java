@@ -23,6 +23,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
@@ -133,7 +134,7 @@ public class MessageConnectionValidator implements ConnectionValidator {
         ValueListIterator<Object> it = srcA.getOrderedMessages().valueListIterator();
         while (it.hasNext()) {
             MessagingEdge me = (MessagingEdge)it.next();
-            Activity otherAc = me.getSource() == srcA ? me.getTarget() : me.getSource();
+            MessageVertex otherAc = me.getSource() == srcA ? me.getTarget() : me.getSource();
             Pool otherPool = getPool(otherAc);
             if (otherPool != targetPool && otherPool != srcPool) {
                 return false;
@@ -142,7 +143,7 @@ public class MessageConnectionValidator implements ConnectionValidator {
         it = targetA.getOrderedMessages().valueListIterator();
         while (it.hasNext()) {
             MessagingEdge me = (MessagingEdge)it.next();
-            Activity otherAc = me.getSource() == targetA ? me.getTarget() : me.getSource();
+            MessageVertex otherAc = me.getSource() == targetA ? me.getTarget() : me.getSource();
             Pool otherPool = getPool(otherAc);
             if (otherPool != targetPool && otherPool != srcPool) {
                 return false;

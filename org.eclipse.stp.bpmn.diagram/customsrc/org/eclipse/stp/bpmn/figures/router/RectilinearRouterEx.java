@@ -38,6 +38,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.figures.SubProcessFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
+import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 
 /**
  * Extended to be able to customize the routers.
@@ -510,12 +511,12 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
         newPoints.addPoint(oldPointA);
         Point oldPointB = oldPointsCopy.removePoint(0);
         route2Points(oldPointA, oldPointB, newPoints, true,
-                oldPointsCopy.size() == 0, minDistfromSide);
+                oldPointsCopy.size() == 0, minDistfromSide, conn);
         while (oldPointsCopy.size() > 0) {
             oldPointA = oldPointB;
             oldPointB = oldPointsCopy.removePoint(0);
             route2Points(oldPointA, oldPointB, newPoints, false,
-                    oldPointsCopy.size() == 0, minDistfromSide);
+                    oldPointsCopy.size() == 0, minDistfromSide, conn);
         }
 
         // Normalize the polyline to remove unwanted segments
@@ -554,7 +555,7 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
     private void route2Points(Point oldPointA,
             Point oldPointB, PointList newPoints, 
             boolean isFirst, boolean isLast,
-            int minDistFromSide) {
+            int minDistFromSide, Connection conn) {
         
         //comments apply for NORMALIZE_ON_HORIZONTAL_CENTER
         Point aPlus = null;//the one on the right of the first bendpoint.
@@ -611,6 +612,7 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 //make it perfectly vertical:
                 newPoints.removeAllPoints();
                 int midX = (oldPointA.x+oldPointB.x)/2;
+                
                 newPoints.addPoint(new Point(midX, oldPointA.y));
                 newPoints.addPoint(new Point(midX, oldPointB.y));
                 return;
@@ -618,9 +620,19 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
             }
             if (isFirst || isLast || (!areAlmostEqual(oldPointA.y, oldPointB.y) &&
                     !areAlmostEqual(oldPointA.x, oldPointB.x))) {
-                int halfWayY = oldPointA.y == 0 ? 0 : oldPointA.y/2;
-                halfWayY += oldPointB.y == 0 ? 0 : oldPointB.y/2;
-                
+                int halfWayY =  oldPointA.y/2 + oldPointB.y/2;
+                int i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
+                int otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
+                 i = oldPointA.y < oldPointB.y ? i : otheri;
+                boolean AisAboveB = oldPointA.y < oldPointB.y && oldPointA.x < oldPointB.x;
+                IMapMode mm = MapModeUtil.getMapMode(conn);
+                if (i != -1) {
+                    if (AisAboveB) {
+                        halfWayY += i * mm.DPtoLP(10);
+                    } else {
+                        halfWayY -= i * mm.DPtoLP(10);
+                    }
+                }
                 if ((isFirst || isLast)
                         && Math.abs(oldPointB.y - oldPointA.y)/2 < minDistFromSide) {
                     int signedMinDistFromSide = oldPointB.y > oldPointA.y ?
@@ -674,13 +686,72 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
         Point ptTerm = new Point(newLine.getLastPoint());
         newLine.removeAllPoints();
         newLine.addPoint(ptOrig);
-        
+        IMapMode mm = MapModeUtil.getMapMode(conn);
+
+        //special algo when the sequence edge goes from right to left:
+        int extra = mm.DPtoLP(16);
         if (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_EXCEPT_FIRST_SEG) {
             if (!areAlmostEqual(ptOrig.x, ptTerm.x)) {
                 newLine.addPoint(new Point(ptOrig.x, ptTerm.y));
             }
+        } else if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
+            // there is going to be a middle bend point.
+            // let's find in the list of points the two points that are part of that middle bend point
+            // if it has been computed already
+            Point ptAlignedWithOrig = null;
+            PointList oldLine = routeFromConstraint(conn);
+            for (int i = 1 ; i < oldLine.size() -1 ; i++) {
+                Point bp = oldLine.getPoint(i);
+                // sequence edge cases
+                if (bp.y == ptOrig.y && 
+                        normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER &&
+                        ptOrig.x + extra < ptTerm.x) {
+                    ptAlignedWithOrig = bp;
+                    break;
+                } else if (bp.x == ptOrig.x  && normalizeBehavior == NORMALIZE_ON_VERTICAL_CENTER) {
+                    ptAlignedWithOrig = bp;
+                    break;
+                }
+            }
+            if (ptAlignedWithOrig != null) {
+                if (normalizeBehavior == NORMALIZE_ON_VERTICAL_CENTER) {
+                    if (ptAlignedWithOrig.y == ptOrig.y) {
+                        ptAlignedWithOrig.y += extra;
+                    }
+                    // reset
+                    if ((ptOrig.y < ptTerm.y && ptAlignedWithOrig.y > ptTerm.y) || 
+                            (ptOrig.y > ptTerm.y && ptAlignedWithOrig.y < ptTerm.y)) {// if in default location
+                        ptAlignedWithOrig.y = (ptOrig.y + ptTerm.y)/2;
+                        int i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
+                        int otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
+                         i = ptOrig.y < ptTerm.y ? i : otheri;
+                        boolean AisAboveB = ptOrig.y < ptTerm.y && ptOrig.x > ptTerm.x;
+                        if (i != -1) {
+                            if (AisAboveB) {
+                                ptAlignedWithOrig.y += i * mm.DPtoLP(10);
+                            } else {
+                                ptAlignedWithOrig.y -= i * mm.DPtoLP(10);
+                            }
+                        }
+                    }
+                    
+                    newLine.addPoint(ptAlignedWithOrig);
+                    newLine.addPoint(new Point(ptTerm.x, ptAlignedWithOrig.y));
+                } else {
+                    if (ptAlignedWithOrig.x == ptOrig.x) {
+                        ptAlignedWithOrig.x += extra;
+                    }
+                    // reset
+                    if (ptAlignedWithOrig.x > ptTerm.x) {
+                        ptAlignedWithOrig.x = (ptOrig.x + ptTerm.x)/2;
+                    }
+                    newLine.addPoint(ptAlignedWithOrig);
+                    newLine.addPoint(new Point(ptAlignedWithOrig.x, ptTerm.y));
+                }
+                
+            } 
         }
-
+        
         newLine.addPoint(ptTerm);
         return newLine;
     }
@@ -694,8 +765,8 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
      * @param conn
      * @param newLine
      */
-    private void routeAroundSelfForClosestDistance(Connection conn, PointList newLine) {
-        Point ptOrig = newLine.getPoint(newLine.size()-2);
+    protected void routeAroundSelfForClosestDistance(Connection conn, PointList newLine) {
+        Point ptOrig = newLine.getPoint(0);
         Point ptTerm = newLine.getLastPoint();
         
         if (NORMALIZE_ON_HORIZONTAL_CENTER == normalizeBehavior
@@ -881,7 +952,7 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
      * @param anchor
      * @return the bounds to create the anchor on.
      */
-    private Rectangle getOwnerBounds(ConnectionAnchor anchor) {
+    protected Rectangle getOwnerBounds(ConnectionAnchor anchor) {
     	for (Object child : anchor.getOwner().getChildren()) {
     		if (child instanceof ActivityDiamondFigure || 
     				child instanceof ActivityOvalFigure) {
@@ -890,4 +961,5 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
     	}
     	return anchor.getOwner().getBounds().getCopy();
     }
+
 }

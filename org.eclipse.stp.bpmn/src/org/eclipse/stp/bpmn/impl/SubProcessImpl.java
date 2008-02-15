@@ -50,391 +50,391 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  */
 public class SubProcessImpl extends ActivityImpl implements SubProcess {
     /**
-	 * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getArtifacts() <em>Artifacts</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getArtifacts()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getArtifacts()
+     * @generated
+     * @ordered
+     */
     protected EList<Artifact> artifacts;
 
     /**
-	 * The cached value of the '{@link #getVertices() <em>Vertices</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getVertices() <em>Vertices</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getVertices()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getVertices()
+     * @generated
+     * @ordered
+     */
     protected EList<Vertex> vertices;
 
     /**
-	 * The cached value of the '{@link #getSequenceEdges() <em>Sequence Edges</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getSequenceEdges() <em>Sequence Edges</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getSequenceEdges()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getSequenceEdges()
+     * @generated
+     * @ordered
+     */
     protected EList<SequenceEdge> sequenceEdges;
 
     /**
-	 * The cached value of the '{@link #getEventHandlers() <em>Event Handlers</em>}' containment reference list.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #getEventHandlers() <em>Event Handlers</em>}' containment reference list.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #getEventHandlers()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #getEventHandlers()
+     * @generated
+     * @ordered
+     */
     protected EList<Activity> eventHandlers;
 
     /**
-	 * The default value of the '{@link #isIsTransaction() <em>Is Transaction</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The default value of the '{@link #isIsTransaction() <em>Is Transaction</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isIsTransaction()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIsTransaction()
+     * @generated
+     * @ordered
+     */
     protected static final boolean IS_TRANSACTION_EDEFAULT = false;
 
     /**
-	 * The cached value of the '{@link #isIsTransaction() <em>Is Transaction</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * The cached value of the '{@link #isIsTransaction() <em>Is Transaction</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @see #isIsTransaction()
-	 * @generated
-	 * @ordered
-	 */
+     * @see #isIsTransaction()
+     * @generated
+     * @ordered
+     */
     protected boolean isTransaction = IS_TRANSACTION_EDEFAULT;
 
     /**
-	 * This is true if the Is Transaction attribute has been set.
-	 * <!-- begin-user-doc -->
+     * This is true if the Is Transaction attribute has been set.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 * @ordered
-	 */
+     * @generated
+     * @ordered
+     */
     protected boolean isTransactionESet;
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected SubProcessImpl() {
-		super();
-	}
+        super();
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				protected EClass eStaticClass() {
-		return BpmnPackage.Literals.SUB_PROCESS;
-	}
+        return BpmnPackage.Literals.SUB_PROCESS;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<Artifact> getArtifacts() {
-		if (artifacts == null) {
-			artifacts = new EObjectContainmentWithInverseEList<Artifact>(Artifact.class, this, BpmnPackage.SUB_PROCESS__ARTIFACTS, BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER);
-		}
-		return artifacts;
-	}
+        if (artifacts == null) {
+            artifacts = new EObjectContainmentWithInverseEList<Artifact>(Artifact.class, this, BpmnPackage.SUB_PROCESS__ARTIFACTS, BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER);
+        }
+        return artifacts;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<Vertex> getVertices() {
-		if (vertices == null) {
-			vertices = new EObjectContainmentWithInverseEList<Vertex>(Vertex.class, this, BpmnPackage.SUB_PROCESS__VERTICES, BpmnPackage.VERTEX__GRAPH);
-		}
-		return vertices;
-	}
+        if (vertices == null) {
+            vertices = new EObjectContainmentWithInverseEList<Vertex>(Vertex.class, this, BpmnPackage.SUB_PROCESS__VERTICES, BpmnPackage.VERTEX__GRAPH);
+        }
+        return vertices;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<SequenceEdge> getSequenceEdges() {
-		if (sequenceEdges == null) {
-			sequenceEdges = new EObjectContainmentWithInverseEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES, BpmnPackage.SEQUENCE_EDGE__GRAPH);
-		}
-		return sequenceEdges;
-	}
+        if (sequenceEdges == null) {
+            sequenceEdges = new EObjectContainmentWithInverseEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES, BpmnPackage.SEQUENCE_EDGE__GRAPH);
+        }
+        return sequenceEdges;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public EList<Activity> getEventHandlers() {
-		if (eventHandlers == null) {
-			eventHandlers = new EObjectContainmentWithInverseEList<Activity>(Activity.class, this, BpmnPackage.SUB_PROCESS__EVENT_HANDLERS, BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR);
-		}
-		return eventHandlers;
-	}
+        if (eventHandlers == null) {
+            eventHandlers = new EObjectContainmentWithInverseEList<Activity>(Activity.class, this, BpmnPackage.SUB_PROCESS__EVENT_HANDLERS, BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR);
+        }
+        return eventHandlers;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public boolean isIsTransaction() {
-		return isTransaction;
-	}
+        return isTransaction;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void setIsTransaction(boolean newIsTransaction) {
-		boolean oldIsTransaction = isTransaction;
-		isTransaction = newIsTransaction;
-		boolean oldIsTransactionESet = isTransactionESet;
-		isTransactionESet = true;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.SUB_PROCESS__IS_TRANSACTION, oldIsTransaction, isTransaction, !oldIsTransactionESet));
-	}
+        boolean oldIsTransaction = isTransaction;
+        isTransaction = newIsTransaction;
+        boolean oldIsTransactionESet = isTransactionESet;
+        isTransactionESet = true;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.SUB_PROCESS__IS_TRANSACTION, oldIsTransaction, isTransaction, !oldIsTransactionESet));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public void unsetIsTransaction() {
-		boolean oldIsTransaction = isTransaction;
-		boolean oldIsTransactionESet = isTransactionESet;
-		isTransaction = IS_TRANSACTION_EDEFAULT;
-		isTransactionESet = false;
-		if (eNotificationRequired())
-			eNotify(new ENotificationImpl(this, Notification.UNSET, BpmnPackage.SUB_PROCESS__IS_TRANSACTION, oldIsTransaction, IS_TRANSACTION_EDEFAULT, oldIsTransactionESet));
-	}
+        boolean oldIsTransaction = isTransaction;
+        boolean oldIsTransactionESet = isTransactionESet;
+        isTransaction = IS_TRANSACTION_EDEFAULT;
+        isTransactionESet = false;
+        if (eNotificationRequired())
+            eNotify(new ENotificationImpl(this, Notification.UNSET, BpmnPackage.SUB_PROCESS__IS_TRANSACTION, oldIsTransaction, IS_TRANSACTION_EDEFAULT, oldIsTransactionESet));
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public boolean isSetIsTransaction() {
-		return isTransactionESet;
-	}
+        return isTransactionESet;
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.SUB_PROCESS__ARTIFACTS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getArtifacts()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.SUB_PROCESS__VERTICES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getVertices()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getSequenceEdges()).basicAdd(otherEnd, msgs);
-			case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
-				return ((InternalEList<InternalEObject>)(InternalEList<?>)getEventHandlers()).basicAdd(otherEnd, msgs);
-		}
-		return super.eInverseAdd(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.SUB_PROCESS__ARTIFACTS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getArtifacts()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.SUB_PROCESS__VERTICES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getVertices()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getSequenceEdges()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getEventHandlers()).basicAdd(otherEnd, msgs);
+        }
+        return super.eInverseAdd(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
-		switch (featureID) {
-			case BpmnPackage.SUB_PROCESS__ARTIFACTS:
-				return ((InternalEList<?>)getArtifacts()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.SUB_PROCESS__VERTICES:
-				return ((InternalEList<?>)getVertices()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
-				return ((InternalEList<?>)getSequenceEdges()).basicRemove(otherEnd, msgs);
-			case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
-				return ((InternalEList<?>)getEventHandlers()).basicRemove(otherEnd, msgs);
-		}
-		return super.eInverseRemove(otherEnd, featureID, msgs);
-	}
+        switch (featureID) {
+            case BpmnPackage.SUB_PROCESS__ARTIFACTS:
+                return ((InternalEList<?>)getArtifacts()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.SUB_PROCESS__VERTICES:
+                return ((InternalEList<?>)getVertices()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
+                return ((InternalEList<?>)getSequenceEdges()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
+                return ((InternalEList<?>)getEventHandlers()).basicRemove(otherEnd, msgs);
+        }
+        return super.eInverseRemove(otherEnd, featureID, msgs);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public Object eGet(int featureID, boolean resolve, boolean coreType) {
-		switch (featureID) {
-			case BpmnPackage.SUB_PROCESS__ARTIFACTS:
-				return getArtifacts();
-			case BpmnPackage.SUB_PROCESS__VERTICES:
-				return getVertices();
-			case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
-				return getSequenceEdges();
-			case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
-				return getEventHandlers();
-			case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
-				return isIsTransaction() ? Boolean.TRUE : Boolean.FALSE;
-		}
-		return super.eGet(featureID, resolve, coreType);
-	}
+        switch (featureID) {
+            case BpmnPackage.SUB_PROCESS__ARTIFACTS:
+                return getArtifacts();
+            case BpmnPackage.SUB_PROCESS__VERTICES:
+                return getVertices();
+            case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
+                return getSequenceEdges();
+            case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
+                return getEventHandlers();
+            case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
+                return isIsTransaction() ? Boolean.TRUE : Boolean.FALSE;
+        }
+        return super.eGet(featureID, resolve, coreType);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
 		@Override
 				public void eSet(int featureID, Object newValue) {
-		switch (featureID) {
-			case BpmnPackage.SUB_PROCESS__ARTIFACTS:
-				getArtifacts().clear();
-				getArtifacts().addAll((Collection<? extends Artifact>)newValue);
-				return;
-			case BpmnPackage.SUB_PROCESS__VERTICES:
-				getVertices().clear();
-				getVertices().addAll((Collection<? extends Vertex>)newValue);
-				return;
-			case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
-				getSequenceEdges().clear();
-				getSequenceEdges().addAll((Collection<? extends SequenceEdge>)newValue);
-				return;
-			case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
-				getEventHandlers().clear();
-				getEventHandlers().addAll((Collection<? extends Activity>)newValue);
-				return;
-			case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
-				setIsTransaction(((Boolean)newValue).booleanValue());
-				return;
-		}
-		super.eSet(featureID, newValue);
-	}
+        switch (featureID) {
+            case BpmnPackage.SUB_PROCESS__ARTIFACTS:
+                getArtifacts().clear();
+                getArtifacts().addAll((Collection<? extends Artifact>)newValue);
+                return;
+            case BpmnPackage.SUB_PROCESS__VERTICES:
+                getVertices().clear();
+                getVertices().addAll((Collection<? extends Vertex>)newValue);
+                return;
+            case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
+                getSequenceEdges().clear();
+                getSequenceEdges().addAll((Collection<? extends SequenceEdge>)newValue);
+                return;
+            case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
+                getEventHandlers().clear();
+                getEventHandlers().addAll((Collection<? extends Activity>)newValue);
+                return;
+            case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
+                setIsTransaction(((Boolean)newValue).booleanValue());
+                return;
+        }
+        super.eSet(featureID, newValue);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public void eUnset(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.SUB_PROCESS__ARTIFACTS:
-				getArtifacts().clear();
-				return;
-			case BpmnPackage.SUB_PROCESS__VERTICES:
-				getVertices().clear();
-				return;
-			case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
-				getSequenceEdges().clear();
-				return;
-			case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
-				getEventHandlers().clear();
-				return;
-			case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
-				unsetIsTransaction();
-				return;
-		}
-		super.eUnset(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.SUB_PROCESS__ARTIFACTS:
+                getArtifacts().clear();
+                return;
+            case BpmnPackage.SUB_PROCESS__VERTICES:
+                getVertices().clear();
+                return;
+            case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
+                getSequenceEdges().clear();
+                return;
+            case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
+                getEventHandlers().clear();
+                return;
+            case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
+                unsetIsTransaction();
+                return;
+        }
+        super.eUnset(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public boolean eIsSet(int featureID) {
-		switch (featureID) {
-			case BpmnPackage.SUB_PROCESS__ARTIFACTS:
-				return artifacts != null && !artifacts.isEmpty();
-			case BpmnPackage.SUB_PROCESS__VERTICES:
-				return vertices != null && !vertices.isEmpty();
-			case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
-				return sequenceEdges != null && !sequenceEdges.isEmpty();
-			case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
-				return eventHandlers != null && !eventHandlers.isEmpty();
-			case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
-				return isSetIsTransaction();
-		}
-		return super.eIsSet(featureID);
-	}
+        switch (featureID) {
+            case BpmnPackage.SUB_PROCESS__ARTIFACTS:
+                return artifacts != null && !artifacts.isEmpty();
+            case BpmnPackage.SUB_PROCESS__VERTICES:
+                return vertices != null && !vertices.isEmpty();
+            case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES:
+                return sequenceEdges != null && !sequenceEdges.isEmpty();
+            case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
+                return eventHandlers != null && !eventHandlers.isEmpty();
+            case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
+                return isSetIsTransaction();
+        }
+        return super.eIsSet(featureID);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public int eBaseStructuralFeatureID(int derivedFeatureID, Class<?> baseClass) {
-		if (baseClass == ArtifactsContainer.class) {
-			switch (derivedFeatureID) {
-				case BpmnPackage.SUB_PROCESS__ARTIFACTS: return BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS;
-				default: return -1;
-			}
-		}
-		if (baseClass == Graph.class) {
-			switch (derivedFeatureID) {
-				case BpmnPackage.SUB_PROCESS__VERTICES: return BpmnPackage.GRAPH__VERTICES;
-				case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES: return BpmnPackage.GRAPH__SEQUENCE_EDGES;
-				default: return -1;
-			}
-		}
-		return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
-	}
+        if (baseClass == ArtifactsContainer.class) {
+            switch (derivedFeatureID) {
+                case BpmnPackage.SUB_PROCESS__ARTIFACTS: return BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS;
+                default: return -1;
+            }
+        }
+        if (baseClass == Graph.class) {
+            switch (derivedFeatureID) {
+                case BpmnPackage.SUB_PROCESS__VERTICES: return BpmnPackage.GRAPH__VERTICES;
+                case BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES: return BpmnPackage.GRAPH__SEQUENCE_EDGES;
+                default: return -1;
+            }
+        }
+        return super.eBaseStructuralFeatureID(derivedFeatureID, baseClass);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public int eDerivedStructuralFeatureID(int baseFeatureID, Class<?> baseClass) {
-		if (baseClass == ArtifactsContainer.class) {
-			switch (baseFeatureID) {
-				case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS: return BpmnPackage.SUB_PROCESS__ARTIFACTS;
-				default: return -1;
-			}
-		}
-		if (baseClass == Graph.class) {
-			switch (baseFeatureID) {
-				case BpmnPackage.GRAPH__VERTICES: return BpmnPackage.SUB_PROCESS__VERTICES;
-				case BpmnPackage.GRAPH__SEQUENCE_EDGES: return BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES;
-				default: return -1;
-			}
-		}
-		return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
-	}
+        if (baseClass == ArtifactsContainer.class) {
+            switch (baseFeatureID) {
+                case BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS: return BpmnPackage.SUB_PROCESS__ARTIFACTS;
+                default: return -1;
+            }
+        }
+        if (baseClass == Graph.class) {
+            switch (baseFeatureID) {
+                case BpmnPackage.GRAPH__VERTICES: return BpmnPackage.SUB_PROCESS__VERTICES;
+                case BpmnPackage.GRAPH__SEQUENCE_EDGES: return BpmnPackage.SUB_PROCESS__SEQUENCE_EDGES;
+                default: return -1;
+            }
+        }
+        return super.eDerivedStructuralFeatureID(baseFeatureID, baseClass);
+    }
 
     /**
-	 * <!-- begin-user-doc -->
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     @Override
 				public String toString() {
-		if (eIsProxy()) return super.toString();
+        if (eIsProxy()) return super.toString();
 
-		StringBuffer result = new StringBuffer(super.toString());
-		result.append(BpmnMessages.SubProcessImpl_isTransaction); 
-		if (isTransactionESet) result.append(isTransaction); else result.append(BpmnMessages.SubProcessImpl_unset); 
-		result.append(')');
-		return result.toString();
-	}
+        StringBuffer result = new StringBuffer(super.toString());
+        result.append(" (isTransaction: ");
+        if (isTransactionESet) result.append(isTransaction); else result.append("<unset>");
+        result.append(')');
+        return result.toString();
+    }
 
 } //SubProcessImpl

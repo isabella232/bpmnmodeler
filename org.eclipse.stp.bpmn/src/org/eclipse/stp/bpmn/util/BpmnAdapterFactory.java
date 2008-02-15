@@ -40,424 +40,442 @@ import org.eclipse.stp.bpmn.Vertex;
  */
 public class BpmnAdapterFactory extends AdapterFactoryImpl {
     /**
-	 * The cached model package.
-	 * <!-- begin-user-doc -->
+     * The cached model package.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected static BpmnPackage modelPackage;
 
     /**
-	 * Creates an instance of the adapter factory.
-	 * <!-- begin-user-doc -->
+     * Creates an instance of the adapter factory.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     public BpmnAdapterFactory() {
-		if (modelPackage == null) {
-			modelPackage = BpmnPackage.eINSTANCE;
-		}
-	}
+        if (modelPackage == null) {
+            modelPackage = BpmnPackage.eINSTANCE;
+        }
+    }
 
     /**
-	 * Returns whether this factory is applicable for the type of the object.
-	 * <!-- begin-user-doc -->
+     * Returns whether this factory is applicable for the type of the object.
+     * <!-- begin-user-doc -->
      * This implementation returns <code>true</code> if the object is either the model's package or is an instance object of the model.
      * <!-- end-user-doc -->
-	 * @return whether this factory is applicable for the type of the object.
-	 * @generated
-	 */
+     * @return whether this factory is applicable for the type of the object.
+     * @generated
+     */
     @Override
 				public boolean isFactoryForType(Object object) {
-		if (object == modelPackage) {
-			return true;
-		}
-		if (object instanceof EObject) {
-			return ((EObject)object).eClass().getEPackage() == modelPackage;
-		}
-		return false;
-	}
+        if (object == modelPackage) {
+            return true;
+        }
+        if (object instanceof EObject) {
+            return ((EObject)object).eClass().getEPackage() == modelPackage;
+        }
+        return false;
+    }
 
     /**
-	 * The switch the delegates to the <code>createXXX</code> methods.
-	 * <!-- begin-user-doc -->
+     * The switch the delegates to the <code>createXXX</code> methods.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @generated
-	 */
+     * @generated
+     */
     protected BpmnSwitch<Adapter> modelSwitch =
         new BpmnSwitch<Adapter>() {
-			@Override
-			public Adapter caseActivity(Activity object) {
-				return createActivityAdapter();
-			}
-			@Override
-			public Adapter caseArtifact(Artifact object) {
-				return createArtifactAdapter();
-			}
-			@Override
-			public Adapter caseArtifactsContainer(ArtifactsContainer object) {
-				return createArtifactsContainerAdapter();
-			}
-			@Override
-			public Adapter caseAssociation(Association object) {
-				return createAssociationAdapter();
-			}
-			@Override
-			public Adapter caseBpmnDiagram(BpmnDiagram object) {
-				return createBpmnDiagramAdapter();
-			}
-			@Override
-			public Adapter caseDataObject(DataObject object) {
-				return createDataObjectAdapter();
-			}
-			@Override
-			public Adapter caseGraph(Graph object) {
-				return createGraphAdapter();
-			}
-			@Override
-			public Adapter caseGroup(Group object) {
-				return createGroupAdapter();
-			}
-			@Override
-			public Adapter caseIdentifiable(Identifiable object) {
-				return createIdentifiableAdapter();
-			}
-			@Override
-			public Adapter caseIdentifiableNode(IdentifiableNode object) {
-				return createIdentifiableNodeAdapter();
-			}
-			@Override
-			public Adapter caseLane(Lane object) {
-				return createLaneAdapter();
-			}
-			@Override
-			public Adapter caseMessagingEdge(MessagingEdge object) {
-				return createMessagingEdgeAdapter();
-			}
-			@Override
-			public Adapter caseNamedBpmnObject(NamedBpmnObject object) {
-				return createNamedBpmnObjectAdapter();
-			}
-			@Override
-			public Adapter casePool(Pool object) {
-				return createPoolAdapter();
-			}
-			@Override
-			public Adapter caseSequenceEdge(SequenceEdge object) {
-				return createSequenceEdgeAdapter();
-			}
-			@Override
-			public Adapter caseSubProcess(SubProcess object) {
-				return createSubProcessAdapter();
-			}
-			@Override
-			public Adapter caseTextAnnotation(TextAnnotation object) {
-				return createTextAnnotationAdapter();
-			}
-			@Override
-			public Adapter caseVertex(Vertex object) {
-				return createVertexAdapter();
-			}
-			@Override
-			public Adapter caseEModelElement(EModelElement object) {
-				return createEModelElementAdapter();
-			}
-			@Override
-			public Adapter defaultCase(EObject object) {
-				return createEObjectAdapter();
-			}
-		};
+            @Override
+            public Adapter caseActivity(Activity object) {
+                return createActivityAdapter();
+            }
+            @Override
+            public Adapter caseArtifact(Artifact object) {
+                return createArtifactAdapter();
+            }
+            @Override
+            public Adapter caseArtifactsContainer(ArtifactsContainer object) {
+                return createArtifactsContainerAdapter();
+            }
+            @Override
+            public Adapter caseAssociation(Association object) {
+                return createAssociationAdapter();
+            }
+            @Override
+            public Adapter caseAssociationTarget(AssociationTarget object) {
+                return createAssociationTargetAdapter();
+            }
+            @Override
+            public Adapter caseBpmnDiagram(BpmnDiagram object) {
+                return createBpmnDiagramAdapter();
+            }
+            @Override
+            public Adapter caseDataObject(DataObject object) {
+                return createDataObjectAdapter();
+            }
+            @Override
+            public Adapter caseGraph(Graph object) {
+                return createGraphAdapter();
+            }
+            @Override
+            public Adapter caseGroup(Group object) {
+                return createGroupAdapter();
+            }
+            @Override
+            public Adapter caseIdentifiable(Identifiable object) {
+                return createIdentifiableAdapter();
+            }
+            @Override
+            public Adapter caseLane(Lane object) {
+                return createLaneAdapter();
+            }
+            @Override
+            public Adapter caseMessageVertex(MessageVertex object) {
+                return createMessageVertexAdapter();
+            }
+            @Override
+            public Adapter caseMessagingEdge(MessagingEdge object) {
+                return createMessagingEdgeAdapter();
+            }
+            @Override
+            public Adapter caseNamedBpmnObject(NamedBpmnObject object) {
+                return createNamedBpmnObjectAdapter();
+            }
+            @Override
+            public Adapter casePool(Pool object) {
+                return createPoolAdapter();
+            }
+            @Override
+            public Adapter caseSequenceEdge(SequenceEdge object) {
+                return createSequenceEdgeAdapter();
+            }
+            @Override
+            public Adapter caseSubProcess(SubProcess object) {
+                return createSubProcessAdapter();
+            }
+            @Override
+            public Adapter caseTextAnnotation(TextAnnotation object) {
+                return createTextAnnotationAdapter();
+            }
+            @Override
+            public Adapter caseVertex(Vertex object) {
+                return createVertexAdapter();
+            }
+            @Override
+            public Adapter caseEModelElement(EModelElement object) {
+                return createEModelElementAdapter();
+            }
+            @Override
+            public Adapter defaultCase(EObject object) {
+                return createEObjectAdapter();
+            }
+        };
 
     /**
-	 * Creates an adapter for the <code>target</code>.
-	 * <!-- begin-user-doc -->
+     * Creates an adapter for the <code>target</code>.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param target the object to adapt.
-	 * @return the adapter for the <code>target</code>.
-	 * @generated
-	 */
+     * @param target the object to adapt.
+     * @return the adapter for the <code>target</code>.
+     * @generated
+     */
     @Override
 				public Adapter createAdapter(Notifier target) {
-		return modelSwitch.doSwitch((EObject)target);
-	}
+        return modelSwitch.doSwitch((EObject)target);
+    }
 
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Activity <em>Activity</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Activity <em>Activity</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Activity
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Activity
+     * @generated
+     */
     public Adapter createActivityAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Artifact <em>Artifact</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Artifact <em>Artifact</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Artifact
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Artifact
+     * @generated
+     */
 	public Adapter createArtifactAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.ArtifactsContainer <em>Artifacts Container</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.ArtifactsContainer <em>Artifacts Container</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.ArtifactsContainer
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.ArtifactsContainer
+     * @generated
+     */
     public Adapter createArtifactsContainerAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Association <em>Association</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Association <em>Association</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Association
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Association
+     * @generated
+     */
 	public Adapter createAssociationAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.BpmnDiagram <em>Diagram</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.AssociationTarget <em>Association Target</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.BpmnDiagram
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.AssociationTarget
+     * @generated
+     */
+    public Adapter createAssociationTargetAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.BpmnDiagram <em>Diagram</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.BpmnDiagram
+     * @generated
+     */
     public Adapter createBpmnDiagramAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.DataObject <em>Data Object</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.DataObject <em>Data Object</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.DataObject
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.DataObject
+     * @generated
+     */
 	public Adapter createDataObjectAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Graph <em>Graph</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Graph <em>Graph</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Graph
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Graph
+     * @generated
+     */
     public Adapter createGraphAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Group <em>Group</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Group <em>Group</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Group
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Group
+     * @generated
+     */
 	public Adapter createGroupAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Identifiable <em>Identifiable</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Identifiable <em>Identifiable</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Identifiable
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Identifiable
+     * @generated
+     */
     public Adapter createIdentifiableAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.IdentifiableNode <em>Identifiable Node</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Lane <em>Lane</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.IdentifiableNode
-	 * @generated
-	 */
-    public Adapter createIdentifiableNodeAdapter() {
-		return null;
-	}
-
-    /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Lane <em>Lane</em>}'.
-	 * <!-- begin-user-doc -->
-     * This default implementation returns null so that we can easily ignore cases;
-     * it's useful to ignore a case when inheritance will catch all the cases anyway.
-     * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Lane
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Lane
+     * @generated
+     */
     public Adapter createLaneAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.MessagingEdge <em>Messaging Edge</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.MessageVertex <em>Message Vertex</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.MessagingEdge
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.MessageVertex
+     * @generated
+     */
+    public Adapter createMessageVertexAdapter() {
+        return null;
+    }
+
+    /**
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.MessagingEdge <em>Messaging Edge</em>}'.
+     * <!-- begin-user-doc -->
+     * This default implementation returns null so that we can easily ignore cases;
+     * it's useful to ignore a case when inheritance will catch all the cases anyway.
+     * <!-- end-user-doc -->
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.MessagingEdge
+     * @generated
+     */
     public Adapter createMessagingEdgeAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.NamedBpmnObject <em>Named Bpmn Object</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.NamedBpmnObject <em>Named Bpmn Object</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.NamedBpmnObject
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.NamedBpmnObject
+     * @generated
+     */
     public Adapter createNamedBpmnObjectAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Pool <em>Pool</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Pool <em>Pool</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Pool
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Pool
+     * @generated
+     */
     public Adapter createPoolAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.SequenceEdge <em>Sequence Edge</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.SequenceEdge <em>Sequence Edge</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.SequenceEdge
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.SequenceEdge
+     * @generated
+     */
     public Adapter createSequenceEdgeAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.SubProcess <em>Sub Process</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.SubProcess <em>Sub Process</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.SubProcess
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.SubProcess
+     * @generated
+     */
     public Adapter createSubProcessAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.TextAnnotation <em>Text Annotation</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.TextAnnotation <em>Text Annotation</em>}'.
+     * <!-- begin-user-doc -->
 	 * This default implementation returns null so that we can easily ignore cases;
 	 * it's useful to ignore a case when inheritance will catch all the cases anyway.
 	 * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.TextAnnotation
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.TextAnnotation
+     * @generated
+     */
 	public Adapter createTextAnnotationAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Vertex <em>Vertex</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.stp.bpmn.Vertex <em>Vertex</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.stp.bpmn.Vertex
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.stp.bpmn.Vertex
+     * @generated
+     */
     public Adapter createVertexAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EModelElement <em>EModel Element</em>}'.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for an object of class '{@link org.eclipse.emf.ecore.EModelElement <em>EModel Element</em>}'.
+     * <!-- begin-user-doc -->
      * This default implementation returns null so that we can easily ignore cases;
      * it's useful to ignore a case when inheritance will catch all the cases anyway.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @see org.eclipse.emf.ecore.EModelElement
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @see org.eclipse.emf.ecore.EModelElement
+     * @generated
+     */
     public Adapter createEModelElementAdapter() {
-		return null;
-	}
+        return null;
+    }
 
     /**
-	 * Creates a new adapter for the default case.
-	 * <!-- begin-user-doc -->
+     * Creates a new adapter for the default case.
+     * <!-- begin-user-doc -->
      * This default implementation returns null.
      * <!-- end-user-doc -->
-	 * @return the new adapter.
-	 * @generated
-	 */
+     * @return the new adapter.
+     * @generated
+     */
     public Adapter createEObjectAdapter() {
-		return null;
-	}
+        return null;
+    }
 
 } //BpmnAdapterFactory

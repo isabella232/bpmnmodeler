@@ -25,7 +25,6 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -375,11 +374,11 @@ public class ActivityName2EditPart extends CompartmentEditPart implements
     }
 
     /**
-     * @generated
+     * @generated NOT: ovrride the manager to support enter+shift and enter+alt to enter newlines.
      */
     protected DirectEditManager getManager() {
         if (manager == null) {
-            setManager(new TextDirectEditManager(this, TextDirectEditManager
+            setManager(new TextDirectEditManager(this, BpmnEditPartFactory
                     .getTextCellEditorClass(this), BpmnEditPartFactory
                     .getTextCellEditorLocator(this)));
         }

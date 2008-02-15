@@ -15,21 +15,26 @@
  **/
 package org.eclipse.stp.bpmn.figures.connectionanchors.impl;
 
+import java.util.Set;
+
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.gef.ui.figures.WrapperNodeFigure;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart.ActivityFigure;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart.SubProcessFigure;
-import org.eclipse.stp.bpmn.figures.SubProcessBodyFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchorSupport;
 import org.eclipse.stp.bpmn.figures.connectionanchors.WrapperNodeFigureEx;
+import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor.INodeFigureAnchorTerminalUpdatable;
+import org.eclipse.stp.bpmn.figures.router.EdgeRectilinearRouter;
 
 /**
  * <p>
@@ -51,12 +56,6 @@ import org.eclipse.stp.bpmn.figures.connectionanchors.WrapperNodeFigureEx;
  */
 public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
     
-    /**
-     * TODO: make it a service if it works well?
-     */
-    public static final BpmnAwareAnchorSupport INSTANCE = new BpmnAwareAnchorSupport();
-    
-
     /**
      * Method called by the anchor to compute its location.
      * 
@@ -95,14 +94,31 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
                     //it must be on the left-side of the owner's figure.
                     res.x = thisCenter.x - thisBox.width/2;
                 }
-                //we also want to distribute them on the y axis if
-                //it is outgoing edges of a gateway.
-                //well let's try doing that for all of them.
+
                 if (anchor.getCount() > 0 && anchor.getOrderNumber() != -1) {
-                    int height = thisBox.height;
-                    res.y = thisCenter.y - height / 2 + 
+                    int constraint = EdgeRectilinearRouter.NO_CONSTRAINT;
+                    //we also want to distribute them on the y axis if
+                    //it is edges of a gateway.
+                    if (anchor.getConnectionOwner() instanceof SequenceEdgeEditPart.EdgeFigure) {
+                        constraint = anchor.isSourceAnchor() == IModelAwareAnchor.SOURCE_ANCHOR ? 
+                                ((SequenceEdgeEditPart.EdgeFigure) anchor.getConnectionOwner()).getSourceGatewayConstraint() : 
+                                    ((SequenceEdgeEditPart.EdgeFigure) anchor.getConnectionOwner()).getTargetGatewayConstraint();
+                    }
+                    if (constraint == EdgeRectilinearRouter.CONSTRAINT_ON_TOP) {
+                        res.y = thisCenter.y - thisBox.height/2;
+                        res.x = thisCenter.x;
+                    } else if (constraint == EdgeRectilinearRouter.CONSTRAINT_BOTTOM) {
+                        res.x = thisCenter.x;
+                        res.y = thisCenter.y + thisBox.height/2;
+                    }  else if (constraint == EdgeRectilinearRouter.CONSTRAINT_MIDDLE) {
+                        res.y = thisCenter.y;
+                    } else {
+                        //well let's try distributing on the y axis for the rest of them.
+                        int height = thisBox.height;
+                        res.y = thisCenter.y - height / 2 + 
                         (height / (anchor.getCount() + 1))
-                                * (anchor.getOrderNumber() + 1);
+                        * (anchor.getOrderNumber() + 1);
+                    }
                 } else {
                     res.y = thisCenter.y;
                 }
@@ -154,11 +170,13 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
             if (anchor.getCount() > 0 && anchor.getOrderNumber() != -1) {
                 int width = thisBox.width;
                 res.x = thisCenter.x - width / 2 + 
-                    (width / (anchor.getCount() + 1))
-                            * (anchor.getOrderNumber() + 1);
+                (width / (anchor.getCount() + 1))
+                * (anchor.getOrderNumber() + 1);
+
             } else {
                 res.x = thisCenter.x;
             }
+            
             return res;
         }
         if (reference == null) {
@@ -214,5 +232,25 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
     	}
     	
     	return anchor.getOwner().getBounds().getCopy();
+    }
+    
+    /**
+     * 
+     * @param figure
+     * @return true if the figure represents a gateway
+     */
+    private boolean isGateway(IFigure figure) {
+        IFigure interestingOwner = figure instanceof WrapperNodeFigureEx ? ((WrapperNodeFigureEx) figure)
+                .getSubfigure()
+                : figure;
+        for (Object child : interestingOwner.getChildren()) {
+            if (child instanceof ActivityDiamondFigure) {
+                return true;
+            }
+            if (child instanceof ActivityFigure) {
+                return ActivityType.VALUES_GATEWAYS.contains(((ActivityFigure) child).getActivityType());
+            }
+        }
+        return false;
     }
 }

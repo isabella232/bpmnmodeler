@@ -31,30 +31,30 @@ import org.eclipse.emf.ecore.EModelElement;
  */
 public interface Identifiable extends EModelElement {
     /**
-	 * Returns the value of the '<em><b>ID</b></em>' attribute.
-	 * <!-- begin-user-doc -->
+     * Returns the value of the '<em><b>ID</b></em>' attribute.
+     * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>ID</em>' attribute isn't clear,
      * there really should be more of a description here...
      * </p>
      * <!-- end-user-doc -->
-	 * @return the value of the '<em>ID</em>' attribute.
-	 * @see #setID(String)
-	 * @see org.eclipse.stp.bpmn.BpmnPackage#getIdentifiable_ID()
-	 * @model id="true" dataType="org.eclipse.emf.ecore.xml.type.ID"
-	 *        extendedMetaData="kind='attribute' name='ID'"
-	 * @generated
-	 */
+     * @return the value of the '<em>ID</em>' attribute.
+     * @see #setID(String)
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getIdentifiable_ID()
+     * @model id="true" dataType="org.eclipse.emf.ecore.xml.type.ID"
+     *        extendedMetaData="kind='attribute' name='ID'"
+     * @generated
+     */
     String getID();
 
     /**
-	 * Sets the value of the '{@link org.eclipse.stp.bpmn.Identifiable#getID <em>ID</em>}' attribute.
-	 * <!-- begin-user-doc -->
+     * Sets the value of the '{@link org.eclipse.stp.bpmn.Identifiable#getID <em>ID</em>}' attribute.
+     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-	 * @param value the new value of the '<em>ID</em>' attribute.
-	 * @see #getID()
-	 * @generated
-	 */
+     * @param value the new value of the '<em>ID</em>' attribute.
+     * @see #getID()
+     * @generated
+     */
     void setID(String value);
 
 } // Identifiable
