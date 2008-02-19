@@ -55,7 +55,6 @@
          <ViewId id="org.eclipse.stp.bpmn.sample.noGatewayInToolbar.editor1">
             <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
                <GlobalActionId actionId="bookmark"/>
-               </GlobalActionId>
             </ElementType>
          </ViewId>
       </GlobalActionHandlerProvider>
