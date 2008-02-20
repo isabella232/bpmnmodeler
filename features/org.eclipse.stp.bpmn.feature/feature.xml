@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.stp.bpmn.feature"
       label="BPMN Project Feature (Incubation)"
-      version="0.7.1.qualifier"
+      version="0.8.0.qualifier"
       provider-name="eclipse.org">
 
    <description>
@@ -16,11 +16,11 @@
    <license url="%licenseURL">
       %license
    </license>
-   
+
    <url>
       <update label="%updateSiteName" url="http://download.eclipse.org/stp/updates/"/>
    </url>
-   
+
    <requires>
       <import plugin="org.eclipse.core.runtime" version="3.2.0" match="compatible"/>
       <import plugin="org.eclipse.core.resources"/>
@@ -29,7 +29,7 @@
       <import plugin="org.eclipse.ui.ide"/>
       <import plugin="org.eclipse.ui.views"/>
       <import plugin="org.eclipse.ui.workbench.texteditor"/>
-      <import plugin="org.eclipse.ui.workbench"/>      
+      <import plugin="org.eclipse.ui.workbench"/>
       <import plugin="org.eclipse.emf.ecore.xmi"/>
       <import plugin="org.eclipse.emf.ecore"/>
       <import plugin="org.eclipse.emf.ecore.edit"/>

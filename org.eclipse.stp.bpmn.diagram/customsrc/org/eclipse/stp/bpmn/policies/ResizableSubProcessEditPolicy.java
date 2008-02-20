@@ -16,16 +16,22 @@
 
 package org.eclipse.stp.bpmn.policies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.handles.AbstractHandle;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
@@ -33,16 +39,24 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.Group;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetGroupsCommand;
 import org.eclipse.stp.bpmn.tools.SubProcessResizeTracker;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
 
 /**
  * Resize edit policy for subprocesses.
  * 
+ * Handles groups.
+ * 
+ * @author Antoine Toulme
  * @author MPeleshchyshyn
  * 
  */
@@ -141,5 +155,29 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
         maxRoomOfChildren.height += subprocessEditPart.getAbsCollapseHandleBounds().height;
         return maxRoomOfChildren;
 //        return ((SubProcessEditPart) subprocessEditPart).calcMinSize();
+    }
+    
+    
+    
+    @Override
+    protected Command getMoveCommand(ChangeBoundsRequest request) {
+        CompoundCommand compound = new CompoundCommand();
+        compound.add(super.getMoveCommand(request));
+        compound.add(new ICommandProxy(
+                new SetGroupsCommand(ResizableActivityEditPolicy.
+                        findContainingGroups(request, (IGraphicalEditPart) getHost()), 
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        return compound;
+    }
+    
+    @Override
+    public Command getResizeCommand(ChangeBoundsRequest request) {
+        CompoundCommand compound = new CompoundCommand();
+        compound.add(super.getResizeCommand(request));
+        compound.add(new ICommandProxy(
+                new SetGroupsCommand(ResizableActivityEditPolicy.
+                        findContainingGroups(request, (IGraphicalEditPart) getHost()), 
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        return compound;
     }
 }

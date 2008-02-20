@@ -33,6 +33,7 @@ import org.eclipse.stp.bpmn.diagram.actions.FilterDecorationsMenuManager;
 import org.eclipse.stp.bpmn.diagram.actions.GroupAction;
 import org.eclipse.stp.bpmn.diagram.actions.GroupActionManager;
 import org.eclipse.stp.bpmn.diagram.actions.ResetBendpointsAction;
+import org.eclipse.stp.bpmn.diagram.actions.SetAsThrowingOrCatchingAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetDefaultAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetLoopAction;
 import org.eclipse.stp.bpmn.diagram.actions.SubProcessCollapseStyleToolbarAction;
@@ -166,6 +167,8 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
             return new SubProcessCollapseStyleToolbarAction(workbenchPage);
         } else if (actionId.startsWith(ChangeEdgeOrderMenuManager.ID)) {
             return ChangeEdgeOrderMenuManager.createAction(workbenchPage, actionId);
+        } else if (SetAsThrowingOrCatchingAction.ID.equals(actionId)) {
+            return new SetAsThrowingOrCatchingAction(workbenchPage);
         }
         return super.createAction(actionId, partDescriptor);
     }

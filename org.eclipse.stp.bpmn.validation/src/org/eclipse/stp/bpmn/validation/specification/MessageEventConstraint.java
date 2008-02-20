@@ -15,6 +15,8 @@ import org.eclipse.emf.validation.AbstractModelConstraint;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 
 /**
@@ -28,7 +30,10 @@ public class MessageEventConstraint extends AbstractModelConstraint {
 
 	@Override
 	public IStatus validate(IValidationContext ctx) {
-		if (ctx.getTarget() instanceof Activity) {
+	    boolean isBpmn11On = BpmnDiagramEditorPlugin.getInstance().
+	        getPreferenceStore().getBoolean(
+	                BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
+		if (ctx.getTarget() instanceof Activity && !isBpmn11On) {
 			Activity act = (Activity) ctx.getTarget();
 			switch (act.getActivityType().getValue()) {
 			case ActivityType.EVENT_INTERMEDIATE_MESSAGE:

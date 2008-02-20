@@ -29,15 +29,26 @@ import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
+import org.eclipse.stp.bpmn.Artifact;
+import org.eclipse.stp.bpmn.ArtifactsContainer;
+import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.AssociationTarget;
+import org.eclipse.stp.bpmn.DataObject;
 import org.eclipse.stp.bpmn.Graph;
+import org.eclipse.stp.bpmn.Group;
 import org.eclipse.stp.bpmn.Identifiable;
 import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
+import org.eclipse.stp.bpmn.TextAnnotation;
 import org.eclipse.stp.bpmn.Vertex;
-import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.DataObject2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
@@ -45,6 +56,8 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
 import org.eclipse.stp.bpmn.diagram.generation.IProcessGenerator;
 import org.eclipse.stp.bpmn.diagram.generation.IVisualProcessGenerator;
 import org.eclipse.stp.bpmn.diagram.generation.impl.BPMNProcessGenerator.InternalRecordingCommand;
@@ -268,6 +281,129 @@ public class BPMNVisualProcessGenerator
 	}
 	
 	/**
+     * Creates and adds a text annotation to the container.
+     * 
+     * @param container the container
+     * @param name the name of the text annotation
+     * 
+     * @return a newly added text annotation
+     * 
+     */
+    public Node addTextAnnotation(final Node container, String name) {
+        final TextAnnotation textAnnotation = _semanticGenerator.addTextAnnotation(
+                (ArtifactsContainer) container.getElement(), name);
+        InternalRecordingCommand command = 
+            _semanticGenerator.new InternalRecordingCommand() {
+
+            @Override
+            protected void doExecute() {
+
+                String semanticHints = null;
+                if (textAnnotation.getArtifactsContainer() instanceof Graph) {
+                    semanticHints =  BpmnVisualIDRegistry.getType(
+                        TextAnnotationEditPart.VISUAL_ID);
+                } else {
+                    semanticHints = BpmnVisualIDRegistry.getType(
+                            TextAnnotation2EditPart.VISUAL_ID);
+                }
+                Node node = 
+                    ViewService.getInstance().createNode(
+                            new EObjectAdapter(textAnnotation),
+                            container, 
+                            semanticHints, ViewUtil.APPEND,
+                            BpmnDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+                setReturnedObject(node);
+            }
+
+        };
+        
+        _semanticGenerator._editingDomain.getCommandStack().execute(command);
+        return (Node) command.getReturnedObject();
+    }
+    
+    /**
+     * Creates and adds a data object to the container.
+     * 
+     * @param container the container
+     * @param name the name of the data object
+     * 
+     * @return a newly added data object
+     * 
+     */
+    public Node addDataObject(final Node container, String name) {
+        final DataObject dataObject = _semanticGenerator.addDataObject(
+                (ArtifactsContainer) container.getElement(), name);
+        InternalRecordingCommand command = 
+            _semanticGenerator.new InternalRecordingCommand() {
+
+            @Override
+            protected void doExecute() {
+
+                String semanticHints = null;
+                if (dataObject.getArtifactsContainer() instanceof Graph) {
+                    semanticHints =  BpmnVisualIDRegistry.getType(
+                        DataObjectEditPart.VISUAL_ID);
+                } else {
+                    semanticHints = BpmnVisualIDRegistry.getType(
+                            DataObject2EditPart.VISUAL_ID);
+                }
+                Node node = 
+                    ViewService.getInstance().createNode(
+                            new EObjectAdapter(dataObject),
+                            container, 
+                            semanticHints, ViewUtil.APPEND,
+                            BpmnDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+                setReturnedObject(node);
+            }
+
+        };
+        
+        _semanticGenerator._editingDomain.getCommandStack().execute(command);
+        return (Node) command.getReturnedObject();
+    }
+	
+    /**
+     * Creates and adds a data object to the container.
+     * 
+     * @param container the container
+     * @param name the name of the group
+     * 
+     * @return a newly added group
+     * 
+     */
+    public Node addGroup(final Node container, String name) {
+        final Group group = _semanticGenerator.addGroup(
+                (ArtifactsContainer) container.getElement(), name);
+        InternalRecordingCommand command = 
+            _semanticGenerator.new InternalRecordingCommand() {
+
+            @Override
+            protected void doExecute() {
+
+                String semanticHints = null;
+                if (group.getArtifactsContainer() instanceof Graph) {
+                    semanticHints =  BpmnVisualIDRegistry.getType(
+                        GroupEditPart.VISUAL_ID);
+                } else {
+                    semanticHints = BpmnVisualIDRegistry.getType(
+                            Group2EditPart.VISUAL_ID);
+                }
+                Node node = 
+                    ViewService.getInstance().createNode(
+                            new EObjectAdapter(group),
+                            container, 
+                            semanticHints, ViewUtil.APPEND,
+                            BpmnDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+                setReturnedObject(node);
+            }
+
+        };
+        
+        _semanticGenerator._editingDomain.getCommandStack().execute(command);
+        return (Node) command.getReturnedObject();
+    }
+    
+	/**
 	 * Creates and adds a task to a parent (either a pool, lane or 
 	 * subprocess).
 	 * 
@@ -482,6 +618,42 @@ public class BPMNVisualProcessGenerator
 
 		return (Edge) command.getReturnedObject();
 	}
+	
+	/**
+     * Connects the source and target elements with an association.
+     * 
+     * @param source the artifact
+     * @param target the target
+     * 
+     */
+	public Edge addAssociation(final Node source, final Node target) {
+        final Association edge = 
+            _semanticGenerator.addAssociation(
+                    (Artifact) source.getElement(), 
+                    (AssociationTarget) target.getElement());
+        InternalRecordingCommand command = 
+            _semanticGenerator.new InternalRecordingCommand() {
+
+            @Override
+            protected void doExecute() {
+                
+                String semanticHints = BpmnVisualIDRegistry.getType(
+                        AssociationEditPart.VISUAL_ID);
+                Edge anEdge =
+                    (Edge) ViewService.getInstance().createEdge(
+                            new EObjectAdapter(edge),
+                            _semanticGenerator.getGraphicalModel(), 
+                            semanticHints, ViewUtil.APPEND,
+                        BpmnDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+                anEdge.setSource(source);
+                anEdge.setTarget(target);
+                setReturnedObject(anEdge);
+            }};
+        _semanticGenerator._editingDomain.getCommandStack().execute(command);
+
+        return (Edge) command.getReturnedObject();
+    }
+	
 	
 	/**
 	 * Connects the source and target elements with either a sequence (if in the

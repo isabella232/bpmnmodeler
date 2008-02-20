@@ -12,19 +12,10 @@
 package org.eclipse.stp.bpmn.tools;
 
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
-import org.eclipse.stp.bpmn.commands.SetBoundsCommandEx;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 
@@ -44,8 +35,7 @@ public class GroupResizeTracker extends ActivityResizeTracker {
         super(owner, direction);
     }
 
-    @Override
-    protected Command getCommand() {
+    private Command getResizeCommand() {
         if (getOwner() instanceof GroupEditPart) {
             Rectangle rect = ((GraphicalEditPart) getOwner().getParent()).getFigure().getBounds().getCopy();
             Rectangle source = getOwner().getFigure().getBounds().getCopy();

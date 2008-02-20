@@ -41,6 +41,7 @@ import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOpe
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorProvider;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
+import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -48,6 +49,8 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Identifiable;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
@@ -55,6 +58,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE.SharedImages;
 
 /** 
  * @generated
@@ -66,6 +70,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
      */
     private static final String KEY = "validationStatus"; //$NON-NLS-1$
 
+    private static final String TASK_KEY = "taskStatus"; //$NON-NLS-1$
     /**
      * @generated NOT
      */
@@ -111,6 +116,8 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
             }
             if (((DiagramEditDomain) ed).getEditorPart() instanceof BpmnDiagramEditor) {
                 decoratorTarget.installDecorator(KEY, new StatusDecorator(
+                        decoratorTarget));
+                decoratorTarget.installDecorator(TASK_KEY, new TaskDecorator(
                         decoratorTarget));
             }
         }
@@ -401,7 +408,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
         /**
          * @generated
          */
-        private void registerDecorator(StatusDecorator decorator) {
+        private void registerDecorator(AbstractDecorator decorator) {
             if (decorator == null) {
                 return;
             }
@@ -411,12 +418,22 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                 mapOfBpmnIdsToDecorators = new HashMap();
             }
 
-            String decoratorViewId = decorator.getViewId();
+            
+            String decoratorViewId = null;
+            if (decorator instanceof StatusDecorator) {
+                decoratorViewId = ((StatusDecorator) decorator).getViewId();
+            } else if (decorator instanceof TaskDecorator) {
+                decoratorViewId = ((TaskDecorator) decorator).getViewId();
+            }
             if (decoratorViewId == null) {
                 return;
             }
-            String bpmnId = decorator.getBpmnId();
-
+            String bpmnId = null;
+            if (decorator instanceof StatusDecorator) {
+                bpmnId = ((StatusDecorator) decorator).getBpmnId();
+            } else if (decorator instanceof TaskDecorator) {
+                bpmnId = ((TaskDecorator) decorator).getBpmnId();
+            }
             /* Add to the list */
             List list = (List) mapOfIdsToDecorators.get(decoratorViewId);
             if (list == null) {
@@ -442,18 +459,27 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
         /**
          * @generated
          */
-        private void unregisterDecorator(StatusDecorator decorator) {
+        private void unregisterDecorator(AbstractDecorator decorator) {
             /* Return if invalid decorator */
             if (decorator == null) {
                 return;
             }
 
-            /* Return if the decorator has invalid view id */
-            String decoratorViewId = decorator.getViewId();
+            String decoratorViewId = null;
+            if (decorator instanceof StatusDecorator) {
+                decoratorViewId = ((StatusDecorator) decorator).getViewId();
+            } else if (decorator instanceof TaskDecorator) {
+                decoratorViewId = ((TaskDecorator) decorator).getViewId();
+            }
             if (decoratorViewId == null) {
                 return;
             }
-            String bpmnId = decorator.getBpmnId();
+            String bpmnId = null;
+            if (decorator instanceof StatusDecorator) {
+                bpmnId = ((StatusDecorator) decorator).getBpmnId();
+            } else if (decorator instanceof TaskDecorator) {
+                bpmnId = ((TaskDecorator) decorator).getBpmnId();
+            }
 
             if (mapOfIdsToDecorators != null) {
                 List list = (List) mapOfIdsToDecorators.get(decoratorViewId);
@@ -546,12 +572,14 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
         public void handleMarkerChanged(IMarker marker) {
             try {
                 if (mapOfIdsToDecorators == null
-                        || !marker.isSubtypeOf(MARKER_TYPE)) {
+                        || (!marker.isSubtypeOf(MARKER_TYPE) && 
+                        !marker.isSubtypeOf(IMarker.TASK))) {
                         //|| !MARKER_TYPE.equals(getType(marker))) {
                     return;
                 }
             } catch (CoreException e) {
-                if (!MARKER_TYPE.equals(getType(marker))) {
+                if (!MARKER_TYPE.equals(getType(marker)) && 
+                        !IMarker.TASK.equals(getType(marker))) {
                     //whatever.
                     return;
                 }
@@ -626,5 +654,180 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                 return ""; //$NON-NLS-1$
             }
         }
+    }
+    
+    public static class TaskDecorator extends AbstractDecorator {
+
+        private static IResource getResource(View view) {
+            Resource model = view.eResource();
+            if (model != null) {
+                return WorkspaceSynchronizer.getFile(model);
+            }
+            return null;
+        }
+        
+        // the two views
+        private String viewId;
+        private String bpmnId;
+        
+        public TaskDecorator(IDecoratorTarget decoratorTarget) {
+            super(decoratorTarget);
+            try {
+                final View view = (View) getDecoratorTarget().getAdapter(
+                        View.class);
+                final EObject semantic = resolveSemanticElement(decoratorTarget);
+                TransactionUtil.getEditingDomain(view).runExclusive(
+                        new Runnable() {
+                            public void run() {
+                                TaskDecorator.this.viewId = view != null ?
+                                        ViewUtil.getIdStr(view) : null;
+                                        TaskDecorator.this.bpmnId = semantic != null 
+                                    && semantic instanceof Identifiable ?
+                                        ((Identifiable)semantic).getID() : null;
+                            }
+                        });
+            } catch (Exception e) {
+                BpmnDiagramEditorPlugin.getInstance().logError(
+                        "ViewID access failure", e); //$NON-NLS-1$          
+            }
+        }
+        
+        String getViewId() {
+            return viewId;
+        }
+        
+        String getBpmnId() {
+            return bpmnId;
+        }
+
+        public void activate() {
+            View view = (View) getDecoratorTarget().getAdapter(View.class);
+            if (view == null)
+                return;
+            Diagram diagramView = view.getDiagram();
+            if (diagramView == null)
+                return;
+            IFile file = WorkspaceSynchronizer.getFile(diagramView.eResource());
+            if (file != null) {
+                if (fileObserver == null) {
+                    fileObserver = new MarkerObserver(diagramView);
+                }
+
+                fileObserver.registerDecorator(this);
+            }
+            
+        }
+
+        public void deactivate() {
+            if (fileObserver != null) {
+                fileObserver.unregisterDecorator(this);
+                if (!fileObserver.isRegistered()) {
+                    fileObserver = null;
+                }
+            }
+
+            super.deactivate();
+        }
+        
+        public void refresh() {
+            removeDecoration();
+
+            if (BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().
+                    getBoolean(BpmnDiagramPreferenceInitializer.FILTER_DECORATIONS)) {
+                return;
+            }
+            
+            View view = (View) getDecoratorTarget().getAdapter(View.class);
+            EditPart editPart = (EditPart) getDecoratorTarget().getAdapter(
+                    EditPart.class);
+            if (view == null || view.eResource() == null) {
+                return;
+            }
+            IResource resource = getResource(view);
+            // make sure we have a resource and that it exists in an open project
+            if (resource == null || !resource.exists()) {
+                return;
+            }
+
+            // query for all the validation markers of the current resource
+            IMarker[] markers = null;
+            try {
+                markers = resource.findMarkers(IMarker.TASK, true,
+                        IResource.DEPTH_INFINITE);
+            } catch (CoreException e) {
+                BpmnDiagramEditorPlugin.getInstance().logError(
+                        "Validation marker refresh failure", e); //$NON-NLS-1$
+            }
+            if (markers == null || markers.length == 0) {
+                return;
+            }
+
+            String elementId = ViewUtil.getIdStr(view);
+            if (elementId == null) {
+                return;
+            }
+
+            IMarker foundMarker = null;
+            Label toolTip = null;
+            for (int i = 0; i < markers.length; i++) {
+                IMarker marker = markers[i];
+//              don't add a decoration if this marker type is filtered.
+                
+                String attribute = marker.getAttribute(ELEMENT_ID, null); //$NON-NLS-1$
+                
+                if (attribute == null || !attribute.equals(elementId)) {
+                    attribute = marker.getAttribute(BPMN_ID, null);
+                    if (attribute == null || !attribute.equals(bpmnId)) {
+                        continue;
+                    }
+                }
+                if (foundMarker == null) {
+                    foundMarker = marker;
+                    toolTip = new Label(marker.getAttribute(
+                            IMarker.MESSAGE, ""), 
+                            PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK)); //$NON-NLS-1$
+                } else {
+                    if (toolTip.getChildren().isEmpty()) {
+                        Label comositeLabel = new Label();
+                        FlowLayout fl = new FlowLayout(false);
+                        fl.setMinorSpacing(0);
+                        comositeLabel.setLayoutManager(fl);
+                        comositeLabel.add(toolTip);
+                        toolTip = comositeLabel;
+                    }
+                    toolTip.add(new Label(marker.getAttribute(
+                            IMarker.MESSAGE, ""), PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK))); //$NON-NLS-1$
+                }
+            }
+            if (foundMarker == null) {
+                return;
+            }
+
+            // add decoration
+            if (editPart instanceof IGraphicalEditPart) {
+                Image img = PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK);
+                if (view instanceof Edge) {
+                    setDecoration(getDecoratorTarget().addConnectionDecoration(
+                            img, 50, true));
+                } else {
+                    int margin = 0;
+                    if (editPart instanceof GraphicalEditPart) {
+                        if (editPart instanceof TextAnnotationEditPart
+                                || editPart instanceof TextAnnotation2EditPart) {
+                            margin = -4;
+                        }
+                        margin = MapModeUtil.getMapMode(
+                                ((IGraphicalEditPart) editPart).getFigure())
+                                .DPtoLP(margin);
+                    }
+                    setDecoration(getDecoratorTarget()
+                            .addShapeDecoration(img,
+                                   Direction.NORTH_WEST, margin, true));
+                }
+                getDecoration().setToolTip(toolTip);
+            }
+            
+        }
+        
     }
 }

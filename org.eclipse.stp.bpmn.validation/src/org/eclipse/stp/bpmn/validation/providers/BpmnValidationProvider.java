@@ -33,6 +33,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.Diagnostic;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.Diagnostician;
@@ -56,6 +57,10 @@ import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.stp.bpmn.BpmnDiagram;
+import org.eclipse.stp.bpmn.TextAnnotation;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
+import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin.IValidationMarkerCreationHook;
@@ -71,6 +76,11 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
      */
     public static final String MARKER_TYPE =
         BpmnValidationPlugin.PLUGIN_ID + ".diagnostic"; //$NON-NLS-1$
+    /**
+     * @generated
+     */
+    public static final String MARKER_TASK_TYPE =
+        "org.eclipse.stp.bpmn.diagram" + ".taskmarker"; //$NON-NLS-1$
 	/**
 	 * @generated
 	 */
@@ -214,6 +224,8 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 				if (diagramFile != null)
 					diagramFile.deleteMarkers(MARKER_TYPE, false,
 							IResource.DEPTH_ZERO);
+				    diagramFile.deleteMarkers(MARKER_TASK_TYPE, false,
+                        IResource.DEPTH_ZERO);
 			} catch (CoreException e) {
                 BpmnValidationPlugin.getDefault().getLog().log(
                         new Status(IStatus.ERROR,
@@ -221,6 +233,56 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
                                 IStatus.ERROR,
                                 BpmnValidationMessages.BpmnValidationProvider_validateFailed, e));
 			}
+			
+	        TreeIterator<EObject> iter = target.eResource().getAllContents();
+	        while (iter.hasNext()) {
+	            EObject eobj = iter.next();
+	            if ((eobj instanceof View)) {
+	                String id = (((View) eobj).getType());
+	                if ((BpmnVisualIDRegistry.getType(TextAnnotationEditPart.VISUAL_ID).equals(id) ||
+	                        BpmnVisualIDRegistry.getType(TextAnnotation2EditPart.VISUAL_ID).equals(id)) &&
+	                        ((View) eobj).getElement() instanceof TextAnnotation) {
+	                    //support for generating task markers just like the java editor.
+	                    String name = ((TextAnnotation) ((View) eobj).getElement()).getName();
+	                    if (name != null) {
+	                        int taskPriority = -1;
+	                        if (name.startsWith("TODO ") || name.contains(" TODO ")) {
+	                            taskPriority = IMarker.PRIORITY_NORMAL;
+	                        } else if (name.startsWith("FIXME ") || name.contains(" FIXME ")) {
+	                            taskPriority = IMarker.PRIORITY_HIGH;
+	                        } else if (name.startsWith("XXX ") || name.contains(" XXX ")) {
+	                            taskPriority = IMarker.PRIORITY_NORMAL;
+	                        }
+	                        if (taskPriority != -1) {
+	                            try {
+	                                IMarker marker = diagramFile.createMarker(MARKER_TASK_TYPE);//IMarker.TASK);
+	                                String location = EMFCoreUtil.getQualifiedName(eobj, true);
+	                                if (location.startsWith("<Diagram>::")) {
+	                                    location = location.substring("<Diagram>::".length());
+	                                }
+	                                marker.setAttribute(IMarker.LOCATION, location);
+	                                marker.setAttribute(
+	                                        org.eclipse.gmf.runtime.common.core.resources.IMarker.ELEMENT_ID, 
+	                                        ViewUtil.getIdStr((View) eobj));
+	                                //just like in the jdt we don't remove the TODO FIXME XXX...
+	                                marker.setAttribute(IMarker.MESSAGE, name.trim());
+	                                marker.setAttribute(IMarker.PRIORITY, taskPriority);
+	                                marker.setAttribute(IMarker.USER_EDITABLE, false);
+	                                List<IValidationMarkerCreationHook> hooks =
+	                                    BpmnValidationPlugin.getDefault().getCreationMarkerCallBacks();
+	                                if (hooks != null) {
+	                                    for (IValidationMarkerCreationHook hook : hooks) {
+	                                        hook.validationMarkerCreated(marker, eobj);
+	                                    }
+	                                }
+	                            } catch (CoreException e) {
+	                                e.printStackTrace();
+	                            }
+	                        }
+	                        }
+	                }
+	            }
+	        }
 			Diagnostic diagnostic = runEMFValidator(target);
 
 			IBatchValidator validator = (IBatchValidator) ModelValidationService

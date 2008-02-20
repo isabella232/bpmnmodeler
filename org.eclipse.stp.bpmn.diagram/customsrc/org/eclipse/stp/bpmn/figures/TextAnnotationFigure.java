@@ -11,7 +11,6 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
-import org.eclipse.swt.graphics.Color;
 
 public class TextAnnotationFigure extends DefaultSizeNodeFigure {
     
@@ -25,14 +24,13 @@ public class TextAnnotationFigure extends DefaultSizeNodeFigure {
     public TextAnnotationFigure(int width, int height, Insets insets) {
         super(width, height);
         setBorder(
-            new MarginBorder(insets.top, insets.left, insets.bottom, insets.right));
-
+                new MarginBorder(insets.top, insets.left, insets.bottom, insets.right));
         ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
         layout.setMinorAlignment(ConstrainedToolbarLayout.ALIGN_TOPLEFT);
         layout.setSpacing(insets.top);
         setLayoutManager(layout);
     }
-    
+
     /**
      * Draw a polyline
      * looking like a C, with square angles,

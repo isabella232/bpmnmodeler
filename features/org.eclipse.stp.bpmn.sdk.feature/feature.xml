@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.stp.bpmn.sdk.feature"
       label="BPMN Project SDK Feature (Incubation)"
-      version="0.7.1.qualifier"
+      version="0.8.0.qualifier"
       provider-name="Eclipse.org">
 
    <description>
@@ -16,7 +16,7 @@
    <license url="%licenseURL">
       %license
    </license>
-   
+
    <url>
       <update label="%updateSiteName" url="http://download.eclipse.org/stp/updates/"/>
    </url>
@@ -24,6 +24,7 @@
    <includes
          id="org.eclipse.stp.bpmn.feature"
          version="0.0.0"/>
+
    <includes
          id="org.eclipse.stp.bpmn.feature.source"
          version="0.0.0"/>

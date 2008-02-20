@@ -529,9 +529,15 @@
    <extension point="org.eclipse.gmf.runtime.common.ui.services.markerNavigationProviders">
       <MarkerNavigationProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnMarkerNavigationProvider">
          <MarkerType name="org.eclipse.stp.bpmn.diagram.diagnostic"/>
+         <MarkerType name="org.eclipse.stp.bpmn.diagram.taskmarker"/>
          <Priority name="Lowest"/>
       </MarkerNavigationProvider>
    </extension>
+   <extension id="taskmarker" name="Bpmn Task marker" point="org.eclipse.core.resources.markers">
+      <super type="org.eclipse.core.resources.taskmarker"/>
+      <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
+      <persistent value="true"/>
+   </extension>   
    <extension id="diagnostic" name="Bpmn Plugin problems" point="org.eclipse.core.resources.markers">
       <super type="org.eclipse.core.resources.problemmarker"/>
       <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
@@ -864,7 +870,14 @@
                   id="setActivityTypeToEventStartTimer"
                   path="/ActivityTypes/ActivityTypes_StartEvents/group0">
             </popupAction>
-           
+           <popupAction
+                  id="setActivityTypeToEventStartSignal"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventStartMultiple"
+                  path="/ActivityTypes/ActivityTypes_StartEvents/group0">
+            </popupAction>
             <popupAction
                   id="setActivityTypeToEventIntermediateEmpty"
                   path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
@@ -890,6 +903,14 @@
                   path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
             </popupAction>
             <popupAction
+                  id="setActivityTypeToEventIntermediateSignal"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventIntermediateMultiple"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
                   id="setActivityTypeToEventEndEmpty"
                   path="/ActivityTypes/ActivityTypes_EndEvents/group0">
             </popupAction>
@@ -903,6 +924,14 @@
             </popupAction>
             <popupAction
                   id="setActivityTypeToEventEndCompensation"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndMultiple"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndSignal"
                   path="/ActivityTypes/ActivityTypes_EndEvents/group0">
             </popupAction>
             <popupAction
@@ -1048,6 +1077,20 @@
                  id="changeEdgeOrderMenu_target_down"
                  path="/formatMenu/changeEdgeOrderMenu/changeEdgeOrderMenu_target/target_group">
            </popupAction>
+        </popupContribution>
+        <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupAction
+                 id="SetAsThrowingOrCatchingAction"
+                 path="/additionsGroup">
+           </popupAction>
+           <popupStructuredContributionCriteria
+                 objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart"
+                 objectCount="1">
+              <method
+                    name="shouldShowSetAsThrowingOrCatching()">
+              </method>
+           </popupStructuredContributionCriteria>
         </popupContribution>
          
       </contributionItemProvider>

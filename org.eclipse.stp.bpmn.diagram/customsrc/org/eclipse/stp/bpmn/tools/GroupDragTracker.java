@@ -13,17 +13,35 @@
  */
 package org.eclipse.stp.bpmn.tools;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.Group;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.swt.graphics.Cursor;
 
 /**
@@ -63,9 +81,9 @@ public class GroupDragTracker extends DragEditPartsTrackerEx {
             source.setLocation(loc);
             vp.translateToAbsolute(source);
 //            vp.translateToAbsolute(target);
-            System.err.println(target + " " + source + "TODO, have those coordinates expressed in the same referential"); //REMOVE
+//            System.err.println(target + " " + source + "TODO, have those coordinates expressed in the same referential"); //REMOVE
             if (!target.contains(source)) {
-                System.err.println("target does not contain source"); //REMOVE
+//                System.err.println("target does not contain source"); //REMOVE
                 setTargetEditPart(getDiagramEditPart((IGraphicalEditPart) super.getTargetEditPart()));
                 updated = true;
             }
@@ -89,10 +107,5 @@ public class GroupDragTracker extends DragEditPartsTrackerEx {
             }
         }
         return super.calculateCursor();
-    }
-    
-    @Override
-    protected Command getCommand() {
-        return super.getCommand();
     }
 }

@@ -48,6 +48,8 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
                     switch (((Activity) source).getActivityType().getValue()) {
                     case ActivityType.EVENT_START_MESSAGE:
                     case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
+                    case ActivityType.EVENT_START_MULTIPLE:
+                    case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
                         FeatureMap.Entry fentry = (FeatureMap.Entry) source.
                         getOrderedMessages().get(0);
                         MessagingEdge firstMsgOfSource =
@@ -66,7 +68,7 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
                     case ActivityType.EVENT_INTERMEDIATE_EMPTY:
                     case ActivityType.EVENT_INTERMEDIATE_CANCEL:
                     case ActivityType.EVENT_INTERMEDIATE_LINK:
-                    case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
+                    case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
                     case ActivityType.EVENT_INTERMEDIATE_ERROR:
                     case ActivityType.EVENT_INTERMEDIATE_RULE:
                     case ActivityType.EVENT_INTERMEDIATE_TIMER:
@@ -75,9 +77,9 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
 
                     case ActivityType.EVENT_START_EMPTY:
                     case ActivityType.EVENT_START_LINK:
-                    case ActivityType.EVENT_START_MULTIPLE:
                     case ActivityType.EVENT_START_RULE:
                     case ActivityType.EVENT_START_TIMER:
+                    case ActivityType.EVENT_START_SIGNAL:
                         return ctx.createFailureStatus(new Object[]{
                                 BpmnValidationMessages.MessagingEdgeConstraint_StartEventMustNotSendMessage
                         });
@@ -86,21 +88,21 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
                 if (target instanceof Activity) {
                     switch (((Activity) target).getActivityType().getValue()) {	
                     case ActivityType.EVENT_END_MESSAGE:
-                        if (((FeatureMap.Entry) source.
-                                getOrderedMessages().get(0))
-                                .getEStructuralFeature().getFeatureID() !=
-                                    BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES) {
+                    case ActivityType.EVENT_END_MULTIPLE:
+                        if (source.getOutgoingMessages().contains(
+                                source.getOrderedMessages().get(0).getValue())) {
                             return ctx.createFailureStatus(new Object[]{
                                     BpmnValidationMessages.MessagingEdgeConstraint_EndEventMustNotReceiveAMessage
                             });
                         }
+                        break;
                     case ActivityType.EVENT_END_COMPENSATION:
                     case ActivityType.EVENT_END_EMPTY:
                     case ActivityType.EVENT_END_ERROR:
                     case ActivityType.EVENT_END_TERMINATE:
                     case ActivityType.EVENT_END_CANCEL:
+                    case ActivityType.EVENT_END_SIGNAL:
                     case ActivityType.EVENT_END_LINK:
-                    case ActivityType.EVENT_END_MULTIPLE:
                         return ctx.createFailureStatus(new Object[]{
                                 BpmnValidationMessages.MessagingEdgeConstraint_EndEventMustNotReceiveMessage
                         });

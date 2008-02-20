@@ -47,6 +47,7 @@ public class BpmnDiagramEditor extends FileDiagramEditor implements IGotoMarker 
         super(true);
     }
 
+    
     /**
      * @generated
      */
