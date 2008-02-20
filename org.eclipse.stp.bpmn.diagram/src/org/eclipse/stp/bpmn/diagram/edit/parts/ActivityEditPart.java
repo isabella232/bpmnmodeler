@@ -31,6 +31,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
@@ -60,13 +61,17 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.BpmnPackage;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.actions.SetAsThrowingOrCatchingAction;
 import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityGraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityItemSemanticEditPolicy;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip.IToolTipProvider;
@@ -870,7 +875,24 @@ public class ActivityEditPart extends ShapeNodeEditPart {
          */
         @Override
         public boolean isCatching() {
-            return false;
+            Activity activity = (Activity) resolveSemanticElement();
+            if (activity == null) {
+                return false;
+            }
+            if (!activity.getOrderedMessages().isEmpty()) {
+                return activity.getIncomingMessages().contains(
+                        activity.getOrderedMessages().get(0).getValue());
+            } else {
+                String str = EcoreUtil.getAnnotation(activity, 
+                        SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
+                        SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID);
+                if ("true".equals(str)) {
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+           
         }
 
     }
@@ -900,6 +922,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         case ActivityType.GATEWAY_DATA_BASED_INCLUSIVE:
         case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
         case ActivityType.GATEWAY_PARALLEL:
+        case ActivityType.GATEWAY_COMPLEX:
             shapeType = SHAPE_DIAMOND;
             break;
         default:
@@ -985,5 +1008,23 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         });
         
         return seqs.indexOf(index);
+    }
+    
+    /**
+     * @generated NOT
+     * this method is used to know whether the action 
+     * "Set as a throwing shape" and "Set as a catching shape" should show
+     */
+    public boolean shouldShowSetAsThrowingOrCatching() {
+        boolean b = BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().
+            getBoolean(BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
+        if (!b) {
+            return false;
+        }
+        return resolveSemanticElement() instanceof Activity &&
+            ((Activity) resolveSemanticElement()).getOrderedMessages().isEmpty() &&
+                ActivityType.VALUES_EVENTS.contains(
+                    ((Activity) resolveSemanticElement()).getActivityType());
+        
     }
 }

@@ -21,9 +21,12 @@ import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
+import org.eclipse.emf.common.util.ECollections;
+import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.FeatureMap;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
@@ -36,16 +39,21 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.AssociationTarget;
+import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Graph;
+import org.eclipse.stp.bpmn.Identifiable;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.commands.CreateRelationshipCommandEx;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityItemSemanticEditPolicy.CreateIncomingMessagingEdge3002Command;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**
@@ -101,6 +109,10 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
         if (BpmnElementTypes.Association_3003.getId().equals(req.getElementType().getId())) {
             return req.getTarget() == null ? null
                     : getCreateCompleteIncomingAssociation3003Command(req);
+        }
+        if (BpmnElementTypes.MessagingEdge_3002.getId().equals(req.getElementType().getId())) {
+            return req.getTarget() == null ? getCreateStartOutgoingMessagingEdge3002Command(req)
+                    : getCreateCompleteIncomingMessagingEdge3002Command(req);
         }
         return super.getCreateRelationshipCommand(req);
     }
@@ -258,4 +270,326 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
         }
     }
     
+    
+    /**
+     * @generated
+     */
+    protected Command getCreateCompleteIncomingMessagingEdge3002Command(
+            CreateRelationshipRequest req) {
+        final BpmnDiagram element = (BpmnDiagram) getRelationshipContainer(req
+                .getSource(), BpmnPackage.eINSTANCE.getBpmnDiagram(), req
+                .getElementType());
+        if (element == null) {
+            return UnexecutableCommand.INSTANCE;
+        }
+        if (req.getContainmentFeature() == null) {
+            req.setContainmentFeature(BpmnPackage.eINSTANCE
+                    .getBpmnDiagram_Messages());
+        }
+        return getMSLWrapper(new CreateIncomingMessagingEdge3002Command(req) {
+
+            /**
+             * @generated
+             */
+            protected EObject getElementToEdit() {
+                return element;
+            }
+        });
+    }
+
+    /**
+     * Almost generated: the private is now protected
+     * @generated
+     */
+    protected static class CreateIncomingMessagingEdge3002Command extends
+            CreateRelationshipCommandEx {
+
+        /**
+         * @generated
+         */
+        public CreateIncomingMessagingEdge3002Command(
+                CreateRelationshipRequest req) {
+            super(req);
+        }
+
+        /**
+         * @generated
+         */
+        protected EClass getEClassToEdit() {
+            return BpmnPackage.eINSTANCE.getBpmnDiagram();
+        };
+
+        /**
+         * @generated
+         */
+        protected void setElementToEdit(EObject element) {
+            throw new UnsupportedOperationException();
+        }
+
+        /**
+         * @generated
+         */
+        protected EObject doDefaultElementCreation() {
+            MessagingEdge newElement = (MessagingEdge) super
+                    .doDefaultElementCreation();
+            if (newElement != null) {
+                newElement.setTarget((MessageVertex) getTarget());
+                newElement.setSource((MessageVertex) getSource());
+            }
+            return newElement;
+        }
+        
+        /**
+         * Contains Message Flow Rules
+         * @generated not
+         */
+        @Override
+        public boolean canExecute() {
+            if (getSource() instanceof Pool || 
+                    getTarget() instanceof Pool) {
+                return true;
+            }
+            if ((!(getSource() instanceof Activity))|| 
+                    !(getTarget() instanceof Activity)) {
+                return false;
+                // the message is created at the same time as the activity is created.
+            }
+            Activity source = getSource() instanceof Activity ?
+                    (Activity) getSource() : null;
+            Activity target = getTarget() instanceof Activity ?
+                    (Activity) getTarget() : null;
+                    
+            /*
+             * Message Flow Rules
+             */
+            if (source.equals(target)) {
+                return false;
+            }
+
+            EList tInMessages = target == null ? ECollections.EMPTY_ELIST :
+                    target.getIncomingMessages();
+            EList tOutMessages = target == null ? ECollections.EMPTY_ELIST :
+                    target.getOutgoingMessages();
+            EList sInMessages = source == null ? ECollections.EMPTY_ELIST :
+                    source.getIncomingMessages();
+            EList sOutMessages = source == null ? ECollections.EMPTY_ELIST :
+                    source.getOutgoingMessages();
+
+            /*
+             * only one incoming and one outgoing message connection between two
+             * activities are allowed.
+             */
+            for (Iterator iter = tInMessages.iterator(); iter.hasNext();) {
+                MessagingEdge element = (MessagingEdge) iter.next();
+                // better be safe here
+                if (element.getSource() != null && 
+                        element.getSource().equals(source)) {
+                    return false;
+                }
+            }
+
+            // source pool
+            Identifiable sContainer = getSource() instanceof Pool ?
+                    (Identifiable) getSource() :
+                (Identifiable) source.eContainer();
+            while (!(sContainer instanceof Pool)) {
+                sContainer = (Identifiable) sContainer.eContainer();
+            }
+
+            // target pool
+            Identifiable tContainer = getTarget() instanceof Pool ?
+                    (Identifiable) getTarget() :
+                (Identifiable) target.eContainer();
+            while (!(tContainer instanceof Pool)) {
+                tContainer = (Identifiable) tContainer.eContainer();
+            }
+
+            if (sContainer.equals(tContainer)) {
+                return false;
+            }
+            /*
+             * if a shape is already carrying one or more messaging edges, the
+             * new messaging edge must not link to an activity that belongs to a
+             * third pool.
+             */
+            for (Iterator iter = tOutMessages.iterator(); iter.hasNext();) {
+                MessagingEdge element = (MessagingEdge) iter.next();
+                Activity task = (Activity) element.getTarget();
+                Identifiable container = (Identifiable) task.eContainer();
+                while (!(container instanceof Pool)) {
+                    container = (Identifiable) container.eContainer();
+                }
+                if (!container.equals(sContainer)) {
+                    return false;
+                }
+            }
+
+            for (Iterator iter = tInMessages.iterator(); iter.hasNext();) {
+                MessagingEdge element = (MessagingEdge) iter.next();
+                Activity task = (Activity) element.getSource();
+                Identifiable container = (Identifiable) task.eContainer();
+                while (!(container instanceof Pool)) {
+                    container = (Identifiable) container.eContainer();
+                }
+                if (!container.equals(sContainer)) {
+                    return false;
+                }
+            }
+
+            for (Iterator iter = sOutMessages.iterator(); iter.hasNext();) {
+                MessagingEdge element = (MessagingEdge) iter.next();
+                Activity task = (Activity) element.getTarget();
+                Identifiable container = (Identifiable) task.eContainer();
+                while (!(container instanceof Pool)) {
+                    container = (Identifiable) container.eContainer();
+                }
+                if (!container.equals(tContainer)) {
+                    return false;
+                }
+            }
+
+            for (Iterator iter = sInMessages.iterator(); iter.hasNext();) {
+                MessagingEdge element = (MessagingEdge) iter.next();
+                Activity task = (Activity) element.getSource();
+                Identifiable container = (Identifiable) task.eContainer();
+                while (!(container instanceof Pool)) {
+                    container = (Identifiable) container.eContainer();
+                }
+                if (!container.equals(tContainer)) {
+                    return false;
+                }
+            }
+            
+            if (target != null) {
+                //connection rules for events and gateways
+                switch (target.getActivityType().getValue()) {
+                case ActivityType.GATEWAY_DATA_BASED_INCLUSIVE:
+                case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
+                case ActivityType.GATEWAY_PARALLEL:
+                case ActivityType.GATEWAY_COMPLEX:
+                case ActivityType.SUB_PROCESS:
+                    return false;
+                    
+                case ActivityType.EVENT_START_EMPTY:
+                case ActivityType.EVENT_START_LINK:
+                case ActivityType.EVENT_START_MULTIPLE:
+                case ActivityType.EVENT_START_RULE:
+                case ActivityType.EVENT_START_TIMER:
+                case ActivityType.EVENT_START_MESSAGE:
+                case ActivityType.EVENT_START_SIGNAL:
+                    //all the starts can receive a message.
+                    
+                case ActivityType.EVENT_INTERMEDIATE_CANCEL:
+                case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
+                case ActivityType.EVENT_INTERMEDIATE_EMPTY:
+                case ActivityType.EVENT_INTERMEDIATE_ERROR:
+                case ActivityType.EVENT_INTERMEDIATE_LINK:
+                case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
+                case ActivityType.EVENT_INTERMEDIATE_RULE:
+                case ActivityType.EVENT_INTERMEDIATE_TIMER:
+                case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
+                case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
+//                  all the intermediates can receive a message.
+                    
+                case ActivityType.TASK:
+                    break;
+                    
+                //we are being a little lax with the bpmn spec:
+                //if the message event shape receive a request, we
+                //allow the message response to come from the same
+                //shape.
+                case ActivityType.EVENT_END_MESSAGE:
+                case ActivityType.EVENT_END_MULTIPLE:
+                    if (!target.getOrderedMessages().isEmpty()
+                         && (target.getOutgoingMessages().contains(
+                                 target.getOrderedMessages().get(0).getValue()))) {
+                        break;
+                    }
+                case ActivityType.EVENT_END_COMPENSATION:
+                case ActivityType.EVENT_END_EMPTY:
+                case ActivityType.EVENT_END_ERROR:
+                case ActivityType.EVENT_END_TERMINATE:
+                case ActivityType.EVENT_END_CANCEL:
+                case ActivityType.EVENT_END_LINK:
+                case ActivityType.EVENT_END_SIGNAL:
+                default:
+                    return false;
+                }
+            }
+            if (source != null) {
+                //connection rules for events and gateways
+                switch (source.getActivityType().getValue()) {
+                case ActivityType.GATEWAY_DATA_BASED_INCLUSIVE:
+                case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
+                case ActivityType.GATEWAY_PARALLEL:
+                case ActivityType.GATEWAY_COMPLEX:
+                case ActivityType.SUB_PROCESS:
+                    return false;
+                case ActivityType.EVENT_END_EMPTY:
+                case ActivityType.EVENT_END_COMPENSATION:
+                case ActivityType.EVENT_END_ERROR:
+                case ActivityType.EVENT_END_TERMINATE:
+                case ActivityType.EVENT_END_CANCEL:
+                case ActivityType.EVENT_END_LINK:
+                case ActivityType.EVENT_END_MULTIPLE:
+                case ActivityType.EVENT_END_MESSAGE:
+                case ActivityType.EVENT_END_SIGNAL:
+                    //all the end can send a message
+                    
+                case ActivityType.TASK:
+                    break;
+                    
+                //we are being a little lax with the bpmn spec:
+                //if the message event shape receive a request, we
+                //allow the message response to answer from the same
+                //shape.
+                case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
+                case ActivityType.EVENT_START_MESSAGE:
+                case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
+                case ActivityType.EVENT_START_MULTIPLE:
+                    if (!source.getOrderedMessages().isEmpty()) {
+                        boolean incomingFirst = source.getIncomingMessages().contains(
+                                source.getOrderedMessages().get(0).getValue());
+                        FeatureMap.Entry fentry = (FeatureMap.Entry) source.
+                                            getOrderedMessages().get(0);
+                        MessagingEdge firstMsgOfSource = (MessagingEdge) fentry.getValue();
+                        if (incomingFirst &&
+                                firstMsgOfSource.getSource() == target) {
+                        // a little bent to the spec
+                        // let's let the start events be able to reply
+                            break;
+                        }
+                    }
+                case ActivityType.EVENT_START_EMPTY:
+                case ActivityType.EVENT_START_LINK:
+                case ActivityType.EVENT_START_RULE:
+                case ActivityType.EVENT_START_TIMER:
+                case ActivityType.EVENT_START_SIGNAL:
+                case ActivityType.EVENT_INTERMEDIATE_CANCEL:
+                case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
+                case ActivityType.EVENT_INTERMEDIATE_EMPTY:
+                case ActivityType.EVENT_INTERMEDIATE_ERROR:
+                case ActivityType.EVENT_INTERMEDIATE_LINK:
+                case ActivityType.EVENT_INTERMEDIATE_RULE:
+                case ActivityType.EVENT_INTERMEDIATE_TIMER:
+                case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
+                    //the start and intermediate cannot send a message.
+                default:
+                    return false;
+                }
+
+            }
+            return super.canExecute();
+        }
+
+        
+    }
+    /**
+     * @generated
+     */
+    protected Command getCreateStartOutgoingMessagingEdge3002Command(
+            CreateRelationshipRequest req) {
+        return new Command() {
+        };
+    }
 }

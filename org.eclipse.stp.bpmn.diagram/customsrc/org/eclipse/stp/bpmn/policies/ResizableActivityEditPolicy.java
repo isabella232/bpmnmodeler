@@ -15,15 +15,20 @@
  **/
 package org.eclipse.stp.bpmn.policies;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPart;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
@@ -37,25 +42,29 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
+import org.eclipse.stp.bpmn.Group;
 import org.eclipse.stp.bpmn.commands.ElementTypeEx;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityName2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityNameEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.tools.ActivityResizeTracker;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
 
 /**
- * Edit policy for activities and other shapes.
+ * This edit policy helps resizing activities and handles the changes of groups.
  * 
  * @author MPeleshchyshyn
+ * @author Antoine Toulme
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
@@ -85,7 +94,7 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
          */
         @Override
         protected DragTracker createDragTracker() {
-            return new ActivityResizeTracker(getOwner(), cursorDirection);
+            return new ActivityResizeTracker(getOwner(), cursorDirection) {};
         }
     }
 
@@ -183,5 +192,117 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
             return compound;
         }
         return super.getCommand(request);
+    }
+    
+    static List<Group> findContainingGroups(ChangeBoundsRequest request, IGraphicalEditPart host) {
+        Rectangle rect = host.getFigure().getBounds().getCopy();
+        host.getFigure().translateToAbsolute(rect);
+        rect.resize(request.getSizeDelta());
+        rect.translate(request.getMoveDelta());
+        return findContainingGroups(rect, host.getViewer());
+    }
+    
+    static List<Group> findContainingGroups(Rectangle rect, EditPartViewer viewer) {
+        List<Group> groups = new ArrayList<Group>();
+        for (Object o : viewer.getVisualPartMap().keySet()) {
+            EditPart p = (EditPart) viewer.getVisualPartMap().get(o);
+            if (p instanceof GroupEditPart || p instanceof Group2EditPart) {
+                IGraphicalEditPart part = (IGraphicalEditPart) p;
+                Rectangle bounds = part.getFigure().getBounds().getCopy();
+                part.getFigure().translateToAbsolute(bounds);
+                if (bounds.contains(rect)) {
+                    groups.add((Group) part.resolveSemanticElement());
+                }
+            }
+        }
+        return groups;
+    }
+    
+    /**
+     * This command sets the groups on the activity.
+     * @author <a href="http://www.intalio.com">Intalio Inc.</a>
+     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
+     */
+    public static class SetGroupsCommand extends AbstractTransactionalCommand {
+        
+        private List<Group> _groups;
+        
+        private Activity _activity;
+        
+        private CreateViewAndElementRequest _request;
+        
+        /**
+         * Default constructor
+         * 
+         * @param groups the groups
+         * @param activity the activity to act on
+         */
+        public SetGroupsCommand(List<Group> groups, Activity activity) {
+            super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
+                    getEditingDomainFor(activity),
+                    "Sets the groups on the activity", 
+                    getWorkspaceFiles(activity));
+            _groups = groups;
+            _activity = activity;
+        }
+        
+        /**
+         * Constructor for newly created activities
+         * 
+         * @param groups the groups
+         * @param request the request which will contain the new activity
+         * @param container the container needed to resolve the editing domain
+         */
+        public SetGroupsCommand(List<Group> groups, 
+                CreateViewAndElementRequest request, 
+                EObject container) {
+            super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
+                    getEditingDomainFor(container),
+                    "Sets the groups on the activity", 
+                    getWorkspaceFiles(container));
+            _groups = groups;
+            _request = request;
+        }
+
+        @Override
+        protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+                IAdaptable info) throws ExecutionException {
+            if (_request != null) {
+                _activity = (Activity) _request.getViewAndElementDescriptor().
+                    getCreateElementRequestAdapter().resolve();
+            }
+            List<Group> toRemove = new ArrayList<Group>();
+            List<Group> groups = new ArrayList<Group>(_groups);
+            for (Group a : _activity.getGroups()) {
+                if (!groups.remove(a)) {
+                    toRemove.add(a);
+                }
+            }
+            
+            _activity.getGroups().removeAll(toRemove);
+            _activity.getGroups().addAll(groups);
+            return CommandResult.newOKCommandResult();
+        }
+        
+    }
+    
+    @Override
+    protected Command getMoveCommand(ChangeBoundsRequest request) {
+        CompoundCommand compound = new CompoundCommand();
+        compound.add(super.getMoveCommand(request));
+        compound.add(new ICommandProxy(
+                new SetGroupsCommand(findContainingGroups(request, (IGraphicalEditPart) getHost()), 
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        return compound;
+    }
+    
+    @Override
+    public Command getResizeCommand(ChangeBoundsRequest request) {
+        CompoundCommand compound = new CompoundCommand();
+        compound.add(super.getResizeCommand(request));
+        compound.add(new ICommandProxy(
+                new SetGroupsCommand(findContainingGroups(request, (IGraphicalEditPart) getHost()), 
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        return compound;
     }
 }

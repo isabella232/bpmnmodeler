@@ -40,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
@@ -180,6 +181,24 @@ public class SelectionToolEx extends SelectionTool {
     			IGraphicalEditPart child = selectedEditPart.
     			getChildBySemanticHint(BpmnVisualIDRegistry.getType(
     					SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
+    			
+    			if (child != null) {
+    			    //see EDGE-2082: see how close we are from the border:
+                    Rectangle rect = selectedEditPart.getFigure().getBounds().getCopy();
+                    Point loc = getLocation().getCopy();
+//                  part.getFigure().translateToAbsolute(rect);
+                    selectedEditPart.getFigure().translateToRelative(loc);
+                    if (loc.y - (rect.y + rect.height) < 14) {//do we need LD2DP? I don't think so.
+                        IGraphicalEditPart border = selectedEditPart.
+                            getChildBySemanticHint(BpmnVisualIDRegistry.getType(
+                                    SubProcessSubProcessBorderCompartmentEditPart.VISUAL_ID));
+                        if (border != null) {
+                            child = border;
+                        }
+                    }
+    			}
+    			
+    			
     			if (child == null) {
     				 child = selectedEditPart.
     	    			getChildBySemanticHint(BpmnVisualIDRegistry.getType(
@@ -266,7 +285,7 @@ public class SelectionToolEx extends SelectionTool {
     @Override
     protected boolean updateTargetUnderMouse() {
         boolean updated = super.updateTargetUnderMouse();
-
+        
         if (getTargetEditPart() instanceof GroupEditPart || 
                 getTargetEditPart() instanceof Group2EditPart) {
             IGraphicalEditPart part = (IGraphicalEditPart) getTargetEditPart();
@@ -275,21 +294,20 @@ public class SelectionToolEx extends SelectionTool {
 //          part.getFigure().translateToAbsolute(rect);
             part.getFigure().translateToRelative(loc);
             boolean onX = Math.abs(loc.x - rect.x) < 5 ||
-            Math.abs(loc.x - (rect.x + rect.width)) < 5;
+                Math.abs(loc.x - (rect.x + rect.width)) < 5;
             boolean onY = Math.abs(loc.y - rect.y) < 5 ||
-            Math.abs(loc.y - (rect.y + rect.height)) < 5;
+                Math.abs(loc.y - (rect.y + rect.height)) < 5;
             if (!(onX || onY)) {
                 EditPart res = part.getViewer().findObjectAtExcluding(
                         getLocation(), Collections.singletonList(part.getFigure()), 
                         new EditPartViewer.Conditional() {
-
                             public boolean evaluate(EditPart editpart) {
                                 return editpart.isSelectable();
                             }});
                 setTargetEditPart(res);
                 updated = true;
             }
-        }
+        }   
         return updated;
     }
 }

@@ -43,6 +43,7 @@ import org.eclipse.stp.bpmn.diagram.edit.policies.PoolGraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.PoolItemSemanticEditPolicy;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
+import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.DelegateToCompartmentEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizablePoolEditPolicy;
 import org.eclipse.swt.graphics.Color;
@@ -111,6 +112,8 @@ public class PoolEditPart extends ShapeNodeEditPart {
     protected void createDefaultEditPolicies() {
         createDefaultEditPoliciesGen();
         removeEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE);
+        installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE, 
+                new ConnectionHandleEditPolicyEx());
         // the compartment is not selectable anymore.
         // it looks like none of the containereidtpolicy gets called
         // because of that.

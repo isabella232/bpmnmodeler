@@ -40,6 +40,7 @@ import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Graph;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.diagram.edit.policies.MessagingEdgeItemSemanticEditPolicy;
@@ -266,6 +267,9 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
     protected ConnectionAnchor getSourceConnectionAnchor() {
         srcConnEditPart = null;
         EditPart editPart = getSource();
+        if (editPart instanceof PoolEditPart) {
+            return super.getSourceConnectionAnchor();
+        }
         if (editPart != null) {
             EditPart newSrcEditPart = getRealEditPart(editPart);
             if (newSrcEditPart != editPart) {
@@ -363,6 +367,9 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
     protected ConnectionAnchor getTargetConnectionAnchor() {
         trgConnEditPart = null;
         EditPart editPart = getTarget();
+        if (editPart instanceof PoolEditPart) {
+            return super.getTargetConnectionAnchor();
+        }
         if (editPart != null) {
             EditPart newTargetEditPart = getRealEditPart(editPart);
             if (newTargetEditPart != editPart) {
@@ -418,15 +425,15 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
                     IdentityAnchor notifier = (IdentityAnchor) notification
                             .getNotifier();
                     Edge connection = (Edge) notifier.eContainer();
-                    Activity activity;
+                    MessageVertex activity;
                     boolean isSource;
                     if (connection.getSourceAnchor() == notifier) {
                         isSource = true;
-                        activity = (Activity) connection.getSource()
+                        activity = (MessageVertex) connection.getSource()
                                 .getElement();
                     } else {
                         isSource = false;
-                        activity = (Activity) connection.getTarget()
+                        activity = (MessageVertex) connection.getTarget()
                                 .getElement();
                     }
                     FeatureMap messages = activity.getOrderedMessages();

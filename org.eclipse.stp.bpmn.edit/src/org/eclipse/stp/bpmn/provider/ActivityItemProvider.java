@@ -336,6 +336,15 @@ public class ActivityItemProvider
             case ActivityType.EVENT_END_EMPTY:
                 filename = END_EMPTY;
                 break;
+            case ActivityType.EVENT_END_CANCEL:
+                filename = END_CANCEL;
+                break;
+            case ActivityType.EVENT_END_MULTIPLE:
+                filename = END_MULTIPLE;
+                break;
+            case ActivityType.EVENT_END_LINK:
+                filename = END_LINK;
+                break;
             case ActivityType.EVENT_END_ERROR:
                 filename = END_ERROR;
                 break;
@@ -344,6 +353,9 @@ public class ActivityItemProvider
                 break;
             case ActivityType.EVENT_END_TERMINATE:
                 filename = END_TERMINATE;
+                break;
+            case ActivityType.EVENT_END_SIGNAL:
+                filename = END_SIGNAL;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
                 filename = INTERMEDIATE_COMPENSATION;
@@ -372,6 +384,9 @@ public class ActivityItemProvider
             case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
                 filename = INTERMEDIATE_MULTIPLE;
                 break;
+            case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
+                filename = INTERMEDIATE_SIGNAL;
+                break;
             case ActivityType.EVENT_START_EMPTY:
                 filename = START_EMPTY;
                 break;
@@ -390,6 +405,9 @@ public class ActivityItemProvider
             case ActivityType.EVENT_START_TIMER:
                 filename = START_TIMER;
                 break;
+            case ActivityType.EVENT_START_SIGNAL:
+                filename = START_SIGNAL;
+                break;
             case ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE:
                 filename = GATEWAY_DATABASED_EXCLUSIVE;
                 break;
@@ -406,7 +424,12 @@ public class ActivityItemProvider
                 filename = GATEWAY_COMPLEX;
                 break;
             case ActivityType.SUB_PROCESS:
-                filename = SUB_PROCESS;
+                if (object instanceof Activity && 
+                        ((Activity)object).isLooping()) {
+                    filename = SUB_PROCESS_LOOPING;
+                } else {
+                    filename = SUB_PROCESS;
+                }
                 break;
 			}
             return overlayImage(object, getResourceLocator().getImage("full/obj24/activities/" +  //$NON-NLS-1$
@@ -537,9 +560,11 @@ public class ActivityItemProvider
     public static final String END_ERROR = "end_error"; //$NON-NLS-1$
     public static final String END_MESSAGE = "end_message"; //$NON-NLS-1$
     public static final String END_TERMINATE = "end_terminate"; //$NON-NLS-1$
-    //TODO
-    public static final String END_CANCEL = "end_empty"; //$NON-NLS-1$
-    public static final String END_MULTIPLE = "end_empty"; //$NON-NLS-1$
+    public static final String END_CANCEL = "end_cancel"; //$NON-NLS-1$
+    public static final String END_MULTIPLE = "end_multiple"; //$NON-NLS-1$
+    public static final String END_LINK = "end_link"; //$NON-NLS-1$
+    public static final String END_SIGNAL = "end_signal"; //$NON-NLS-1$
+    
     
     public static final String GATEWAY_DATABASED_EXCLUSIVE = "gateway_databased_exclusive"; //$NON-NLS-1$
     public static final String GATEWAY_DATABASED_INCLUSIVE = "gateway_databased_inclusive"; //$NON-NLS-1$
@@ -553,10 +578,9 @@ public class ActivityItemProvider
     public static final String INTERMEDIATE_MESSAGE = "intermediate_message"; //$NON-NLS-1$
     public static final String INTERMEDIATE_RULE = "intermediate_rule"; //$NON-NLS-1$
     public static final String INTERMEDIATE_TIMER = "intermediate_timer"; //$NON-NLS-1$
-    //TODO
-    public static final String INTERMEDIATE_LINK = "intermediate_empty"; //$NON-NLS-1$
-    public static final String INTERMEDIATE_MULTIPLE = "intermediate_empty"; //$NON-NLS-1$
-    public static final String INTERMEDIATE_ = "intermediate_timer"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_LINK = "intermediate_link"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_MULTIPLE = "intermediate_multiple"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_SIGNAL = "intermediate_signal"; //$NON-NLS-1$
     
     
     public static final String POOL = "pool"; //$NON-NLS-1$
@@ -564,9 +588,9 @@ public class ActivityItemProvider
     public static final String START_MESSAGE = "start_message"; //$NON-NLS-1$
     public static final String START_RULE = "start_rule"; //$NON-NLS-1$
     public static final String START_TIMER = "start_timer"; //$NON-NLS-1$
-    //TODO: fix this
-    public static final String START_LINK = "start_rule"; //$NON-NLS-1$
-    public static final String START_MULTIPLE = "start_timer"; //$NON-NLS-1$
+    public static final String START_LINK = "start_link"; //$NON-NLS-1$
+    public static final String START_SIGNAL = "start_signal"; //$NON-NLS-1$
+    public static final String START_MULTIPLE = "start_multiple"; //$NON-NLS-1$
     public static final String SUB_PROCESS = "sub_process"; //$NON-NLS-1$
     public static final String SUB_PROCESS_EXPANDED = "sub_process_expanded"; //$NON-NLS-1$
     public static final String SUB_PROCESS_EXPANDED_LOOPING = "sub_process_expanded_looping"; //$NON-NLS-1$

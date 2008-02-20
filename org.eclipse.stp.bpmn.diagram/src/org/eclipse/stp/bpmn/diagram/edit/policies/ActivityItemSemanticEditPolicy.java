@@ -58,6 +58,8 @@ import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.commands.CreateRelationshipCommandEx;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**
@@ -344,9 +346,6 @@ public class ActivityItemSemanticEditPolicy extends
      */
     protected Command getCreateCompleteIncomingMessagingEdge3002Command(
             CreateRelationshipRequest req) {
-        if (!(req.getSource() instanceof Activity)) {
-            return UnexecutableCommand.INSTANCE;
-        }
         final BpmnDiagram element = (BpmnDiagram) getRelationshipContainer(req
                 .getSource(), BpmnPackage.eINSTANCE.getBpmnDiagram(), req
                 .getElementType());
@@ -404,19 +403,22 @@ public class ActivityItemSemanticEditPolicy extends
             MessagingEdge newElement = (MessagingEdge) super
                     .doDefaultElementCreation();
             if (newElement != null) {
-                newElement.setTarget((Activity) getTarget());
-                newElement.setSource((Activity) getSource());
+                newElement.setTarget((MessageVertex) getTarget());
+                newElement.setSource((MessageVertex) getSource());
             }
             return newElement;
         }
         
         /**
          * Contains Message Flow Rules
-         * @notgenerated
-         * @author BIlchyshyn
+         * @generated not
          */
         @Override
         public boolean canExecute() {
+            if (getSource() instanceof Pool || 
+                    getTarget() instanceof Pool) {
+                return true;
+            }
         	if ((!(getSource() instanceof Activity))|| 
         			!(getTarget() instanceof Activity)) {
         		return false;
@@ -528,6 +530,8 @@ public class ActivityItemSemanticEditPolicy extends
                 }
             }
             
+            boolean isBpmn11 = BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().getBoolean(
+                    BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
             if (target != null) {
                 //connection rules for events and gateways
                 switch (target.getActivityType().getValue()) {
@@ -544,6 +548,7 @@ public class ActivityItemSemanticEditPolicy extends
                 case ActivityType.EVENT_START_RULE:
                 case ActivityType.EVENT_START_TIMER:
                 case ActivityType.EVENT_START_MESSAGE:
+                case ActivityType.EVENT_START_SIGNAL:
                     //all the starts can receive a message.
                     
                 case ActivityType.EVENT_INTERMEDIATE_CANCEL:
@@ -555,6 +560,7 @@ public class ActivityItemSemanticEditPolicy extends
                 case ActivityType.EVENT_INTERMEDIATE_RULE:
                 case ActivityType.EVENT_INTERMEDIATE_TIMER:
                 case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
+                case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
 //                  all the intermediates can receive a message.
                     
                 case ActivityType.TASK:
@@ -565,11 +571,13 @@ public class ActivityItemSemanticEditPolicy extends
                 //allow the message response to come from the same
                 //shape.
                 case ActivityType.EVENT_END_MESSAGE:
-                    if (!source.getOrderedMessages().isEmpty()
-                         && ((FeatureMap.Entry) source.
-                            getOrderedMessages().get(0))
-                              .getEStructuralFeature().getFeatureID() ==
-                                BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES) {
+                case ActivityType.EVENT_END_MULTIPLE:
+                    if (isBpmn11) {
+                        break;
+                    }
+                    if (!target.getOrderedMessages().isEmpty()
+                         && (target.getOutgoingMessages().contains(
+                                 target.getOrderedMessages().get(0).getValue()))) {
                         break;
                     }
                 case ActivityType.EVENT_END_COMPENSATION:
@@ -578,7 +586,7 @@ public class ActivityItemSemanticEditPolicy extends
                 case ActivityType.EVENT_END_TERMINATE:
                 case ActivityType.EVENT_END_CANCEL:
                 case ActivityType.EVENT_END_LINK:
-                case ActivityType.EVENT_END_MULTIPLE:
+                case ActivityType.EVENT_END_SIGNAL:
                 default:
                     return false;
                 }
@@ -600,6 +608,7 @@ public class ActivityItemSemanticEditPolicy extends
                 case ActivityType.EVENT_END_LINK:
                 case ActivityType.EVENT_END_MULTIPLE:
                 case ActivityType.EVENT_END_MESSAGE:
+                case ActivityType.EVENT_END_SIGNAL:
                     //all the end can send a message
                     
                 case ActivityType.TASK:
@@ -611,13 +620,19 @@ public class ActivityItemSemanticEditPolicy extends
                 //shape.
                 case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
                 case ActivityType.EVENT_START_MESSAGE:
+                case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
+                case ActivityType.EVENT_START_MULTIPLE:
+                    
+                    if (isBpmn11) {
+                        break;
+                    }
                     if (!source.getOrderedMessages().isEmpty()) {
+                        boolean incomingFirst = source.getIncomingMessages().contains(
+                                source.getOrderedMessages().get(0).getValue());
                         FeatureMap.Entry fentry = (FeatureMap.Entry) source.
                                             getOrderedMessages().get(0);
-                        MessagingEdge firstMsgOfSource =
-                        (MessagingEdge) fentry.getValue();
-                        if (fentry.getEStructuralFeature().getFeatureID() ==
-                            BpmnPackage.MESSAGE_VERTEX__INCOMING_MESSAGES &&
+                        MessagingEdge firstMsgOfSource = (MessagingEdge) fentry.getValue();
+                        if (incomingFirst &&
                                 firstMsgOfSource.getSource() == target) {
                         // a little bent to the spec
                         // let's let the start events be able to reply
@@ -626,17 +641,17 @@ public class ActivityItemSemanticEditPolicy extends
                     }
                 case ActivityType.EVENT_START_EMPTY:
                 case ActivityType.EVENT_START_LINK:
-                case ActivityType.EVENT_START_MULTIPLE:
                 case ActivityType.EVENT_START_RULE:
                 case ActivityType.EVENT_START_TIMER:
+                case ActivityType.EVENT_START_SIGNAL:
                 case ActivityType.EVENT_INTERMEDIATE_CANCEL:
                 case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
                 case ActivityType.EVENT_INTERMEDIATE_EMPTY:
                 case ActivityType.EVENT_INTERMEDIATE_ERROR:
                 case ActivityType.EVENT_INTERMEDIATE_LINK:
-                case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
                 case ActivityType.EVENT_INTERMEDIATE_RULE:
                 case ActivityType.EVENT_INTERMEDIATE_TIMER:
+                case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
                     //the start and intermediate cannot send a message.
                 default:
                     return false;

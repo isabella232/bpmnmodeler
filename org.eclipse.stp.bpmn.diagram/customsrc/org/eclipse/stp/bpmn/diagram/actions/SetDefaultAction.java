@@ -145,7 +145,7 @@ public class SetDefaultAction extends AbstractActionHandler {
 	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
-	private abstract class MyCommand extends AbstractTransactionalCommand {
+	static abstract class MyCommand extends AbstractTransactionalCommand {
 		public MyCommand(EObject elt) {
 			super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
 					getEditingDomainFor(elt),

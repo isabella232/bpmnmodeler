@@ -10,6 +10,20 @@
  *******************************************************************************/
 package org.eclipse.stp.bpmn.policies;
 
+import java.util.List;
+
+import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.stp.bpmn.Group;
+import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
+import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
+import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetGroupsCommand;
+
 
 /**
  * Set subprocess figure default size.
@@ -23,4 +37,33 @@ package org.eclipse.stp.bpmn.policies;
  */
 public class SubProcessCreationEditPolicy extends CreationEditPolicyEx {
 
+    @Override
+    protected Command getCreateElementAndViewCommand(
+            CreateViewAndElementRequest request) {
+        IElementType type = (IElementType) request.getViewAndElementDescriptor().
+            getElementAdapter().getAdapter(IElementType.class);
+        if (type != null && (
+                BpmnElementTypes.Activity_2001.getId().equals(type.getId()) ||
+                BpmnElementTypes.Activity_2003.getId().equals(type.getId()) ||
+                BpmnElementTypes.SubProcess_2002.getId().equals(type.getId()))) {
+            Rectangle rect = new Rectangle();
+            rect.setLocation(request.getLocation());
+            if (request.getSize() != null) {
+                rect.setSize(request.getSize());
+            }
+            if (rect.getSize().width == -1 ||
+                    rect.getSize().height == -1) {
+                rect.setSize(BpmnShapesDefaultSizes.getDefaultSize(type));
+            }
+            List<Group> groups = ResizableActivityEditPolicy.findContainingGroups(
+                    rect, getHost().getViewer());
+            SetGroupsCommand command = new ResizableActivityEditPolicy.SetGroupsCommand(
+                    groups, request, ((IGraphicalEditPart) getHost()).resolveSemanticElement());
+            CompoundCommand compound = new CompoundCommand();
+            compound.add(super.getCreateElementAndViewCommand(request));
+            compound.add(new ICommandProxy(command));
+            return compound;
+        }
+        return super.getCreateElementAndViewCommand(request);
+    }
 }

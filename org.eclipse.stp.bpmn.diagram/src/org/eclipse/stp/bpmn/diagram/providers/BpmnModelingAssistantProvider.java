@@ -41,6 +41,7 @@ import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
@@ -217,6 +218,12 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             types = filterElementTypes(source, types);
             return types;
         }
+        if (sourceEditPart instanceof PoolEditPart) {
+            List types = new ArrayList();
+            types.add(BpmnElementTypes.MessagingEdge_3002);
+            types = filterElementTypes(source, types);
+            return types;
+        }
         if (isEditPartArtifact(sourceEditPart)) {
         	List types = new ArrayList();
 			types.add(BpmnElementTypes.Association_3003);
@@ -256,6 +263,7 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             case ActivityType.GATEWAY_DATA_BASED_INCLUSIVE:
             case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
             case ActivityType.GATEWAY_PARALLEL:
+            case ActivityType.GATEWAY_COMPLEX:
             case ActivityType.EVENT_END_COMPENSATION:
             case ActivityType.EVENT_END_EMPTY:
             case ActivityType.EVENT_END_ERROR:
@@ -280,6 +288,13 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             List types = new ArrayList();
 			types.add(BpmnElementTypes.Association_3003);
             types.add(BpmnElementTypes.SequenceEdge_3001);
+            types = filterElementTypes(target, types);
+            return types;
+        }
+        if (targetEditPart instanceof PoolEditPart) {
+            List types = new ArrayList();
+            types.add(BpmnElementTypes.Association_3003);
+            types.add(BpmnElementTypes.MessagingEdge_3002);
             types = filterElementTypes(target, types);
             return types;
         }
@@ -350,6 +365,18 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             types = filterElementTypes(source, types);
             return types;
         }
+        if (sourceEditPart instanceof PoolEditPart) {
+            List types = new ArrayList();
+            types.add(BpmnElementTypes.MessagingEdge_3002);
+            types = filterElementTypes(source, types);
+            return types;
+        }
+        if (targetEditPart instanceof PoolEditPart) {
+            List types = new ArrayList();
+            types.add(BpmnElementTypes.MessagingEdge_3002);
+            types = filterElementTypes(source, types);
+            return types;
+        }
         return Collections.EMPTY_LIST;
     }
 
@@ -394,6 +421,15 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
                 List types = new ArrayList();
                 types.addAll(BPMNElementTypesActivities
                         .getElementTypesForAssociationSource());
+                types = filterElementTypes(target, types);
+                return types;
+            }
+        }
+        if (targetEditPart instanceof PoolEditPart) {
+            if (relationshipType == BpmnElementTypes.MessagingEdge_3002) {
+                List types = new ArrayList();
+                types.addAll(BPMNElementTypesActivities
+                        .getElementTypesForMessagingEdgeSource());
                 types = filterElementTypes(target, types);
                 return types;
             }
@@ -473,6 +509,15 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             }
             types = filterElementTypes(source, types);
             return types;
+        }
+        if (sourceEditPart instanceof PoolEditPart) {
+            if (relationshipType == BpmnElementTypes.MessagingEdge_3002) {
+                List types = new ArrayList();
+                types.addAll(BPMNElementTypesActivities
+                        .getElementTypesForMessagingEdgeSource());
+                types = filterElementTypes(source, types);
+                return types;
+            }
         }
         if (isEditPartArtifact(sourceEditPart)) {
         	List types = new ArrayList();

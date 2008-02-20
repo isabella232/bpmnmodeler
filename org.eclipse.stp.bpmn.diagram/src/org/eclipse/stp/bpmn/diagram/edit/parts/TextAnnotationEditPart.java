@@ -59,7 +59,11 @@ public class TextAnnotationEditPart extends ShapeNodeEditPart {
      */
     public static Insets TEXT_FIGURE_INSETS = new Insets(5, 10, 5, 14);
 
-
+    /**
+     * @generated NOT
+     */
+    static final Dimension TASK_MARKER_DIM = new Dimension(10, 10);
+    
     /**
      * @generated
      */
@@ -272,14 +276,32 @@ public class TextAnnotationEditPart extends ShapeNodeEditPart {
             super(TEXT_FIGURE_SIZE.width, TEXT_FIGURE_SIZE.height, TEXT_FIGURE_INSETS);
             createContents();
         }
-
+        
         /**
          * @generated NOT (Added the wrap)
          */
         private void createContents() {
             //org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel();
             WrapLabelWithToolTip fig_0 = new WrapLabelWithToolTip(
-                    TextAnnotationEditPart.this.getToolTipProvider());
+                    TextAnnotationEditPart.this.getToolTipProvider()) {
+                /**
+                 * If the text triggeers the presence of a Task bookmark.
+                 * We add the size of it.
+                 */
+                protected Dimension getTotalIconSize() {
+                    Dimension dim = super.getTotalIconSize();
+                    if (dim.width == 0) {
+                        String text = getText();
+                        if (text != null && 
+                                (text.indexOf("TODO") != -1
+                                        || text.indexOf("FIXME") != -1
+                                        || text.indexOf("XXX") != -1)) {
+                            return TASK_MARKER_DIM;
+                        }
+                    }
+                    return dim;
+                }
+            };
             fig_0.setText(""); //$NON-NLS-1$
             fig_0.setTextWrap(true);//not generated
             setFigureTextAnnotationNameFigure(fig_0);

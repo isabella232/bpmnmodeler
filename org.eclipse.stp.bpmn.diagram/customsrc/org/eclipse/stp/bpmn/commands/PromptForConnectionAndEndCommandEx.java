@@ -17,14 +17,22 @@ package org.eclipse.stp.bpmn.commands;
 
 import java.util.List;
 
+import org.eclipse.core.commands.ExecutionException;
+import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.requests.CreateConnectionRequest;
+import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.common.core.util.ObjectAdapter;
 import org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.internal.commands.ElementTypeLabelProvider;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
+import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
+import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.osgi.util.NLS;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
@@ -45,6 +53,12 @@ import org.eclipse.swt.graphics.Image;
  */
 public class PromptForConnectionAndEndCommandEx extends
     PromptForConnectionAndEndCommand {
+
+    /**
+     * constant to select the underlying pool as the target of the message
+     * Should not be i18n'ized, see the end label provider for its text representation.
+     */
+    private static final String UNDERLYING_POOL = "underlying pool"; //$NON-NLS-1$
 
     private static Image EXISTING = null;
     
@@ -89,6 +103,9 @@ public class PromptForConnectionAndEndCommandEx extends
             if (element instanceof String) {
                 if (EXISTING_ELEMENT.equals(element)) {
                     return BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_ConnectToExisting;
+                }
+                if (UNDERLYING_POOL.equals(element)) {
+                    return "underlying pool";
                 }
             }
             String theInputStr = null;
@@ -190,6 +207,8 @@ public class PromptForConnectionAndEndCommandEx extends
 //                Object lastElement = l.get(l.size() - 1);
                 l.clear();
 //                l.add(lastElement);
+            } else {
+                l.add(UNDERLYING_POOL);
             }
         } else if ((IMetamodelType) connectionItem == BpmnElementTypes.SequenceEdge_3001) {
             if (tPool != null && 
@@ -266,6 +285,116 @@ public class PromptForConnectionAndEndCommandEx extends
             Object connectionItem) {
         return new ConnectionAndEndLabelProviderEx(connectionItem);
     }
+    
+    private CommandResult doExecuteWithResultPopupMenuCommand(IProgressMonitor progressMonitor) {
+        if (getPopupMenu() != null) {
+            if (getPopupMenu().show(getParentShell()) == false) {
+                // user cancelled gesture
+                progressMonitor.setCanceled(true);
+                return CommandResult.newCancelledCommandResult();
+            }
+            return CommandResult.newOKCommandResult(getPopupMenu().getResult());
+            
+        } else if (getPopupDialog() != null) {
+            if (getPopupDialog().open() == Dialog.CANCEL
+                || getPopupDialog().getResult() == null
+                || getPopupDialog().getResult().length <= 0) {
+                
+                // user cancelled dialog
+                progressMonitor.setCanceled(true);
+                return CommandResult.newCancelledCommandResult();
+            }
+            return CommandResult.newOKCommandResult(getPopupDialog().getResult()[0]);
+        }
+
+        return CommandResult.newOKCommandResult();
+    }
+    
+    /**
+     * Pops up the dialog with the content provided. If the user selects 'select
+     * existing', then the select elements dialog also appears.
+     */
+    protected CommandResult doExecuteWithResult(IProgressMonitor progressMonitor,
+            IAdaptable info)
+        throws ExecutionException {
+        
+        PopupMenu popup = createPopupMenu();
+
+        if (popup == null) {
+            return CommandResult.newErrorCommandResult(getLabel());
+        }
+
+        setPopupMenu(popup);
+
+        CommandResult cmdResult = doExecuteWithResultPopupMenuCommand(progressMonitor);
+        if (!cmdResult.getStatus().isOK()) {
+            return cmdResult;
+        }
+
+        Object result = cmdResult.getReturnValue();
+        if (result instanceof List) {
+            List resultList = (List) result;
+            if (resultList.size() == 2) {
+                connectionAdapter.setObject(resultList.get(0));
+
+                Object targetResult = resultList.get(1);
+
+                if (targetResult.equals(EXISTING_ELEMENT)) {
+                    targetResult = isDirectionReversed() ? ModelingAssistantService
+                        .getInstance().selectExistingElementForSource(
+                            getKnownEnd(), (IElementType) resultList.get(0))
+                        : ModelingAssistantService.getInstance()
+                            .selectExistingElementForTarget(getKnownEnd(),
+                                (IElementType) resultList.get(0));
+                    if (targetResult == null) {
+                        return CommandResult.newCancelledCommandResult();
+                    }
+                } else if (targetResult.equals(UNDERLYING_POOL)) {
+                    targetResult = ((IGraphicalEditPart) getPool(request.getTargetEditPart())).
+                        resolveSemanticElement();
+                }
+                endAdapter.setObject(targetResult);
+                return CommandResult.newOKCommandResult();
+            }
+        }
+        return CommandResult.newErrorCommandResult(getLabel());
+    }
+    
+    /**
+     * Gets the known end, which even in the case of a reversed
+     * <code>CreateUnspecifiedTypeConnectionRequest</code>, is the source
+     * editpart.
+     * 
+     * @return the known end
+     */
+    private EditPart getKnownEnd() {
+        return request.getSourceEditPart();
+    }
+    
+    /** Adapts to the connection type result. */
+    private ObjectAdapter connectionAdapter = new ObjectAdapter();
+
+    /** Adapts to the other end type result. */
+    private ObjectAdapter endAdapter = new ObjectAdapter();
+    
+    /**
+     * Gets the connectionAdapter.
+     * 
+     * @return Returns the connectionAdapter.
+     */
+    public ObjectAdapter getConnectionAdapter() {
+        return connectionAdapter;
+    }
+
+    /**
+     * Gets the endAdapter.
+     * 
+     * @return Returns the endAdapter.
+     */
+    public IAdaptable getEndAdapter() {
+        return endAdapter;
+    }
+    
 //    @Override
 //    public boolean canExecute() {
 //    	return createPopupBalloon() != null;

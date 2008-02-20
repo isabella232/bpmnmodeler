@@ -21,7 +21,9 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.AssociationTarget;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
+import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
@@ -87,14 +89,23 @@ public class BpmnReorientRelationshipCommand extends Command {
                     }
                 }
             } else if (_req.getRelationship() instanceof MessagingEdge) {
+                EObject unmovedEnd = null;
+                if (_req.getDirection() == ReorientRelationshipRequest.REORIENT_TARGET) {
+                    unmovedEnd = ((MessagingEdge)_req.getRelationship()).getSource();
+                } else {
+                    unmovedEnd = ((MessagingEdge)_req.getRelationship()).getTarget();
+                }
+                if (newEnd instanceof Pool || unmovedEnd instanceof Pool) {
+                    return true;
+                }
                 if (newEnd instanceof Activity) {
                     Activity act = (Activity)newEnd;
                     if (_req.getDirection() == ReorientRelationshipRequest.REORIENT_TARGET) {
                         return MessageConnectionValidator.INSTANCE.canConnect(
-                                ((MessagingEdge)_req.getRelationship()).getSource(), act);
+                                unmovedEnd, act);
                     } else {
                         return MessageConnectionValidator.INSTANCE.canConnect(act,
-                                ((MessagingEdge)_req.getRelationship()).getTarget());
+                                unmovedEnd);
                     }
                 }
             }
@@ -155,9 +166,9 @@ public class BpmnReorientRelationshipCommand extends Command {
             }
         } else if (_req.getRelationship() instanceof MessagingEdge) {
             if (_req.getDirection() == ReorientRelationshipRequest.REORIENT_SOURCE) {
-                ((MessagingEdge)_req.getRelationship()).setSource((Activity)newEnd);
+                ((MessagingEdge)_req.getRelationship()).setSource((MessageVertex)newEnd);
             } else {
-                ((MessagingEdge)_req.getRelationship()).setTarget((Activity)newEnd);
+                ((MessagingEdge)_req.getRelationship()).setTarget((MessageVertex)newEnd);
             }
         }
     }

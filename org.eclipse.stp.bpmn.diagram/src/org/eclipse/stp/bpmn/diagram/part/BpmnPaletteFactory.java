@@ -391,7 +391,7 @@ public class BpmnPaletteFactory {
         return result;
     }
     /**
-     * @generated
+     * @generated NOT
      */
     private PaletteContainer createGatewayShapes3Group() {
         PaletteContainer paletteContainer = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_gateways_label);
@@ -400,7 +400,27 @@ public class BpmnPaletteFactory {
         paletteContainer.add(createEventbasedexclusive2CreationTool());
         paletteContainer.add(createDatabasedinclusive3CreationTool());
         paletteContainer.add(createParallel4CreationTool());
+        paletteContainer.add(createComplex5CreationTool());
         return paletteContainer;
+    }
+    
+    private PaletteEntry createComplex5CreationTool() {
+        ImageDescriptor smallImage = findSmallImgDescr(GATEWAY_COMPLEX);
+        ImageDescriptor largeImage = findLargeImgDescr(GATEWAY_COMPLEX);
+
+        final List elementTypes = new ArrayList();
+        IElementTypeEx activity = ElementTypeEx.wrap(
+                    BpmnElementTypes.Activity_2001,
+                    ActivityType.GATEWAY_COMPLEX_LITERAL.getLiteral());
+
+        elementTypes.add(activity);
+
+        ToolEntry result = new NodeToolEntry("Complex", 
+                "Creates a complex gateway",
+                smallImage, largeImage, elementTypes) {
+        };
+
+        return result;
     }
     /**
      * @generated NOT adding an id to the palette drawer, so

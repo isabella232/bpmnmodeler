@@ -621,8 +621,15 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
             if (isFirst || isLast || (!areAlmostEqual(oldPointA.y, oldPointB.y) &&
                     !areAlmostEqual(oldPointA.x, oldPointB.x))) {
                 int halfWayY =  oldPointA.y/2 + oldPointB.y/2;
-                int i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
-                int otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
+                int i = -1;
+                if (conn.getSourceAnchor() instanceof IModelAwareAnchor) {
+                    i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
+                }
+                
+                int otheri = -1;
+                if (conn.getTargetAnchor() instanceof IModelAwareAnchor) {
+                    otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
+                }
                  i = oldPointA.y < oldPointB.y ? i : otheri;
                 boolean AisAboveB = oldPointA.y < oldPointB.y && oldPointA.x < oldPointB.x;
                 IMapMode mm = MapModeUtil.getMapMode(conn);

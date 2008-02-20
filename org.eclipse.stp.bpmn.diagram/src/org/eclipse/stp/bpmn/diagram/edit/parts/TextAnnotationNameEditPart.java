@@ -26,6 +26,7 @@ import java.util.Collections;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.MarginBorder;
 
 import org.eclipse.draw2d.geometry.Point;
 
@@ -261,6 +262,12 @@ public class TextAnnotationNameEditPart extends CompartmentEditPart implements
         }
         return text;
     }
+
+    /** @generated not */
+    private static final MarginBorder BORDER_NO_TASK_BOOKMARK = new MarginBorder(0, 0, 0, 0);
+    /** @generated not */
+    private static final MarginBorder BORDER_WITH_TASK_BOOKMARK = new MarginBorder(4, 0, 0, 0);
+    
 
     /**
      * @generated
