@@ -21,8 +21,7 @@ import org.eclipse.stp.bpmn.diagram.providers.BpmnPaletteProvider;
 import org.eclipse.ui.IEditorPart;
 
 /**
- * 
- *
+ * This provider removes the text annotation from the palette.
  *
  * @author <a href="http://www.intalio.com">Intalio Inc.</a>
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
