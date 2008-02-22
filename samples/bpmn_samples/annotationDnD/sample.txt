@@ -1,0 +1,1 @@
+This file contains data that can be placed on a bpmn diagram by drag and drop.
