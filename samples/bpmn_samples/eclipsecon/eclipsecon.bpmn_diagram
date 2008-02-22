@@ -55,7 +55,7 @@
         <styles xmi:type="notation:FillStyle" xmi:id="_7Et3c-E0Edya34o6MxSuhg"/>
         <styles xmi:type="notation:LineStyle" xmi:id="_7Et3dOE0Edya34o6MxSuhg" lineColor="0"/>
         <element xmi:type="bpmn:Activity" href="eclipsecon.bpmn#_7EspUeE0Edya34o6MxSuhg"/>
-        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7Et3deE0Edya34o6MxSuhg" x="722" y="170" width="122"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_7Et3deE0Edya34o6MxSuhg" x="717" y="169" width="122"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_HQ6HgOE1Edya34o6MxSuhg" type="2001">
         <children xmi:type="notation:Node" xmi:id="_HQ6ukOE1Edya34o6MxSuhg" type="4001"/>
@@ -84,7 +84,7 @@
     <styles xmi:type="notation:FillStyle" xmi:id="_oIhHE-DPEdya34o6MxSuhg" fillColor="16771304"/>
     <styles xmi:type="notation:LineStyle" xmi:id="_oIhHFODPEdya34o6MxSuhg" lineColor="11119017"/>
     <element xmi:type="bpmn:Pool" href="eclipsecon.bpmn#_oIZLQeDPEdya34o6MxSuhg"/>
-    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oIkxdODPEdya34o6MxSuhg" x="16" y="16" width="1164" height="243"/>
+    <layoutConstraint xmi:type="notation:Bounds" xmi:id="_oIkxdODPEdya34o6MxSuhg" x="16" y="16" width="1164" height="244"/>
   </children>
   <children xmi:type="notation:Node" xmi:id="_i5xWYOE0Edya34o6MxSuhg" type="1001">
     <children xmi:type="notation:Node" xmi:id="_i5x9cOE0Edya34o6MxSuhg" type="4008"/>

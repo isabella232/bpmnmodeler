@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <bpmn:BpmnDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:bpmn="http://stp.eclipse.org/bpmn" xmi:id="_oHaT0ODPEdya34o6MxSuhg" iD="_oHZswODPEdya34o6MxSuhg">
   <pools xmi:type="bpmn:Pool" xmi:id="_oIZLQeDPEdya34o6MxSuhg" iD="_oIZLQODPEdya34o6MxSuhg" name="Attendee">
-    <artifacts xmi:type="bpmn:TextAnnotation" xmi:id="_QjOAYeE1Edya34o6MxSuhg" iD="_QjOAYOE1Edya34o6MxSuhg" name="TODO complete and regenerate SVG"/>
+    <artifacts xmi:type="bpmn:TextAnnotation" xmi:id="_QjOAYeE1Edya34o6MxSuhg" iD="_QjOAYOE1Edya34o6MxSuhg" name="TODO complete and regenerate images"/>
     <vertices xmi:type="bpmn:Activity" xmi:id="_oIaZYeDPEdya34o6MxSuhg" iD="_oIaZYODPEdya34o6MxSuhg" outgoingEdges="_nu1n4eE0Edya34o6MxSuhg" name="visit website" activityType="Task"/>
     <vertices xmi:type="bpmn:Activity" xmi:id="_nusd8eE0Edya34o6MxSuhg" iD="_nusd8OE0Edya34o6MxSuhg" outgoingEdges="_txVV0eE0Edya34o6MxSuhg" incomingEdges="_nu1n4eE0Edya34o6MxSuhg" name="get to know &#xA;about eclipsecon" activityType="Task"/>
     <vertices xmi:type="bpmn:Activity" xmi:id="_txMy8eE0Edya34o6MxSuhg" iD="_txMy8OE0Edya34o6MxSuhg" outgoingEdges="_6EHWEeE0Edya34o6MxSuhg" incomingEdges="_txVV0eE0Edya34o6MxSuhg" name="register" activityType="Task">
