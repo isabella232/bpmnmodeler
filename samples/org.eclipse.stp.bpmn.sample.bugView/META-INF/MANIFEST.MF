@@ -11,3 +11,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.stp.bpmn,
  org.eclipse.stp.bpmn.diagram
 Eclipse-LazyStart: false
+Export-Package: org.eclipse.stp.bpmn.sample.bugView.bug.view
