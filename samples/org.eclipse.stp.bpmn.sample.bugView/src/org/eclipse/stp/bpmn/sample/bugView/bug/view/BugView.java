@@ -176,9 +176,15 @@ public class BugView extends ViewPart {
 		}
 	}
 	
-	 private static Image BUG;
+	 /**
+	  * the image of a bug
+	  */
+	 public static Image BUG;
      
-     private static Image BUG_FIXED;
+	 /**
+	  * the image of a fixed bug.
+	  */
+     public static Image BUG_FIXED;
      
      static {
          ImageDescriptor desc = BugViewPlugin.imageDescriptorFromPlugin(
@@ -189,6 +195,11 @@ public class BugView extends ViewPart {
          BUG_FIXED = desc2.createImage();
      }
      
+    /**
+     * The bug label provider.
+     * @author <a href="http://www.intalio.com">Intalio Inc.</a>
+     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
+     */
 	private class BugLabelProvider extends LabelProvider {
 	    
 	    @Override
