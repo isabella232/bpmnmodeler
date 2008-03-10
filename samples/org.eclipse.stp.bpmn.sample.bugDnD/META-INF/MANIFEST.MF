@@ -9,3 +9,4 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.stp.bpmn.diagram,
  org.eclipse.stp.bpmn.sample.bugView
 Eclipse-LazyStart: true
+Export-Package: org.eclipse.stp.bpmn.sample.bugDnD.dnd
