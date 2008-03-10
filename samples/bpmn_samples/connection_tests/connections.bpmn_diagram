@@ -235,7 +235,7 @@
         <styles xmi:type="notation:FillStyle" xmi:id="_FdKW0-67EdyNzfsl8kvXyQ"/>
         <styles xmi:type="notation:LineStyle" xmi:id="_FdKW1O67EdyNzfsl8kvXyQ" lineColor="0"/>
         <element xmi:type="bpmn:Activity" href="connections.bpmn#_FdH6ke67EdyNzfsl8kvXyQ"/>
-        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_FdKW1e67EdyNzfsl8kvXyQ" x="857" y="665"/>
+        <layoutConstraint xmi:type="notation:Bounds" xmi:id="_FdKW1e67EdyNzfsl8kvXyQ" x="860" y="665"/>
       </children>
       <children xmi:type="notation:Node" xmi:id="_GIJ0kO67EdyNzfsl8kvXyQ" type="2001">
         <children xmi:type="notation:Node" xmi:id="_GIKbou67EdyNzfsl8kvXyQ" type="4001"/>
