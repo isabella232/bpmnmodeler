@@ -54,52 +54,27 @@ public class BugEditPartProvider extends BpmnEditPartProvider {
                  int viewVisualID = BpmnVisualIDRegistry.getVisualID(view);
                  switch (viewVisualID) {
                  case TextAnnotationEditPart.VISUAL_ID :
-                     return new BugTextAnnotationEditPart(view);
+                     return new TextAnnotationEditPart(view) {
+                         
+                         @Override
+                         protected void createDefaultEditPolicies() {
+                             super.createDefaultEditPolicies();
+                             installEditPolicy(EditPolicyRoles.OPEN_ROLE, new OpenBugEditPolicy());
+                         }
+                     };
                  case TextAnnotation2EditPart.VISUAL_ID :
-                     return new BugTextAnnotation2EditPart(view);
+                     return new TextAnnotation2EditPart(view) {
+                         
+                         @Override
+                         protected void createDefaultEditPolicies() {
+                             super.createDefaultEditPolicies();
+                             installEditPolicy(EditPolicyRoles.OPEN_ROLE, new OpenBugEditPolicy());
+                         }
+                         
+                     };
                  }
              }
              return super.createEditPart(context, model);
-        }
-    }
-    
-    /**
-     * Our text annotation edit part, with a special edit policy to open bugs.
-     * 
-     * @author <a href="http://www.intalio.com">Intalio Inc.</a>
-     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
-     */
-    private class BugTextAnnotationEditPart extends TextAnnotationEditPart {
-
-        public BugTextAnnotationEditPart(View view) {
-            super(view);
-        }
-        
-        @Override
-        protected void createDefaultEditPolicies() {
-            super.createDefaultEditPolicies();
-            installEditPolicy(EditPolicyRoles.OPEN_ROLE, new OpenBugEditPolicy());
-        }
-        
-    }
-    
-    /**
-     * Our text annotation for diagram text annotations, 
-     * with a special edit policy to open bugs
-     * 
-     * @author <a href="http://www.intalio.com">Intalio Inc.</a>
-     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
-     */
-    private class BugTextAnnotation2EditPart extends TextAnnotation2EditPart {
-
-        public BugTextAnnotation2EditPart(View view) {
-            super(view);
-        }
-        
-        @Override
-        protected void createDefaultEditPolicies() {
-            super.createDefaultEditPolicies();
-            installEditPolicy(EditPolicyRoles.OPEN_ROLE, new OpenBugEditPolicy());
         }
     }
 }
