@@ -23,6 +23,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramActionBarContributor;
 public class BugDiagramActionBarContributor extends
         BpmnDiagramActionBarContributor {
 
+    @SuppressWarnings("unchecked")
     protected Class getEditorClass() {
         return BugBpmnEditor.class;
     }

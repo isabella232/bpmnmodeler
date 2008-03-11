@@ -23,6 +23,7 @@ import org.eclipse.stp.bpmn.sample.bugView.bug.view.IBug;
  * @author <a href="http://www.intalio.com">Intalio Inc.</a>
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
  */
+@SuppressWarnings("unchecked")
 public class BugAdapterFactory implements IAdapterFactory {
 
     public Object getAdapter(Object adaptableObject, Class adapterType) {

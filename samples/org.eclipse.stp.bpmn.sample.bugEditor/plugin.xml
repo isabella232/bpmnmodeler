@@ -45,9 +45,6 @@
          <ViewId id="org.eclipse.stp.bpmn.sample.bugeditor.editor">
             <ElementType class="org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart">
                <GlobalActionId actionId="bookmark"/>
-               <GlobalActionId
-                     actionId="addTask">
-               </GlobalActionId>
             </ElementType>
          </ViewId>
       </GlobalActionHandlerProvider>

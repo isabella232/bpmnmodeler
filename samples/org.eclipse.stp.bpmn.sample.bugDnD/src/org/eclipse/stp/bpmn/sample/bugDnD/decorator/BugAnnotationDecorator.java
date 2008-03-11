@@ -17,7 +17,6 @@ import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
-import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
 import org.eclipse.jface.resource.ImageDescriptor;

@@ -24,7 +24,6 @@ import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
