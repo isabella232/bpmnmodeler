@@ -41,6 +41,9 @@
         </eAnnotations>
       </associations>
     </artifacts>
+    <artifacts xmi:type="bpmn:TextAnnotation" xmi:id="_gF1JsfCLEdyg96L9xJvQPQ" iD="_gF1JsPCLEdyg96L9xJvQPQ" name="Press Shift and double-click&#xA; on the shape to open the license file">
+      <associations xmi:type="bpmn:Association" xmi:id="_gF73YPCLEdyg96L9xJvQPQ" target="_7yBysfCFEdyg96L9xJvQPQ"/>
+    </artifacts>
     <vertices xmi:type="bpmn:Activity" xmi:id="_EXLTIfBQEdy0oJHOT0PmCg" iD="_EXLTIPBQEdy0oJHOT0PmCg" outgoingEdges="_uu_tIfB4Edyg96L9xJvQPQ" name="Experience an &#xA;unexpected behavior" activityType="EventStartSignal" looping="false"/>
     <vertices xmi:type="bpmn:SubProcess" xmi:id="_VucZwfB4Edyg96L9xJvQPQ" iD="_VucZwPB4Edyg96L9xJvQPQ" associations="_50ddUPCGEdyg96L9xJvQPQ" outgoingEdges="_yUiQcfB4Edyg96L9xJvQPQ" incomingEdges="_uu_tIfB4Edyg96L9xJvQPQ" name="Investigate" activityType="SubProcess">
       <vertices xmi:type="bpmn:Activity" xmi:id="_VudA0fB4Edyg96L9xJvQPQ" iD="_VudA0PB4Edyg96L9xJvQPQ" name="contact the community"/>
@@ -152,7 +155,11 @@
       <vertices xmi:type="bpmn:Activity" xmi:id="_LMeysfB_Edyg96L9xJvQPQ" iD="_LMeysPB_Edyg96L9xJvQPQ" outgoingEdges="_fPL5wfCEEdyg96L9xJvQPQ _cYcWIfCEEdyg96L9xJvQPQ" activityType="GatewayDataBasedInclusive" looping="false"/>
       <vertices xmi:type="bpmn:Activity" xmi:id="_fO_sgfCEEdyg96L9xJvQPQ" iD="_fO_sgPCEEdyg96L9xJvQPQ" outgoingEdges="_pl518fCEEdyg96L9xJvQPQ" incomingEdges="_fPL5wfCEEdyg96L9xJvQPQ" name="Ask for help from &#xA;the community" activityType="Task"/>
       <vertices xmi:type="bpmn:Activity" xmi:id="_lHQD4fCFEdyg96L9xJvQPQ" iD="_lHQD4PCFEdyg96L9xJvQPQ" incomingEdges="_mh6rEfCFEdyg96L9xJvQPQ _9yfOkfCFEdyg96L9xJvQPQ" name="test that the&#xA; bug is fixed" activityType="Task"/>
-      <vertices xmi:type="bpmn:Activity" xmi:id="_7yBysfCFEdyg96L9xJvQPQ" iD="_7yBysPCFEdyg96L9xJvQPQ" outgoingEdges="_9yfOkfCFEdyg96L9xJvQPQ" incomingEdges="_7yH5UfCFEdyg96L9xJvQPQ" name="make sure &#xA;IP is clean" activityType="Task"/>
+      <vertices xmi:type="bpmn:Activity" xmi:id="_7yBysfCFEdyg96L9xJvQPQ" iD="_7yBysPCFEdyg96L9xJvQPQ" associations="_gF73YPCLEdyg96L9xJvQPQ" outgoingEdges="_9yfOkfCFEdyg96L9xJvQPQ" incomingEdges="_7yH5UfCFEdyg96L9xJvQPQ" name="make sure &#xA;IP is clean" activityType="Task">
+        <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_d3-yEPCLEdyg96L9xJvQPQ" source="genericFile">
+          <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_d3-yEfCLEdyg96L9xJvQPQ" key="projectRelativePath" value="LICENSE.txt"/>
+        </eAnnotations>
+      </vertices>
       <sequenceEdges xmi:type="bpmn:SequenceEdge" xmi:id="_fPL5wfCEEdyg96L9xJvQPQ" iD="_fPL5wPCEEdyg96L9xJvQPQ" source="_LMeysfB_Edyg96L9xJvQPQ" target="_fO_sgfCEEdyg96L9xJvQPQ"/>
       <sequenceEdges xmi:type="bpmn:SequenceEdge" xmi:id="_cYcWIfCEEdyg96L9xJvQPQ" iD="_cYcWIPCEEdyg96L9xJvQPQ" source="_LMeysfB_Edyg96L9xJvQPQ" target="_cYWPgfCEEdyg96L9xJvQPQ"/>
       <sequenceEdges xmi:type="bpmn:SequenceEdge" xmi:id="_pl518fCEEdyg96L9xJvQPQ" iD="_pl518PCEEdyg96L9xJvQPQ" source="_fO_sgfCEEdyg96L9xJvQPQ" target="_plzvUfCEEdyg96L9xJvQPQ"/>
