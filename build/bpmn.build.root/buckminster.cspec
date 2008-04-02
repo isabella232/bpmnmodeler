@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="org.eclipse.bpmn.build.root" componentType="buckminster" version="0.8.0.qualifier" versionType="OSGi" shortDesc="Virtual component for BPMN building">
+<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="bpmn.build.root" componentType="buckminster" version="0.8.0.qualifier" versionType="OSGi" shortDesc="Virtual component for BPMN building">
     <cs:dependencies>
         <cs:dependency name="org.eclipse.stp.bpmn.feature" componentType="eclipse.feature"/>
     </cs:dependencies>
@@ -24,7 +24,7 @@
                 <cs:path path="site.xml"/>
             </cs:products>
         </cs:public>
-        <cs:public name="build.stp.site" actor="ant">
+        <cs:public name="build.bpmn.site" actor="ant">
             <cs:actorProperties>
                 <cs:property key="buildFileId" value="buckminster.pdetasks"/>
                 <cs:property key="targets" value="create.complex.site"/>

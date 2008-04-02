@@ -29,12 +29,6 @@
        </provider>
     </searchPath>
 
-    <searchPath name="orbit">
-      <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="false" source="false">
-	<uri format="http://download.eclipse.org/tools/orbit/downloads/drops/S20080209163815/orbitBundles-S20080209163815.map"/>
-      </provider>
-    </searchPath>
-     
     <searchPath name="ganymede">
       <!-- Search will look at M5 provider first, then fall back to M4 provider -->
       <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="true" source="false">
@@ -47,9 +41,8 @@
      
      
      <!-- Project specific search paths -->
-     <locator searchPathRef="bpmn.build.root" pattern="^spec" />
+     <locator searchPathRef="bpmn.build.root" pattern="^bpmn\.build\.root" />
      <locator searchPathRef="bpmn.features" pattern="^org\.eclipse\.stp\.bpmn(\..*)?feature" />
      <locator searchPathRef="bpmn.plugins" pattern="^org\.eclipse\.stp\.bpmn(\..*)?" />
      <locator searchPathRef="ganymede" pattern="^org\.eclipse(\..*)?" />   
-     <locator searchPathRef="orbit" pattern=".*" /> 
 </rmap>
