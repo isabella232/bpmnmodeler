@@ -19,7 +19,7 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
  * A utility class to simplify 
  * the instanciation of AbstractTransactionalCommand.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public abstract class ModifyBpmnEAnnotationCommand 

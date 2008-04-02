@@ -21,7 +21,7 @@ import org.eclipse.jface.viewers.Viewer;
 /**
  * Simple content provider that reflects 
  * the EAnnotations attached to the EModelElement given as an input.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class EAnnotationsMapContentProvider implements IStructuredContentProvider {

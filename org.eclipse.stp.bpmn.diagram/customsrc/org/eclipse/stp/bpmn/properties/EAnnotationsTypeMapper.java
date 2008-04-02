@@ -26,7 +26,7 @@ import org.eclipse.ui.views.properties.tabbed.AbstractTypeMapper;
  * (no priorities). A coupe of related bugs have been filed:
  * https://www.eclipse.org/bugs/show_bug.cgi?id=158607
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class EAnnotationsTypeMapper extends AbstractTypeMapper {
