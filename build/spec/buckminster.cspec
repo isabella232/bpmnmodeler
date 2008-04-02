@@ -1,17 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="org.eclipse.stp.build.root" componentType="buckminster" version="0.8.0.qualifier" versionType="OSGi" shortDesc="Virtual component for STP building">
+<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="org.eclipse.bpmn.build.root" componentType="buckminster" version="0.8.0.qualifier" versionType="OSGi" shortDesc="Virtual component for BPMN building">
     <cs:dependencies>
-        <cs:dependency name="org.eclipse.stp.b2j.feature" componentType="eclipse.feature"/>
-        <!-- cs:dependency name="org.eclipse.stp.bpmn.feature" componentType="eclipse.feature"/ -->
-        <cs:dependency name="org.eclipse.stp.eid.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.policy.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.sc.jaxws.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.sc.jaxws.tests.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.sca.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.servicecreation" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.servicecreation.tests.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.soas.feature" componentType="eclipse.feature"/>
-        <cs:dependency name="org.eclipse.stp.soas.runtime.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.bpmn.feature" componentType="eclipse.feature"/>
     </cs:dependencies>
     <cs:artifacts>
         <cs:private name="root.artifacts">
@@ -54,15 +44,7 @@
     </cs:actions>
     <cs:groups>
         <cs:public name="bundle.jars">
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.b2j.feature"/>
-            <!-- cs:attribute name="bundle.jars" component="org.eclipse.stp.bpmn.feature"/ -->
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.eid.feature"/>
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.policy.feature"/>
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.sc.jaxws.feature"/>
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.sca.feature"/>
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.servicecreation"/>
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.soas.feature"/>
-            <cs:attribute name="bundle.jars" component="org.eclipse.stp.soas.runtime.feature"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.bpmn.feature"/>
         </cs:public>
         <cs:public name="feature.jars">
             <cs:attribute name="soa.development.category"/>
@@ -75,15 +57,7 @@
             <cs:attribute name="build.site.xml"/>
         </cs:public>
         <cs:public name="soa.development.category">
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.b2j.feature"/>
-            <!-- cs:attribute name="feature.jars" component="org.eclipse.stp.bpmn.feature"/ -->
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.eid.feature"/>
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.policy.feature"/>
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.sc.jaxws.feature"/>
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.sca.feature"/>
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.servicecreation"/>
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.soas.feature"/>
-            <cs:attribute name="feature.jars" component="org.eclipse.stp.soas.runtime.feature"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.bpmn.feature"/>
         </cs:public>
     </cs:groups>
 </cs:cspec>
