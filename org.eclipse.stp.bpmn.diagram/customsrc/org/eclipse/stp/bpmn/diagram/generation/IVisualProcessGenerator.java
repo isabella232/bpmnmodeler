@@ -25,7 +25,7 @@ import org.eclipse.stp.bpmn.ActivityType;
  * This interface expands to the generation
  * of visual objects extending {@link View}.
  *  
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public interface IVisualProcessGenerator {
