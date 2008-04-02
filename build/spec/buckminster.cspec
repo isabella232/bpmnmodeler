@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cs:cspec xmlns:cs="http://www.eclipse.org/buckminster/CSpec-1.0" name="org.eclipse.stp.build.root" componentType="buckminster" version="0.8.0.qualifier" versionType="OSGi" shortDesc="Virtual component for STP building">
+    <cs:dependencies>
+        <cs:dependency name="org.eclipse.stp.b2j.feature" componentType="eclipse.feature"/>
+        <!-- cs:dependency name="org.eclipse.stp.bpmn.feature" componentType="eclipse.feature"/ -->
+        <cs:dependency name="org.eclipse.stp.eid.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.policy.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.sc.jaxws.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.sc.jaxws.tests.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.sca.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.servicecreation" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.servicecreation.tests.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.soas.feature" componentType="eclipse.feature"/>
+        <cs:dependency name="org.eclipse.stp.soas.runtime.feature" componentType="eclipse.feature"/>
+    </cs:dependencies>
+    <cs:artifacts>
+        <cs:private name="root.artifacts">
+            <cs:path path="epl-v10.html"/>
+            <cs:path path="site.properties"/>
+        </cs:private>
+        <cs:private name="site.template" path="site.xml"/>
+    </cs:artifacts>
+    <cs:actions>
+        <cs:public name="build.site.xml" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFileId" value="buckminster.pdetasks"/>
+                <cs:property key="targets" value="create.site.xml"/>
+            </cs:actorProperties>
+            <cs:prerequisites>
+                <cs:attribute name="site.features" alias="features"/>
+                <cs:attribute name="site.template" alias="template"/>
+            </cs:prerequisites>
+            <cs:products alias="action.output" base="generated/">
+                <cs:path path="site.xml"/>
+            </cs:products>
+        </cs:public>
+        <cs:public name="build.stp.site" actor="ant">
+            <cs:actorProperties>
+                <cs:property key="buildFileId" value="buckminster.pdetasks"/>
+                <cs:property key="targets" value="create.complex.site"/>
+            </cs:actorProperties>
+            <cs:properties>
+                <cs:property key="site.extra.suffix" value="_incubation"/>
+                <cs:property key="site.name" value="stp.archivedsite"/>
+            </cs:properties>
+            <cs:prerequisites>
+                <cs:attribute name="bundle.jars" alias="plugins" includePattern=".*\.stp\..*"/>
+                <cs:attribute name="feature.jars" alias="features"/>
+                <cs:attribute name="site.rootFiles" alias="rootFiles"/>
+                <cs:attribute name="site.template" alias="template"/>
+            </cs:prerequisites>
+            <cs:products alias="action.output" base="site/" fileCount="1" upToDatePolicy="COUNT"/>
+        </cs:public>
+    </cs:actions>
+    <cs:groups>
+        <cs:public name="bundle.jars">
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.b2j.feature"/>
+            <!-- cs:attribute name="bundle.jars" component="org.eclipse.stp.bpmn.feature"/ -->
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.eid.feature"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.policy.feature"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.sc.jaxws.feature"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.sca.feature"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.servicecreation"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.soas.feature"/>
+            <cs:attribute name="bundle.jars" component="org.eclipse.stp.soas.runtime.feature"/>
+        </cs:public>
+        <cs:public name="feature.jars">
+            <cs:attribute name="soa.development.category"/>
+        </cs:public>
+        <cs:public name="site.features">
+            <cs:attribute name="soa.development.category"/>
+        </cs:public>
+        <cs:public name="site.rootFiles">
+            <cs:attribute name="root.artifacts"/>
+            <cs:attribute name="build.site.xml"/>
+        </cs:public>
+        <cs:public name="soa.development.category">
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.b2j.feature"/>
+            <!-- cs:attribute name="feature.jars" component="org.eclipse.stp.bpmn.feature"/ -->
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.eid.feature"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.policy.feature"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.sc.jaxws.feature"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.sca.feature"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.servicecreation"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.soas.feature"/>
+            <cs:attribute name="feature.jars" component="org.eclipse.stp.soas.runtime.feature"/>
+        </cs:public>
+    </cs:groups>
+</cs:cspec>
