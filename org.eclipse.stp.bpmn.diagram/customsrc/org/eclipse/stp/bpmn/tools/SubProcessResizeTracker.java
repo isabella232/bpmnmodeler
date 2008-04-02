@@ -10,37 +10,29 @@
  *******************************************************************************/
 
 /** 
- * Date           	Author              Changes 
- * 12 Sep 2006   	MPeleshchyshyn  	Created 
+ * Date             Author              Changes 
+ * 12 Sep 2006      MPeleshchyshyn      Created 
  **/
 
 package org.eclipse.stp.bpmn.tools;
 
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionDimension;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.SnapToHelper;
-import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
-import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.swt.SWT;
 
 /**
- * Resize tracker that limits minimal size od the subprocess based on figures
+ * Resize tracker that limits minimal size of the subprocess based on figures
  * that are inside body compartment.
  * 
  * @author MPeleshchyshyn
@@ -52,6 +44,7 @@ public class SubProcessResizeTracker extends ActivityResizeTracker {
         super(owner, direction);
     }
 
+    
     /**
      * @see org.eclipse.gef.tools.SimpleDragTracker#updateSourceRequest()
      */
@@ -63,7 +56,7 @@ public class SubProcessResizeTracker extends ActivityResizeTracker {
         Point moveDelta = new Point(0, 0);
         Dimension resizeDelta = new Dimension(0, 0);
 
-        IGraphicalEditPart owner = (IGraphicalEditPart) getOwner();
+        SubProcessEditPart owner = (SubProcessEditPart) getOwner();
         PrecisionRectangle sourceRect = getSourceRectangle();
         SnapToHelper snapToHelper = getSnapToHelper();
 
@@ -103,79 +96,49 @@ public class SubProcessResizeTracker extends ActivityResizeTracker {
 
         request.setCenteredResize(getCurrentInput().isModKeyDown(SWT.MOD1));
 
-        Dimension minSize = new Dimension(0, 0);
+//        Dimension minSize = new Dimension(0, 0);
         SubProcessSubProcessBodyCompartmentEditPart bodyEditPart =
-        	(SubProcessSubProcessBodyCompartmentEditPart) 
-        	owner.getChildBySemanticHint(BpmnVisualIDRegistry.getType(
-				SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
+            (SubProcessSubProcessBodyCompartmentEditPart) 
+            owner.getChildBySemanticHint(BpmnVisualIDRegistry.getType(
+                SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
         boolean isCollapsed = ((Boolean) bodyEditPart
                 .getStructuralFeatureValue(NotationPackage.eINSTANCE
                         .getDrawerStyle_Collapsed())).booleanValue();
+        
+        double zoom = owner.getZoom();
+        
+//        Dimension figureSize = owner.getFigure().getSize();
         if (!isCollapsed) {
-        	minSize = getSubProcessMinSize(owner);
+//            minSize = BpmnShapesDefaultSizes.getSubProcessMinSize(owner, false);
+//            minSize.scale(zoom);
         }
-        Dimension figureSize = owner.getFigure().getSize();
-        RootEditPart rootEditPart = owner.getRoot();
-        if (rootEditPart instanceof ScalableFreeformRootEditPart) {
-            double zoom = ((ScalableFreeformRootEditPart) rootEditPart)
-                    .getZoomManager().getZoom();
-            minSize.scale(zoom);
-            figureSize.scale(zoom);
-        }
+//        figureSize.scale(zoom);
 
         if ((getResizeDirection() & PositionConstants.NORTH) != 0) {
             if (getCurrentInput().isControlKeyDown()) {
-                if (minSize.height > figureSize.height - 2 * d.height) {
-                    d.setSize(new Dimension(d.width,
-                            (figureSize.height - minSize.height) / 2));
-                }
                 resizeDelta.height -= d.height;
-            } else if (minSize.height > figureSize.height - d.height) {
-                d.setSize(new Dimension(d.width, figureSize.height
-                        - minSize.height));
             }
             moveDelta.y += d.height;
             resizeDelta.height -= d.height;
         }
         if ((getResizeDirection() & PositionConstants.SOUTH) != 0) {
             if (getCurrentInput().isControlKeyDown()) {
-                if (minSize.height > figureSize.height + 2 * d.height) {
-                    d.setSize(new Dimension(d.width,
-                            -(figureSize.height - minSize.height) / 2));
-                }
                 moveDelta.y -= d.height;
                 resizeDelta.height += d.height;
-            } else if (minSize.height > figureSize.height + d.height) {
-                d.setSize(new Dimension(d.width,
-                        -(figureSize.height - minSize.height)));
             }
             resizeDelta.height += d.height;
         }
         if ((getResizeDirection() & PositionConstants.WEST) != 0) {
             if (getCurrentInput().isControlKeyDown()) {
-                if (minSize.width > figureSize.width - 2 * d.width) {
-                    d.setSize(new Dimension(
-                            (figureSize.width - minSize.width) / 2, d.height));
-                }
                 resizeDelta.width -= d.width;
-            } else if (minSize.width > figureSize.width - d.width) {
-                d.setSize(new Dimension(figureSize.width - minSize.width,
-                        d.height));
             }
             moveDelta.x += d.width;
             resizeDelta.width -= d.width;
         }
         if ((getResizeDirection() & PositionConstants.EAST) != 0) {
             if (getCurrentInput().isControlKeyDown()) {
-                if (minSize.width > figureSize.width + 2 * d.width) {
-                    d.setSize(new Dimension(
-                            -(figureSize.width - minSize.width) / 2, d.height));
-                }
                 moveDelta.x -= d.width;
                 resizeDelta.width += d.width;
-            } else if (minSize.width > figureSize.width + d.width) {
-                d.setSize(new Dimension(-(figureSize.width - minSize.width),
-                        d.height));
             }
             resizeDelta.width += d.width;
         }
@@ -218,77 +181,9 @@ public class SubProcessResizeTracker extends ActivityResizeTracker {
             PrecisionDimension preciseResize = new PrecisionDimension(
                     result.width + resizeDelta.width, result.height
                             + resizeDelta.height);
-            if (minSize.width > figureSize.width + preciseResize.width) {
-                preciseResize.preciseWidth = resizeDelta.width;
-                preciseResize.updateInts();
-            }
-            if (minSize.height > figureSize.height + preciseResize.height) {
-                preciseResize.preciseHeight = resizeDelta.height;
-                preciseResize.updateInts();
-            }
             request.setMoveDelta(preciseMove);
             request.setSizeDelta(preciseResize);
         }
     }
 
-    /**
-     * Calculates subprocess' minimal size.
-     * 
-     * @param subprocessEditPart
-     *            the subprocess edit part
-     * @return calculated minimal size of the s
-     */
-    public Dimension getSubProcessMinSize(GraphicalEditPart subprocessEditPart) {
-    	SubProcessSubProcessBodyCompartmentEditPart body = null;
-    	SubProcessSubProcessBorderCompartmentEditPart border = null;
-    	SubProcessNameEditPart name = null;
-    	for (Object child : subprocessEditPart.getChildren()) {
-    		if (child instanceof SubProcessSubProcessBodyCompartmentEditPart) {
-    			body = (SubProcessSubProcessBodyCompartmentEditPart) child;
-    		}
-    		if (child instanceof SubProcessSubProcessBorderCompartmentEditPart) {
-    			border = (SubProcessSubProcessBorderCompartmentEditPart) child;
-    		}
-    		if (child instanceof SubProcessNameEditPart) {
-    			name = (SubProcessNameEditPart) child;
-    		}
-    	}
-    	if (body == null) {
-    		return new Dimension(0, 0);
-    	}
-        // now take in account the shapes in the pool
-        Dimension maxRoomOfChildren = new Dimension(0, 0);
-        for (Object ep : body.getChildren()) {
-        	if (ep instanceof IGraphicalEditPart) {
-        		// we use the figure as width and lengths may be 
-        		// not initialized on the views objects
-        		IFigure figure = ((IGraphicalEditPart) ep).getFigure();
-        		Rectangle bounds = figure.getBounds();
-        		maxRoomOfChildren.height = Math.max(bounds.y + 
-        				bounds.height, maxRoomOfChildren.height);
-        		maxRoomOfChildren.width = Math.max(bounds.x + 
-        				bounds.width, maxRoomOfChildren.width);
-        	}
-        }
-        maxRoomOfChildren.expand(SubProcessEditPart.INSETS.
-        		getWidth(), SubProcessEditPart.INSETS.getHeight() + 2);
-        maxRoomOfChildren.height += border.getFigure().getBounds().height;
-        if (name != null) {
-        	maxRoomOfChildren.height += name.getFigure().getBounds().height;
-        }
-        return maxRoomOfChildren;
-//        return ((SubProcessEditPart) subprocessEditPart).calcMinSize();
-    }
-
-    /*
-     * (non-Javadoc)
-     * 
-     * @see org.eclipse.gef.tools.AbstractTool#getDragMoveDelta()
-     */
-    @Override
-    protected Dimension getDragMoveDelta() {
-        Dimension d = super.getDragMoveDelta();
-        // d = new Dimension(d.width * 2, d.height * 2);
-        return d;
-    }
 }

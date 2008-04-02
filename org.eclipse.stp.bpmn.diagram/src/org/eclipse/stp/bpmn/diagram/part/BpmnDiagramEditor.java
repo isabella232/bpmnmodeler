@@ -12,7 +12,9 @@ package org.eclipse.stp.bpmn.diagram.part;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
@@ -166,6 +168,17 @@ public class BpmnDiagramEditor extends FileDiagramEditor implements IGotoMarker 
                 // Set the state of the Snap to Grid Property
                 _root.getViewer().setProperty(
                      SnapToGeometry.PROPERTY_SNAP_ENABLED, event.getNewValue());
+            } else if (event.getProperty().equals(
+                            BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_ALPHA)
+                       || event.getProperty().equals(
+                            BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_ALPHA)) {
+                //repaint the connection layer after the transparency has been changed.
+                //transparency applies to all connections.
+                IFigure connLayer = _root.getLayer(LayerConstants.CONNECTION_LAYER);
+                if (connLayer != null) {
+                    //System.err.println("invalidating the connection layer");
+                    connLayer.repaint();                    
+                }
             }
         }
         

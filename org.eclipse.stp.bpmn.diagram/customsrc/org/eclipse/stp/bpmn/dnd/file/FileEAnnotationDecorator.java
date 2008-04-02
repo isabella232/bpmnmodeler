@@ -27,7 +27,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * The decorator for the file link decoration.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class FileEAnnotationDecorator implements IEAnnotationDecorator {

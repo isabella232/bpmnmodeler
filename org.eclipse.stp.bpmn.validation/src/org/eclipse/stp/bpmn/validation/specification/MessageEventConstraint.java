@@ -23,7 +23,7 @@ import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
  * Constraint on message events, stating that they should be the target
  * of a messaging edge for the start and intermediate messaging event
  * and that an end message event should be sending a message.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class MessageEventConstraint extends AbstractModelConstraint {

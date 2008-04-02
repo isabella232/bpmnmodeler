@@ -7,7 +7,7 @@
  * program(s) have been supplied.
  *
  * Dates       		 Author              Changes
- * Dec 21, 2006      Antoine Toulm�   Creation
+ * Dec 21, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.export;
 
@@ -30,7 +30,7 @@ import org.eclipse.swt.graphics.RGB;
  * This extends the CopyImageUtil class
  * so that if the path given as a parameter is null,
  * it keeps the input stream in memory and may be retrieved.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class LazyCopyImageUtil extends CopyToImageUtil {

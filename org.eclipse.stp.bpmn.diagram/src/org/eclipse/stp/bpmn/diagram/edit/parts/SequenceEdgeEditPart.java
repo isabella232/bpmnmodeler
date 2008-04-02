@@ -25,16 +25,12 @@ import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
-import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.LayerConstants;
-import org.eclipse.gef.editparts.AbstractConnectionEditPart;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -57,13 +53,16 @@ import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SequenceFlowConditionType;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SequenceEdgeItemSemanticEditPolicy;
+import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.figures.ConnectionLayerExEx;
 import org.eclipse.stp.bpmn.figures.ConnectionUtils;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 import org.eclipse.stp.bpmn.figures.router.EdgeRectilinearRouter;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionEndPointEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
+import org.eclipse.swt.SWT;
 
 /**
  * @generated
@@ -192,7 +191,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         }
 
         /**
-         * @notgenerated
+         * @generated NOT
          * 
          * @see org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx#getSmoothPoints()
          */
@@ -208,12 +207,26 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
             }
             return smoothPoints;
         }
-
+        
+        @Override
+        public void paintFigure(Graphics graphics) {
+            graphics.setAlpha(ActivityPainter.getSequenceEdgeTransparency());
+            super.paintFigure(graphics);
+        }
+        
         @Override
         /**
          * @notgenerated Adds default connection decorator painting.
          */
         protected void outlineShape(Graphics g) {
+            
+            if (getSource() instanceof Activity2EditPart && 
+                    ((Activity)((Activity2EditPart) getSource()).
+                            resolveSemanticElement()).getActivityType().getValue() == 
+                                ActivityType.EVENT_INTERMEDIATE_COMPENSATION) {
+                g.setLineStyle(SWT.LINE_CUSTOM);
+                g.setLineDash(new int[] {1, 2});
+            } 
             super.outlineShape(g);
             if (isDefault && isConditional()) {
                 Point res = new Point();
@@ -254,7 +267,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
 
                 Point p1 = new PrecisionPoint(x1, y1);
                 Point p2 = new PrecisionPoint(x2, y2);
-
+                
                 g.drawLine(p1, p2);
             }
             // if the edge is conditional, a losange is drawn at its source
@@ -295,6 +308,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         public int getSourceGatewayConstraint() {
             return SequenceEdgeEditPart.this.getSourceGatewayConstraint();
         }
+        
     }
 
     /**
@@ -311,7 +325,13 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
             ConnectionLayerExEx cLayerEx = (ConnectionLayerExEx) cLayer;
             if (Routing.RECTILINEAR_LITERAL == style.getRouting()) {
                 if (rectilinearRouter == null) {
-                    if (getSource() != null && getSource() instanceof Activity2EditPart) {
+                    Vertex source = null;
+                    if (resolveSemanticElement() instanceof SequenceEdge) {
+                        SequenceEdge edge = (SequenceEdge) resolveSemanticElement();
+                        source = edge.getSource();
+                    }
+                    if (source instanceof Activity && 
+                            ((Activity) source).getEventHandlerFor() != null) {
                         rectilinearRouter = cLayerEx.getBpmnSequenceEdgeForBorderedShapesRectilinearRouter();
                     } else {
                         rectilinearRouter = new EdgeRectilinearRouter(this);
@@ -428,8 +448,9 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
                 SequenceEdge seqEdge = (SequenceEdge)getPrimaryView().getElement();
                 int ind = seqs.indexOf(seqEdge);
                 if (!isOrderImportant(isSource)) {
-                    ind = ActivityEditPart.calculateBestPosition(seqEdge, isSource, 
-                            (Node) (isSource ? getSource().getModel() : getTarget().getModel()));
+                    ind = isSource
+                        ? ActivityEditPart.getStartAnchorVisualIndex((Edge)getModel())
+                        : ActivityEditPart.getTargetAnchorVisualIndex((Edge)getModel());
                 }
                 int count = seqs.size();
                 String connectionType =
@@ -506,7 +527,8 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
      * 
      * @return one of {@link EdgeRectilinearRouter#NO_CONSTRAINT},
      * {@link EdgeRectilinearRouter#CONSTRAINT_BOTTOM},
-     * {@link EdgeRectilinearRouter#CONSTRAINT_ON_TOP}
+     * {@link EdgeRectilinearRouter#CONSTRAINT_ON_TOP},
+     * {@link EdgeRectilinearRouter#CONSTRAINT_MIDDLE}
      * by looking at the target.
      */
     public int getTargetGatewayConstraint() {
@@ -514,14 +536,13 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         if (target == null  || target.resolveSemanticElement() == null || getSource() == null) {
             return EdgeRectilinearRouter.NO_CONSTRAINT;
         }
-        int tgtsize = 0;
         List<SequenceEdgeEditPart> targets = new ArrayList<SequenceEdgeEditPart>();
         int index = ((Activity) target.resolveSemanticElement()).
             getIncomingEdges().indexOf(resolveSemanticElement());
         if (!isOrderImportant(true)) {
-            index = ActivityEditPart.calculateBestPosition(
-                    (SequenceEdge) resolveSemanticElement(), false, (Node) getTarget().getModel());
+            index = ActivityEditPart.getTargetAnchorVisualIndex((Edge)getModel());
         }
+        int tgtsize = 0;
         for (Object o : target.getTargetConnections()) {
             if (o instanceof SequenceEdgeEditPart) {
                 tgtsize++;
@@ -534,47 +555,43 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
                 srcsize++;
             }
         }
-        // if the activity is a gateway
-        boolean constraint = ActivityType.VALUES_GATEWAYS.contains(
-                ((Activity) target.resolveSemanticElement()).getActivityType());
+        boolean constraint = shouldShowTopDownEdges((Activity) target.resolveSemanticElement());
         // if it has no more than one edge on the other side.
-        constraint = constraint && tgtsize > 1 && 
-                srcsize <= 1;
+        constraint = constraint && tgtsize > 1 && srcsize <= 1;
         if (!constraint) {
             return EdgeRectilinearRouter.NO_CONSTRAINT;
         }
      // we have two edges. We can choose, depending on the position of the target shapes, 
         // to place the edges at top and bottom, middle and bottom, or top and middle.
         // this requires to inspect the location of the target edit parts.
-     // we have two edges. We can choose, depending on the position of the target shapes, 
-        // to place the edges at top and bottom, middle and bottom, or top and middle.
-        // this requires to inspect the location of the target edit parts.
         if (tgtsize == 2 ) {
-            
-            Bounds sourceLoc = ((Bounds) ((Node) ((Edge) getModel()).getSource()).getLayoutConstraint());
-            Bounds targetLoc = ((Bounds) ((Node) ((Edge) getModel()).getTarget()).getLayoutConstraint());
+            Bounds targetLoc = BpmnShapesDefaultSizes.getBounds((Node) ((Edge) getModel()).getTarget());
+            Bounds sourceLoc = BpmnShapesDefaultSizes.getBounds((Node) ((Edge) getModel()).getSource());
             Bounds otherSourceLoc = null;
             for (SequenceEdgeEditPart p : targets) {
                 if (p != this) {
-                    otherSourceLoc = ((Bounds) ((Node) ((Edge) p.getModel()).getSource()).getLayoutConstraint());
+                    otherSourceLoc = BpmnShapesDefaultSizes.getBounds((Node) ((Edge) p.getModel()).getSource());break;
                 }
             }
-            int topLimit = targetLoc.getY() + targetLoc.getHeight() + MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
-            int bottomLimit = targetLoc.getY() - MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
-            if (sourceLoc.getY() < topLimit && otherSourceLoc.getY() < topLimit) {
-                // the two shapes are higher than the gateway.
-                // the highest shape has a top constraint, while the other one will have a middle constraint.
-                if (index == tgtsize -1) {
-                    return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;
-                }
-            } else if (sourceLoc.getY() + sourceLoc.getHeight()/2 > bottomLimit && 
-                    otherSourceLoc.getY() + otherSourceLoc.getHeight()/2 > bottomLimit) {
-             // the two shapes are lower than the gateway.
-                // the highest shape has a top constraint, while the other one will have a middle constraint.
-                if (index == 0) {
-                    return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;
-                }
-            }
+            //don't apply DP2LP: we are in the gmf view coords where there is no scale to apply.
+            int topLimit = targetLoc.getY() + targetLoc.getHeight() + 20;//MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
+            int bottomLimit = targetLoc.getY() - 20;//MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
+
+            //assuming the anchor gets plugged in the middle.
+            int sourceMidY = sourceLoc.getY() + sourceLoc.getHeight()/2;
+            int otherSourceMidY = otherSourceLoc.getY() + otherSourceLoc.getHeight()/2;
+            
+            int midY = targetLoc.getY() + targetLoc.getHeight()/2;
+            
+//            String n = ((NamedBpmnObject) this.resolveSemanticElement()).getName();
+//            if ("one".equals(n) || "two".equals(n) || "three".equals(n)) {
+//                System.err.println("hello target " + n + " index=" + index);
+//                if ("two".equals(n)) {
+//                    n="twotwo.";
+//                }
+//            }
+            return getGatewayConstraintFor2Connections(bottomLimit,
+                    topLimit, midY, sourceMidY, otherSourceMidY, index);
         }
         if (index == 0) {
             return EdgeRectilinearRouter.CONSTRAINT_ON_TOP;
@@ -601,8 +618,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         int index = ((Activity) source.resolveSemanticElement()).
             getOutgoingEdges().indexOf(resolveSemanticElement());
         if (!isOrderImportant(true)) {
-            index = ActivityEditPart.calculateBestPosition(
-                    (SequenceEdge) resolveSemanticElement(), true, (Node) getSource().getModel());
+            index = ActivityEditPart.getStartAnchorVisualIndex((Edge)getModel());
         }
         List<SequenceEdgeEditPart> sources = new ArrayList<SequenceEdgeEditPart>();
         for (Object o : source.getSourceConnections()) {
@@ -617,12 +633,9 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
                 tgtsize++;
             }
         }
-     // if the activity is a gateway
-        boolean constraint = ActivityType.VALUES_GATEWAYS.contains(
-                ((Activity) source.resolveSemanticElement()).getActivityType());
-     // if it has no more than one edge on the other side.
-        constraint = constraint && srcsize > 1 && 
-                tgtsize <= 1;
+        boolean constraint = shouldShowTopDownEdges((Activity) source.resolveSemanticElement());
+        // if it has no more than one edge on the other side.
+        constraint = constraint && srcsize > 1 && tgtsize <= 1;
         if (!constraint) {
             return EdgeRectilinearRouter.NO_CONSTRAINT;
         }
@@ -630,31 +643,38 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         // to place the edges at top and bottom, middle and bottom, or top and middle.
         // this requires to inspect the location of the target edit parts.
         if (srcsize == 2 ) {
-            
-            Bounds targetLoc = (Bounds) ((Node) ((Edge) getModel()).getTarget()).getLayoutConstraint();
-            Bounds sourceLoc = (Bounds) ((Node) ((Edge) getModel()).getSource()).getLayoutConstraint();
+            Bounds targetLoc = BpmnShapesDefaultSizes.getBounds((Node) ((Edge) getModel()).getTarget());
+            Bounds sourceLoc = BpmnShapesDefaultSizes.getBounds((Node) ((Edge) getModel()).getSource());
             Bounds otherTargetLoc = null;
             for (SequenceEdgeEditPart p : sources) {
                 if (p != this) {
-                    otherTargetLoc = (Bounds) ((Node) ((Edge) p.getModel()).getTarget()).getLayoutConstraint();
+                    otherTargetLoc = BpmnShapesDefaultSizes.getBounds((Node) ((Edge) p.getModel()).getTarget());
                 }
             }
-            int topLimit = sourceLoc.getY() + sourceLoc.getHeight() + MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
-            int bottomLimit = sourceLoc.getY() - MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
-            if (targetLoc.getY() < topLimit && otherTargetLoc.getY() < topLimit) {
-                // the two shapes are higher than the gateway.
-                // the highest shape has a top constraint, while the other one will have a middle constraint.
-                if (index == srcsize -1) {
-                    return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;
-                }
-            } else if (targetLoc.getY() + targetLoc.getHeight()/2 > bottomLimit && 
-                    otherTargetLoc.getY() + otherTargetLoc.getHeight()/2 > bottomLimit) {
-             // the two shapes are lower than the gateway.
-                // the highest shape has a top constraint, while the other one will have a middle constraint.
-                if (index == 0) {
-                    return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;
-                }
-            }
+          //don't apply LD2DP: we are in the gmf view coords
+          //where there is no scale to apply.
+            int topLimit = sourceLoc.getY() + sourceLoc.getHeight() + 20;//MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
+            int bottomLimit = sourceLoc.getY() - 20;//MapModeUtil.getMapMode(getFigure()).DPtoLP(20);
+            int midY = sourceLoc.getY() + sourceLoc.getHeight()/2;
+            
+            //assuming the anchor gets plugged in the middle.
+            int targetMidY = targetLoc.getY() + targetLoc.getHeight()/2;
+            int otherTargetMidY = otherTargetLoc.getY() + otherTargetLoc.getHeight()/2;
+            
+//            String n = ((NamedBpmnObject) this.resolveSemanticElement()).getName();
+//            if ("one".equals(n) || "two".equals(n) || "three".equals(n)) {
+//                System.err.println("hello source " + n + " index=" + index);
+//                if (!isOrderImportant(true)) {
+//                    String modName = ((NamedBpmnObject) this.resolveSemanticElement()).getName();
+//                    if (modName.equals("one")) {
+//                        System.err.println("hello one");
+//                    }
+//                    index = ActivityEditPart.getStartAnchorVisualIndex((Edge)getModel());
+//                }
+//            }
+            
+            return getGatewayConstraintFor2Connections(bottomLimit,
+                    topLimit, midY, targetMidY, otherTargetMidY, index);
         }
         if (index == 0) {
             return EdgeRectilinearRouter.CONSTRAINT_ON_TOP;
@@ -673,6 +693,71 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
      */
     private boolean isOrderImportant(boolean isSource) {
         EditPart part = isSource ? getSource() : getTarget();
-        return ActivityEditPart.isOrderImportant((IGraphicalEditPart) part);
+        return ActivityEditPart.isOrderImportant((IGraphicalEditPart) part, isSource);
+    }
+    
+    /**
+     * 
+     * @param topScreenLimit 20 pixels above the top of the gateway for which we compute the constraint
+     * @param bottomScreenLimit 20 pixels below the bottom of the gateway for which we compute the constraint
+     * @param gatewayMidY The center Y coord of the gateway
+     * @param thisMidY The center of the shape processed
+     * @param otherMidY The center of the other shape
+     * @param currentBestIndex The currently suggestd index: 0 for the top, 1 for the bottom.
+     * @return {@link EdgeRectilinearRouter.CONSTRAINT_ON_TOP},
+     * {@link EdgeRectilinearRouter.CONSTRAINT_BOTTOM},
+     * {@link EdgeRectilinearRouter.CONSTRAINT_MIDDLE}
+     */
+    private int getGatewayConstraintFor2Connections(int topScreenLimit, int bottomScreenLimit,
+            int gatewayMidY, int thisMidY, int otherMidY, int currentBestIndex) {
+        if (currentBestIndex == 0) {//first edge, at the top of the screen.
+            //so returned value will be either at-screen-top or at-screen-middle.
+            if (thisMidY < topScreenLimit) {//zone-1 above-screen of gateway:
+                //put it in the middle to leave some space for the one above:
+                return EdgeRectilinearRouter.CONSTRAINT_ON_TOP;
+            } else if (thisMidY < bottomScreenLimit) {//zone-2 at the level of the gateway:
+                if (Math.abs(thisMidY-gatewayMidY) < Math.abs(otherMidY-gatewayMidY)) {
+                    //we are closer: we deserve to be in the middle.
+                    //the other one will be at the bottom
+                    return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;
+                } else {
+                    //the other one is closer, let it be in the middle.
+                    //put ourselves at the bottom then:
+                    return EdgeRectilinearRouter.CONSTRAINT_ON_TOP;//is bottom the bottom of the screen?
+                }
+            } else {//zone-2 below-screen of the gateway:
+                return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;//is bottom the bottom of the screen?
+            }
+        } else {//second edge, place it below the other one.
+            //so returned value will be either at-screen-bottom or at-screen-middle.
+            //let's call ourselves:
+            if (thisMidY >= bottomScreenLimit) {//zone-2 below-screen of the gateway:
+                return EdgeRectilinearRouter.CONSTRAINT_BOTTOM;
+            }
+            int otherOneresult = getGatewayConstraintFor2Connections(
+                    topScreenLimit, bottomScreenLimit,
+                    gatewayMidY, otherMidY, thisMidY, 0);
+            if (otherOneresult == EdgeRectilinearRouter.CONSTRAINT_MIDDLE) {
+                return EdgeRectilinearRouter.CONSTRAINT_BOTTOM;//is top top of the screen?
+            } else {
+                return EdgeRectilinearRouter.CONSTRAINT_MIDDLE;//is top top of the screen?
+            }
+        }
+    }
+        
+    /**
+     * Returns whether the activity is eligible to show top-down edges
+     * @param activity
+     * @return true if the activity is a gateway or an event with no messaging edges.
+     */
+    private static boolean shouldShowTopDownEdges(Activity activity) {
+        boolean constraint = 
+            ActivityType.VALUES_GATEWAYS.contains(activity.getActivityType());
+        if (constraint) {
+            return true;
+        }
+        constraint = ActivityType.VALUES_EVENTS.contains(activity.getActivityType()) && 
+            activity.getOrderedMessages().isEmpty();
+        return constraint;
     }
 }

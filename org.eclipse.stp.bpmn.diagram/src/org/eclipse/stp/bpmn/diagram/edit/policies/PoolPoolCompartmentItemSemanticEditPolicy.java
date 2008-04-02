@@ -12,17 +12,23 @@ package org.eclipse.stp.bpmn.diagram.edit.policies;
 
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.emf.commands.core.commands.DuplicateEObjectsCommand;
+import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.emf.type.core.commands.CreateElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DuplicateElementsRequest;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.BpmnPackage;
+import org.eclipse.stp.bpmn.Lane;
+import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.commands.CreateElementCommandEx;
 import org.eclipse.stp.bpmn.commands.CreateSubProcessCommand;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**
@@ -176,6 +182,54 @@ public class PoolPoolCompartmentItemSemanticEditPolicy extends
                 container = ((View) container).getElement();
             }
             return container;
+        }
+        
+        /**
+         * Overriden to make sure the lane name at least at creation time is unique
+         * @return the new model element that has been created
+         * @generated NOT
+         */
+        @Override
+        protected EObject doDefaultElementCreation() {
+            EReference containment = getContainmentFeature();
+            EClass eClass = getElementType().getEClass();
+
+            if (containment != null) {
+                EObject element = getElementToEdit();
+
+                if (element != null) {
+                    EObject res = EMFCoreUtil.create(element, containment, eClass);
+                    if (res instanceof Lane) {
+                        //lets make sure it has a unique enough label
+                        Lane lane = (Lane)res;
+                        Pool pool = (Pool)element;
+                        String laneName = lane.getName();
+                        if (laneName == null) {
+                            laneName = "lane";
+                        }
+                        String baseName = laneName;
+                        int i = 0;
+                        boolean ok = false;
+                        while (!ok) {
+                            ok = true;
+                            for (Lane p : pool.getLanes()) {
+                                if (p != lane) {
+                                    if (laneName.equals(p.getName())) {
+                                        ok = false;
+                                        laneName = baseName + i;
+                                        i++;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                        lane.setName(laneName);
+                    }
+                    return res;
+                }
+            }
+            
+            return null;
         }
     }
 

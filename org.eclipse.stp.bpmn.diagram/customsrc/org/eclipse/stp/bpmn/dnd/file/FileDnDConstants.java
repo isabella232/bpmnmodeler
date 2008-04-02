@@ -13,7 +13,7 @@ package org.eclipse.stp.bpmn.dnd.file;
 /**
  * Constants used to retrieve the annotation attached to the shape
  * and the path of the afile stored in the annotation.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public interface FileDnDConstants {

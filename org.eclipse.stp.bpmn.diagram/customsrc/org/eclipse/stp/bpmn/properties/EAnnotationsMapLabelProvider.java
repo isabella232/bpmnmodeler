@@ -19,7 +19,7 @@ import org.eclipse.swt.graphics.Image;
  * Label provider in charge of rendering the keys and values of 
  * the annotations attached to the object.
  * Currently based on CommonLabelProvider.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class EAnnotationsMapLabelProvider 
@@ -56,8 +56,8 @@ public class EAnnotationsMapLabelProvider
 					return ea.getSource() + ":" +  //$NON-NLS-1$
 						((Object[]) element)[columnIndex+1];
 					case 1 :
-					return ((EAnnotation) ((Object[]) element)[columnIndex-1]).
-					getDetails().get(((Object[]) element)[columnIndex]).toString();
+					return String.valueOf(((EAnnotation) ((Object[]) element)[columnIndex-1]).
+					        getDetails().get(((Object[]) element)[columnIndex]));
 					default :
 					return super.getText(obj);
 				}

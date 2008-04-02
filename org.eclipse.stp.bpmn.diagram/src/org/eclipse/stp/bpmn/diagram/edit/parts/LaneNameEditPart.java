@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -37,7 +36,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
@@ -52,6 +50,8 @@ import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.figures.VerticalLabel;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.VerticalLabelNonResizableEditPolicy;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
@@ -137,24 +137,24 @@ public class LaneNameEditPart extends CompartmentEditPart implements
     }
 
     /**
-     * @generated
+     * @generated NOT wrapping label
      */
     protected String getLabelTextHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getText();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getText();
         } else {
-            return ((Label) figure).getText();
+            return ((WrapLabel) figure).getText();
         }
     }
 
     /**
-     * @generated
+     * @generated NOT wrapping label
      */
     protected void setLabelTextHelper(IFigure figure, String text) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setText(text);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setText(text);
         } else {
-            ((Label) figure).setText(text);
+            ((WrapLabel) figure).setText(text);
         }
     }
 
@@ -162,10 +162,10 @@ public class LaneNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected Image getLabelIconHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getIcon();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getIcon();
         } else {
-            return ((Label) figure).getIcon();
+            return ((WrapLabel) figure).getIcon();
         }
     }
 
@@ -173,10 +173,10 @@ public class LaneNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected void setLabelIconHelper(IFigure figure, Image icon) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setIcon(icon);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setIcon(icon);
         } else {
-            ((Label) figure).setIcon(icon);
+            ((WrapLabel) figure).setIcon(icon);
         }
     }
 

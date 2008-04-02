@@ -7,7 +7,7 @@
  * program(s) have been supplied.
  *
  * Dates       		 Author              Changes
- * Mar 20, 2007      Antoine Toulmé   Creation
+ * Mar 20, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.validation.specification;
 
@@ -20,7 +20,7 @@ import org.eclipse.stp.bpmn.ActivityType;
 /**
  * This constraint is enforcing the rule of forbidding the messaging edges
  * on gateways.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class MessagesOnGatewaysConstraint extends AbstractModelConstraint {

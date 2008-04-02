@@ -17,7 +17,7 @@ import org.eclipse.emf.validation.model.IClientSelector;
  * This class is used to filter objects that should trigger a constraint.
  * For now the class returns true for any object.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ValidationDelegateClientSelector implements IClientSelector {

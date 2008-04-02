@@ -15,19 +15,17 @@
  **/
 package org.eclipse.stp.bpmn.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart.ActivityFigure;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * Have a fixed height, the 
@@ -63,13 +61,21 @@ public class SubProcessBorderFigure extends RectangleFigure {
 
     @Override
     public Dimension getMinimumSize(int wHint, int hHint) {
-        return new Dimension(super.getMinimumSize(wHint, hHint).width,
+        int width = super.getMinimumSize(wHint, hHint).width;
+        if (!hasChildren()) {
+            width = 0;
+        }
+        return new Dimension(width,
                 getBorderHeight());
     }
 
     @Override
     public void paintFigure(Graphics graphics) {
         //nothing: transparent
+//graphics.drawRectangle(getBounds());
+//graphics.setAlpha(120);
+//graphics.setBackgroundColor(ColorConstants.red);
+//graphics.fillRectangle(getBounds());
     }
     
     public boolean hasChildren() {
@@ -97,9 +103,9 @@ public class SubProcessBorderFigure extends RectangleFigure {
                 nameHeight = Math.max(nameHeight, fig.getBounds().height);
             }
         }
-        if (fig instanceof WrapLabel) {
-            if (!(((WrapLabel) fig).getText() == null || 
-                    ("".equals(((WrapLabel) fig).getText().trim())))) {
+        if (fig instanceof WrappingLabel) {
+            if (!(((WrappingLabel) fig).getText() == null || 
+                    ("".equals(((WrappingLabel) fig).getText().trim())))) {
                 nameHeight = Math.max(nameHeight, fig.getBounds().height);
             }
         }

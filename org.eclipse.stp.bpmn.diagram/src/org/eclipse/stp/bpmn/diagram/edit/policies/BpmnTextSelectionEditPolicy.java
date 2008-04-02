@@ -19,7 +19,7 @@ import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.editpolicies.SelectionEditPolicy;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * @generated
@@ -40,9 +40,9 @@ public class BpmnTextSelectionEditPolicy extends SelectionEditPolicy {
      * @generated
      */
     protected void showPrimarySelection() {
-        if (getHostFigure() instanceof WrapLabel) {
-            ((WrapLabel) getHostFigure()).setSelected(true);
-            ((WrapLabel) getHostFigure()).setFocus(true);
+        if (getHostFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getHostFigure()).setSelected(true);
+            ((WrappingLabel) getHostFigure()).setFocus(true);
         } else {
             showSelection();
             showFocus();
@@ -53,9 +53,9 @@ public class BpmnTextSelectionEditPolicy extends SelectionEditPolicy {
      * @generated
      */
     protected void showSelection() {
-        if (getHostFigure() instanceof WrapLabel) {
-            ((WrapLabel) getHostFigure()).setSelected(true);
-            ((WrapLabel) getHostFigure()).setFocus(false);
+        if (getHostFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getHostFigure()).setSelected(true);
+            ((WrappingLabel) getHostFigure()).setFocus(false);
         } else {
             hideSelection();
             addFeedback(selectionFeedbackFigure = createSelectionFeedbackFigure());
@@ -68,9 +68,9 @@ public class BpmnTextSelectionEditPolicy extends SelectionEditPolicy {
      * @generated
      */
     protected void hideSelection() {
-        if (getHostFigure() instanceof WrapLabel) {
-            ((WrapLabel) getHostFigure()).setSelected(false);
-            ((WrapLabel) getHostFigure()).setFocus(false);
+        if (getHostFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getHostFigure()).setSelected(false);
+            ((WrappingLabel) getHostFigure()).setFocus(false);
         } else {
             if (selectionFeedbackFigure != null) {
                 removeFeedback(selectionFeedbackFigure);
@@ -84,8 +84,8 @@ public class BpmnTextSelectionEditPolicy extends SelectionEditPolicy {
      * @generated
      */
     protected void showFocus() {
-        if (getHostFigure() instanceof WrapLabel) {
-            ((WrapLabel) getHostFigure()).setFocus(true);
+        if (getHostFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getHostFigure()).setFocus(true);
         } else {
             hideFocus();
             addFeedback(focusFeedbackFigure = createFocusFeedbackFigure());
@@ -97,8 +97,8 @@ public class BpmnTextSelectionEditPolicy extends SelectionEditPolicy {
      * @generated
      */
     protected void hideFocus() {
-        if (getHostFigure() instanceof WrapLabel) {
-            ((WrapLabel) getHostFigure()).setFocus(false);
+        if (getHostFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getHostFigure()).setFocus(false);
         } else {
             if (focusFeedbackFigure != null) {
                 removeFeedback(focusFeedbackFigure);

@@ -24,8 +24,9 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.TextFlow;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
@@ -46,6 +47,48 @@ public class ActivityPainter {
         return BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().getBoolean(
                 BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
     }
+    
+    private static int sequenceEdgeTransparency = BpmnDiagramEditorPlugin.getInstance().getPreferenceStore()
+        .getInt(BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_ALPHA);
+    private static int messagingEdgeTransparency = BpmnDiagramEditorPlugin.getInstance().getPreferenceStore()
+        .getInt(BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_ALPHA);
+    
+    
+    
+    static {
+        //listens the preferences and update the cached value of the transparency
+        //for the 2 types of edge and message connections.
+        BpmnDiagramEditorPlugin.getInstance().getPreferenceStore()
+            .addPropertyChangeListener(new IPropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent event) {
+                    if (event.getProperty().equals(
+                            BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_ALPHA)) {
+                        ActivityPainter.sequenceEdgeTransparency = BpmnDiagramEditorPlugin
+                            .getInstance().getPreferenceStore()
+                            .getInt(BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_ALPHA);
+                    } else if (event.getProperty().equals(
+                            BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_ALPHA)) {
+                        ActivityPainter.messagingEdgeTransparency = BpmnDiagramEditorPlugin
+                            .getInstance().getPreferenceStore()
+                            .getInt(BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_ALPHA);
+                    }
+                }
+            });
+    }
+    
+    /**
+     * @return The transparency to apply for the sequence edge connection
+     */
+    public static int getSequenceEdgeTransparency() {
+        return sequenceEdgeTransparency;
+    }
+    /**
+     * @return The transparency to apply for the messaging edge connection
+     */
+    public static int getMessagingEdgeTransparency() {
+        return messagingEdgeTransparency;
+    }
+    
     /**
      * Paints the specified activity figure.
      * 
@@ -480,6 +523,7 @@ public class ActivityPainter {
         if (!isCatching && isBPMN11On()) {
             graphics.fillRectangle(innerRect);
             graphics.setForegroundColor(ColorConstants.white);
+            graphics.setLineWidth((int) (graphics.getLineWidth()));
         } else {
             graphics.drawRectangle(innerRect);
         }
@@ -487,6 +531,7 @@ public class ActivityPainter {
         // ok. now just need to compute 2 point around the center:
         // basically it is the center -1 on the y and + 1 on the x
         // then -1 and +1
+        
         graphics.drawPolyline(new int[] { innerRect.getTopLeft().x,
                 innerRect.getTopLeft().y, innerRect.getCenter().x, innerRect.getCenter().y,
                 innerRect.getTopRight().x, innerRect.getTopRight().y });

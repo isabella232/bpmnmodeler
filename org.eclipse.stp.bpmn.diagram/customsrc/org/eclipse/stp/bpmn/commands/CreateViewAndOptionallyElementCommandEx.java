@@ -34,7 +34,7 @@ import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
  * added the possibility to offset the creation of the shape
  * by the half of their default size either on x, y or both.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class CreateViewAndOptionallyElementCommandEx extends

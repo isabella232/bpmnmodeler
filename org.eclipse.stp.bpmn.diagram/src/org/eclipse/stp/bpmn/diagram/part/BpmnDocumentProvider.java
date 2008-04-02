@@ -143,29 +143,30 @@ public class BpmnDocumentProvider extends FileDiagramDocumentProvider {
     }
 
     /**
-     * @generated
+     * CustomModificationListener listen to changes in the semantic model
+     * and marks the editor dirty accordingly.
+     * As most changes are handled graphically, the model only listens
+     * to SET operations that could be operated from the properties  view.
+     * However, we reimplement some actions, like Dnd operations, that 
+     * force us to listen to NOT_TOUCH operations.
      */
     private class CustomModificationListener extends
             FileDiagramModificationListener {
 
-        /**
-         * @generated
-         */
+        
         private DemultiplexingListener myListener = null;
 
-        /**
-         * @generated
-         */
+       
         public CustomModificationListener(
                 BpmnDocumentProvider documentProviderParameter,
                 DiagramDocument documentParameter,
                 IFileEditorInput inputParameter) {
             super(documentProviderParameter, documentParameter, inputParameter);
             final DiagramDocument document = documentParameter;
-            NotificationFilter diagramResourceModifiedFilter = NotificationFilter
-                    .createEventTypeFilter(Notification.SET | Notification.ADD);
+            
+            // CHANGE : Listen to NOT_TOUCH events.
             myListener = new DemultiplexingListener(
-                    diagramResourceModifiedFilter) {
+                    NotificationFilter.NOT_TOUCH) {
                 protected void handleNotification(
                         TransactionalEditingDomain domain,
                         Notification notification) {
@@ -181,18 +182,12 @@ public class BpmnDocumentProvider extends FileDiagramDocumentProvider {
                 }
             };
         }
-
-        /**
-         * @generated
-         */
+        
         public void startListening() {
             super.startListening();
             getEditingDomain().addResourceSetListener(myListener);
         }
-
-        /**
-         * @generated
-         */
+        
         public void stopListening() {
             getEditingDomain().removeResourceSetListener(myListener);
             super.stopListening();

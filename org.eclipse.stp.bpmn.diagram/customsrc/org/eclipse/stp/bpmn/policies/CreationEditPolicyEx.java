@@ -33,29 +33,4 @@ import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
  */
 public class CreationEditPolicyEx extends CreationEditPolicy {
 
-	@Override
-	protected Command getCreateElementAndViewCommand(CreateViewAndElementRequest request) {
-		Point loc = request.getLocation().getCopy();
-    	((GraphicalEditPart) getHost()).getFigure().translateToAbsolute(loc);
-    	((GraphicalEditPart) getHost()).getFigure().translateToRelative(loc);
-    	Rectangle rect = ((GraphicalEditPart) getHost()).getFigure().getBounds().getCopy();
-    	((GraphicalEditPart) getHost()).getFigure().translateToAbsolute(rect);
-    	loc.x = loc.x - rect.x;
-    	loc.y = loc.y - rect.y;
-		IElementType type = (IElementType) request.getViewAndElementDescriptor().
-			getElementAdapter().getAdapter(IElementType.class);
-		Dimension dim = BpmnShapesDefaultSizes.getDefaultSize(type).getCopy();
-		Insets insets = PoolPoolCompartmentEditPart.INSETS;
-		if (getHost() instanceof SubProcessSubProcessBodyCompartmentEditPart) {
-			insets = SubProcessEditPart.INSETS;
-		}
-		int y = loc.y + dim.height + insets.bottom - rect.height;
-		int x = loc.x + dim.width + insets.right - rect.width;
-		x = Math.max(x, 0);
-		y = Math.max(y, 0);
-		
-		request.getLocation().x -= x;
-		request.getLocation().y -= y;
-		return super.getCreateElementAndViewCommand(request);
-	}
 }

@@ -23,7 +23,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
  * 
  * Note that the images that are given by this biais will not be disposed.
  * It is the reponsability of the extension points coders to dispose the images.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public interface IEAnnotationDecorator {

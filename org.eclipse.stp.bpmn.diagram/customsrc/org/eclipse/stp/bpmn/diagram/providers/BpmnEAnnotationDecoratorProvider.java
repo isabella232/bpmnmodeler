@@ -56,7 +56,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Decoration in charge of showing icons and tooltips on views 
  * that are associated with modele elements that contain annotations.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class BpmnEAnnotationDecoratorProvider extends AbstractProvider 
@@ -173,7 +173,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 	/**
 	 * Handles the decorator, attached to an edit part.
 	 * Called by the decoration edit policy.
-	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
 	public class EAnnotationDecorator implements IDecorator {
@@ -422,7 +422,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 	
 	/**
 	 * Locator that sticks to the border it is attached to.
-	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
 	private class StickyToBorderLocator implements Locator {
@@ -558,7 +558,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 
 				} else if (direction == PositionConstants.SOUTH_EAST) {
 
-					Dimension shift = new Dimension(offset + 2, 2);
+					Dimension shift = new Dimension(-(width + offset), -height);
 					target.setLocation(
 						bounds.getBottomRight().getTranslated(shift));
 

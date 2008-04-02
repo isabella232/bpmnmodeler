@@ -7,7 +7,7 @@
  * program(s) have been supplied.
  *
  * Dates       		 Author              Changes
- * Feb 20, 2007      Antoine Toulmé   Creation
+ * Feb 20, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.actions;
 
@@ -24,7 +24,7 @@ import org.eclipse.ui.PlatformUI;
 
 /**
  * Hides the decorations by setting a value in the preference store.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class FilterDecorationsAction extends AbstractActionHandler {

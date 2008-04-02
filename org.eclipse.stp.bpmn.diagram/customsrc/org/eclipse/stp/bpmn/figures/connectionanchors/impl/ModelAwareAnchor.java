@@ -190,8 +190,8 @@ public class ModelAwareAnchor extends SlidableAnchor implements IModelAwareAncho
      * @return  Owner of this anchor
      * @see #setOwner(IFigure)
      */
-    public IFigure getOwner() {
-        return super.getOwner();
+    public INodeFigureAnchorTerminalUpdatable getCastedOwner() {
+        return (INodeFigureAnchorTerminalUpdatable) super.getOwner();
     }
     
     /**

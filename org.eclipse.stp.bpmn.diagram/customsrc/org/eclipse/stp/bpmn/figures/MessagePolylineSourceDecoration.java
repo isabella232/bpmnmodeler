@@ -12,10 +12,12 @@
 package org.eclipse.stp.bpmn.figures;
 
 import org.eclipse.draw2d.Ellipse;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 
 /**
  * Code taken from the GMF-BPMN tutorial.
@@ -60,5 +62,24 @@ public class MessagePolylineSourceDecoration extends
         //ignore, does not make sense to rotate circle
     }
 
+//    @Override
+//    public void paintFigure(Graphics graphics) {
+//        graphics.setAlpha(ActivityPainter.getMessagingEdgeTransparency());
+//        super.paintFigure(graphics);
+//    }
+    
+    /**
+     * Overrides to set the alpha. only for the shape outline. Not for the fill.
+     * @param graphics the graphics object
+     */
+    @Override
+    protected void outlineShape(Graphics graphics) {
+        int alpha = graphics.getAlpha();
+        graphics.setAlpha(ActivityPainter.getMessagingEdgeTransparency());
+        super.outlineShape(graphics);
+        graphics.setAlpha(alpha);
+    }
+
+    
 }
 

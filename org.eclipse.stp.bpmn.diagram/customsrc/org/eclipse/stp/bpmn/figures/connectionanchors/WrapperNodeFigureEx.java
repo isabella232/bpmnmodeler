@@ -22,6 +22,7 @@ import java.util.Set;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
 import org.eclipse.gmf.runtime.gef.ui.figures.WrapperNodeFigure;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor.INodeFigureAnchorTerminalUpdatable;
@@ -147,5 +148,14 @@ implements INodeFigureAnchorTerminalUpdatable {
     public IConnectionAnchorFactory getConnectionAnchorFactory() {
         return _connectionAnchorFactory;
     }
+    
+    /**
+     * @param result The object on which the bounds will be set.
+     * By default it is the bounds of the figure itself.
+     */
+    public void computeAbsoluteHandleBounds(Rectangle result) {
+        getSubfigure().computeAbsoluteHandleBounds(result);
+    }
+
 
 }

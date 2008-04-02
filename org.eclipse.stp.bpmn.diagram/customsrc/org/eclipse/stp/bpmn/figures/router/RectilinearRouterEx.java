@@ -37,6 +37,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.figures.SubProcessFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
+import org.eclipse.stp.bpmn.figures.activities.ActivityNodeFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 
@@ -556,7 +557,6 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
             Point oldPointB, PointList newPoints, 
             boolean isFirst, boolean isLast,
             int minDistFromSide, Connection conn) {
-        
         //comments apply for NORMALIZE_ON_HORIZONTAL_CENTER
         Point aPlus = null;//the one on the right of the first bendpoint.
         Point bMinus = null;//the one on the left of the second bendpoint.
@@ -597,6 +597,7 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                         bMinus = new Point(oldPointB.x - minDistFromSide, oldPointB.y);
                     }
                 } else {
+                    // general case, take the middle
                     aPlus = new Point(halfWayX, oldPointA.y);
                     bMinus = new Point(halfWayX, oldPointB.y);
                 }
@@ -618,8 +619,9 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 return;
 //                break;//it is perfect don't touch it.
             }
-            if (isFirst || isLast || (!areAlmostEqual(oldPointA.y, oldPointB.y) &&
-                    !areAlmostEqual(oldPointA.x, oldPointB.x))) {
+            
+            if (isFirst || isLast || ((!areAlmostEqual(oldPointA.y, oldPointB.y) &&
+                    !areAlmostEqual(oldPointA.x, oldPointB.x)))) {
                 int halfWayY =  oldPointA.y/2 + oldPointB.y/2;
                 int i = -1;
                 if (conn.getSourceAnchor() instanceof IModelAwareAnchor) {
@@ -691,6 +693,21 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
         
         Point ptOrig = new Point(newLine.getFirstPoint());
         Point ptTerm = new Point(newLine.getLastPoint());
+        
+        
+        if (normalizeBehavior == NORMALIZE_ON_VERTICAL_CENTER 
+                && areGrosslyEqual(ptOrig.x, ptTerm.x)) {
+            //for some reason, being perfectly aligned and vertical has
+            //issue when the arrow is pointing up.
+            //this seems to be fixing the issue.
+            //make it perfectly vertical:
+            newLine.removeAllPoints();
+            int midX = (ptOrig.x+ptTerm.x)/2;
+
+            newLine.addPoint(new Point(midX, ptOrig.y));
+            newLine.addPoint(new Point(midX, ptTerm.y));
+            return newLine;
+        }
         newLine.removeAllPoints();
         newLine.addPoint(ptOrig);
         IMapMode mm = MapModeUtil.getMapMode(conn);
@@ -702,17 +719,27 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 newLine.addPoint(new Point(ptOrig.x, ptTerm.y));
             }
         } else if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
+            if (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER && 
+                    ptOrig.x + extra > ptTerm.x) {
+                // if the origin is after the term, then the algorithm will route around shapes.
+                // so we just exit.
+                newLine.addPoint(ptTerm);
+                return newLine;
+            }
             // there is going to be a middle bend point.
             // let's find in the list of points the two points that are part of that middle bend point
             // if it has been computed already
             Point ptAlignedWithOrig = null;
             PointList oldLine = routeFromConstraint(conn);
-            for (int i = 1 ; i < oldLine.size() -1 ; i++) {
+            // remove the orig and term points.
+            oldLine.removePoint(0);
+            oldLine.removePoint(oldLine.size() -1);
+            for (int i = 0 ; i < oldLine.size() ; i++) {
                 Point bp = oldLine.getPoint(i);
                 // sequence edge cases
                 if (bp.y == ptOrig.y && 
                         normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER &&
-                        ptOrig.x + extra < ptTerm.x) {
+                        bp.x < ptTerm.x && bp.x > ptOrig.x) {
                     ptAlignedWithOrig = bp;
                     break;
                 } else if (bp.x == ptOrig.x  && normalizeBehavior == NORMALIZE_ON_VERTICAL_CENTER) {
@@ -720,45 +747,50 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                     break;
                 }
             }
-            if (ptAlignedWithOrig != null) {
+            // found no match, let's get the standard one.
+            if (ptAlignedWithOrig == null) {
                 if (normalizeBehavior == NORMALIZE_ON_VERTICAL_CENTER) {
-                    if (ptAlignedWithOrig.y == ptOrig.y) {
-                        ptAlignedWithOrig.y += extra;
-                    }
-                    // reset
-                    if ((ptOrig.y < ptTerm.y && ptAlignedWithOrig.y > ptTerm.y) || 
-                            (ptOrig.y > ptTerm.y && ptAlignedWithOrig.y < ptTerm.y)) {// if in default location
-                        ptAlignedWithOrig.y = (ptOrig.y + ptTerm.y)/2;
-                        int i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
-                        int otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
-                         i = ptOrig.y < ptTerm.y ? i : otheri;
-                        boolean AisAboveB = ptOrig.y < ptTerm.y && ptOrig.x > ptTerm.x;
-                        if (i != -1) {
-                            if (AisAboveB) {
-                                ptAlignedWithOrig.y += i * mm.DPtoLP(10);
-                            } else {
-                                ptAlignedWithOrig.y -= i * mm.DPtoLP(10);
-                            }
+                    ptAlignedWithOrig = new Point(ptOrig.x, (ptOrig.y + ptTerm.y)/2);
+                } else if (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER) {
+                        ptAlignedWithOrig = new Point((ptOrig.x + ptTerm.x)/2, ptOrig.y);
+                }
+            }
+            if (normalizeBehavior == NORMALIZE_ON_VERTICAL_CENTER) {
+                if (ptAlignedWithOrig.y == ptOrig.y) {
+                    ptAlignedWithOrig.y += extra;
+                }
+                // reset: if the middle bend point is not between the two ends
+                // we reset its y coordinate to the middle.
+                // we try to avoid having all the messaging edges on the same y though,
+                // so we add a little extra depending on the edge order.
+                Point belowPoint = ptTerm.y > ptOrig.y ? ptTerm : ptOrig;
+                Point abovePoint = belowPoint == ptOrig ? ptTerm : ptOrig;
+                if (ptAlignedWithOrig.y > belowPoint.y || ptAlignedWithOrig.y < abovePoint.y) {
+                    ptAlignedWithOrig.y = (ptOrig.y + ptTerm.y)/2;
+                    int i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
+                    int otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
+                    i = ptOrig.y < ptTerm.y ? i : otheri;
+                    boolean AisAboveB = ptOrig.y < ptTerm.y && ptOrig.x > ptTerm.x;
+                    if (i != -1) {
+                        if (AisAboveB) {
+                            ptAlignedWithOrig.y += i * mm.DPtoLP(10);
+                        } else {
+                            ptAlignedWithOrig.y -= i * mm.DPtoLP(10);
                         }
                     }
-                    
-                    newLine.addPoint(ptAlignedWithOrig);
-                    newLine.addPoint(new Point(ptTerm.x, ptAlignedWithOrig.y));
-                } else {
-                    if (ptAlignedWithOrig.x == ptOrig.x) {
-                        ptAlignedWithOrig.x += extra;
-                    }
-                    // reset
-                    if (ptAlignedWithOrig.x > ptTerm.x) {
-                        ptAlignedWithOrig.x = (ptOrig.x + ptTerm.x)/2;
-                    }
-                    newLine.addPoint(ptAlignedWithOrig);
-                    newLine.addPoint(new Point(ptAlignedWithOrig.x, ptTerm.y));
                 }
-                
-            } 
+
+                newLine.addPoint(ptAlignedWithOrig);
+                newLine.addPoint(new Point(ptTerm.x, ptAlignedWithOrig.y));
+            } else {
+                if (ptAlignedWithOrig.x == ptOrig.x) {
+                    ptAlignedWithOrig.x += extra;
+                }
+                newLine.addPoint(ptAlignedWithOrig.x, ptOrig.y);
+                newLine.addPoint(ptAlignedWithOrig.x, ptTerm.y);
+            }
         }
-        
+
         newLine.addPoint(ptTerm);
         return newLine;
     }
@@ -890,7 +922,9 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                     //anchored on.
                     Point srcLeft = src.getLeft();
                     conn.getSourceAnchor().getOwner().translateToRelative(srcLeft);
-                    farLeft = Math.min(farLeft, srcLeft.x + extra);
+                    if (ptTerm.y < ptOrig.y)  {
+                    	farLeft = Math.min(farLeft, srcLeft.x + extra);
+                    }
                 }
                 Point origPlus = new Point(farRightX, ptOrig.y);
                 Point origAbove = new Point(origPlus.x, aboveY);
@@ -961,10 +995,14 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
      */
     protected Rectangle getOwnerBounds(ConnectionAnchor anchor) {
     	for (Object child : anchor.getOwner().getChildren()) {
-    		if (child instanceof ActivityDiamondFigure || 
-    				child instanceof ActivityOvalFigure) {
-    			return ((IFigure) child).getBounds().getCopy();
-    		}
+    	    if (child instanceof ActivityNodeFigure) {
+    	        for (Object childOfChild : ((ActivityNodeFigure) child).getChildren()) {
+    	            if (childOfChild instanceof ActivityDiamondFigure || 
+    	                    childOfChild instanceof ActivityOvalFigure) {
+    	                return ((IFigure) childOfChild).getBounds().getCopy();
+    	            }
+    	        }
+    	    }
     	}
     	return anchor.getOwner().getBounds().getCopy();
     }

@@ -49,7 +49,7 @@ import org.eclipse.ui.dialogs.WizardExportResourcesPage;
 /**
  * The page used to hold the destination fields. Does the essential of the work.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ExportImagePage extends WizardExportResourcesPage implements IExportImagePage {

@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.transaction.util.TransactionUtil;
@@ -35,6 +36,7 @@ import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
@@ -55,6 +57,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
@@ -306,8 +309,8 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
             String imageName = ISharedImages.IMG_OBJS_ERROR_TSK;
             switch (severity) {
             case IMarker.SEVERITY_ERROR:
-                imageName = ISharedImages.IMG_OBJS_ERROR_TSK;
-                break;
+               return BpmnDiagramEditorPlugin.getInstance().
+                   getBundledImage("icons/obj16/error.png");
             case IMarker.SEVERITY_WARNING:
                 imageName = ISharedImages.IMG_OBJS_WARN_TSK;
                 break;
@@ -820,11 +823,31 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                                 ((IGraphicalEditPart) editPart).getFigure())
                                 .DPtoLP(margin);
                     }
-                    setDecoration(getDecoratorTarget()
-                            .addShapeDecoration(img,
-                                   Direction.NORTH_WEST, margin, true));
+                    
+                    if (editPart instanceof TextAnnotationEditPart) {
+                        ((TextAnnotationEditPart) editPart).setLabelImage(img, PositionConstants.NORTH_WEST, toolTip);
+                    } else if (editPart instanceof TextAnnotation2EditPart) {
+                        ((TextAnnotation2EditPart) editPart).setLabelImage(img, PositionConstants.NORTH_WEST, toolTip);
+                    } else {
+                        // default case, should not happen since we only do task markers on text annotations right now.
+                        setDecoration(getDecoratorTarget()
+                                .addShapeDecoration(img,
+                                        Direction.NORTH_WEST, margin, true));
+                    }
+                    // this only works if the label edit part is already initialized.
+//                    for (Object ep : editPart.getChildren()) {
+//                        if (ep instanceof ITextAwareEditPart) {
+//                            ((WrappingLabel) ((ITextAwareEditPart) ep).getFigure()).setIcon(img);
+//                            ((WrappingLabel) ((ITextAwareEditPart) ep).getFigure()).setIconAlignment(PositionConstants.NORTH_WEST);
+//                            ((WrappingLabel) ((ITextAwareEditPart) ep).getFigure()).setToolTip(toolTip);
+//                            break;
+//                        }
+//                    }
+                    
                 }
-                getDecoration().setToolTip(toolTip);
+                if (getDecoration() != null) {
+                    getDecoration().setToolTip(toolTip);
+                }
             }
             
         }

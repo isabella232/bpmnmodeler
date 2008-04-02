@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Jan 24, 2007      Antoine Toulm�   Creation
+ * Jan 24, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.generation.impl;
 
@@ -76,7 +76,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
  * location and/or a size.
  * Then it is able to generate all the Views at once, 
  * and returning them to the user for further use.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class BPMNVisual2ProcessGenerator extends BPMNProcessGenerator {

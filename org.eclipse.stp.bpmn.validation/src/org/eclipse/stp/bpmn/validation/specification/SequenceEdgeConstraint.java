@@ -23,7 +23,7 @@ import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 /**
  * Sequence edges constraints computed from the BPMN specification.
  * See BPMN 1.0 paragraph 8.4.1
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class SequenceEdgeConstraint extends AbstractModelConstraint {

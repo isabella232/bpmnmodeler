@@ -10,12 +10,11 @@
  *******************************************************************************/
 package org.eclipse.stp.bpmn.figures;
 
-import java.lang.reflect.Field;
-
-import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * Wrap label that maintains its tooltip.
@@ -23,7 +22,7 @@ import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
  * @author hmalphettes
  * @author Intalio Inc.
  */
-public class WrapLabelWithToolTip extends WrapLabel {
+public class WrapLabelWithToolTip extends WrappingLabel {
 
     /**
      */
@@ -36,33 +35,17 @@ public class WrapLabelWithToolTip extends WrapLabel {
         
     }
     
-    private static Field textField;
-    private static void init() {
-        if (textField != null) {
-            return;
-        }
-        try {
-            textField = WrapLabel.class.getDeclaredField("text"); //$NON-NLS-1$
-            textField.setAccessible(true);
-        } catch (SecurityException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
-    }
-
-    
     private final IToolTipProvider _toolTipProvider;
     private String _lastToolTip;
     private boolean trunc = false;
         
-    /**
-     * @param toolTipProvider
-     */
-    public WrapLabelWithToolTip(IToolTipProvider toolTipProvider) {
-        init();
-        _toolTipProvider = toolTipProvider;
-    }
+//    /**
+//     * @param toolTipProvider
+//     */
+//    public WrapLabelWithToolTip(IToolTipProvider toolTipProvider) {
+//        _toolTipProvider = toolTipProvider;
+//        super.setTextWrap(true);
+//    }
     
     /**
      * Makes sure we don't call the methods of the super class to setup the figure.
@@ -72,141 +55,31 @@ public class WrapLabelWithToolTip extends WrapLabel {
      * @param toolTipProvider
      */
     public WrapLabelWithToolTip(IToolTipProvider toolTipProvider,
-            Dimension prefSize, Dimension minSize, boolean isWrap, int textAlignment) {
-        this(toolTipProvider);
+            Dimension prefSize, Dimension minSize, boolean isWrap,
+            int labelAlignmentWithinFigure,//MIDDLE|LEFT xor TOP|CENTER
+            int textJustification) {//LEFT xor CENTER
+        super();
+        _toolTipProvider = toolTipProvider;
         super.prefSize = prefSize;
         super.minSize = minSize;
         //don't use the method of the super.
         //otherwise unvalidate is called and the font is expected to be set.
         //NPEs would be next.
-        setFlag(/*FLAG_WRAP*/MAX_FLAG << 5, true);
-        setFlag(/*FLAG_TEXT_ALIGN*/ MAX_FLAG << 6, true);
+        setAlignment(labelAlignmentWithinFigure);//labelAlignmentWithinFigure);//alignment of the text within the figure
+//        setTextAlignment(PositionConstants.TOP);//textAlignment);//only relevant to align compare to the icon of the label.
+//        setTextPlacement(PositionConstants.NORTH);//only useful to place the text compared to the icon.
+        setTextJustification(textJustification);
+        super.setTextWrap(isWrap);
     }
     
-    
-    /**
-     * Sometimes this method is called before the font is set.
-     * and that makes the GMF code throw NPEs.
-     */
     @Override
-    public void setText(String s) {
-        if (getFont() == null) {
-            try {
-                textField.set(this, s);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        } else {
-            super.setText(s);
+    public String getTruncationString() {
+        String sub = super.getTruncationString();
+        if (_toolTipProvider != null) {
+            updateToolTip(sub);
         }
+        return sub;
     }
-    /**
-     * Sometimes this method is called before the font is set.
-     * and that makes the GMF code throw NPEs.
-     */
-    @Override
-    public void setTextWrap(boolean b) {
-        if (getFont() != null) {
-            super.setTextWrap(b);
-        } else {
-            setFlag(/*FLAG_WRAP*/MAX_FLAG << 5, b);
-        }
-    }
-    /**
-     * Sometimes this method is called before the font is set.
-     * and that makes the GMF code throw NPEs.
-     */
-    @Override
-    public void setTextAlignment(int align) {
-        if (getFont() != null) {
-            super.setTextAlignment(align);
-        } else {
-            setAlignmentFlags(align, /*FLAG_TEXT_ALIGN*/MAX_FLAG << 6);
-        }
-    }
-    
-    /**
-     * Copied from the super where it is private
-     */
-    private void setAlignmentFlags(int align, int flagOffset) {
-        flags &= ~(0x7 * flagOffset);
-        switch (align) {
-            case CENTER:
-                flags |= 0x1 * flagOffset;
-                break;
-            case TOP:
-                flags |= 0x2 * flagOffset;
-                break;
-            case LEFT:
-                flags |= 0x3 * flagOffset;
-                break;
-            case RIGHT:
-                flags |= 0x4 * flagOffset;
-                break;
-            case BOTTOM:
-                flags |= 0x5 * flagOffset;
-                break;
-        }
-    }
-
-
-    @Override
-    public void setTextPlacement(int where) {
-        if (getFont() != null) {
-            setTextPlacement(where);
-        } else {
-            setPlacementFlags(where, /*FLAG_TEXT_PLACEMENT*/MAX_FLAG << 18);
-        }
-        super.setTextPlacement(where);
-    }
-    /**
-     * Copied from the super where it is private
-     */
-    private void setPlacementFlags(int align, int flagOffset) {
-        flags &= ~(0x7 * flagOffset);
-        switch (align) {
-            case EAST:
-                flags |= 0x1 * flagOffset;
-                break;
-            case WEST:
-                flags |= 0x2 * flagOffset;
-                break;
-            case NORTH:
-                flags |= 0x3 * flagOffset;
-                break;
-            case SOUTH:
-                flags |= 0x4 * flagOffset;
-                break;
-        }
-    }
-
-    @Override
-    public void setTextStrikeThrough(boolean b) {
-        if (getFont() != null) {
-            super.setTextStrikeThrough(b);
-        } else {
-            setFlag(/*FLAG_STRIKEDTHROUGH*/ MAX_FLAG << 4, b);
-        }
-    }
-
-    @Override
-    public void setTextUnderline(boolean b) {
-        if (getFont() != null) {
-            super.setTextUnderline(b);
-        } else {
-            setFlag(/*FLAG_UNDERLINED*/ MAX_FLAG << 3, b);
-        }
-    }
-
-    @Override
-    public void setTextWrapAlignment(int i) {
-        if (getFont() != null) {
-            super.setTextWrapAlignment(i);
-        } else {
-            setAlignmentFlags(i, MAX_FLAG << 9);
-        }
-    }
-
     /**
      * refresh the tooltip if necessary
      */
@@ -226,43 +99,16 @@ public class WrapLabelWithToolTip extends WrapLabel {
             setToolTip(ActivityPainter.createToolTipFigure(_lastToolTip));
         }
     }
-
-    @Override
-    public String getSubStringText() {
-        String sub = super.getSubStringText();
-        if (_toolTipProvider != null) {
-            updateToolTip(sub);
-        }
-        return sub;
-    }
     
-    /**
-     * Invalidating the figure does not mean that its preferred, min and max size
-     * should be reset to null. (!).
-     * Also if the font is not set we know for sure the figure is not ready
-     * and has never been painted yet. so there is nothing to invalidate.
-     * @see IFigure#invalidate()
-     */
-    @Override
-    public void invalidate() {
-        if (getFont() == null) {
-            return;//the figure is not ready.
-        }
-        Dimension theprefSize = getPreferredSize();
-        Dimension theminSize = getMinimumSize();
-        super.invalidate();
-        //now restore them:
-        super.minSize = theminSize;
-        super.prefSize = theprefSize;
-    }
+//    public void paintFigure(Graphics graphics) {
+//        super.paintFigure(graphics);
+//        graphics.drawRectangle(getTextFigure().getBounds());
+//        graphics.setForegroundColor(ColorConstants.blue);
+//        graphics.drawRectangle(getBounds());
+//        System.err.println(getParent() + " " + getParent().getLayoutManager()
+//                + " heightWhole=" + getBounds().height
+//                + " heightTextFlow=" + getTextFigure().getBounds().height);
+//        //graphics.drawRectangle(super.get);
+//    }
 
-    /**
-     * Returns the width of the label when not truncated
-     * @param w
-     * @param h
-     * @return
-     */
-    public int getTextSizeWidth(int w, int h) {
-        return super.getTextSize(w, h).width;
-    }
 }

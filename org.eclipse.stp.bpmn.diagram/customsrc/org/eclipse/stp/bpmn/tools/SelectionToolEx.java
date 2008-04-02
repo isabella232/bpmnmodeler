@@ -11,7 +11,7 @@
 
 /** 
  * Date         	    Author              Changes 
- * 11 ��� 2006   	MPeleshchyshyn  	Created 
+ * 11 &eacute;&eacute;&eacute; 2006   	MPeleshchyshyn  	Created 
  **/
 
 package org.eclipse.stp.bpmn.tools;
@@ -29,6 +29,9 @@ import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.SharedCursors;
+import org.eclipse.gef.Tool;
+import org.eclipse.gef.EditPartViewer.Conditional;
 import org.eclipse.gef.palette.ToolEntry;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.SelectionTool;
@@ -37,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
@@ -48,6 +52,7 @@ import org.eclipse.stp.bpmn.dnd.file.FileDnDConstants;
 import org.eclipse.stp.bpmn.policies.PopupBarEditPolicyEx;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.graphics.Cursor;
 
 /**
  * Extends the default selection tool and overrides it to behave in this manner:
@@ -92,6 +97,9 @@ public class SelectionToolEx extends SelectionTool {
             e.printStackTrace();
         }
     }
+
+
+    private boolean spacePressed;
     //--helper
 //direct edit on double-click
     /**
@@ -108,12 +116,10 @@ public class SelectionToolEx extends SelectionTool {
     	EditPartViewer viewer = getCurrentViewer();
     	if (viewer instanceof GraphicalViewer &&
     			(isInState(STATE_DRAG) || isInState(STATE_INITIAL))) {
-    		EditPart selectedEditPart =
-    			((GraphicalViewer)viewer).getFocusEditPart();
+    		EditPart selectedEditPart = getTargetEditPart();
     		if (getCurrentInput().isShiftKeyDown()) {
     			if (selectedEditPart instanceof IGraphicalEditPart) {
-    				EObject object = ((IGraphicalEditPart) selectedEditPart).
-    					getNotationView().getElement();
+    				EObject object = ((IGraphicalEditPart) selectedEditPart).resolveSemanticElement();
     				if (object instanceof EModelElement) {
     					EAnnotation src = ((EModelElement) object).
     					getEAnnotation(FileDnDConstants.ANNOTATION_SOURCE);
@@ -128,14 +134,32 @@ public class SelectionToolEx extends SelectionTool {
     		} else {
     			if (!(selectedEditPart instanceof ITextAwareEditPart)
     					&& selectedEditPart instanceof IGraphicalEditPart) {
+    			    
     				IGraphicalEditPart nodePart =
     					(IGraphicalEditPart) selectedEditPart;
-    				EditPart primEditPart = nodePart.getPrimaryChildEditPart();
-    				if (primEditPart != null &&
-    						primEditPart instanceof ITextAwareEditPart) {
-    					ITextAwareEditPart textPart =
-    						(ITextAwareEditPart) primEditPart;
-    					selectedEditPart = textPart;
+    				if (nodePart instanceof SubProcessSubProcessBodyCompartmentEditPart) {
+    				    nodePart = (IGraphicalEditPart) nodePart.getParent();
+    				}
+    				ITextAwareEditPart textAwareEditPart = null;
+    				for (Object child : nodePart.getChildren()) {
+    				    if (child instanceof ITextAwareEditPart) {
+    				        textAwareEditPart = (ITextAwareEditPart) child;
+    				        break;
+    				    }
+    				}
+    				
+    				if (textAwareEditPart != null) {
+    				    // doesn't work well: the compartment takes back the selection
+//    					if (nodePart instanceof SubProcessEditPart) {
+//    					    // if the user double-clicks on a subprocess,
+//    					    // the label edit part shows as selected for the user
+//    					    // to move it around.
+//    					    viewer.setSelection(new StructuredSelection(textAwareEditPart));
+//    					    return true;
+//    					} else {
+    					    selectedEditPart = textAwareEditPart;
+//    					}
+    					
 
     					//at this point we could decide to edit only if the label
     					//is in fact null or empty.
@@ -164,7 +188,8 @@ public class SelectionToolEx extends SelectionTool {
 //-- end of the direct-edit requests on double-click.
 
     /**
-     * Shows up the diagram assistant if Ctrl+Space is pressed
+     * Shows up the diagram assistant if Ctrl+Space is pressed.
+     * If space is pressed, delegate calls to the insert-space tool.
      */
     @Override
     protected boolean handleKeyDown(KeyEvent e) {
@@ -221,26 +246,54 @@ public class SelectionToolEx extends SelectionTool {
     		}
     		
     	} else if (e.keyCode == ' ') {
-    	    
-    	    MultipleShapesMoveTool t = new MultipleShapesMoveTool() {
-                @Override
-                protected boolean handleKeyUp(KeyEvent e) {
-                    if (e.keyCode == ' ') {
-                        getDomain().setActiveTool(SelectionToolEx.this);
-                    }
-                    return super.handleKeyUp(e);
-                }
-            };
-            t.setViewer(getCurrentViewer());
-            if (getCurrentInput().isMouseButtonDown(1)) {
-                t.handleButtonDown(1);
-            }
-    	    getDomain().setActiveTool(t);
+    	    spacePressed = true;
+    	    setCursor(SharedCursors.SIZEWE);
     	}
     	return super.handleKeyDown(e);
     }
     
+    @Override
+    protected boolean handleButtonDown(int button) {
+        if (spacePressed && button == 1) {
+            MultipleShapesMoveTool t = new MultipleShapesMoveTool() {
+                
+                private boolean dont = false;
+                @Override
+                public boolean handleButtonDown(int button) {
+                    if (dont) {
+                        spacePressed = false;
+                        setCursor(SelectionToolEx.this.getDefaultCursor());
+                        SelectionToolEx t = SelectionToolEx.this;
+                        t.setViewer(getCurrentViewer());
+                        t.handleButtonDown(1);
+                        getDomain().setActiveTool(t);
+                        t.setTargetEditPart(getTargetEditPart());
+                        deactivate();
+                        return false;
+                    }
+                    dont = true;
+                    return super.handleButtonDown(button);
+                }
+                
+            };
+            t.setViewer(getCurrentViewer());
+            getDomain().setActiveTool(t);
+            t.handleButtonDown(1);
+            return true; 
+        }
+        return super.handleButtonDown(button);
+    }
     
+    
+    
+    @Override
+    protected boolean handleKeyUp(KeyEvent e) {
+        spacePressed = false;
+        if (getDomain().getActiveTool() == this) {
+            setCursor(SelectionToolEx.this.getDefaultCursor());
+        }
+        return super.handleKeyUp(e);
+    }
     /**
      * Do we want to improve the behavior of the cursor so that it changes when above an area that
      * would make the shape below move?
@@ -283,31 +336,33 @@ public class SelectionToolEx extends SelectionTool {
      * otherwise the parent of the group is selected.
      */
     @Override
-    protected boolean updateTargetUnderMouse() {
-        boolean updated = super.updateTargetUnderMouse();
-        
-        if (getTargetEditPart() instanceof GroupEditPart || 
-                getTargetEditPart() instanceof Group2EditPart) {
-            IGraphicalEditPart part = (IGraphicalEditPart) getTargetEditPart();
-            Rectangle rect = part.getFigure().getBounds().getCopy();
-            Point loc = getLocation().getCopy();
-//          part.getFigure().translateToAbsolute(rect);
-            part.getFigure().translateToRelative(loc);
-            boolean onX = Math.abs(loc.x - rect.x) < 5 ||
-                Math.abs(loc.x - (rect.x + rect.width)) < 5;
-            boolean onY = Math.abs(loc.y - rect.y) < 5 ||
-                Math.abs(loc.y - (rect.y + rect.height)) < 5;
-            if (!(onX || onY)) {
-                EditPart res = part.getViewer().findObjectAtExcluding(
-                        getLocation(), Collections.singletonList(part.getFigure()), 
-                        new EditPartViewer.Conditional() {
-                            public boolean evaluate(EditPart editpart) {
-                                return editpart.isSelectable();
-                            }});
-                setTargetEditPart(res);
-                updated = true;
+    protected Conditional getTargetingConditional() {
+        return new EditPartViewer.Conditional() {
+            public boolean evaluate(EditPart editpart) {
+                if (editpart instanceof GroupEditPart || 
+                        editpart instanceof Group2EditPart) {
+                    IGraphicalEditPart part = (IGraphicalEditPart) editpart;
+                    Rectangle rect = part.getFigure().getBounds().getCopy();
+                    Point loc = getLocation().getCopy();
+                    part.getFigure().translateToRelative(loc);
+                    boolean onX = Math.abs(loc.x - rect.x) < 5 ||
+                        Math.abs(loc.x - (rect.x + rect.width)) < 5;
+                    boolean onY = Math.abs(loc.y - rect.y) < 5 ||
+                        Math.abs(loc.y - (rect.y + rect.height)) < 5;
+                    if (!(onX || onY)) {
+                        return false;
+                    }
+                }
+                if (editpart instanceof SubProcessSubProcessBodyCompartmentEditPart) {
+                    // if the MOD1 modifier is pressed (meaning: ctrl on all 
+                    // platforms except Mac OS, which uses Command)
+                    // then the subprocess may be moved around.
+                    // apparently the modifiers are inverted at some point by something,
+                    // so we are looking for the reversed flag.
+                    return !getCurrentInput().isModKeyDown(SWT.MOD1);
+                }
+                return editpart.isSelectable();
             }
-        }   
-        return updated;
+        };
     }
 }

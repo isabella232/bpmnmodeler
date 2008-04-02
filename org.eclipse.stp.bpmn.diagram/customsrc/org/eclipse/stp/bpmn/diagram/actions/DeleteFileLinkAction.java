@@ -7,7 +7,7 @@
  * program(s) have been supplied.
  *
  * Dates       		 Author              Changes
- * Mar 16, 2007      Antoine Toulmé   Creation
+ * Mar 16, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.actions;
 
@@ -30,7 +30,7 @@ import org.eclipse.ui.model.IWorkbenchAdapter;
 
 /**
  * An action that deletes the link to the file associated with the shape
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class DeleteFileLinkAction extends AbstractDeleteAnnotationAction {

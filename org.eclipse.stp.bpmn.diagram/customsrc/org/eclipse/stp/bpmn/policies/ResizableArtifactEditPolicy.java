@@ -7,7 +7,7 @@
  * program(s) have been supplied.
  *
  * Dates       		 Author              Changes
- * Mar 9, 2007      Antoine Toulmé   Creation
+ * Mar 9, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.policies;
 
@@ -20,7 +20,7 @@ import org.eclipse.stp.bpmn.tools.ActivityResizeTracker;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
 
 /**
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ResizableArtifactEditPolicy extends ResizableShapeEditPolicyEx {

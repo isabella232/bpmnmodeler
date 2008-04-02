@@ -42,7 +42,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
@@ -56,6 +55,7 @@ import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnTextSelectionEditPolicy;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
@@ -144,8 +144,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected String getLabelTextHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getText();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getText();
         } else {
             return ((Label) figure).getText();
         }
@@ -155,8 +155,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected void setLabelTextHelper(IFigure figure, String text) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setText(text);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setText(text);
         } else {
             ((Label) figure).setText(text);
         }
@@ -166,8 +166,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected Image getLabelIconHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getIcon();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getIcon();
         } else {
             return ((Label) figure).getIcon();
         }
@@ -177,8 +177,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected void setLabelIconHelper(IFigure figure, Image icon) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setIcon(icon);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setIcon(icon);
         } else {
             ((Label) figure).setIcon(icon);
         }
@@ -187,7 +187,7 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
     /**
      * @generated
      */
-    public void setLabel(WrapLabel figure) {
+    public void setLabel(WrappingLabel figure) {
         unregisterVisuals();
         setFigure(figure);
         defaultText = getLabelTextHelper(figure);
@@ -221,10 +221,10 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
      * @notgenerated
      */
     protected Image getLabelIcon() {
-    	if (getFigure() instanceof WrapLabel) {
-    		return ((WrapLabel) getFigure()).getIcon();
+    	if (getFigure() instanceof WrappingLabel) {
+    		return ((WrappingLabel) getFigure()).getIcon();
     	} else if (getFigure() instanceof Label) {
-    		return ((WrapLabel) getFigure()).getIcon();
+    		return ((WrappingLabel) getFigure()).getIcon();
     	}
         return null;
     }
@@ -391,8 +391,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
      * @generated
      */
     protected void performDirectEdit() {
-        if (getFigure() instanceof WrapLabel) {
-            ((WrapLabel)getFigure()).setTextWrap(true);
+        if (getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel)getFigure()).setTextWrap(true);
         }
         getManager().show();
     }
@@ -482,8 +482,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
     protected void refreshUnderline() {
         FontStyle style = (FontStyle) getFontStyleOwnerView().getStyle(
                 NotationPackage.eINSTANCE.getFontStyle());
-        if (style != null && getFigure() instanceof WrapLabel) {
-            ((WrapLabel) getFigure()).setTextUnderline(style.isUnderline());
+        if (style != null && getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getFigure()).setTextUnderline(style.isUnderline());
         }
     }
 
@@ -493,8 +493,8 @@ public class SubProcessNameEditPart extends CompartmentEditPart implements
     protected void refreshStrikeThrough() {
         FontStyle style = (FontStyle) getFontStyleOwnerView().getStyle(
                 NotationPackage.eINSTANCE.getFontStyle());
-        if (style != null && getFigure() instanceof WrapLabel) {
-            ((WrapLabel) getFigure()).setTextStrikeThrough(style
+        if (style != null && getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getFigure()).setTextStrikeThrough(style
                     .isStrikeThrough());
         }
     }

@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gmf.runtime.emf.core.util.IProxyEObject;
 import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.emf.type.core.IHintedType;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.stp.bpmn.Activity;
@@ -300,6 +301,11 @@ public class BpmnElementTypes {
         // System.err.println("Looking for " + hint + " returns null");
         return null;
     }
+    
+    /**
+     * @generate NOT. Indexes the bpmn element types according to their semantic hint.
+     */
+    private static final Map<String,IHintedType> BpmnElementTypesIndexedBySemanticHint = new HashMap<String, IHintedType>();
 
     /**
      * @generated
@@ -377,12 +383,26 @@ public class BpmnElementTypes {
     public static final IElementType Association_3003 = getElementType("org.eclipse.stp.bpmn.diagram.Association_3003"); //$NON-NLS-1$
 
     /**
-     * @generated
+     * @generated NOT. Also populating the index of element types local to here.
      */
     private static IElementType getElementType(String id) {
-        return ElementTypeRegistry.getInstance().getType(id);
+        IElementType et = ElementTypeRegistry.getInstance().getType(id);
+        if (et != null && et instanceof IHintedType) {
+            IHintedType het = (IHintedType)et;
+            BpmnElementTypesIndexedBySemanticHint.put(het.getSemanticHint(), het);
+        }
+        return et;
     }
 
+    /**
+     * 
+     * @param semanticHint. For example, "2001" for an activity.
+     * @return The corresponding element type or null if no such thing.
+     */
+    public static IHintedType getBpmnElementType(String semanticHint) {
+        return BpmnElementTypesIndexedBySemanticHint.get(semanticHint);
+    }
+    
     /**
      * @generated
      */

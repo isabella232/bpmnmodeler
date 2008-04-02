@@ -78,6 +78,12 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
      * the closest distance possible to route the line.
      */
     public PointList routeClosestDistance(Connection conn) {
+        int gatewaySourceConstraint = edge.getSourceGatewayConstraint();
+        int gatewayTargetConstraint = edge.getTargetGatewayConstraint();
+        if (gatewaySourceConstraint == NO_CONSTRAINT && 
+                gatewayTargetConstraint == NO_CONSTRAINT) {
+            return super.routeClosestDistance(conn);
+        }
         PointList newLine = routeFromConstraint(conn);
 
         Point ptOrig = new Point(newLine.getFirstPoint());
@@ -98,85 +104,117 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
             conn.getSourceAnchor().getOwner().translateToAbsolute(src);
             conn.translateToRelative(src);
         }
+        
+        
         if (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_EXCEPT_FIRST_SEG) {
             if (!areAlmostEqual(ptOrig.x, ptTerm.x)) {
                 newLine.addPoint(new Point(ptOrig.x, ptTerm.y));
             }
-        } else if (!areAlmostEqual(ptOrig.y, ptTerm.y) && ptOrig.x + extra < ptTerm.x) {
-            // there is going to be a middle bend point.
-            // let's find in the list of points the two points that are part of that middle bend point
-            // if it has been computed already
-            Point ptOnOrigY = null;
-            Point ptOnTermY = null;
-            PointList oldLine = routeFromConstraint(conn);
-            for (int i = 1 ; i < oldLine.size() -1 ; i++) {
-                Point bp = oldLine.getPoint(i);
-                if (bp.y == ptOrig.y) {
-                    ptOnOrigY = bp;
-                    break;
-                } else if (bp.y == ptTerm.y) {
-                    ptOnTermY = bp;
-                    break;
+        } else {
+            boolean needMiddleBendPoint = !areAlmostEqual(ptOrig.y, ptTerm.y) && ptOrig.x + extra < ptTerm.x;
+            needMiddleBendPoint = needMiddleBendPoint && 
+            (gatewaySourceConstraint == gatewayTargetConstraint && (
+                    gatewaySourceConstraint == NO_CONSTRAINT || 
+                    gatewaySourceConstraint == CONSTRAINT_MIDDLE)); 
+            if (needMiddleBendPoint) {
+
+                // there is going to be a middle bend point.
+                // let's find in the list of points the two points that are part of that middle bend point
+                // if it has been computed already
+                Point ptOnOrigY = null;
+                Point ptOnTermY = null;
+                PointList oldLine = routeFromConstraint(conn);
+                for (int i = 1 ; i < oldLine.size() -1 ; i++) {
+                    Point bp = oldLine.getPoint(i);
+                    if (bp.y == ptOrig.y) {
+                        ptOnOrigY = bp;
+                        break;
+                    } else if (bp.y == ptTerm.y) {
+                        ptOnTermY = bp;
+                        break;
+                    }
                 }
-            }
-            if (ptOnOrigY != null) {
-                if (ptOnOrigY.x == ptOrig.x) {
-                    ptOnOrigY.x += extra;
+                if (ptOnOrigY != null) {
+                    if (ptOnOrigY.x >= ptTerm.x || ptOnOrigY.x <= ptOrig.x) {
+                        ptOnOrigY.x = (ptOrig.x + ptTerm.x)/2;
+                    }
+                    newLine.addPoint(ptOnOrigY);
+                    newLine.addPoint(new Point(ptOnOrigY.x, ptTerm.y));
+                } else if (ptOnTermY != null) {
+                    if (ptOnTermY.x >= ptTerm.x || ptTerm.x <= ptOrig.x) {
+                        ptOnTermY.x = (ptOrig.x + ptTerm.x)/2;
+                    }
+                    newLine.addPoint(new Point(ptOnTermY.x, ptOrig.y));
+
+                    newLine.addPoint(ptOnTermY);
+                } else {
+                    // normally nothing
                 }
-                if (ptOnOrigY.x > ptTerm.x) {
-                    ptOnOrigY.x = (ptOrig.x + ptTerm.x)/2;
-                }
-                newLine.addPoint(ptOnOrigY);
-                newLine.addPoint(new Point(ptOnOrigY.x, ptTerm.y));
-            } else if (ptOnTermY != null) {
-                if (ptOnTermY.x == ptTerm.x) {
-                    ptOnTermY.x -= extra;
-                }
-                if (ptOnTermY.x > ptTerm.x) {
-                    ptOnTermY.x = (ptOrig.x + ptTerm.x)/2;
-                }
-                newLine.addPoint(new Point(ptOnTermY.x, ptOrig.y));
-                newLine.addPoint(ptOnTermY);
             }
         }
 
-        int gatewaySourceConstraint = edge.getSourceGatewayConstraint();
-        int gatewayTargetConstraint = edge.getTargetGatewayConstraint();
+        
        
         // in case both constraints are applied, we will need to add bend points to help
         Point midSourceYPoint = new Point(ptOrig.x, (ptTerm.y + ptOrig.y)/2);
         Point midTargetYPoint = new Point(ptTerm.x, (ptTerm.y + ptOrig.y)/2);
         
         if (gatewaySourceConstraint != NO_CONSTRAINT && gatewaySourceConstraint != CONSTRAINT_MIDDLE 
-                && ptOrig.x < ptTerm.x) {
+                && ptOrig.x + extra < ptTerm.x) {
          // we need to route around the gateway if the activity is placed after it, but too high.
-            if (ptOrig.y > ptTerm.y && edge.getSourceGatewayConstraint() == CONSTRAINT_BOTTOM) {
+            if (gatewayTargetConstraint == gatewaySourceConstraint &&
+                    gatewayTargetConstraint != NO_CONSTRAINT &&
+                    gatewayTargetConstraint != CONSTRAINT_MIDDLE) {
+                if (gatewaySourceConstraint == CONSTRAINT_BOTTOM) {
+                    newLine.addPoint(new Point(ptOrig.x, Math.max(ptOrig.y, ptTerm.y) + extra));
+                } else if (gatewaySourceConstraint == CONSTRAINT_ON_TOP) {
+                    newLine.addPoint(new Point(ptOrig.x, Math.min(ptOrig.y, ptTerm.y) - extra));
+                }
+            } else if (ptOrig.y > ptTerm.y && gatewaySourceConstraint == CONSTRAINT_BOTTOM) {
                 newLine.addPoint(new Point(ptOrig.x, ptOrig.y + extra));
                 newLine.addPoint(new Point(ptOrig.x + src.width + extra, ptOrig.y + extra));
                 newLine.addPoint(new Point(ptOrig.x + src.width + extra, ptTerm.y));
-            } else if (ptOrig.y < ptTerm.y && gatewaySourceConstraint == CONSTRAINT_ON_TOP) {
+            } else if (ptOrig.y < ptTerm.y &&
+                    gatewaySourceConstraint == CONSTRAINT_ON_TOP) {
                 newLine.addPoint(new Point(ptOrig.x, ptOrig.y - extra));
                 newLine.addPoint(new Point(ptOrig.x + src.width + extra, ptOrig.y - extra));
                 newLine.addPoint(new Point(ptOrig.x + src.width + extra, ptTerm.y));
             } else {
                 if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
-                    Point pointToConsider = gatewayTargetConstraint != NO_CONSTRAINT ? midTargetYPoint : ptTerm; 
+                    Point pointToConsider = gatewayTargetConstraint != NO_CONSTRAINT && 
+                        gatewayTargetConstraint != CONSTRAINT_MIDDLE ? midTargetYPoint : ptTerm; 
                     newLine.addPoint(new Point(ptOrig.x, pointToConsider.y));
                 }
             }
             
         }
-
+        
+        
         if (gatewayTargetConstraint != NO_CONSTRAINT   && gatewayTargetConstraint != CONSTRAINT_MIDDLE 
-                && ptOrig.x < ptTerm.x) {
-            if (ptOrig.y < ptTerm.y && gatewayTargetConstraint == CONSTRAINT_BOTTOM) {
-                newLine.addPoint(new Point(ptOrig.x + extra, ptOrig.y));
-                newLine.addPoint(new Point(ptOrig.x + extra, ptTerm.y + extra));
-                newLine.addPoint(new Point(ptTerm.x, ptTerm.y + extra));
-            } else if (ptOrig.y > ptTerm.y && gatewayTargetConstraint == CONSTRAINT_ON_TOP) {
-                newLine.addPoint(new Point(ptOrig.x + extra, ptOrig.y));
-                newLine.addPoint(new Point(ptOrig.x + extra, ptTerm.y - extra));
-                newLine.addPoint(new Point(ptTerm.x, ptTerm.y - extra));
+                && ptOrig.x + extra < ptTerm.x) {
+            
+           if (gatewayTargetConstraint == gatewaySourceConstraint &&
+                    gatewaySourceConstraint != NO_CONSTRAINT &&
+                    gatewaySourceConstraint != CONSTRAINT_MIDDLE) {
+                if (gatewayTargetConstraint == CONSTRAINT_BOTTOM) {
+                    newLine.addPoint(new Point(ptTerm.x, Math.max(ptOrig.y, ptTerm.y) + extra));
+                } else if (gatewayTargetConstraint == CONSTRAINT_ON_TOP) {
+                    newLine.addPoint(new Point(ptTerm.x, Math.min(ptOrig.y, ptTerm.y) - extra));
+                }
+            } else if ((ptOrig.y < ptTerm.y) && gatewayTargetConstraint == CONSTRAINT_BOTTOM) {
+                if (ptOrig.y + extra > ptTerm.y) {
+                    newLine.addPoint(new Point(ptOrig.x + extra, ptOrig.y));
+                    newLine.addPoint(new Point(ptTerm.x, ptTerm.y + extra));
+                } else {
+                    newLine.addPoint(new Point(ptTerm.x, ptOrig.y));
+                }
+            } else if ((ptOrig.y > ptTerm.y) && gatewayTargetConstraint == CONSTRAINT_ON_TOP) {
+                if (ptOrig.y - extra < ptTerm.y) {
+                    newLine.addPoint(new Point(ptOrig.x + extra, ptOrig.y));
+                    newLine.addPoint(new Point(ptTerm.x, ptTerm.y - extra));
+                } else {
+                    newLine.addPoint(new Point(ptTerm.x, ptOrig.y));
+                }
             } else {
                 if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
                     Point pointToConsider = gatewaySourceConstraint != NO_CONSTRAINT ? midSourceYPoint : ptOrig; 
@@ -274,13 +312,13 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
                     newLine.addPoint(origPlus);
                     newLine.addPoint(origAbove);
                 } else {
-                    if (ptOrig.x >= ptTerm.x) {
+                    if (ptOrig.x + extra >= ptTerm.x) {
                         newLine.addPoint(new Point(ptOrig.x, aboveY));
                     }
                 }
                 if (targetGatewayConstraint == NO_CONSTRAINT || 
                         targetGatewayConstraint == CONSTRAINT_MIDDLE) {
-                    if (ptOrig.x <= ptTerm.x) {
+                    if (ptOrig.x + extra <= ptTerm.x) {
                     } else {
                     newLine.addPoint(termAbove);
                     newLine.addPoint(termMinus);

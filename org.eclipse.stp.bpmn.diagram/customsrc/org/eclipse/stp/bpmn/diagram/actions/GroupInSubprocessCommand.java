@@ -405,8 +405,8 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
     
     
     /**
-     * @param req
-     * @return The size and location of the sub-process being reated to group them all.
+     * @param req the creation request 
+     * @return The size and location of the sub-process being created to group them all.
      */
     private Rectangle getSizeAndLocation(CreateViewRequest req) {
         int x = 0;
@@ -470,6 +470,13 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         height += SubProcessEditPart.INSETS.getHeight();
         
         width += SubProcessEditPart.INSETS.getWidth();
+        
+        // let's get comfortable in there. For some reason scrollbars show
+        // when grouping activities, even though we thought we have added
+        // enough width and height to be comfortable.
+        height += 5;
+        width += 5;
+        
         Point pt = new Point(x, y);
         return new Rectangle(pt, new Dimension(width, height));
     }

@@ -18,30 +18,34 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RequestConstants;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.internal.ui.rulers.GuideEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.SimpleDragTracker;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
-import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.Graph;
+import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.bpmn.policies.ResizableShapeEditPolicyEx;
 import org.eclipse.swt.graphics.Cursor;
 
 /**
@@ -54,6 +58,8 @@ import org.eclipse.swt.graphics.Cursor;
  */
 public class MultipleShapesMoveTool extends SimpleDragTracker {
 
+    private static final Rectangle SINGLETON = new Rectangle();
+    
     /**
      * the guide figure to use for feedback
      */
@@ -64,11 +70,22 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
      */
     private Integer _initialPosition;
     
+    private Integer _initPosNoZoom;
+    
     /**
      * the list of moving shapes that are concerned
      * by the move.
      */
-    private List<IGraphicalEditPart> _movingShapes = Collections.EMPTY_LIST;
+    private List<IGraphicalEditPart> _movingShapes = Collections.emptyList();
+    
+    /**
+     * the list of subprocesses that will be resized by the tool as well
+     */
+    private List<IGraphicalEditPart> _subProcesses = Collections.emptyList();
+    
+    /**
+     * the container edit part, only a pool, that we execute on.
+     */
     private IGraphicalEditPart _container;
 
     /**
@@ -96,8 +113,20 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
         
         ChangeBoundsRequest request = 
             new ChangeBoundsRequest(RequestConstants.REQ_MOVE);
+        request.setEditParts(Collections.emptyList());
+        request.setSizeDelta(Dimension.SINGLETON.getCopy());
+        request.setMoveDelta(Point.SINGLETON.getCopy());
         for (IGraphicalEditPart part : _movingShapes) {
             part.eraseSourceFeedback(request);
+        }
+        
+        ChangeBoundsRequest spRequest = new ChangeBoundsRequest(
+                RequestConstants.REQ_RESIZE);
+        spRequest.setEditParts(Collections.emptyList());
+        spRequest.setSizeDelta(Dimension.SINGLETON.getCopy());
+        spRequest.setMoveDelta(Point.SINGLETON.getCopy());
+        for (IGraphicalEditPart sp : _subProcesses) {
+            sp.eraseSourceFeedback(spRequest);
         }
     }
 
@@ -105,7 +134,36 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
      * creates the command to move the shapes left or right.
      */
     protected Command getCommand() {
-        return _container.getCommand(getSourceRequest());
+        if (_container == null) {
+            return null;
+        }
+        CompoundCommand command = new CompoundCommand("Insert space tool");
+        TransactionalEditingDomain editingDomain = _container.getEditingDomain();
+        
+        Point moveDelta  = ((ChangeBoundsRequest) getSourceRequest()).getMoveDelta().getCopy();
+        Dimension spSizeDelta = new Dimension(moveDelta.x, moveDelta.y);
+        ZoomManager zoomManager = ((DiagramRootEditPart) 
+                getCurrentViewer().getRootEditPart()).getZoomManager();
+        spSizeDelta.scale(1/zoomManager.getZoom());
+//        for (IGraphicalEditPart part : _movingShapes) {
+//            Rectangle rect = part.getFigure().getBounds().getCopy();
+//            rect.translate(moveDelta);
+//            SetBoundsCommand setBounds = 
+//                new SetBoundsCommand(editingDomain, "Moving shape", part, rect);
+//            command.add(new ICommandProxy(setBounds));
+//        }
+        // or maybe call the parent ?
+        command.add(_container.getCommand(getSourceRequest()));
+        
+        
+        for (IGraphicalEditPart sp : _subProcesses) {
+            Dimension spDim = sp.getFigure().getBounds().getSize().getCopy();
+            spDim.expand(spSizeDelta);
+            SetBoundsCommand setBounds = 
+                new SetBoundsCommand(editingDomain, "Resizing subprocesses", sp, spDim);
+            command.add(new ICommandProxy(setBounds));
+        }
+        return command;
     }
 
     /**
@@ -134,7 +192,7 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
         ZoomManager zoomManager = ((DiagramRootEditPart) 
                 getCurrentViewer().getRootEditPart()).getZoomManager();
         if (zoomManager != null) {
-            position = (int)Math.round(position / zoomManager.getZoom());
+            position = (int)Math.round(position * zoomManager.getZoom());
         }
         return position;
     }
@@ -188,49 +246,25 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
         }
         stateTransition(STATE_INITIAL, STATE_DRAG_IN_PROGRESS);
         _initialPosition = getCurrentPosition();
+        _initPosNoZoom = getCurrentPositionZoomed();
+        
         // calculate the initial selection
         // of shapes that should move
-        _container = (IGraphicalEditPart) underMouse;
+        _container = (IGraphicalEditPart) findPool(underMouse);
         
         // the children that will be moved around
         List<IGraphicalEditPart> rightChildren = new ArrayList<IGraphicalEditPart>();
+        List<IGraphicalEditPart> subProcesses = new ArrayList<IGraphicalEditPart>();
         
-        // special cases.
-        // we want those parts to be selected as their parent.
-        if (_container instanceof SubProcessSubProcessBorderCompartmentEditPart
-                || _container instanceof SubProcessNameEditPart) {
-            _container = (IGraphicalEditPart) _container.getParent();
-        }
-        if (_container instanceof SubProcessEditPart ||
-                (_container.resolveSemanticElement() instanceof AssociationTarget && 
-                        !(_container.resolveSemanticElement() instanceof Graph))) {
-            IGraphicalEditPart parent = findParent(_container.getParent());
-            if (parent != null) {
-                if (_container instanceof TextCompartmentEditPart) {
-                    _container = (IGraphicalEditPart) _container.getParent();
-                }
-                rightChildren.add(_container);
-                _container = parent;
-            }
-        }
-        
-        if (_container.resolveSemanticElement() instanceof Graph) {
+        if (_container != null && _container.resolveSemanticElement() instanceof Pool) {
             List children  = null;
             if (_container instanceof PoolEditPart) {
                 PoolPoolCompartmentEditPart compartment = 
                     (PoolPoolCompartmentEditPart) ((PoolEditPart) _container).getChildBySemanticHint(
                             BpmnVisualIDRegistry.getType(PoolPoolCompartmentEditPart.VISUAL_ID));
                 children = compartment.getChildren();
-//              } else if (_container instanceof SubProcessEditPart) {
-//              SubProcessSubProcessBodyCompartmentEditPart compartment = 
-//              (SubProcessSubProcessBodyCompartmentEditPart) ((IGraphicalEditPart) _container)
-//              .getChildBySemanticHint(BpmnVisualIDRegistry.
-//              getType(SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
-//              children = compartment.getChildren();
             } else if (_container instanceof PoolPoolCompartmentEditPart) {
                 children = ((PoolPoolCompartmentEditPart) _container).getChildren();
-            } else if (_container instanceof SubProcessSubProcessBodyCompartmentEditPart) {
-                children = ((SubProcessSubProcessBodyCompartmentEditPart) _container).getChildren();
             }
             if (children == null) {
                 throw new IllegalArgumentException("The part " + _container + " did not contain elements"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -238,18 +272,23 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
             // now iterate over the compartment children
             // and take those that are on the right.
             for (Object child : children) {
-                if (child instanceof IGraphicalEditPart) {
-                    Point loc = ((IGraphicalEditPart) child).getFigure().
-                    getBounds().getLocation().getCopy();
-                    ((IGraphicalEditPart) child).getFigure().translateToAbsolute(loc);
-                    ((DiagramEditPart) getCurrentViewer().getContents()).getFigure().translateToRelative(loc);
-                    if (loc.x > _initialPosition) {
+                if (child instanceof ShapeNodeEditPart) {
+                    TaskDragEditPartsTrackerEx.setBoundsForOverlapComputation(
+                            (IGraphicalEditPart)child, SINGLETON);
+                    ((DiagramEditPart) getCurrentViewer().getContents())
+                                .getFigure().translateToRelative(SINGLETON);
+                    if (SINGLETON.x > _initPosNoZoom) {
                         rightChildren.add((IGraphicalEditPart) child);
+                    } else if (child instanceof SubProcessEditPart && 
+                            SINGLETON.x < _initPosNoZoom && 
+                            SINGLETON.x + SINGLETON.width > _initPosNoZoom) {
+                        addEnclosedChildren((IGraphicalEditPart) child, rightChildren, subProcesses, _initPosNoZoom);
                     }
                 }
             }
         }
         _movingShapes = rightChildren;
+        _subProcesses = subProcesses;
         
         updateSourceRequest();
         showSourceFeedback();
@@ -258,16 +297,47 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
     }
 
     /**
+     * 
+     * @param sp the subprocess to examine
+     * @param rightChildren the right children, the objects that move
+     * @param subProcesses the subprocesses that might be crossed by the lines. They will be resized
+     * @param curPosNoZoom the current mouse location
+     */
+    private void addEnclosedChildren(IGraphicalEditPart sp,
+            List<IGraphicalEditPart> rightChildren,
+            List<IGraphicalEditPart> subProcesses, int curPosNoZoom) {
+        subProcesses.add(sp);
+        SubProcessSubProcessBodyCompartmentEditPart compartment = 
+            (SubProcessSubProcessBodyCompartmentEditPart) sp.getChildBySemanticHint(
+                    BpmnVisualIDRegistry.getType(SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
+        List children = compartment.getChildren();
+        for (Object child : children) {
+            TaskDragEditPartsTrackerEx.setBoundsForOverlapComputation(
+                    (IGraphicalEditPart)child, SINGLETON);
+            ((DiagramEditPart) getCurrentViewer().getContents())
+            .getFigure().translateToRelative(SINGLETON);
+            if (SINGLETON.x > curPosNoZoom) {
+                rightChildren.add((IGraphicalEditPart) child);
+            } else if (child instanceof SubProcessEditPart && 
+                    SINGLETON.x < curPosNoZoom && 
+                    SINGLETON.x + SINGLETON.width > curPosNoZoom) {
+                addEnclosedChildren((IGraphicalEditPart) child, rightChildren, subProcesses, curPosNoZoom);
+            }
+        }
+    }
+        
+
+    /**
      * Finds a part that represents a Graph, acting recursively.
      * @param part
      * @return
      */
-    private IGraphicalEditPart findParent(Object part) {
+    private IGraphicalEditPart findPool(Object part) {
         if (part instanceof IGraphicalEditPart) {
-            if (((IGraphicalEditPart) part).resolveSemanticElement() instanceof Graph) {
+            if (((IGraphicalEditPart) part).resolveSemanticElement() instanceof Pool) {
                 return (IGraphicalEditPart) part;
             }
-            return findParent(((IGraphicalEditPart) part).getParent());
+            return findPool(((IGraphicalEditPart) part).getParent());
         }
         return null;
     }
@@ -303,24 +373,40 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
             addFeedback(guideline);
         }
         Rectangle bounds = Rectangle.SINGLETON.getCopy();
-        bounds.x = getCurrentPositionZoomed();
+        bounds.x = getCurrentPosition();
         
         Rectangle containerBounds = _container.getFigure().getBounds().getCopy();
         _container.getFigure().translateToAbsolute(containerBounds);
         
-        ((DiagramEditPart) getCurrentViewer().getContents()).getFigure().translateToRelative(containerBounds);
+        ((DiagramEditPart) getCurrentViewer().getContents())
+                .getFigure().translateToRelative(containerBounds);
         bounds.y = containerBounds.y;
         bounds.width = 1;
         bounds.height = containerBounds.height;
+        
         guideline.setBounds(bounds);
         guideline.setVisible(getState() == STATE_DRAG_IN_PROGRESS);
         
         ChangeBoundsRequest request = 
             new ChangeBoundsRequest(RequestConstants.REQ_MOVE);
-        request.setMoveDelta(((ChangeBoundsRequest) 
-                getSourceRequest()).getMoveDelta().getCopy());
+        request.setMoveDelta(((ChangeBoundsRequest) getSourceRequest()).getMoveDelta());
+        request.setSizeDelta(new Dimension(0, 0));
+        request.setEditParts(_movingShapes);
+        ResizableShapeEditPolicyEx.setOtherSelectedEditParts(_subProcesses, request);
         for (IGraphicalEditPart part : _movingShapes) {
             part.showSourceFeedback(request);
+        }
+        
+        ChangeBoundsRequest spRequest = new ChangeBoundsRequest(
+                RequestConstants.REQ_RESIZE);
+        Point moveDelta  = ((ChangeBoundsRequest) getSourceRequest()).getMoveDelta().getCopy();
+        Dimension spSizeDelta = new Dimension(moveDelta.x, moveDelta.y);
+        spRequest.setSizeDelta(spSizeDelta);
+        spRequest.setMoveDelta(new Point(0, 0));
+        spRequest.setEditParts(_subProcesses);
+        ResizableShapeEditPolicyEx.setOtherSelectedEditParts(_movingShapes, spRequest);
+        for (IGraphicalEditPart sp : _subProcesses) {
+            sp.showSourceFeedback(spRequest);
         }
     }
 
@@ -330,7 +416,9 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
      */
     @Override
     protected Request createSourceRequest() {
-        return new ChangeBoundsRequest(getCommandName());
+        ChangeBoundsRequest request = new ChangeBoundsRequest(getCommandName());
+        request.setSizeDelta(new Dimension(0, 0));
+        return request;
     }
     
     /**

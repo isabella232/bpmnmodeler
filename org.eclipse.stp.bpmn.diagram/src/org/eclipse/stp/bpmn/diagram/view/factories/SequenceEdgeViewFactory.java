@@ -18,6 +18,8 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EcoreFactory;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.ConnectionViewFactory;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Routing;
@@ -25,6 +27,7 @@ import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.Smoothness;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeNameEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
@@ -121,5 +124,12 @@ public class SequenceEdgeViewFactory extends ConnectionViewFactory {
             smoothness = Smoothness.NORMAL_LITERAL;
         }
         style.setSmoothness(smoothness);
+        
+        //color:
+        LineStyle lineStyle = (LineStyle) view
+            .getStyle(NotationPackage.eINSTANCE.getLineStyle());
+        lineStyle.setLineColor(FigureUtilities.RGBToInteger(
+                PreferenceConverter.getColor(preferenceStore,
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_COLOR)));
     }
 }

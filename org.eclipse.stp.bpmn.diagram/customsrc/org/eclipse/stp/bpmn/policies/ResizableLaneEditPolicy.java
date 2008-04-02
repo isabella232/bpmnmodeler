@@ -25,11 +25,13 @@ import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.handles.AbstractHandle;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 
 /**
  * Resize edit policy for lanes: only the bottom lane and if it is not
@@ -101,6 +103,13 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
      */
     @Override
     protected Command getResizeCommand(ChangeBoundsRequest request) {
+        // if you want a lane to be expanded to the north and the lane happens to be the first lane,
+        // and there is no space above it, forbid the resize.
+        if (request.getMoveDelta().y < 0 && 
+                getHostFigure().getBounds().y == PoolPoolCompartmentEditPart.INSETS.top) {
+            return UnexecutableCommand.INSTANCE;
+        }
+        
         ChangeBoundsRequest req = new ChangeBoundsRequest(REQ_RESIZE_CHILDREN);
         req.setEditParts(request.getEditParts());
 

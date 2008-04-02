@@ -36,6 +36,7 @@ import org.eclipse.stp.bpmn.diagram.actions.ResetBendpointsAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetAsThrowingOrCatchingAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetDefaultAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetLoopAction;
+import org.eclipse.stp.bpmn.diagram.actions.SetTransactionalAction;
 import org.eclipse.stp.bpmn.diagram.actions.SubProcessCollapseStyleToolbarAction;
 import org.eclipse.stp.bpmn.diagram.actions.UngroupAction;
 import org.eclipse.stp.bpmn.diagram.actions.activitytypes.ActivityTypesManager;
@@ -66,6 +67,7 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
      */
     protected IMenuManager createMenuManager(String menuId,
             IWorkbenchPartDescriptor partDescriptor) {
+        
         if (GroupActionManager.MENU_ID.equals(menuId)) {
             return new GroupActionManager(getAction(GroupAction.ACTION_ID,
                     partDescriptor));
@@ -120,6 +122,9 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
         } else if (ChangeEdgeOrderMenuManager.SUB_MENU_TARGET.equals(menuId)) {
             return ChangeEdgeOrderMenuManager.createSubmenu(BpmnDiagramMessages.BpmnDiagramActionProvider_change_edge_order_target_sub_menu, menuId);
         }
+        
+        
+        
         return super.createMenuManager(menuId, partDescriptor);
     }
 
@@ -169,6 +174,9 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
             return ChangeEdgeOrderMenuManager.createAction(workbenchPage, actionId);
         } else if (SetAsThrowingOrCatchingAction.ID.equals(actionId)) {
             return new SetAsThrowingOrCatchingAction(workbenchPage);
+        } else if (SetTransactionalAction.ID.equals(actionId)) {
+            return new SetTransactionalAction(workbenchPage);
+        } else {
         }
         return super.createAction(actionId, partDescriptor);
     }

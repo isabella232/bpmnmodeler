@@ -119,6 +119,10 @@ public class BpmnDiagramMessages extends NLS {
     public static String BpmnConnectionsPreferencePage_smoothness;
 
     public static String BpmnConnectionsPreferencePage_style;
+    
+    public static String BpmnConnectionsPreferencePage_color;
+    
+    public static String BpmnConnectionsPreferencePage_transparency;
 
     public static String BpmnCreationWizardPage_description;
 

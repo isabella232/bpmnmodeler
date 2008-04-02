@@ -17,7 +17,6 @@
 package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.figures.connectionanchors.NodeFigureEx;
@@ -33,10 +32,8 @@ import org.eclipse.stp.bpmn.figures.connectionanchors.NodeFigureEx;
  */
 public class ActivityOvalFigure extends NodeFigureEx {
     
-    public ActivityOvalFigure(IConnectionAnchorFactory connectionAnchorFactory,
-            Dimension dimension) {
+    public ActivityOvalFigure(IConnectionAnchorFactory connectionAnchorFactory) {
         super(connectionAnchorFactory);
-        setPreferredSize(dimension);
     }
 
     /**
@@ -73,7 +70,7 @@ public class ActivityOvalFigure extends NodeFigureEx {
         Rectangle r = getBounds();
         Rectangle ovalRect = new Rectangle(r);
         // avoid edge of the oval being chopped off:
-        ovalRect.setSize(r.width-1, r.height-1);
+//        ovalRect.setSize(r.width-1, r.height-1);
         return ovalRect;
     }
 

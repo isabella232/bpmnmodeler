@@ -546,7 +546,7 @@ try {
                     if (subProcess != null
                             && !subProcesses.contains(subProcess)) {
                     	SubProcess sp = (SubProcess) subProcess.resolveSemanticElement();
-                    	if (sp.getEventHandlers().isEmpty()) {
+                    	if (sp != null && sp.getEventHandlers().isEmpty()) {
                     	    if (!sp.getVertices().isEmpty() ||
                     	            !sp.getArtifacts().isEmpty()) {
                     	        subProcesses.add(subProcess);

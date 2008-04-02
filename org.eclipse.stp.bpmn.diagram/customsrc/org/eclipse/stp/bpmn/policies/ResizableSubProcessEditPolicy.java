@@ -16,15 +16,11 @@
 
 package org.eclipse.stp.bpmn.policies;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
@@ -37,16 +33,16 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
+import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
-import org.eclipse.stp.bpmn.Group;
-import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
+import org.eclipse.stp.bpmn.figures.FeedbackShape;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetGroupsCommand;
 import org.eclipse.stp.bpmn.tools.SubProcessResizeTracker;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
@@ -94,7 +90,7 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
     }
     
     /**
-	 * Cfreates a new AutoSize comamnd
+	 * Creates a new AutoSize command
 	 * 
 	 * @param request
 	 * @return command
@@ -104,7 +100,8 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) 
         		getHost()).getEditingDomain();
         Dimension size = SubProcessEditPart.EXPANDED_SIZE.getCopy();
-        Dimension minSize = getSubProcessMinSize((SubProcessEditPart) getHost());
+        Dimension minSize = BpmnShapesDefaultSizes.getSubProcessMinSize(
+                                (SubProcessEditPart) getHost());
         size.width = Math.max(size.width, minSize.width);
         size.height = Math.max(size.height, minSize.height);
         
@@ -115,50 +112,9 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
 		return new ICommandProxy(resizeCommand);
 	}
     
-    /**
-     * Copied from SubProcessResizeTracker
-     * Calculates subprocess' minimal size.
-     * 
-     * @param subprocessEditPart
-     *            the subprocess edit part
-     * @return calculated minimal size of the s
+    /** 
+     * Overridden to set the groups on the subprocess
      */
-    public Dimension getSubProcessMinSize(SubProcessEditPart subprocessEditPart) {
-    	SubProcessSubProcessBodyCompartmentEditPart body = 
-            (SubProcessSubProcessBodyCompartmentEditPart) subprocessEditPart.
-            getChildBySemanticHint(BpmnVisualIDRegistry.getType(
-                    SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
-    	SubProcessSubProcessBorderCompartmentEditPart border = 
-            (SubProcessSubProcessBorderCompartmentEditPart) subprocessEditPart.
-            getChildBySemanticHint(BpmnVisualIDRegistry.getType(
-                    SubProcessSubProcessBorderCompartmentEditPart.VISUAL_ID));
-    	if (body == null) {
-    		return new Dimension(0, 0);
-    	}
-        // now take in account the shapes in the pool
-        Dimension maxRoomOfChildren = new Dimension(0, 0);
-        for (Object ep : body.getChildren()) {
-        	if (ep instanceof IGraphicalEditPart) {
-        		// we use the figure as width and lengths may be 
-        		// not initialized on the views objects
-        		IFigure figure = ((IGraphicalEditPart) ep).getFigure();
-        		Rectangle bounds = figure.getBounds();
-        		maxRoomOfChildren.height = Math.max(bounds.y + 
-        				bounds.height, maxRoomOfChildren.height);
-        		maxRoomOfChildren.width = Math.max(bounds.x + 
-        				bounds.width, maxRoomOfChildren.width);
-        	}
-        }
-        maxRoomOfChildren.expand(SubProcessEditPart.INSETS.
-        		getWidth(), SubProcessEditPart.INSETS.getHeight() + 2);
-        maxRoomOfChildren.height += border.getFigure().getBounds().height;
-        maxRoomOfChildren.height += subprocessEditPart.getAbsCollapseHandleBounds().height;
-        return maxRoomOfChildren;
-//        return ((SubProcessEditPart) subprocessEditPart).calcMinSize();
-    }
-    
-    
-    
     @Override
     protected Command getMoveCommand(ChangeBoundsRequest request) {
         CompoundCommand compound = new CompoundCommand();
@@ -170,14 +126,21 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
         return compound;
     }
     
+    /**
+     * Overridden to set the groups on the subprocess
+     */
     @Override
-    public Command getResizeCommand(ChangeBoundsRequest request) {
+    public Command getResizeCommand(final ChangeBoundsRequest request) {
         CompoundCommand compound = new CompoundCommand();
-        compound.add(super.getResizeCommand(request));
-        compound.add(new ICommandProxy(
+        Command resizeCmd = super.getResizeCommand(request);
+        ICommandProxy iSetGroupCmd = new ICommandProxy(
                 new SetGroupsCommand(ResizableActivityEditPolicy.
                         findContainingGroups(request, (IGraphicalEditPart) getHost()), 
-                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement()));
+        compound.add(resizeCmd);
+        // resizing the body edit part figure directly, to help with the layout.
+        compound.add(iSetGroupCmd);
         return compound;
     }
+    
 }

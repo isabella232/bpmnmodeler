@@ -94,7 +94,7 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
          */
         @Override
         protected DragTracker createDragTracker() {
-            return new ActivityResizeTracker(getOwner(), cursorDirection) {};
+            return new ActivityResizeTracker(getOwner(), cursorDirection);
         }
     }
 
@@ -305,4 +305,13 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
                         (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
         return compound;
     }
+    
+//    public boolean understandsRequest(Request request) {
+//        if (REQ_MOVE.equals(request.getType())) {
+//            return isDragAllowed();
+//        }
+//        return super.understandsRequest(request);
+//    }
+
+    
 }

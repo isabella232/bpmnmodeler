@@ -37,6 +37,7 @@ import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.SnapToGrid;
 import org.eclipse.gef.SnapToGuides;
 import org.eclipse.gef.SnapToHelper;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.SelectionRequest;
 import org.eclipse.gef.rulers.RulerProvider;
@@ -351,7 +352,10 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
                 dummyRequest.setEditParts(Collections.EMPTY_LIST);
                 dummyRequest.setMoveDelta(Point.SINGLETON.getCopy());
                 dummyRequest.setSizeDelta(Dimension.SINGLETON.getCopy());
-                getCommand(dummyRequest).execute();
+                Command co = getCommand(dummyRequest);
+                if (co != null) {
+                    co.execute();
+                }
             }
         }
         super.handleNotificationEvent(event);

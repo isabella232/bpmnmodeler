@@ -19,10 +19,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
@@ -36,7 +38,7 @@ import org.eclipse.stp.bpmn.figures.activities.LaneFigure;
  * @author hmalphettes
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
-public class PoolPoolCompartmentFigure extends NotScrollableShapeCompartmentFigure {
+public class PoolPoolCompartmentFigure extends ShapeCompartmentFigure {
 
     private Set<Integer> _coordsOnLastUpdate = new HashSet<Integer>();
     
@@ -67,7 +69,12 @@ public class PoolPoolCompartmentFigure extends NotScrollableShapeCompartmentFigu
                 this.translateToRelative(bottom);
                 
                 graphics.pushState();
-                graphics.setForegroundColor(fig.getForegroundColor());
+                if (fig.getForegroundColor() != null) {
+                    graphics.setForegroundColor(fig.getForegroundColor());
+                } else {
+                    graphics.setForegroundColor(ColorConstants.black);
+                }
+                graphics.setLineWidth((int) (4 * graphics.getAbsoluteScale()));
                 graphics.setBackgroundColor(fig.getBackgroundColor());
                 Rectangle rectangle = new Rectangle();
                 rectangle.width = getBounds().width;

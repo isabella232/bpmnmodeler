@@ -164,7 +164,7 @@ public class ResizablePoolEditPolicy extends ResizableShapeEditPolicyEx {
         size.height = Math.max(size.height, minSize.height);
         
         ChangeBoundsRequest req = new ChangeBoundsRequest();
-        req.setEditParts(Collections.singletonList(getHost()));
+        req.setEditParts(getHost().getViewer().getSelectedEditParts());
         req.setMoveDelta(new Point(0, 0));
         Dimension currentSize = getHostFigure().getSize().getCopy();
         req.setSizeDelta(new Dimension(size.width - currentSize.width, size.height - currentSize.height));

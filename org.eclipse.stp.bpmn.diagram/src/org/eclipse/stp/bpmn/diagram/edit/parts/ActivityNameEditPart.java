@@ -25,7 +25,6 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.editpolicies.ResizableEditPolicy;
 import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.requests.DirectEditRequest;
@@ -33,19 +32,16 @@ import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
+import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.CompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.TextCompartmentEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.GraphicalNodeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
@@ -57,10 +53,10 @@ import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
-import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnExtNodeLabelHostLayoutEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnTextSelectionEditPolicy;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
@@ -70,7 +66,7 @@ import org.eclipse.swt.graphics.Image;
 /**
  * @generated
  */
-public class ActivityNameEditPart extends TextCompartmentEditPart implements
+public class ActivityNameEditPart extends CompartmentEditPart implements
         ITextAwareEditPart {
 
     /**
@@ -107,15 +103,13 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
 
 
     /**
-     * performas direct edit
+     * @generated
      */
     protected void performDirectEdit() {
-        try {
-        super.performDirectEdit();
-        }catch (Throwable t) {
-            t.printStackTrace();
-            throw (RuntimeException)t;
+        if (getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel)getFigure()).setTextWrap(true);
         }
+        getManager().show();
     }
     
     /**
@@ -175,8 +169,8 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
         if (figure == null) {
             return ""; //$NON-NLS-1$
         }
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getText();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getText();
         } else {
             return ((Label) figure).getText();
         }
@@ -186,8 +180,8 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
      * @generated
      */
     protected void setLabelTextHelper(IFigure figure, String text) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setText(text);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setText(text);
         } else {
             ((Label) figure).setText(text);
         }
@@ -197,8 +191,8 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
      * @generated
      */
     protected Image getLabelIconHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getIcon();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getIcon();
         } else {
             return ((Label) figure).getIcon();
         }
@@ -208,17 +202,17 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
      * @generated
      */
     protected void setLabelIconHelper(IFigure figure, Image icon) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setIcon(icon);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setIcon(icon);
         } else {
             ((Label) figure).setIcon(icon);
         }
     }
 
     /**
-     * @generated
+     * @generated NOT WrappingLabel
      */
-    public void setLabel(WrapLabel figure) {
+    public void setLabel(WrappingLabel figure) {
         unregisterVisuals();
         setFigure(figure);
         defaultText = getLabelTextHelper(figure);
@@ -252,10 +246,10 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
      * @generated NOT
      */
     protected Image getLabelIcon() {
-    	if (getFigure() instanceof WrapLabel) {
-    		return ((WrapLabel) getFigure()).getIcon();
+    	if (getFigure() instanceof WrappingLabel) {
+    		return ((WrappingLabel) getFigure()).getIcon();
     	} else if (getFigure() instanceof Label) {
-    		return ((WrapLabel) getFigure()).getIcon();
+    		return ((Label) getFigure()).getIcon();
     	}
         return null;
     }
@@ -494,8 +488,8 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
     protected void refreshUnderline() {
         FontStyle style = (FontStyle) getFontStyleOwnerView().getStyle(
                 NotationPackage.eINSTANCE.getFontStyle());
-        if (style != null && getFigure() instanceof WrapLabel) {
-            ((WrapLabel) getFigure()).setTextUnderline(style.isUnderline());
+        if (style != null && getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getFigure()).setTextUnderline(style.isUnderline());
         }
     }
 
@@ -505,8 +499,8 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
     protected void refreshStrikeThrough() {
         FontStyle style = (FontStyle) getFontStyleOwnerView().getStyle(
                 NotationPackage.eINSTANCE.getFontStyle());
-        if (style != null && getFigure() instanceof WrapLabel) {
-            ((WrapLabel) getFigure()).setTextStrikeThrough(style
+        if (style != null && getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getFigure()).setTextStrikeThrough(style
                     .isStrikeThrough());
         }
     }
@@ -666,5 +660,12 @@ public class ActivityNameEditPart extends TextCompartmentEditPart implements
         } else {
             return true;
         }
+    }
+    
+    /**
+     * @generated
+     */
+    public ParserOptions getParserOptions() {
+        return ParserOptions.NONE;
     }
 }

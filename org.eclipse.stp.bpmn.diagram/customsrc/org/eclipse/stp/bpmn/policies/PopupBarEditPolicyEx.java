@@ -11,7 +11,7 @@
 
 /** 
  * Date         	    Author              Changes 
- * 10 ��� 2006   	MPeleshchyshyn  	Created 
+ * 10 &eacute;&eacute;&eacute; 2006   	MPeleshchyshyn  	Created 
  **/
 
 package org.eclipse.stp.bpmn.policies;

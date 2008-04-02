@@ -23,6 +23,7 @@ import java.util.WeakHashMap;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.internal.runtime.AdapterManager;
+import org.eclipse.core.internal.runtime.IAdapterFactoryExt;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -68,7 +69,7 @@ import org.eclipse.swt.widgets.Shell;
  * or View objects.
  */
 public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
-
+    
     /**
      * A cache so that we only adapt the request objects once.
      * @author atoulme
@@ -192,7 +193,6 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
             if (cache == null) {
                 adapted = retrieveDnDHandlers(dropRequest.getObjects());
                 Collections.sort(adapted, new Comparator<IDnDHandler>() {
-
 					public int compare(IDnDHandler o1, IDnDHandler o2) {
 						if (o1.getPriority() > o2.getPriority()) {
 							return -1;
@@ -312,7 +312,9 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
             					(IGraphicalEditPart) getHost(),
             					winner.index, 
             					dropRequest.getLocation().getCopy());
-            		co.execute();
+            		if (co != null) {
+            		    co.execute();
+            		}
 //          		drop(winner, dropRequest);
 //}
             	for (IDnDHandler handler : handlers) {
@@ -374,6 +376,12 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
                     if (clfactories != null) {
                         for (Object f : clfactories) {
                             IAdapterFactory factory = (IAdapterFactory) f;
+                            if (f instanceof IAdapterFactoryExt) {
+                                //if we don't call this method
+                                //the adapter factory is not returned unless the
+                                //plugin is already loaded.
+                                ((IAdapterFactoryExt)f).loadFactory(true);
+                            }
                             Object adapted = factory.getAdapter(dropped, IDnDHandler.class);
                             if (adapted instanceof IDnDHandler) {
                                 dndHandlers.add((IDnDHandler) adapted);
@@ -444,4 +452,6 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
         }
         return null;
     }
+        
+    
 }

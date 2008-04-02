@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Jan 15, 2007      Antoine Toulm�   Creation
+ * Jan 15, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.generation;
 
@@ -32,7 +32,7 @@ import org.eclipse.stp.bpmn.Vertex;
  * 
  * It wraps some complex calls, helps create a new model file.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public interface IProcessGenerator {

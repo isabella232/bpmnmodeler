@@ -11,6 +11,8 @@
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
@@ -26,7 +28,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
@@ -43,6 +44,8 @@ import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizableArtifactEditPolicy;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @generated
@@ -67,6 +70,21 @@ public class TextAnnotation2EditPart extends ShapeNodeEditPart {
      */
     protected IFigure contentPane;
 
+    /**
+     * @generated NOT the image to show on the label
+     */
+    private Image image;
+
+    /**
+     * the direction of the image to show on the label
+     */
+    private int imageDirection;
+
+    /**
+     * the image tooltip
+     */
+    private Label imageTooltip;
+    
     /**
      * @generated
      */
@@ -272,14 +290,20 @@ public class TextAnnotation2EditPart extends ShapeNodeEditPart {
         }
 
         /**
-         * @generated NOT setting the text wrap true. 
+         * @generated NOT setting the text wrap true, setting the image.
          */
         private void createContents() {
-            //org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel();
+            //org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel();
             WrapLabelWithToolTip fig_0 = new WrapLabelWithToolTip(
-                    TextAnnotation2EditPart.this.getToolTipProvider());
+                    TextAnnotation2EditPart.this.getToolTipProvider(),
+                    null, null, true, PositionConstants.MIDDLE | PositionConstants.LEFT,
+                    PositionConstants.LEFT);
             fig_0.setText(""); //$NON-NLS-1$
-            fig_0.setTextWrap(true);
+            if (image != null) {
+                fig_0.setIcon(image);
+                fig_0.setIconAlignment(imageDirection);
+                fig_0.setToolTip(imageTooltip);
+            }
             setFigureTextAnnotationNameFigure(fig_0);
 
             Object layData0 = null;
@@ -288,22 +312,21 @@ public class TextAnnotation2EditPart extends ShapeNodeEditPart {
         }
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel
          */
-        private org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fTextAnnotationNameFigure;
+        private WrappingLabel fTextAnnotationNameFigure;
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel
          */
-        public org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel getFigureTextAnnotationNameFigure() {
+        public WrappingLabel getFigureTextAnnotationNameFigure() {
             return fTextAnnotationNameFigure;
         }
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel
          */
-        private void setFigureTextAnnotationNameFigure(
-                org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig) {
+        private void setFigureTextAnnotationNameFigure(WrappingLabel fig) {
             fTextAnnotationNameFigure = fig;
         }
 
@@ -378,8 +401,8 @@ public class TextAnnotation2EditPart extends ShapeNodeEditPart {
         if (getFigure() != null && getFigure().getChildren().size() > 0) {
             Object childFig =
                 ((IFigure)getFigure().getChildren().get(0)).getChildren().get(0);
-            if (childFig instanceof WrapLabel) {
-                return ((WrapLabel) childFig).isTextTruncated();
+            if (childFig instanceof WrappingLabel) {
+                return ((WrappingLabel) childFig).isTextWrapOn();
             }
         }
         return false;
@@ -393,4 +416,22 @@ public class TextAnnotation2EditPart extends ShapeNodeEditPart {
             (NamedBpmnObject)resolveSemanticElement(), true);
     }
 
+    /**
+     * @generated NOT method added to set an icon on the text annotation edit part label.
+     * @param img the image to set
+     * @param direction the direction in which the image will be showing 
+     * @param toolTip the tooltip of the image
+     */
+    public void setLabelImage(Image img, int direction, Label toolTip) {
+        image = img;
+        this.imageDirection = direction;
+        this.imageTooltip = toolTip;
+        if (getPrimaryShape() != null && 
+                getPrimaryShape().fTextAnnotationNameFigure != null) {
+            WrappingLabel label = getPrimaryShape().fTextAnnotationNameFigure;
+            label.setIcon(image);
+            label.setIconAlignment(imageDirection);
+            label.setToolTip(imageTooltip);
+        }
+    }
 }

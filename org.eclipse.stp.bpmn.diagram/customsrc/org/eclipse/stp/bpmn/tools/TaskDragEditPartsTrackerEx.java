@@ -18,7 +18,7 @@ package org.eclipse.stp.bpmn.tools;
 
 import java.util.List;
 
-import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
@@ -27,7 +27,6 @@ import org.eclipse.gef.Request;
 import org.eclipse.gef.SharedCursors;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
-import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.AbstractTool;
 import org.eclipse.gef.tools.SelectEditPartTracker;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -38,9 +37,13 @@ import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.Vertex;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart.SubProcessFigure;
+import org.eclipse.stp.bpmn.policies.ResizableShapeEditPolicyEx;
 import org.eclipse.swt.graphics.Cursor;
 
 /**
@@ -53,19 +56,12 @@ import org.eclipse.swt.graphics.Cursor;
 public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
     
     //set to false to deactivate the overlapping position
-    private static final boolean DO_FIX_LOCATION_TO_AVOID_OVERLAP = true;
+    private static final boolean DO_FIX_LOCATION_TO_AVOID_OVERLAP = false;
     //set to false to deactivate the use of the most recent executable command
-    private static final boolean DO_CACHE_LAST_EXECUTABLE_COMMAND = true;
+    private static final boolean DO_CACHE_LAST_EXECUTABLE_COMMAND = false;
     
-    private Command _mostRecentExecutableCommand;
-    private ChangeBoundsRequest _mostRecentTargetForExecutableCommand;
-    private Point _mostRecentExecutableLocation;
-    private Point _mostRecentExecutableMoveDelta;
-    private Dimension _mostRecentExecutableSizeDelta;
-    private Object _mostExecutableRecentType;
     private int _srcHalfHeight = 0, _srcHalfWidth = 0;
     
-    private ChangeBoundsRequest clonedLastExecutableRequest;
     private int dLeft = -1, dRight, dTop, dBottom;
 
     private EObject _sourceModel;
@@ -99,7 +95,7 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
 
 
     /**
-     * Determines wheter reparent is enabled. Returns <code>true</code> in
+     * Determines wether reparent is enabled. Returns <code>true</code> in
      * case if SHIFT is pressed and source edit part has Pool Compartment parent
      * and has no connections to other edit parts.
      * 
@@ -190,7 +186,6 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
     
     protected Command getCommand() {
         if (isReparentEnabled()) {
-            _mostRecentExecutableCommand = null;
             Request request = getTargetRequest();
             if (getTargetEditPart() != null) {
                 request.setType(REQ_ADD);
@@ -201,36 +196,37 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
     		}
     	} else {
     	    Command res = super.getCommand();
-    	    if (!DO_CACHE_LAST_EXECUTABLE_COMMAND) {
-    	        return res;
-    	    }
-    		if (res.canExecute()) {
-    		    //store the most recent executable command.
-    		    _mostRecentExecutableCommand = res;
-    		    _mostRecentTargetForExecutableCommand = (ChangeBoundsRequest)getTargetRequest();
-    		    _mostRecentExecutableLocation = _mostRecentTargetForExecutableCommand.getLocation();
-    		    _mostRecentExecutableSizeDelta = _mostRecentTargetForExecutableCommand.getSizeDelta();
-    		    _mostRecentExecutableMoveDelta = _mostRecentTargetForExecutableCommand.getMoveDelta();
-    		    _mostExecutableRecentType = _mostRecentTargetForExecutableCommand.getType();
-    		    clonedLastExecutableRequest = null;
-            } else if (_mostRecentExecutableCommand != null) {
-                //look if we are very far away from the last executable position or not
-                //it is not very subtle but it is fairly straight forward to code this:
-                if (Math.abs(_mostRecentExecutableLocation.x - getLocation().x) >
-                                MAX_DELTA_FROM_LAST_EXECUTABLE_POSITION + _srcHalfWidth
-                        || Math.abs(_mostRecentExecutableLocation.y - getLocation().y) >
-                                MAX_DELTA_FROM_LAST_EXECUTABLE_POSITION + _srcHalfHeight) {
-                    //the current location is too far away
-                    //from the last location where the command is executable.
-                    //return the unexecutbale command.
-                    return res;
-                }
-                return _mostRecentExecutableCommand;
-    		}
     		return res;
     	}
     }
-        
+    
+    /**
+     * Computes the bounds meaningful to avoid overlaps.
+     * In the case of an activity, we don't take into account the label.
+     * In the case of a sub-process, use the "visible bounds".
+     * 
+     * Also computes them in absolute coords.
+     * 
+     * @param ep
+     * @param result The rectangle on which the coords are set. absolute coordinates.
+     */
+    public static void setBoundsForOverlapComputation(IGraphicalEditPart ep, Rectangle result) {
+        if (ep instanceof ActivityEditPart) {
+            IFigure fig = ((ActivityEditPart)ep).getHandleBoundsFigure();
+            result.setBounds(fig.getBounds());
+            fig.translateToAbsolute(result);
+            return;
+        } else if (ep instanceof SubProcessEditPart) {
+            SubProcessEditPart sep = (SubProcessEditPart)ep;
+            SubProcessFigure f = (SubProcessFigure)sep.getPrimaryShape();
+            result.setBounds(f.getHandleBounds());
+            f.translateToAbsolute(result);
+        } else {
+            result.setBounds(ep.getFigure().getBounds());
+            ep.getFigure().translateToAbsolute(result);
+        }
+    }
+    
     /**
      * @return The nearest position for the cursor such that the dragged shape
      * does not overlap with the shape of the that the mouse is currently over.
@@ -262,7 +258,7 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
                 //we only look at one shape at a time.
                 //as soon as it intersects we stop looking.
                 IGraphicalEditPart srcEp = (IGraphicalEditPart)getSourceEditPart();
-                _tmp2.setBounds(srcEp.getFigure().getBounds());
+                setBoundsForOverlapComputation(srcEp, _tmp2);
                 srcEp.getFigure().translateToAbsolute(_tmp2);
                 for (Object ep : currTarget.getChildren()) {
                     if (ep != srcEp && ep instanceof IGraphicalEditPart &&
@@ -270,8 +266,7 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
                                     (ep instanceof GroupEditPart) || 
                                     (ep instanceof Group2EditPart))) {
                         IGraphicalEditPart sibling = (IGraphicalEditPart)ep;
-                        _tmp.setBounds(sibling.getFigure().getBounds());
-                        sibling.getFigure().translateToAbsolute(_tmp);
+                        setBoundsForOverlapComputation(sibling, _tmp);
                        // divideByZoom(_tmp);
                         //_tmp.scale(_zoom.getZoom());
                         if (_tmp.intersects(_tmp2)) {
@@ -307,8 +302,7 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
             
             if (currTarget != null) {
                 //look for the closest point outside of the bounds of the targetEditPart:
-                _tmp.setBounds(currTarget.getFigure().getBounds());
-                currTarget.getFigure().translateToAbsolute(_tmp);
+                setBoundsForOverlapComputation(currTarget, _tmp);
                 
                 Point currLocation = super.getLocation();
                 
@@ -389,26 +383,9 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
     @Override
     protected void showSourceFeedback() {
         List editParts = getOperationSet();
-        if (_mostRecentExecutableCommand != null) {
-            if (clonedLastExecutableRequest == null) {
-                clonedLastExecutableRequest = new ChangeBoundsRequest(_mostExecutableRecentType);
-                if (_mostRecentExecutableSizeDelta != null)
-                    clonedLastExecutableRequest.setSizeDelta(_mostRecentExecutableSizeDelta);
-                if (_mostRecentExecutableMoveDelta != null)
-                    clonedLastExecutableRequest.setMoveDelta(_mostRecentExecutableMoveDelta);
-                if (_mostRecentExecutableLocation != null)
-                    clonedLastExecutableRequest.setLocation(_mostRecentExecutableLocation);
-                clonedLastExecutableRequest.setEditParts(_mostRecentTargetForExecutableCommand.getEditParts());
-            }
-            for (int i = 0; i < editParts.size(); i++) {
-                EditPart editPart = (EditPart) editParts.get(i);
-                    editPart.showSourceFeedback(clonedLastExecutableRequest);
-            }
-        } else {
-            for (int i = 0; i < editParts.size(); i++) {
-                EditPart editPart = (EditPart) editParts.get(i);
-                editPart.showSourceFeedback(getTargetRequest());
-            }
+        for (int i = 0; i < editParts.size(); i++) {
+            EditPart editPart = (EditPart) editParts.get(i);
+            editPart.showSourceFeedback(getTargetRequest());
         }
         setFlag(_FLAG_SOURCE_FEEDBACK, true);
     }
@@ -443,5 +420,16 @@ public class TaskDragEditPartsTrackerEx extends DragEditPartsTrackerEx {
         }
         setCurrentCommand(null);
     }
+
+
+    @Override
+    protected void updateTargetRequest() {
+        super.updateTargetRequest();
+        if (isReparentEnabled()) {
+            ResizableShapeEditPolicyEx.setIsChangingScope(true, getTargetRequest());
+        }
+    }
+    
+    
 
 }

@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Dec 1, 2006      Antoine Toulm�   Creation
+ * Dec 1, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.validation.specification;
 
@@ -27,7 +27,7 @@ import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 /**
  * This constraint checks that there is only one default edge
  * after or before the XOR gateway.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class UniqueDefaultEdgeConstraint extends AbstractModelConstraint {

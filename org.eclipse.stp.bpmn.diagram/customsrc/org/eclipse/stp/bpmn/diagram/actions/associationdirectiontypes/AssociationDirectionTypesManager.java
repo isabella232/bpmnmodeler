@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Dec 18, 2006      Antoine Toulm�   Creation
+ * Dec 18, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.actions.associationdirectiontypes;
 
@@ -21,7 +21,7 @@ import org.eclipse.ui.IWorkbenchPage;
 /**
  * This menu manager is used for the activity types popup menus.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class AssociationDirectionTypesManager extends ActionMenuManager {

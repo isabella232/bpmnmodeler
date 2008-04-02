@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Jan 15, 2007      Antoine Toulm�   Creation
+ * Jan 15, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.generation.impl;
 
@@ -78,7 +78,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramFileCreator;
  * 
  * The generator provides a method to save the diagrams' data.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class BPMNProcessGenerator implements IProcessGenerator {
@@ -626,7 +626,7 @@ public class BPMNProcessGenerator implements IProcessGenerator {
 	/**
 	 * This command extends RecordingCommand by giving the opportunity
 	 * to the user to return the created object of the command.
-	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
 	protected abstract class InternalRecordingCommand extends RecordingCommand {

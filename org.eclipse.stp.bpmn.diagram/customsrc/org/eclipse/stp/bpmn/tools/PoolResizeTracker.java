@@ -126,7 +126,6 @@ public class PoolResizeTracker extends ActivityResizeTracker {
 
         if (((direction & PositionConstants.NORTH) != 0) && (parts.size() < 2)) {
             // prevents children shapes from clipping
-
             if (getCurrentInput().isControlKeyDown()) {
                 if (minSize.height > (figureSize.height - 2 * dragDelta.height)) {
                     dragDelta.height =

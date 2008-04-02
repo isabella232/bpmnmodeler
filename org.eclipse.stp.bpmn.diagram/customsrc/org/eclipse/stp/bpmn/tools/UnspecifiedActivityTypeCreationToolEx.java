@@ -21,11 +21,17 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.requests.CreateRequest;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.tools.UnspecifiedTypeCreationTool;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.commands.IElementTypeEx;
+import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**
  * @notgenerated aware if this creates an activity. set to not unload
@@ -35,6 +41,8 @@ public class UnspecifiedActivityTypeCreationToolEx extends
         UnspecifiedTypeCreationTool {
     private boolean isActivity;
 
+    private boolean isArtifact;
+    
     public UnspecifiedActivityTypeCreationToolEx(List elementTypes,
             boolean unloadWhenFinished) {
         super(elementTypes);
@@ -42,6 +50,15 @@ public class UnspecifiedActivityTypeCreationToolEx extends
         for (Object object : elementTypes) {
             if (object instanceof IElementTypeEx) {
                 isActivity = true;
+                break;
+            }
+            if (object == BpmnElementTypes.Group_1004 ||
+                    object == BpmnElementTypes.Group_2006 ||
+                    object == BpmnElementTypes.TextAnnotation_1002 ||
+                    object == BpmnElementTypes.TextAnnotation_2004 ||
+                    object == BpmnElementTypes.DataObject_1003 ||
+                    object == BpmnElementTypes.DataObject_2005) {
+                isArtifact = true;
                 break;
             }
         }
@@ -74,6 +91,45 @@ public class UnspecifiedActivityTypeCreationToolEx extends
                 req.setLocation(getLocation());
             }
         }
+    }
+    
+    /**
+     * Recursively finds the parent that could contain shapes
+     * @param part the part that we inspect
+     * @return the compatible parent
+     */
+    private EditPart findParent(EditPart part) {
+        if (part instanceof PoolPoolCompartmentEditPart || 
+                part instanceof SubProcessSubProcessBodyCompartmentEditPart || 
+                part instanceof BpmnDiagramEditPart) {
+            return part;
+        } else {
+            if (part == null) {
+                throw new IllegalArgumentException("Could not find parent");
+            }
+            return findParent(part.getParent());
+        }
+    }
+    /**
+     * Overriding to get the parent when the element type represents an artifact and it does not fit
+     * completely in its current parent.
+     */
+    @Override
+    protected boolean updateTargetUnderMouse() {
+        boolean b = super.updateTargetUnderMouse();
+        if (isArtifact && getTargetEditPart() instanceof IGraphicalEditPart 
+                && getTargetRequest() != null) {
+            Point loq = getStartLocation();
+            Rectangle bounds = new Rectangle(loq, loq);
+            bounds.union(loq.getTranslated(getDragMoveDelta()));
+            Rectangle fig = ((IGraphicalEditPart) getTargetEditPart()).getFigure().getBounds().getCopy();
+            ((IGraphicalEditPart) getTargetEditPart()).getFigure().translateToAbsolute(fig);
+            if (!fig.contains(bounds)) {
+                b = true;
+                setTargetEditPart(findParent(getTargetEditPart().getParent()));
+            }
+        }
+        return b;
     }
 
     private static int sgn(int i) {

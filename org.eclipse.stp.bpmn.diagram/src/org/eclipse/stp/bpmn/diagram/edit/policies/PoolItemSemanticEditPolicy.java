@@ -347,7 +347,9 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
         public boolean canExecute() {
             if (getSource() instanceof Pool || 
                     getTarget() instanceof Pool) {
-                return true;
+                if (getSource() != getTarget()) {
+                    return true;
+                }
             }
             if ((!(getSource() instanceof Activity))|| 
                     !(getTarget() instanceof Activity)) {

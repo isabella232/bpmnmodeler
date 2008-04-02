@@ -160,7 +160,7 @@ public class EdgeConnectionValidator implements ConnectionValidator {
 		return false;
 	}
 	
-	   /**
+	 /**
      * @return true if the source and the target of the edit part
      * can be connected.
      * 
@@ -189,14 +189,9 @@ public class EdgeConnectionValidator implements ConnectionValidator {
                 equals(((Vertex) target).getGraph())) {
             return false;
         }
-        for (SequenceEdge edge: ((Vertex) source).getOutgoingEdges()) {
-            if (edge.getTarget().equals(target)) {
-                return false;
-            }
-        }
         return true;
     }
-	
+    
 	/**
 	 * @return true if the source and the target of the edit part
 	 * can be connected.

@@ -32,7 +32,7 @@ public abstract class AbstractDnDHandler implements IDnDHandler {
 	
 	/**
 	 * Utility class used to simplify the use of AbstracTransactionalCommand.
-	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
 	protected abstract class EasyCommand extends AbstractTransactionalCommand {

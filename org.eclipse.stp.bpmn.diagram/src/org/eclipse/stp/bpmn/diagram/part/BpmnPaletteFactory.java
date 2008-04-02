@@ -116,6 +116,7 @@ public class BpmnPaletteFactory {
      */
     private PaletteContainer createbpmn1Group() {
         PaletteContainer paletteContainer = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_basic_bpmn_drawer_label);
+        ((PaletteDrawer) paletteContainer).setInitialState(PaletteDrawer.INITIAL_STATE_OPEN);
         paletteContainer.setDescription(BpmnDiagramMessages.BpmnPaletteFactory_basic_bpmn_drawer_description);
         paletteContainer.add(createTextAnnotation2CreationTool());
         paletteContainer.add(createTask1CreationTool());
@@ -157,6 +158,7 @@ public class BpmnPaletteFactory {
      */
     private PaletteContainer createEventShapes21Group() {
         PaletteContainer paletteContainer1 = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_start_events_label);
+        ((PaletteDrawer) paletteContainer1).setInitialState(PaletteDrawer.INITIAL_STATE_CLOSED);
         paletteContainer1.setDescription(BpmnDiagramMessages.BpmnPaletteFactory_start_events_description);
         paletteContainer1.add(createStartEmpty1CreationTool());
         paletteContainer1.add(createStartMessage2CreationTool());
@@ -259,6 +261,7 @@ public class BpmnPaletteFactory {
      */
     private PaletteContainer createEventShapes22Group() {
         PaletteContainer paletteContainer2 = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_inter_events_label);
+        ((PaletteDrawer) paletteContainer2).setInitialState(PaletteDrawer.INITIAL_STATE_CLOSED);
         paletteContainer2.setDescription(BpmnDiagramMessages.BpmnPaletteFactory_inter_events_description);
         paletteContainer2.add(createIntermediateEmpty4CreationTool());
         paletteContainer2.add(createIntermediateMessage5CreationTool());
@@ -322,6 +325,7 @@ public class BpmnPaletteFactory {
      */
     private PaletteContainer createEventShapes23Group() {
         PaletteContainer paletteContainer3 = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_end_events_label);
+        ((PaletteDrawer) paletteContainer3).setInitialState(PaletteDrawer.INITIAL_STATE_CLOSED);
         paletteContainer3.setDescription(BpmnDiagramMessages.BpmnPaletteFactory_end_events_description);
         paletteContainer3.add(createEndEmpty10CreationTool());
         paletteContainer3.add(createEndMessage11CreationTool());
@@ -395,6 +399,7 @@ public class BpmnPaletteFactory {
      */
     private PaletteContainer createGatewayShapes3Group() {
         PaletteContainer paletteContainer = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_gateways_label);
+        ((PaletteDrawer) paletteContainer).setInitialState(PaletteDrawer.INITIAL_STATE_CLOSED);
         paletteContainer.setDescription(BpmnDiagramMessages.BpmnPaletteFactory_gateways_description);
         paletteContainer.add(createDatabasedexcusive1CreationTool());
         paletteContainer.add(createEventbasedexclusive2CreationTool());
@@ -428,6 +433,7 @@ public class BpmnPaletteFactory {
      */
     private PaletteContainer createArtifacts4Group() {
         PaletteContainer paletteContainer = new PaletteDrawer(BpmnDiagramMessages.BpmnPaletteFactory_artifacts_label);
+        ((PaletteDrawer) paletteContainer).setInitialState(PaletteDrawer.INITIAL_STATE_CLOSED);
         paletteContainer.setDescription(BpmnDiagramMessages.BpmnPaletteFactory_artifacts_description);
         paletteContainer.add(createGroup3CreationTool());
         paletteContainer.add(createDataObject4CreationTool());

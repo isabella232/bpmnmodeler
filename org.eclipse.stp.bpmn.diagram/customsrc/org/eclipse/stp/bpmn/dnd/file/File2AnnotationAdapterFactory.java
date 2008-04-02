@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Nov 28, 2006      Antoine Toulm�   Creation
+ * Nov 28, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.dnd.file;
 
@@ -19,7 +19,7 @@ import org.eclipse.stp.bpmn.dnd.IDnDHandler;
 
 /**
  * This adapter factory adapts IFile objects into EAnnotations.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class File2AnnotationAdapterFactory implements IAdapterFactory {

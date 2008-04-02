@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Jan 17, 2007      Antoine Toulm�   Creation
+ * Jan 17, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.generation.impl;
 
@@ -68,7 +68,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
  * This class extends BPMNProcessGenerator and 
  * implements IVisualProcessGenerator. It is used to create semantic elements
  * and give them the right position and size.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class BPMNVisualProcessGenerator  

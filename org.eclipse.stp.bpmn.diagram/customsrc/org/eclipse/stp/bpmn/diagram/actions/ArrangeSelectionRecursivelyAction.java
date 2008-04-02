@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Jan 26, 2007      Antoine Toulm�   Creation
+ * Jan 26, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.actions;
 
@@ -41,7 +41,7 @@ import org.eclipse.ui.PlatformUI;
 /**
  * Extension for the Arrange selection action. The big difference here is
  * that it goes down the compartments and arranges them recursively
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ArrangeSelectionRecursivelyAction extends DiagramAction {

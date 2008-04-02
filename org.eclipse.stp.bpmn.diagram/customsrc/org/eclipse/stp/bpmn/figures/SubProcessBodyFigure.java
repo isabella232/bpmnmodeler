@@ -15,8 +15,10 @@
  **/
 package org.eclipse.stp.bpmn.figures;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 
 /**
  * More to come.
@@ -34,6 +36,10 @@ public class SubProcessBodyFigure extends RectangleFigure {
 
     public void paintFigure(Graphics graphics) {
         // transparent
+//graphics.drawRectangle(getClientArea());
+//graphics.setAlpha(120);
+//graphics.setBackgroundColor(ColorConstants.blue);
+//graphics.fillRectangle(getBounds().getCopy().crop(SubProcessEditPart.INSETS));
     }
 
 }

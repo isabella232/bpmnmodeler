@@ -22,10 +22,11 @@ import java.util.List;
 
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Tool;
 import org.eclipse.gef.tools.SelectionTool;
@@ -34,17 +35,19 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolic
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandleLocator;
 import org.eclipse.gmf.runtime.diagram.ui.handles.ConnectionHandle.HandleDirection;
-import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.jface.preference.IPreferenceStore;
-import org.eclipse.stp.bpmn.Activity;
-import org.eclipse.stp.bpmn.ActivityType;
-import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
+import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
+import org.eclipse.stp.bpmn.figures.activities.ActivityNodeFigure;
+import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
 import org.eclipse.stp.bpmn.handles.ConnectionHandleEx;
 import org.eclipse.stp.bpmn.handles.ConnectionHandleForAssociation;
 
@@ -54,6 +57,7 @@ import org.eclipse.stp.bpmn.handles.ConnectionHandleForAssociation;
  * There was issues overriding enough things.
  * 
  * @author Bohdan Ilchyshyn
+ * @author atoulme
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
@@ -80,7 +84,7 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 	private OwnerMovedListener ownerMovedListener = new OwnerMovedListener();
 
 	/** list of connection handles currently being displayed */
-	private List handles = null;
+	private List<ConnectionHandle> handles = null;
 
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#isDiagramAssistant(java.lang.Object)
@@ -268,16 +272,11 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 		ConnectionHandleLocator locator = getConnectionHandleLocator(referencePoint);
         
         //set handle position to host
-        EditPart host = getHost();
-        
 		handles = getHandleFigures(locator.getBorderSide());
 		if (handles == null) {
 			return;
 		}
 
-		
-		
-		
 		IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
 		for (Iterator iter = handles.iterator(); iter.hasNext();) {
 			ConnectionHandle handle = (ConnectionHandle) iter.next();
@@ -333,16 +332,12 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 			return;
 		}
 		IFigure layer = getLayer(LayerConstants.HANDLE_LAYER);
-		for (Iterator iter = handles.iterator(); iter.hasNext();) {
-			IFigure handle = (IFigure) iter.next();
+		for (ConnectionHandle handle : handles) {
 			handle.removeMouseMotionListener(this);
 			layer.remove(handle);
 			getHost().getViewer().getVisualPartMap().remove(handle);
 		}
 		handles = null;
-		
-		//unset handle position to host
-		EditPart host = getHost();
 	}
 		
 	private boolean isSelectionToolActive()
@@ -357,6 +352,40 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 		return false;		
 	}
 	
+	/**
+     * Helper method to return the bounds of the owner,
+     * or only the ones from its interesting feature.
+     * We add a scale factor for the user
+     * to place the cursor around the figure.
+     * @param hostFigure the host figure
+     * @return the bounds to create the anchor on.
+     */
+    protected Rectangle getOwnerBounds(IFigure hostFigure) {
+        Rectangle bounds = null;
+        for (Object child : hostFigure.getChildren()) {
+            if (child instanceof ActivityNodeFigure) {
+                for (Object childOfChild : ((ActivityNodeFigure) child).getChildren()) {
+                    if (childOfChild instanceof ActivityDiamondFigure || 
+                            childOfChild instanceof ActivityOvalFigure) {
+                        bounds = ((IFigure) childOfChild).getBounds().getCopy();
+                        break;
+                    }
+                }
+            }
+            if (bounds != null) {
+                break;
+            }
+        }
+        if (bounds == null) {
+            bounds = hostFigure.getBounds().getCopy();
+        }
+        bounds.x -= bounds.width/4;
+        bounds.y -= bounds.height/4;
+        bounds.width += bounds.width/4;
+        bounds.height += bounds.height/4;
+        return bounds;
+    }
+    
 	/* (non-Javadoc)
 	 * @see org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy#shouldShowDiagramAssistant()
 	 */
@@ -373,13 +402,25 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 		if (handles != null || !isSelectionToolActive()) {
 			return false;
 		}
-		return true;
+		
+		// only show if in the top, bottom, left or right quarter
+		Point mouse = getMouseLocation().getCopy();
+		Rectangle bounds = getOwnerBounds(getHostFigure());
+		if (getHost() instanceof GroupEditPart ||
+		        getHost() instanceof Group2EditPart) {
+            boolean onX = Math.abs(mouse.x - bounds.x) < 5 ||
+                Math.abs(mouse.x - (bounds.x + bounds.width)) < 5;
+            boolean onY = Math.abs(mouse.y - bounds.y) < 5 ||
+                Math.abs(mouse.y - (bounds.y + bounds.height)) < 5;
+            return ((onX || onY));
+		}
+		return bounds.contains(mouse);
 	}
 	
 	/**
 	 * get the connection handle locator using the host and the passed reference
 	 * point
-	 * @author atoulme added a tweak to always rturn the center
+	 * @author atoulme added a tweak to always return the center
 	 * of the shape when the host represents an activity
 	 * @param referencePoint
 	 * @return <code>ConnectionHandleLocator</code>
@@ -388,22 +429,28 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 	    // only non events tasks may benefit from this for now,
 	    // until we rework the handles and their positioning 
 	    // according to the shape without its label
+	    
+	    IFigure handleBoundFig = null;
+	    IGraphicalEditPart gap = (IGraphicalEditPart)getHost();
 	    if (getHost() instanceof ActivityEditPart) {
-	        Activity activity = (Activity) ((IGraphicalEditPart) getHost()).
-                resolveSemanticElement();
-	        Rectangle bounds = ((IGraphicalEditPart) getHost()).
-                getFigure().getBounds().getCopy();
-	        // if it is an event or a gateway we want the
-	        // bounds of the shape only, not including the label.
-            if (ActivityType.VALUES_EVENTS.contains(activity.getActivityType()) ||
-                    ActivityType.VALUES_EVENTS.contains(activity.getActivityType())) {
-                bounds = ((IFigure) ((IFigure) ((IGraphicalEditPart) getHost()).
-                getFigure().getChildren().get(0)).getChildren().get(0)).getBounds().getCopy();
-            }
+	        ActivityEditPart aep = (ActivityEditPart)getHost();
+	        handleBoundFig = aep.getHandleBoundsFigure();
+	    } else if (getHost() instanceof Activity2EditPart) {
+	        Activity2EditPart aep2 = (Activity2EditPart)getHost();
+	        handleBoundFig = aep2.getHandleBoundsFigure();
+	    }
+	    
+	    if (handleBoundFig != null) {
+	        Rectangle bounds = handleBoundFig.getBounds().getCopy();//no need to copy as the rectangle is not modified.
+	        if (bounds.x == 0) {
+    	        handleBoundFig.translateToAbsolute(bounds);
+    	        gap.getFigure().translateToRelative(bounds);
+	        }
 	        if (bounds.width != 0 && bounds.height != 0) {
 	         // we create the two equations representing the diagonals of the rectangle
 	            // first the one starting from the top left and going to
 	            // the bottom right
+	            int borderSide = PositionConstants.NONE;
 	            boolean overFirstDiag = isOverALine( 
 	                    bounds.getBottomRight(), bounds.getTopLeft(), referencePoint);
 	            boolean overSecondDiag = isOverALine( 
@@ -411,18 +458,27 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 	            if (overFirstDiag) {
 	                if (overSecondDiag) {
 	                    referencePoint = bounds.getTop().getCopy();
+	                    borderSide = PositionConstants.NORTH;
 	                } else {
 	                    referencePoint = bounds.getRight().getCopy();
+	                    borderSide = PositionConstants.EAST;
 	                }
 	            } else {
 	                if (overSecondDiag) {
 	                    referencePoint = bounds.getLeft().getCopy();
+	                    borderSide = PositionConstants.WEST;
 	                } else {
 	                    referencePoint = bounds.getBottom().getCopy();
+	                    borderSide = PositionConstants.SOUTH;
 	                }
 	            }
+	            getHostFigure().translateToAbsolute(referencePoint);
+	            return new ConnectionHandleLocatorEx(getHostFigure(), referencePoint, borderSide);
 	        }
+	        
 	    }
+	    
+	    // TODO for pools
 		return new ConnectionHandleLocator(getHostFigure(), referencePoint);		
 	}
 
@@ -468,4 +524,67 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
         return delay > -1 ? delay : 60;
     }
 
+    /** number of pixels between connection handles */
+    private static int HANDLE_SPACING = 15;
+
+    /**
+     * We are more straight-forward than the super class regarding where
+     * we want our handles. In particular, the border side is set and should
+     * not change during the appearance of the handle.
+     *
+     * @author <a href="http://www.intalio.com">Intalio Inc.</a>
+     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
+     */
+    private class ConnectionHandleLocatorEx extends ConnectionHandleLocator {
+
+        
+        
+        private int borderSide;
+
+        public ConnectionHandleLocatorEx(IFigure shape, Point reference, int borderSide) {
+            super(shape, reference);
+            this.borderSide = borderSide;
+        }
+        
+        public void relocate(IFigure target) {
+         // set location based on side
+            Dimension offset = Dimension.SINGLETON.getCopy();
+            
+            
+            switch (borderSide) {
+            case PositionConstants.NORTH:
+                offset.height = -target.getBounds().height;
+                break;
+            case PositionConstants.EAST:
+                break;
+            case PositionConstants.SOUTH:
+                break;
+            case PositionConstants.WEST:
+                offset.width = -target.getBounds().width;
+                break;
+            default:
+                // nothing
+            }
+            Point targetLocation = getCursorPosition().getCopy().translate(offset);
+            target.translateToRelative(targetLocation);
+            target.setLocation(targetLocation);
+
+            // space out handles
+            int index = handles.indexOf(target);
+            double centerOffset = index - (handles.size() / 2.0);
+
+            if (borderSide == PositionConstants.WEST || borderSide == PositionConstants.EAST) {
+                target.translate(0, (int) (centerOffset * HANDLE_SPACING));
+            } else {
+                target.translate((int) (centerOffset * HANDLE_SPACING), 0);
+            }
+            
+        }
+        
+        @Override
+        public int getBorderSide() {
+            return borderSide;
+        }
+        
+    }
 }

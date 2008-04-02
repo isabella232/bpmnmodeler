@@ -705,7 +705,7 @@
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
             <popupStructuredContributionCriteria objectClass="org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionEditPart">
             </popupStructuredContributionCriteria>
-            <popupAction path="/formatMenu" id="resetBendpointsAction">
+			<popupAction path="/formatMenu/miscellaneousGroup" id="resetBendpointsAction">
             </popupAction>
          </popupContribution>
          <popupContribution class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
@@ -764,8 +764,42 @@
                   objectCount="1">
             </popupStructuredContributionCriteria>
          </popupContribution>
-        <popupContribution
+         <!-- reuse the alignment from GMF action IDs. ? -->
+        <!--popupContribution
                class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria
+                    objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityNameEditPart"
+                    objectCount="1">
+            </popupStructuredContributionCriteria>
+            <popupStructuredContributionCriteria
+                  objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.Activity2NameEditPart"
+                  objectCount="1">
+            </popupStructuredContributionCriteria>   
+            <popupMenu path="/formatMenu/miscellaneousGroup" id="alignmentMenu">
+            </popupMenu>    
+            <popupMenuGroup path="/formatMenu/alignmentMenu/" id="alignmentGroup">
+            </popupMenuGroup>             
+            <popupAction path="/formatMenu/alignmentMenu/alignmentGroup" id="alignLeft">
+            </popupAction>   
+            <popupAction path="/formatMenu/alignmentMenu/alignmentGroup" id="alignRight">
+            </popupAction>   
+            <popupAction path="/formatMenu/alignmentMenu/alignmentGroup" id="alignCenter">
+            </popupAction>   
+            <popupAction path="/formatMenu/alignmentMenu/alignmentGroup" id="alignVerticalCenter">
+            </popupAction>   
+            <popupAction path="/formatMenu/alignmentMenu/alignmentGroup" id="alignVerticalTop">
+            </popupAction>   
+            <popupAction path="/formatMenu/alignmentMenu/alignmentGroup" id="alignVerticalBottom">
+            </popupAction>
+         </popupContribution-->
+         <popupContribution
+               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+            <popupStructuredContributionCriteria
+                    objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart"
+                    objectCount="1">
+            </popupStructuredContributionCriteria>
+
+            
             <popupMenu
                   id="ActivityTypes"
                   path="/editGroup">
@@ -829,12 +863,8 @@
                   path="/ActivityTypes/ActivityTypes_EndEvents/"
                   separator="false">
             </popupMenuGroup>
-            <popupStructuredContributionCriteria
-            		objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart"
-                  	objectCount="1">
-            </popupStructuredContributionCriteria>
             
-         <popupAction
+            <popupAction
                   id="setActivityTypeToTask"
                   path="/ActivityTypes/ActivityTypes_Tasks/group0">
             </popupAction>
@@ -1092,7 +1122,17 @@
               </method>
            </popupStructuredContributionCriteria>
         </popupContribution>
-         
+         <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupAction
+                 id="SetTransactionalAction"
+                 path="/additionsGroup">
+           </popupAction>
+           <popupStructuredContributionCriteria
+                 objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart"
+                 objectCount="1">
+           </popupStructuredContributionCriteria>
+        </popupContribution>
       </contributionItemProvider>
    </extension>
    <extension

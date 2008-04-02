@@ -24,7 +24,7 @@ import org.eclipse.ui.views.navigator.LocalSelectionTransfer;
 /**
  * Listener taking the localSelectionTransfer selection
  * and giving it to the superclass to form the DropObjectsRequest.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class BpmnDropTargetListener extends

@@ -224,12 +224,10 @@ final public class TaskDragHelper {
         // Get zoom size
         double zoom = 1;
         RootEditPart root = source.getRoot();
-
         if (root instanceof ScalableFreeformRootEditPart) {
             zoom = ((ScalableFreeformRootEditPart) root).getZoomManager()
                     .getZoom();
         }
-
         // Apply zoom
         moveDelta.scale(1 / zoom);
 

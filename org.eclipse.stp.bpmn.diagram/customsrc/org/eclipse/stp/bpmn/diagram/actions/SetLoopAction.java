@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Dec 13, 2006      Antoine Toulm�   Creation
+ * Dec 13, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.actions;
 
@@ -37,7 +37,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * Sets the selected task or sub process as a looping task
  * or subprocess.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class SetLoopAction extends AbstractActionHandler {
@@ -147,7 +147,7 @@ public class SetLoopAction extends AbstractActionHandler {
 
 	/**
 	 * Utility class used to simplify the use of AbstracTransactionalCommand.
-	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
 	private abstract class MyCommand extends AbstractTransactionalCommand {

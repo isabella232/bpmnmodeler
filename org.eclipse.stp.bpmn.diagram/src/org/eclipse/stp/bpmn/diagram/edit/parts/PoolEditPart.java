@@ -45,6 +45,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.DelegateToCompartmentEditPolicy;
+import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizablePoolEditPolicy;
 import org.eclipse.swt.graphics.Color;
 
@@ -125,6 +126,9 @@ public class PoolEditPart extends ShapeNodeEditPart {
                         EditPolicy.CONTAINER_ROLE));
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
         		new BpmnDragDropEditPolicy(this));
+     // adding an open edit policy
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
+                new OpenFileEditPolicy());
     }
 
     /**

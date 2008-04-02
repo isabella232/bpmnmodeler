@@ -18,15 +18,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.BorderLayout;
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.draw2d.text.AbstractFlowBorder;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EModelElement;
@@ -47,13 +47,12 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.OneLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Edge;
-import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -61,10 +60,10 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.BpmnPackage;
-import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
 import org.eclipse.stp.bpmn.SequenceEdge;
+import org.eclipse.stp.bpmn.SequenceFlowConditionType;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.actions.SetAsThrowingOrCatchingAction;
 import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityCanonicalEditPolicy;
@@ -73,6 +72,7 @@ import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityItemSemanticEditPolicy
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip.IToolTipProvider;
 import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
@@ -81,7 +81,6 @@ import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
-import org.eclipse.stp.bpmn.figures.connectionanchors.WrapperNodeFigureEx;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor.INodeFigureAnchorTerminalUpdatable;
 import org.eclipse.stp.bpmn.figures.connectionanchors.impl.ConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.layouts.ActivityLayout;
@@ -90,6 +89,7 @@ import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * @generated
@@ -146,7 +146,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
     /**
      * Structure of figure: WrapperNodeFigure is a node plate figure that wraps
      * Oval, Diamond or rectanle, that holds primary shape. Wrapped shape can be
-     * chaged when activity type is changed.
+     * changed when activity type is changed.
      * 
      * @notgenerated
      */
@@ -178,7 +178,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      */
     protected void createDefaultEditPolicies() {
         createDefaultEditPoliciesGen();
-        super.getViewer().getEditDomain();
+        //super.getViewer().getEditDomain();
         // replace ConnectionHandleEditPolicy with our own
         removeEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE);
         installEditPolicy(EditPolicyRoles.CONNECTION_HANDLES_ROLE,
@@ -263,7 +263,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             ActivityFigure activityFigure, Activity activity) {
         activityFigure.setActivityType(activity.getActivityType().getLiteral());
         boolean res = false;
-        WrapLabel wl = activityFigure.getFigureActivityNameFigure();
+        WrappingLabel wl = activityFigure.getFigureActivityNameFigure();
         if (activity.getName() == null) {
             if (activity.getActivityType().equals(ActivityType.TASK_LITERAL)) {
                 if (!BpmnDiagramMessages.ActivityEditPart_task_default_name.equals(wl.getText())) {
@@ -272,18 +272,42 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             }
             res = true;
         }
-
+        return setAlignments(activityFigure, activity, wl, res);
+    }
+    
+    private static final Border BORDER_TOP = new MarginBorder(4, 0, 0, 0);
+    private static final Border BORDER_NONE = new MarginBorder(0, 0, 0, 0);
+    
+    //same than the margin border but the border line is visible.
+    private static final Border BORDER_TEST = new OneLineBorder(ColorConstants.black, 4, PositionConstants.TOP);
+    
+    
+    private boolean setAlignments(ActivityFigure activityFigure, Activity activity,
+            WrappingLabel wl, boolean res) {
         if (activity.getActivityType().equals(ActivityType.TASK_LITERAL)) {
             if (!(activityFigure.getLayoutManager() instanceof StackLayout)) {
                 StackLayout layout = new StackLayout();
                 activityFigure.setLayoutManager(layout);
                 res = true;
             }
-            wl.setTextAlignment(PositionConstants.MIDDLE);
+            wl.setAlignment(PositionConstants.CENTER);
+            wl.setTextJustification(PositionConstants.CENTER);
+            if (wrappedFigure.getLayoutManager() instanceof ActivityLayout) {
+                ActivityLayout layout = (ActivityLayout) wrappedFigure.getLayoutManager();
+                layout.setVerticalSpacing(0);
+            }
+//            wl.setBorder(BORDER_NONE);
         } else {
             if (wl != null) {
-                wl.setTextAlignment(PositionConstants.TOP);
-                wl.setPreferredSize(ACTIVITY_FIGURE_SIZE.width, 0);
+                wl.setTextJustification(PositionConstants.CENTER);
+                wl.setAlignment(PositionConstants.TOP);
+//                int prefWidth = MapModeUtil.getMapMode(activityFigure).DPtoLP(ACTIVITY_FIGURE_SIZE.width);
+//                wl.setPreferredSize(prefWidth, 0);
+                if (wrappedFigure.getLayoutManager() instanceof ActivityLayout) {
+                    ActivityLayout layout = (ActivityLayout) wrappedFigure.getLayoutManager();
+                    layout.setVerticalSpacing(4);
+                }
+//                wl.setBorder(BORDER_TOP);
             }
             if (!(activityFigure.getLayoutManager() instanceof ConstrainedToolbarLayout)) {
                 ConstrainedToolbarLayout layout = new ConstrainedToolbarLayout();
@@ -330,48 +354,23 @@ public class ActivityEditPart extends ShapeNodeEditPart {
     protected IConnectionAnchorFactory getConnectionAnchorFactory() {
         return ConnectionAnchorFactory.INSTANCE;
     }
-
+    
     /**
-     * @notgenerated
+     * Helper method
+     * @return The figure for the oval or diamond or rectangle figure.
+     */
+    public IFigure getHandleBoundsFigure() {
+        if (wrappedFigure.getLayoutManager() instanceof ActivityLayout) {
+            return ((ActivityLayout)wrappedFigure.getLayoutManager()).getOvalOrDiamondFigure();
+        }
+        return getPrimaryShape();
+    }
+    
+    /**
+     * @generated not
      */
     protected NodeFigure createNodePlate() {
-
-        // final Activity2EditPart zis = this;
-
-        return new WrapperNodeFigureEx(getConnectionAnchorFactory(),
-                createWrappedFigure()) {
-            @Override
-            /**
-             * Exclude activity name label from handle bounds
-             */
-            public Rectangle getHandleBounds() {
-                Rectangle rectangle = super.getHandleBounds();
-                Activity activity = (Activity) resolveSemanticElement();
-                if (activity == null || activity.getActivityType() == null || 
-                		activity.getActivityType().equals(ActivityType.TASK_LITERAL)) {
-                    return rectangle;
-                }
-
-                return ((IFigure) wrappedFigure.getChildren().get(0)).getBounds();
-//                IGraphicalEditPart activityNameEditPart = getChildBySemanticHint(BpmnVisualIDRegistry
-//                        .getType(org.eclipse.stp.bpmn.diagram.edit.parts.ActivityNameEditPart.VISUAL_ID));
-//                int nameFigureHeight = activityNameEditPart == null 
-//                		|| activityNameEditPart.getFigure() == null ? 
-//                		0 : activityNameEditPart.getFigure().getSize().height;
-//
-//                return new Rectangle(rectangle.x, rectangle.y, rectangle.width,
-//                        rectangle.height - nameFigureHeight);
-
-            };
-
-        };
-    }
-
-    /**
-     * @notgenerated
-     * @return
-     */
-    private INodeFigureAnchorTerminalUpdatable createWrappedFigure() {
+        //this used to be the createWrappedFigure() method:
         Activity activity = (Activity) getPrimaryView().getElement();
         final int activityType = activity.getActivityType().getValue();
 
@@ -380,49 +379,68 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             int width = getMapMode().DPtoLP(ACTIVITY_FIGURE_SIZE.width);
             int height = getMapMode().DPtoLP(ACTIVITY_FIGURE_SIZE.height);
             wrappedFigure = new ActivityNodeFigure(getConnectionAnchorFactory(),
-                                                    width, height);
+                                                    width, height, false);
         } else if (shapeType == SHAPE_DIAMOND) {
-        	int width = getMapMode().DPtoLP(GATEWAY_FIGURE_SIZE);
+            int width = getMapMode().DPtoLP(GATEWAY_FIGURE_SIZE);
             int height = getMapMode().DPtoLP(GATEWAY_FIGURE_SIZE);
             wrappedFigure = new ActivityNodeFigure(getConnectionAnchorFactory(),
-                                                    width, height);
+                                                    width, height, false);
         } else {
-        	int width = getMapMode().DPtoLP(EVENT_FIGURE_SIZE);
+            int width = getMapMode().DPtoLP(EVENT_FIGURE_SIZE);
             int height = getMapMode().DPtoLP(EVENT_FIGURE_SIZE);
             wrappedFigure = new ActivityNodeFigure(getConnectionAnchorFactory(),
-                                                    width, height);
+                                                    width, height, false);
         }
         wrappedFigure.setLayoutManager(new StackLayout());
-        return wrappedFigure;
+        return (NodeFigure)wrappedFigure;
+        
+        //FIXME: this is the old way of doing things.
+        //it looks unecessary right now.
+        //please review and delete eventually
+//        return new WrapperNodeFigureEx(getConnectionAnchorFactory(), wrappedFigure) {
+//            
+//            // Exclude activity name label from handle bounds
+//            @Override
+//            public Rectangle getHandleBounds() {
+//                Rectangle rectangle = super.getHandleBounds();
+//                Activity activity = (Activity) resolveSemanticElement();
+//                if (activity == null || activity.getActivityType() == null || 
+//                		activity.getActivityType().equals(ActivityType.TASK_LITERAL)) {
+//                    return rectangle;
+//                }
+//
+//                //return the first child which is the oval or diamond
+//                return ((IFigure) wrappedFigure.getChildren().get(0)).getBounds();
+//            };
+//
+//        };
     }
 
     /**
-     * @notgenerated Used for gateway and event bpmns shapes.
+     * @param ovalOrDiamond The figure that draw the oval of the diamond
+     * @param shape The figure that contains the oval or diamond and the wrapLabel.
+     * @param wrapLabel The label figure.
+     * @param size The default size of ovalOrDiamondFig (is this useful?)
+     * @generated not. Used for gateway and event bpmns shapes.
      */
-    private void buildFigure(IFigure container, IFigure shape,
-            WrapLabel wrapLabel, int size) {
-        int resultSize = getMapMode().DPtoLP(size);
-        container.setSize(resultSize, resultSize + 30);
-
+    private void buildFigure(IFigure ovalOrDiamond, IFigure shape,
+            WrappingLabel wrapLabel) {
         ActivityLayout layout = new ActivityLayout();
         wrappedFigure.setLayoutManager(layout);
-        container.setLayoutManager(new BorderLayout());
-        container.add(shape, BorderLayout.CENTER);
+        ovalOrDiamond.setLayoutManager(new BorderLayout());
+        ovalOrDiamond.add(shape, BorderLayout.CENTER);
 
-        wrappedFigure.add(container, BorderLayout.CENTER);
+        wrappedFigure.add(ovalOrDiamond, BorderLayout.CENTER);
         wrappedFigure.add(wrapLabel, BorderLayout.BOTTOM);
         
-//        wrapLabel.setTextWrap(true);
-        wrapLabel.setLabelAlignment(PositionConstants.CENTER);
-//        if (isEventOrGateway) {
-//            //in that case the label is placed below the event marker shape.
-//            //the label should be as close as possible to the figure
-//            //above hence the text alignment.
-//            wrapLabel.setTextAlignment(PositionConstants.TOP);
-//        }
-        ((ActivityFigure) shape).setFigureActivityNameFigure(wrapLabel);
+        ActivityFigure activityFigure = (ActivityFigure)shape;
+        activityFigure.setFigureActivityNameFigure(wrapLabel);
 
         contentPane = setupContentPane(wrappedFigure);
+        EObject sem = resolveSemanticElement();
+        if (sem instanceof Activity) {
+            setAlignments(activityFigure, (Activity)sem, wrapLabel, true);
+        }
     }
 
 
@@ -434,11 +452,11 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      * Body of this method does not depend on settings in generation model so
      * you may safely remove <i>generated</i> tag and modify it.
      * 
-     * @notgenerated
+     * @generated not
      */
     protected NodeFigure createNodeFigure() {
-        NodeFigure figure = createNodePlate();
-        IFigure shape = createNodeShape();
+        NodeFigure figure = createNodePlate();//the wrapper figure just there to hold the connections and the handlebound
+        IFigure shape = createNodeShape();//the activityFigure
 
         ActivityType activityType = ((Activity) getPrimaryView().getElement())
                 .getActivityType();
@@ -448,20 +466,16 @@ public class ActivityEditPart extends ShapeNodeEditPart {
                         .contains(activityType);
 
         if (gateway) {
-            int size = getMapMode().DPtoLP(GATEWAY_FIGURE_SIZE);
-            IFigure diamondFigure = new ActivityDiamondFigure(
-                   getConnectionAnchorFactory(), new Dimension(size, size));
-            WrapLabel label = new WrapLabelWithToolTip(getToolTipProvider(),
-                    null, null, true, PositionConstants.TOP);
-            buildFigure(diamondFigure, shape, label, GATEWAY_FIGURE_SIZE);
+            IFigure diamondFigure = new ActivityDiamondFigure(getConnectionAnchorFactory());
+            WrappingLabel label = new WrapLabelWithToolTip(getToolTipProvider(),
+                    null, null, true, PositionConstants.TOP, PositionConstants.CENTER);
+            buildFigure(diamondFigure, shape, label);
         } else if (event) {
-            int size = getMapMode().DPtoLP(EVENT_FIGURE_SIZE);
             ActivityOvalFigure ovalFigure = new ActivityOvalFigure(
-                    getConnectionAnchorFactory(),
-                    new Dimension(size, size));
-            WrapLabel label = new WrapLabelWithToolTip(getToolTipProvider(),
-                    null, null, true, PositionConstants.TOP);
-            buildFigure(ovalFigure, shape, label, EVENT_FIGURE_SIZE);
+                    getConnectionAnchorFactory());
+            WrappingLabel label = new WrapLabelWithToolTip(getToolTipProvider(),
+                    null, null, true, PositionConstants.TOP, PositionConstants.CENTER);
+            buildFigure(ovalFigure, shape, label);
         } else {
             wrappedFigure.add(shape);
             contentPane = setupContentPane(shape);
@@ -487,7 +501,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @notgenerated
+     * @generated not
      */
     protected IFigure setupContentPane(IFigure nodeShape) {
         if (nodeShape.getLayoutManager() == null) {
@@ -683,27 +697,49 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         }
         //same for outgoing sequences:
         if (sourceOnly) {
-            EList<SequenceEdge> outEdges = act.getOutgoingEdges();
-            int ind = 0;
-            totalLength = outEdges.size();
-            for (SequenceEdge edge : outEdges) {
-                if (!isOrderImportant(this)) {
-                    i = calculateBestPosition(edge, true, (Node) getModel());
+            if (!isOrderImportant(this, sourceOnly)) {
+                //set the anchor order according to the visuals.
+                Node thisModel = (Node)getModel();
+                List<Edge> seqs = getSourceSequenceEdges(thisModel, true);
+                totalLength = seqs.size();
+                int ind = 0;
+                for (Edge srcEdge : seqs) {
+                    setAnchorIndex(connIndex, (EModelElement)srcEdge.getElement(), i, totalLength, true);
+                    ind++;
                 }
-                setAnchorIndex(connIndex, edge, i, totalLength, true);
-                ind++;
+            } else {
+                //set the anchor order according to the index in the semantic model.
+                EList<SequenceEdge> outEdges = act.getOutgoingEdges();
+                int ind = 0;
+                totalLength = outEdges.size();
+                for (SequenceEdge edge : outEdges) {
+                    setAnchorIndex(connIndex, edge, i, totalLength, true);
+                    ind++;
+                }
             }
         } else {
             //same for incoming sequences:
-            EList<SequenceEdge> inEdges = act.getIncomingEdges();
-            int ind = 0;
-            totalLength = inEdges.size();
-            for (SequenceEdge edge : inEdges) {
-                if (!isOrderImportant(this)) {
-                    i = calculateBestPosition(edge, true, (Node) getModel());
+            if (!isOrderImportant(this, false)) {
+                //set the anchor order according to the visuals.
+                Node thisModel = (Node)getModel();
+                List<Edge> seqs = getTargetSequenceEdges(thisModel, true);
+                totalLength = seqs.size();
+                int ind = 0;
+                for (Edge targetEdge : seqs) {
+                    setAnchorIndex(connIndex, 
+                            (EModelElement)targetEdge.getElement(),
+                            i, totalLength, false);
+                    ind++;
                 }
-                setAnchorIndex(connIndex, edge, i, totalLength, false);
-                ind++;
+            } else {
+                //set the anchor order according to the index in the semantic model.
+                EList<SequenceEdge> inEdges = act.getIncomingEdges();
+                int ind = 0;
+                totalLength = inEdges.size();
+                for (SequenceEdge edge : inEdges) {
+                    setAnchorIndex(connIndex, edge, ind, totalLength, false);
+                    ind++;
+                }
             }
         }
         
@@ -803,26 +839,10 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             //org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel();
             WrapLabelWithToolTip fig_0 = new WrapLabelWithToolTip(
                     ActivityEditPart.this.getToolTipProvider(), null, null, true,
-                    PositionConstants.CENTER);
+                    PositionConstants.TOP, PositionConstants.TOP);
+                    //PositionConstants.CENTER, PositionConstants.CENTER);
             fig_0.setText(BpmnDiagramMessages.ActivityEditPart_task_default_name);
-            
-            setBorder(new AbstractFlowBorder() {
-            	@Override
-            	public int getLeftMargin() {
-            		return 2;
-            	}
-
-            	@Override
-            	public int getRightMargin() {
-            		return 2;
-            	}
-            	
-            	@Override
-            	public Insets getInsets(IFigure figure) {
-            		return new Insets(0, 2, 0, 2);
-            	}
-            });
-            
+                        
             setFigureActivityNameFigure(fig_0);
 
             Object layData0 = null;
@@ -831,22 +851,21 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         }
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel
          */
-        private org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fActivityNameFigure;
+        private WrappingLabel fActivityNameFigure;
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel
          */
-        public org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel getFigureActivityNameFigure() {
+        public WrappingLabel getFigureActivityNameFigure() {
             return fActivityNameFigure;
         }
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel
          */
-        private void setFigureActivityNameFigure(
-                org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig) {
+        private void setFigureActivityNameFigure(WrappingLabel fig) {
             fActivityNameFigure = fig;
         }
 
@@ -879,18 +898,24 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             if (activity == null) {
                 return false;
             }
-            if (!activity.getOrderedMessages().isEmpty()) {
-                return activity.getIncomingMessages().contains(
-                        activity.getOrderedMessages().get(0).getValue());
-            } else {
-                String str = EcoreUtil.getAnnotation(activity, 
-                        SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
-                        SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID);
-                if ("true".equals(str)) {
-                    return false;
+            if (ActivityType.VALUES_EVENTS_INTERMEDIATE.contains(activity.getActivityType())) {
+                if (!activity.getOrderedMessages().isEmpty()) {
+                    return activity.getIncomingMessages().contains(
+                            activity.getOrderedMessages().get(0).getValue());
                 } else {
-                    return true;
+                    String str = EcoreUtil.getAnnotation(activity, 
+                            SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
+                            SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID);
+                    if ("true".equals(str)) {
+                        return false;
+                    } else {
+                        return true;
+                    }
                 }
+            } else if (ActivityType.VALUES_EVENTS_START.contains(activity.getActivityType())) {
+                return true;
+            } else {
+                return false;
             }
            
         }
@@ -952,63 +977,33 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      * 
      * @param isSource, true if this method should examine the source,
      * false if it should look at the target
-     * @return true if the order of the edges over the part to examine is important.
+     * @param forOutgoing true if the question is related to outgoing messages, false for incoming.
+     * forOutgoing == isSource.
+     * !forOugoing == !isSource
+     * @return true if the semantice order of the edges over the part to examine is important.
      */
-    public static boolean isOrderImportant(IGraphicalEditPart part) {
-        if (part.resolveSemanticElement() == null) {
+    public static boolean isOrderImportant(IGraphicalEditPart part, boolean forOutgoing) {
+        if (!forOutgoing || part.resolveSemanticElement() == null) {
             return false;
         }
-        ActivityType type = ((Activity) part.resolveSemanticElement()).getActivityType();
+        Activity act = (Activity)part.resolveSemanticElement();
+        ActivityType type = act.getActivityType();
         if (type.equals(ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE_LITERAL) ||
                 type.equals(ActivityType.GATEWAY_DATA_BASED_INCLUSIVE_LITERAL)) {
+            if (act.getOutgoingEdges().size() == 2) {
+                for (SequenceEdge se : act.getOutgoingEdges()) {
+                    if (se.isIsDefault()
+                            || (se.getConditionType() != null
+                             && se.getConditionType().getValue() == SequenceFlowConditionType.DEFAULT)) {
+                        return false;
+                    }
+                }
+            }
             return true;
         }
         return false;
     }
     
-    /**
-     * this method calculates the best position for the edge according to the 
-     * position of the other edges connected to the owner.
-     * @param seqEdge the edge to place
-     * @param isSource whether we are looking at the source or the target
-     * of the edge
-     * @param owner the anchor owner
-     * @return the best position for the edge.
-     */
-    public static int calculateBestPosition(SequenceEdge seqEdge, 
-            boolean isSource, Node owner) {
-        List<View> connections = isSource ? owner.getSourceEdges() : owner.getTargetEdges();
-        List<Node> seqs = new ArrayList<Node>();
-        Node index = null;
-        for (View con : connections) {
-            if (con.getElement() instanceof SequenceEdge) {
-                Node node = (Node) (isSource ? 
-                        ((Edge) con).getTarget() : ((Edge) con).getSource());
-                if (node != null) {
-                    seqs.add(node);
-                    if (con.getElement() == seqEdge) {
-                        index = node;
-                    }
-                }
-            }
-        }
-        Collections.sort(seqs, new Comparator<Node>() {
-
-            public int compare(Node o1, Node o2) {
-                int y1 = ((Location) o1.getLayoutConstraint()).getY();
-                int y2 = ((Location) o2.getLayoutConstraint()).getY();
-                if (y1 < y2) {
-                    return -1;
-                } else if (y1 == y2){
-                    return 0;
-                } else {
-                    return 1;
-                }
-            }
-        });
-        
-        return seqs.indexOf(index);
-    }
     
     /**
      * @generated NOT
@@ -1027,4 +1022,111 @@ public class ActivityEditPart extends ShapeNodeEditPart {
                     ((Activity) resolveSemanticElement()).getActivityType());
         
     }
+    
+    /**
+     * the comparator to compare edges depending on the y coordinates of their sources
+     */
+    private static final EdgeComparator EDGE_AT_START_COMPARATOR = new EdgeComparator(true);
+    
+    /**
+     * the comparator to compare edges depending on the y coordinates of their targets
+     */
+    private static final EdgeComparator EDGE_AT_END_COMPARATOR = new EdgeComparator(false);
+    
+    /**
+     * Sorts a list of views according to the the y coordinates of the shape either at
+     * the end or at the beginning of the connection.
+     * @param coll
+     * @param compareWithSources true to compare according to the y coord at the shape at the start
+     * of the connection. false to compare at the shape of the end of the connection
+     */
+    private static class EdgeComparator implements Comparator<Edge> {
+        /**
+         * whether the comparison should be on source or targets of the edges.
+         */
+        private boolean compareWithSources;
+        
+        EdgeComparator(boolean accordingToStartY) {
+            this.compareWithSources = accordingToStartY;
+        }
+        
+        public int compare(Edge o1, Edge o2) {
+            Node n1 = null, n2 = null;
+            if (compareWithSources) {
+                n1 = (Node)o1.getSource();
+                n2 = (Node)o2.getSource();
+            } else {
+                n1 = (Node)o1.getTarget();
+                n2 = (Node)o2.getTarget();
+            }
+            Bounds y1 = BpmnShapesDefaultSizes.getBounds(n1);
+            Bounds y2 = BpmnShapesDefaultSizes.getBounds(n2);
+            
+            return (2*y1.getY() + y1.getHeight())
+                    - (2*y2.getY() + y2.getHeight());
+        }
+    }
+    
+    /**
+     * @param thisModel
+     * @param dosort true to sort the outgoing edges according to the coordinates
+     * of the shape at the end of the connection.
+     * @return The list of source edges that are for a outgoing SequenceEdge.
+     */
+    public static List<Edge> getSourceSequenceEdges(Node thisModel, boolean dosort) {
+        List<Edge> res = new ArrayList<Edge>();
+        for (Object e : thisModel.getSourceEdges()) {
+            Edge ee = (Edge)e;
+            if (ee.getElement() instanceof SequenceEdge) {
+                res.add(ee);
+            }
+        }
+        if (dosort) {//when we sort outgoing edges we must do it looking at the end of them
+            Collections.sort(res, EDGE_AT_END_COMPARATOR);
+        }
+        return res;
+    }
+    /**
+     * @param thisModel
+     * @param dosort true to sort the outgoing edges according to the coordinates
+     * of the shape at the end of the connection.
+     * @return The list of target edges that are for a incoming SequenceEdge.
+     */
+    public static List<Edge> getTargetSequenceEdges(Node thisModel, boolean dosort) {
+        List<Edge> res = new ArrayList<Edge>();
+        for (Object e : thisModel.getTargetEdges()) {
+            Edge ee = (Edge)e;
+            if (ee.getElement() instanceof SequenceEdge) {
+                if (ee.getSource() != null && ee.getTarget() != null) {
+                    res.add(ee);
+                }
+            }
+        }
+        if (dosort) {//when we sort outgoing edges we must do it looking at the start of them
+            Collections.sort(res, EDGE_AT_START_COMPARATOR);
+        }
+        return res;
+    }
+    
+    /**
+     * @param The edge for which we need to compute the visual index of its start
+     * anchor.
+     * @return The visual index of its start anchor.
+     */
+    public static int getStartAnchorVisualIndex(Edge thisEdge) {
+        Node target = (Node) thisEdge.getSource();
+        List<Edge> res = getSourceSequenceEdges(target, true);
+        return res.indexOf(thisEdge);
+    }
+    /**
+     * @param The edge for which we need to compute the visual index of its start
+     * anchor.
+     * @return The visual index of its start anchor.
+     */
+    public static int getTargetAnchorVisualIndex(Edge thisEdge) {
+        Node source = (Node) thisEdge.getTarget();
+        List<Edge> res = getTargetSequenceEdges(source, true);
+        return res.indexOf(thisEdge);
+    }
+    
 }

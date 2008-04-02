@@ -11,6 +11,7 @@
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.DragTracker;
@@ -269,12 +270,13 @@ public class GroupEditPart extends ShapeNodeEditPart {
         }
 
         /**
-         * @generated
+         * @generated NOT wrappingLabel, set as wrapped and centered
          */
         private void createContents() {
-            org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel();
+            org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig_0 = new org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel();
             fig_0.setText(""); //$NON-NLS-1$
-
+            fig_0.setTextWrap(true);
+            fig_0.setAlignment(PositionConstants.TOP);
             setFigureGroupNameFigure(fig_0);
 
             Object layData0 = null;
@@ -285,12 +287,12 @@ public class GroupEditPart extends ShapeNodeEditPart {
         /**
          * @generated
          */
-        private org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fGroupNameFigure;
+        private org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fGroupNameFigure;
 
         /**
          * @generated
          */
-        public org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel getFigureGroupNameFigure() {
+        public org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureGroupNameFigure() {
             return fGroupNameFigure;
         }
 
@@ -298,7 +300,7 @@ public class GroupEditPart extends ShapeNodeEditPart {
          * @generated
          */
         private void setFigureGroupNameFigure(
-                org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig) {
+                org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig) {
             fGroupNameFigure = fig;
         }
 

@@ -15,11 +15,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.draw2d.BorderLayout;
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
@@ -31,7 +30,7 @@ import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.util.FeatureMap;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
@@ -40,7 +39,6 @@ import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.RootEditPart;
 import org.eclipse.gef.commands.Command;
-import org.eclipse.gef.editparts.AbstractGraphicalEditPart;
 import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
@@ -60,11 +58,11 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnecti
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
+import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
@@ -76,12 +74,12 @@ import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.actions.SetTransactionalAction;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessGraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessItemSemanticEditPolicy;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
-import org.eclipse.stp.bpmn.figures.SubProcessBorderFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.connectionanchors.DefaultSizeNodeFigureEx;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
@@ -100,6 +98,11 @@ import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
 public class SubProcessEditPart extends ShapeNodeEditPart {
     
     /**
+     * the height of the collapse handle, also used for the loop, 
+     * the compensation and error markers.
+     */
+    public static final int COLLAPSE_HANDLE_HEIGHT = 20;
+    /**
      * the border compartment height
      */
     public static final int BORDER_HEIGHT = 50;
@@ -110,9 +113,10 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
     public static final Dimension COLLAPSED_SIZE = new Dimension(111, 71);
 
     /**
-     * @notgenerated
+     * @generated NOT the default expanded size, used during the subprocess creation.
+     * this size includes the collapse handle size, which makes it bigger than the activity.
      */
-    public static final Dimension EXPANDED_SIZE = new Dimension(112, 101);
+    public static final Dimension EXPANDED_SIZE = new Dimension(111, 96);
 
     /**
      * @generated
@@ -316,16 +320,17 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
      * @generated NOT
      */
     protected NodeFigure createNodePlate() {
-        return new DefaultSizeNodeFigureEx(getMapMode().DPtoLP(
-                EXPANDED_SIZE.width), getMapMode().DPtoLP(EXPANDED_SIZE.height),
+        return new DefaultSizeNodeFigureEx(
+                getMapMode().DPtoLP(EXPANDED_SIZE.width),
+                getMapMode().DPtoLP(EXPANDED_SIZE.height),
                 getConnectionAnchorFactory()) {
 
             @Override
             public Rectangle getHandleBounds() {
                 SubProcessFigure figure = getPrimaryShape();
-                return figure.getVisibleBounds();
+                return figure.getHandleBounds();
             }
-
+            
             @Override
             public void setBounds(Rectangle rect) {
                 Rectangle currentBounds = getBounds();
@@ -339,6 +344,12 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
 //                getPrimaryShape().fSubProcessBorderFigure.getBounds().width += widthDiff;
 //                getPrimaryShape().getClientArea().width += widthDiff;
                 super.setBounds(rect);
+            }
+            
+            @Override
+            public void computeAbsoluteHandleBounds(Rectangle result) {
+                result.setBounds(getHandleBounds());
+                super.translateToAbsolute(result);
             }
         };
     }
@@ -437,21 +448,20 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
     public class SubProcessFigure extends
             org.eclipse.stp.bpmn.figures.SubProcessFigure {
 
-    	/**
-    	 * @notgenerated
-    	 * Calculates the minimum size from the different subfigures,
-    	 * and the contained activities.
-    	 */
-        @Override
-        public Dimension getMinimumSize(int wHint, int hHint) {
-            return calcMinSize();
-        }
+//    	/**
+//    	 * @generated not
+//    	 * Calculates the minimum size from the different subfigures,
+//    	 * and the contained activities.
+//    	 */
+//        @Override
+//        public Dimension getMinimumSize(int wHint, int hHint) {
+//            return BpmnShapesDefaultSizes.getSubProcessMinSize(SubProcessEditPart.this); //calcMinSize();
+//        }
 
         /**
          * @generated
          */
         public SubProcessFigure() {
-
             this.setForegroundColor(org.eclipse.draw2d.ColorConstants.black
 
             );
@@ -467,7 +477,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             setLayoutManager(new SubProcessLayout());
             // this is necessary as the g gets cut out currently.
             // FIXME remove when bug 194944 is fixed.
-            org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel() {
+            org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel spLabel = new org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel() {
                 @Override
                 public void setBounds(Rectangle rect) {
                     rect.height += MapModeUtil.getMapMode(this).DPtoLP(1);
@@ -475,15 +485,15 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                 }
                 
             };
-            fig_0.setTextWrap(true);
-            fig_0.setText(""); //$NON-NLS-1$
+            spLabel.setAlignment(PositionConstants.CENTER);
+            spLabel.setTextWrap(true);
+            spLabel.setText(""); //$NON-NLS-1$
 
-            setFigureSubProcessNameFigure(fig_0);
+            setFigureSubProcessNameFigure(spLabel);
 
             Object layData0 = SubProcessLayout.NAME;
 
-            this.add(fig_0, layData0);
-            org.eclipse.stp.bpmn.figures.SubProcessBodyFigure fig_1 = new org.eclipse.stp.bpmn.figures.SubProcessBodyFigure() {
+            org.eclipse.stp.bpmn.figures.SubProcessBodyFigure spBody = new org.eclipse.stp.bpmn.figures.SubProcessBodyFigure() {
                 
                 @Override
                 public Dimension getMinimumSize(int hint, int hint2) {
@@ -499,30 +509,32 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                     }
                 }
             };
-            setFigureSubProcessBodyFigure(fig_1);
+            setFigureSubProcessBodyFigure(spBody);
 
             Object layData1 = SubProcessLayout.BODY;
 
-            this.add(fig_1, layData1);
-            org.eclipse.stp.bpmn.figures.SubProcessBorderFigure fig_2 = new org.eclipse.stp.bpmn.figures.SubProcessBorderFigure(
+            org.eclipse.stp.bpmn.figures.SubProcessBorderFigure spBorder = new org.eclipse.stp.bpmn.figures.SubProcessBorderFigure(
                     SubProcessEditPart.this.getMapMode(), !((SubProcess) resolveSemanticElement()).getEventHandlers().isEmpty());
 
-            setFigureSubProcessBorderFigure(fig_2);
+            setFigureSubProcessBorderFigure(spBorder);
 
             Object layData2 = SubProcessLayout.BORDER;
 
-            this.add(fig_2, layData2);
+            this.add(spBody, layData1);
+            this.add(spBorder, layData2);
+            //place the label at the end so it is on top of the other figure.
+            this.add(spLabel, layData0);
         }
 
         /**
          * @generated
          */
-        private org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fSubProcessNameFigure;
+        private org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fSubProcessNameFigure;
 
         /**
          * @generated
          */
-        public org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel getFigureSubProcessNameFigure() {
+        public org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureSubProcessNameFigure() {
             return fSubProcessNameFigure;
         }
 
@@ -530,7 +542,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
          * @generated
          */
         private void setFigureSubProcessNameFigure(
-                org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig) {
+                org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig) {
             fSubProcessNameFigure = fig;
         }
 
@@ -606,10 +618,29 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         }
 
         /**
+         * @generated NOT
+         * the subprocess may show a transactional decoration, ie showing
+         * a second border line.
+         */
+        @Override
+        protected void outlineShape(Graphics graphics) {
+            super.outlineShape(graphics);
+            if (isTransactional()) {
+                Rectangle f = Rectangle.SINGLETON;
+                Rectangle r = getHandleBounds();
+                f.x = r.x + lineWidth / 2;
+                f.y = r.y + lineWidth / 2;
+                f.width = r.width - lineWidth;
+                f.height = r.height - lineWidth;
+                f.crop(new Insets(5, 5, 5, 5));
+                graphics.drawRoundRectangle(f, corner.width, corner.height);
+            }
+        }
+        /**
          * Draws &quot;+&quot; for collapsed and &quot;-&quot; for expanded
          * subprocess.
          * 
-         * @notgenerated
+         * @generated not
          */
         private void paintCollapseHandle(Graphics graphics) {
         	
@@ -624,7 +655,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         	if (bodyEditPart == null) { // been filtered
         		return; // we don't paint anything but the name of the subprocess.
         	}
-            Rectangle bounds = getAbsCollapseHandleBounds();
+            Rectangle bounds = getAbsCollapseHandleBounds(true);
             translateToRelative(bounds);
             int lineWidth = 1;
             bounds.shrink(lineWidth, lineWidth);
@@ -634,8 +665,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             double delta = lineWidth;
             double y = bounds.y + bounds.height / 2.0;
             PrecisionPoint p1 = new PrecisionPoint(bounds.x + delta, y);
-            PrecisionPoint p2 = new PrecisionPoint(bounds.x + bounds.width
-                    - delta, y);
+            PrecisionPoint p2 = new PrecisionPoint(bounds.x + bounds.width - delta, y);
             graphics.drawLine(p1, p2);
             
             boolean isCollapsed = false;
@@ -727,6 +757,24 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
     }
     
     /**
+     * @return true if the subprocess is transactional, in which case
+     * the border is painted twice.
+     */
+    private boolean isTransactional() {
+        if (!(resolveSemanticElement() instanceof SubProcess)) {
+            return false;
+        }
+        // TODO change insets if true
+        SubProcess sp = (SubProcess) resolveSemanticElement();
+        String ann = EcoreUtil.getAnnotation(sp, SetTransactionalAction.IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
+                SetTransactionalAction.IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID);
+        if (ann == null || ann.equals("false")) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Called during the painting of the sub-process figure.
      * Checks if the sub-process is looping and paint the standard loop
      * marker or the multiple instance loop marker in that case.
@@ -739,12 +787,15 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
     protected void paintLoopMarker(Graphics graphics) {
         SubProcess zmodel = (SubProcess) ((View) getModel()).getElement();
         if (zmodel.isLooping()) {
-            int size = 20;
+            int size = COLLAPSE_HANDLE_HEIGHT;
             Rectangle bounds = getAbsBoundsWithoutBorder();
             getPrimaryShape().translateToRelative(bounds);
             Rectangle loopRect = new Rectangle();
             loopRect.x = bounds.x + bounds.width/2 - size;
             loopRect.y = bounds.y + bounds.height -size;
+            if (getPrimaryShape().getFigureSubProcessBorderFigure().hasChildren()) {
+                loopRect.y = (int) (loopRect.y - (ActivityEditPart.EVENT_FIGURE_SIZE*getZoom())/2);
+            }
             loopRect.height = size;
             loopRect.width = size;
             
@@ -755,13 +806,14 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
     
 
     /**
-     * @notgenerated
+     * @generated not
      */
-    public static final Insets INSETS = new Insets(5, 5, 5, 5);
+    public static final Insets INSETS = new Insets(2, 2, 2, 2);
 
     /**
-     * @notgenerated
-     */
+     * @subprocessminsize see BpmnShapesDefaultSize
+     * @generated not
+     *
     public Dimension calcMinSize() {
         GraphicalEditPart bodyEditPart = (GraphicalEditPart) getChildBySemanticHint(
                 BpmnVisualIDRegistry.getType(SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID));
@@ -777,7 +829,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                         .getDrawerStyle_Collapsed())).booleanValue();
         
      // calculate the dimension of the border edit part.
-        int borderHeight = 0;
+        int borderHeight = BORDER_HEIGHT/2;
         if (getPrimaryShape().getFigureSubProcessBorderFigure().hasChildren()) {
             borderHeight = getPrimaryShape().
                 getFigureSubProcessBorderFigure().getBorderHeight()
@@ -788,7 +840,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             r1 = getChildrenBounds(bodyEditPart);
             if (r1.height == 0) {
                 r1.width = EXPANDED_SIZE.width - INSETS.getWidth();
-                r1.height = EXPANDED_SIZE.height - INSETS.getHeight();
+                r1.height = EXPANDED_SIZE.height - INSETS.getHeight() + getAbsCollapseHandleBounds().height;
             }
         } else {
          // calculate the dimension of the border edit part.
@@ -807,6 +859,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         return new Dimension(r1.width + INSETS.getWidth(),
                 labelSize.height + r1.height + INSETS.getHeight() + borderHeight);
     }
+    */
 
     /**
      * Claculates rectangle that contains all children of the specified edit
@@ -850,119 +903,126 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
 //        refreshChildrenLocation();
     }
 
-    /**
-     * Moves body comparment's children in case they exceed the bounds of the
-     * compartment
-     * 
-     * @notgenerated
-     */
-    private void refreshChildrenLocation() {
-
-        List children = getChildren();
-        GraphicalEditPart bodyEditPart = null;
-        GraphicalEditPart borderEditPart = null;
-        GraphicalEditPart nameEditPart = null;
-        for (Object object : children) {
-            GraphicalEditPart editPart = (GraphicalEditPart) object;
-            if (editPart instanceof SubProcessSubProcessBodyCompartmentEditPart) {
-                bodyEditPart = editPart;
-            } else if (editPart instanceof SubProcessSubProcessBorderCompartmentEditPart) {
-                borderEditPart = editPart;
-            } else if (editPart instanceof SubProcessNameEditPart) {
-                nameEditPart = editPart;
-            }
-        }
-
-        if (bodyEditPart != null) {
-            boolean isCollapsed = ((Boolean) bodyEditPart
-                    .getStructuralFeatureValue(NotationPackage.eINSTANCE
-                            .getDrawerStyle_Collapsed())).booleanValue();
-            if (!isCollapsed) {
-                // move children only in expanded state
-                int width = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
-                        .getSize_Width())).intValue();
-                int totalHeight = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
-                        .getSize_Height())).intValue();
-
-                int borderCompartmentHeight = borderEditPart.getFigure()
-                        .getSize().height;
-                int labelHeight = nameEditPart.getFigure().getSize().height;
-                int height = totalHeight - borderCompartmentHeight
-                        - labelHeight - MapModeUtil.getMapMode(getFigure()).DPtoLP(5);
-
-                Point moveDelta = new Point(0, 0);
-
-                bodyEditPart
-                        .getStructuralFeatureValue(NotationPackage.eINSTANCE
-                                .getSize_Width());
-                Rectangle rect = getChildrenBounds(bodyEditPart);
-
-                if (rect.x + rect.width > width - INSETS.getWidth()) {
-                    moveDelta.x = rect.x + rect.width
-                            - (width - INSETS.getWidth());
-                }
-                if (rect.y + rect.height > height - INSETS.getHeight()) {
-                    moveDelta.y = rect.y + rect.height
-                            - (height - INSETS.getHeight());
-                }
-
-                children = bodyEditPart.getChildren();
-                if ((moveDelta.x + moveDelta.y) > 0 && children.size() > 0) {
-                    CompositeCommand command = new CompositeCommand(
-                            BpmnDiagramMessages.SubProcessEditPart_move_command_name);
-                    for (int i = 0; i < children.size(); i++) {
-                        GraphicalEditPart part = (GraphicalEditPart) children
-                                .get(i);
-                        Rectangle bound = part.getFigure().getBounds();
-                        Point loc = new Point(bound.x - moveDelta.x, bound.y
-                                - moveDelta.y);
-                        Rectangle newBounds = new Rectangle(loc, bound
-                                .getSize());
-                        SetBoundsCommand cmd = new SetBoundsCommand(
-                                getEditingDomain(), BpmnDiagramMessages.SubProcessEditPart_set_bounds_command, part,
-                                newBounds);
-                        command.add(cmd);
-                    }
-                    // check if the current thread is not read-only.
-                    if (!((TransactionalEditingDomainImpl)getEditingDomain()).
-                    		getActiveTransaction().isReadOnly()) {
-                    	getDiagramEditDomain().getDiagramCommandStack().
-                    		execute(new ICommandProxy(command));
-                    }
-
-                }
-            }
-        }
-    }
+//    /**
+//     * Moves body comparment's children in case they exceed the bounds of the
+//     * compartment
+//     * 
+//     * @notgenerated
+//     */
+//    private void refreshChildrenLocation() {
+//
+//        List children = getChildren();
+//        GraphicalEditPart bodyEditPart = null;
+//        GraphicalEditPart borderEditPart = null;
+//        GraphicalEditPart nameEditPart = null;
+//        for (Object object : children) {
+//            GraphicalEditPart editPart = (GraphicalEditPart) object;
+//            if (editPart instanceof SubProcessSubProcessBodyCompartmentEditPart) {
+//                bodyEditPart = editPart;
+//            } else if (editPart instanceof SubProcessSubProcessBorderCompartmentEditPart) {
+//                borderEditPart = editPart;
+//            } else if (editPart instanceof SubProcessNameEditPart) {
+//                nameEditPart = editPart;
+//            }
+//        }
+//
+//        if (bodyEditPart != null) {
+//            boolean isCollapsed = ((Boolean) bodyEditPart
+//                    .getStructuralFeatureValue(NotationPackage.eINSTANCE
+//                            .getDrawerStyle_Collapsed())).booleanValue();
+//            if (!isCollapsed) {
+//                // move children only in expanded state
+//                int width = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
+//                        .getSize_Width())).intValue();
+//                int totalHeight = ((Integer) getStructuralFeatureValue(NotationPackage.eINSTANCE
+//                        .getSize_Height())).intValue();
+//
+//                int borderCompartmentHeight = borderEditPart.getFigure()
+//                        .getSize().height;
+//                int labelHeight = nameEditPart.getFigure().getSize().height;
+//                int height = totalHeight - borderCompartmentHeight
+//                        - labelHeight - MapModeUtil.getMapMode(getFigure()).DPtoLP(5);
+//
+//                Point moveDelta = new Point(0, 0);
+//
+//                bodyEditPart
+//                        .getStructuralFeatureValue(NotationPackage.eINSTANCE
+//                                .getSize_Width());
+//                Rectangle rect = getChildrenBounds(bodyEditPart);
+//
+//                if (rect.x + rect.width > width - INSETS.getWidth()) {
+//                    moveDelta.x = rect.x + rect.width
+//                            - (width - INSETS.getWidth());
+//                }
+//                if (rect.y + rect.height > height - INSETS.getHeight()) {
+//                    moveDelta.y = rect.y + rect.height
+//                            - (height - INSETS.getHeight());
+//                }
+//
+//                children = bodyEditPart.getChildren();
+//                if ((moveDelta.x + moveDelta.y) > 0 && children.size() > 0) {
+//                    CompositeCommand command = new CompositeCommand(
+//                            BpmnDiagramMessages.SubProcessEditPart_move_command_name);
+//                    for (int i = 0; i < children.size(); i++) {
+//                        GraphicalEditPart part = (GraphicalEditPart) children
+//                                .get(i);
+//                        Rectangle bound = part.getFigure().getBounds();
+//                        Point loc = new Point(bound.x - moveDelta.x, bound.y
+//                                - moveDelta.y);
+//                        Rectangle newBounds = new Rectangle(loc, bound
+//                                .getSize());
+//                        SetBoundsCommand cmd = new SetBoundsCommand(
+//                                getEditingDomain(), BpmnDiagramMessages.SubProcessEditPart_set_bounds_command, part,
+//                                newBounds);
+//                        command.add(cmd);
+//                    }
+//                    // check if the current thread is not read-only.
+//                    if (!((TransactionalEditingDomainImpl)getEditingDomain()).
+//                    		getActiveTransaction().isReadOnly()) {
+//                    	getDiagramEditDomain().getDiagramCommandStack().
+//                    		execute(new ICommandProxy(command));
+//                    }
+//
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Returns bounds of figure without border figure included in absolute
-     * coordinates .
+     * coordinates .(zoom not computed == DP DevicePixel).
      * 
      * @notgenerated
      * @return
      */
     protected Rectangle getAbsBoundsWithoutBorder() {
         SubProcessFigure figure = getPrimaryShape();
-        Rectangle theBounds = figure.getVisibleBounds();
+        Rectangle theBounds = figure.getHandleBounds();
         figure.translateToAbsolute(theBounds);
         return theBounds;
     }
-
-    /**
-     * Calculates bounds of collapse handle in absolute coordinates.
-     * 
-     * @notgenerated
-     * @return
-     */
-    public Rectangle getAbsCollapseHandleBounds() {
-        double size = 20.0;
+    
+    public double getZoom() {
+        double zoom = 1.0;
         RootEditPart rootEditPart = getRoot();
         if (rootEditPart instanceof ScalableFreeformRootEditPart) {
-            double zoom = ((ScalableFreeformRootEditPart) rootEditPart)
+            zoom = ((ScalableFreeformRootEditPart) rootEditPart)
                     .getZoomManager().getZoom();
-            size = size * zoom;
         }
+        return zoom;
+    }
+
+    /**
+     * Calculates bounds of collapse handle in absolute coordinates according to
+     * the figures bounds (zoom not computed == DP DevicePixel).
+     * 
+     * @generated not
+     * @return
+     */
+    public Rectangle getAbsCollapseHandleBounds(boolean zoomCompute) {
+        //mystery: why do I need a zoom here?
+        double zoom = zoomCompute ? getZoom() : 1.0;
+        double size = COLLAPSE_HANDLE_HEIGHT * zoom;;//mm.LPtoDP(20);
 
         Rectangle theBounds = getAbsBoundsWithoutBorder();
         PrecisionRectangle handleBounds = new PrecisionRectangle(theBounds);
@@ -970,7 +1030,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         handleBounds.setX(handleBounds.x + (handleBounds.width - size) / 2);
         handleBounds.setY(handleBounds.y + handleBounds.height - size);
         if (getPrimaryShape().getFigureSubProcessBorderFigure().hasChildren()) {
-            handleBounds.setY(handleBounds.y - ActivityEditPart.EVENT_FIGURE_SIZE/2);
+            handleBounds.setY(handleBounds.y - (ActivityEditPart.EVENT_FIGURE_SIZE*zoom)/2);
         }
         handleBounds.setWidth(size);
         handleBounds.setHeight(size);
@@ -999,6 +1059,10 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                 NotationPackage.eINSTANCE.getLocation_Y().equals(notification.getFeature()) ||
                 NotationPackage.eINSTANCE.getLocation().equals(notification.getFeature()) ||
                 NotationPackage.eINSTANCE.getLayoutConstraint().equals(notification.getFeature())) {
+            getPrimaryShape().fSubProcessBodyFigure.getBounds().height = 
+                getPrimaryShape().getBounds().height 
+                    - getPrimaryShape().fSubProcessBorderFigure.getBounds().height 
+                        + ActivityEditPart.EVENT_FIGURE_SIZE/2;
             for (Object e : getSourceConnections()) {
                 if (e instanceof ConnectionEditPart) {
                     ((ConnectionEditPart) e).getTarget().refresh();
@@ -1144,27 +1208,47 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         int i = 0;
         //same for outgoing sequences:
         if (sourceOnly) {
-            EList<SequenceEdge> outEdges = sp.getOutgoingEdges();
-            int ind = 0;
-            totalLength = outEdges.size();
-            for (SequenceEdge edge : outEdges) {
-                if (!ActivityEditPart.isOrderImportant(this)) {
-                    i = ActivityEditPart.calculateBestPosition(edge, true, (Node) getModel());
+            if (!ActivityEditPart.isOrderImportant(this, true)) {
+                //set the anchor order according to the visuals.
+                Node thisModel = (Node)getModel();
+                List<Edge> seqs = ActivityEditPart.getSourceSequenceEdges(thisModel, true);
+                totalLength = seqs.size();
+                int ind = 0;
+                for (Edge srcEdge : seqs) {
+                    setAnchorIndex(connIndex, (EModelElement)srcEdge.getElement(), i, totalLength, true);
+                    ind++;
                 }
-                setAnchorIndex(connIndex, edge, i, totalLength, true);
-                ind++;
+            } else {
+                //set the anchor order according to the index in the semantic model.
+                EList<SequenceEdge> outEdges = sp.getOutgoingEdges();
+                int ind = 0;
+                totalLength = outEdges.size();
+                for (SequenceEdge edge : outEdges) {
+                    setAnchorIndex(connIndex, edge, i, totalLength, true);
+                    ind++;
+                }
             }
         } else {
             //same for incoming sequences:
-            EList<SequenceEdge> inEdges = sp.getIncomingEdges();
-            int ind = 0;
-            totalLength = inEdges.size();
-            for (SequenceEdge edge : inEdges) {
-                if (!ActivityEditPart.isOrderImportant(this)) {
-                    i = ActivityEditPart.calculateBestPosition(edge, false, (Node) getModel());
+            if (!ActivityEditPart.isOrderImportant(this, false)) {
+                //set the anchor order according to the visuals.
+                Node thisModel = (Node)getModel();
+                List<Edge> seqs = ActivityEditPart.getTargetSequenceEdges(thisModel, true);
+                totalLength = seqs.size();
+                int ind = 0;
+                for (Edge targetEdge : seqs) {
+                    setAnchorIndex(connIndex, (EModelElement)targetEdge.getElement(), i, totalLength, false);
+                    ind++;
                 }
-                setAnchorIndex(connIndex, edge, i, totalLength, false);
-                ind++;
+            } else {
+                //set the anchor order according to the index in the semantic model.
+                EList<SequenceEdge> inEdges = sp.getIncomingEdges();
+                int ind = 0;
+                totalLength = inEdges.size();
+                for (SequenceEdge edge : inEdges) {
+                    setAnchorIndex(connIndex, edge, ind, totalLength, false);
+                    ind++;
+                }
             }
         }
         
@@ -1247,4 +1331,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             return null;
         }
     }
+
+    
+    
 }

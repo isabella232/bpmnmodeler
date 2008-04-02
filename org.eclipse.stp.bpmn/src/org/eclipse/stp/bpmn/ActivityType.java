@@ -302,26 +302,26 @@ public enum ActivityType implements Enumerator
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #EVENT_START_SIGNAL
-     * @generated
+     * @generated not
      * @ordered
      */
-    EVENT_START_SIGNAL_LITERAL(30, "EventStartSignal", "EventStartSignal"), /**
+    EVENT_START_SIGNAL_LITERAL(30, "Signal Start Event", "EventStartSignal"), /**
      * The '<em><b>Event Intermediate Signal</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #EVENT_INTERMEDIATE_SIGNAL
-     * @generated
+     * @generated not
      * @ordered
      */
-    EVENT_INTERMEDIATE_SIGNAL_LITERAL(31, "EventIntermediateSignal", "EventIntermediateSignal"), /**
+    EVENT_INTERMEDIATE_SIGNAL_LITERAL(31, "Signal Intermediate Event", "EventIntermediateSignal"), /**
      * The '<em><b>Event End Signal</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #EVENT_END_SIGNAL
-     * @generated
+     * @generated not
      * @ordered
      */
-    EVENT_END_SIGNAL_LITERAL(32, "EventEndSignal", "EventEndSignal"); //$NON-NLS-1$
+    EVENT_END_SIGNAL_LITERAL(32, "Signal End Event", "EventEndSignal");
 	/**
      * The '<em><b>Task</b></em>' literal value.
      * <!-- begin-user-doc -->
@@ -930,7 +930,8 @@ public static final int EVENT_END_MULTIPLE = 23;
 			EVENT_INTERMEDIATE_RULE_LITERAL,
             EVENT_INTERMEDIATE_CANCEL_LITERAL,
             EVENT_INTERMEDIATE_LINK_LITERAL,
-            EVENT_INTERMEDIATE_MULTIPLE_LITERAL
+            EVENT_INTERMEDIATE_MULTIPLE_LITERAL,
+            EVENT_INTERMEDIATE_SIGNAL_LITERAL
 		};
 
 	/**
@@ -947,7 +948,8 @@ public static final int EVENT_END_MULTIPLE = 23;
 			EVENT_START_MESSAGE_LITERAL,
 			EVENT_START_MULTIPLE_LITERAL,
 			EVENT_START_RULE_LITERAL,
-			EVENT_START_TIMER_LITERAL
+			EVENT_START_TIMER_LITERAL,
+			EVENT_START_SIGNAL_LITERAL
 	};
 
 	/**

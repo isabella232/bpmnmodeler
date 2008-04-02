@@ -17,12 +17,9 @@
 package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.Graphics;
-import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.stp.bpmn.figures.connectionanchors.DefaultSizeNodeFigureEx;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.figures.connectionanchors.NodeFigureEx;
-import org.eclipse.stp.bpmn.figures.connectionanchors.impl.ConnectionAnchorFactory;
 
 /**
  * DiamondFigure class extension. Sets preferred size equal to size specified in
@@ -34,10 +31,8 @@ import org.eclipse.stp.bpmn.figures.connectionanchors.impl.ConnectionAnchorFacto
  */
 public class ActivityDiamondFigure extends NodeFigureEx {
 
-    public ActivityDiamondFigure(IConnectionAnchorFactory connectionAnchorFactory,
-            Dimension dim) {
+    public ActivityDiamondFigure(IConnectionAnchorFactory connectionAnchorFactory) {
         super(connectionAnchorFactory);
-        setPreferredSize(dim);
     }
     
     /* (non-Javadoc)

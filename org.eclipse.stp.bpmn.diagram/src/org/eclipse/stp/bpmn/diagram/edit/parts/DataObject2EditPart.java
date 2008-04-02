@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
@@ -38,6 +37,8 @@ import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizableArtifactEditPolicy;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * This is for data-objects contained in a diagram.
@@ -267,8 +268,8 @@ public class DataObject2EditPart extends ShapeNodeEditPart {
          */
         private void createContents() {
             setLayoutManager(new BorderLayout());
-            org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 =
-                new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel();
+            WrappingLabel fig_0 =
+                new WrappingLabel();
             fig_0.setText(""); //$NON-NLS-1$
             fig_0.setTextWrap(true);
             setFigureDataObjectNameFigure(fig_0);
@@ -282,12 +283,12 @@ public class DataObject2EditPart extends ShapeNodeEditPart {
         /**
          * @generated
          */
-        private org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fDataObjectNameFigure;
+        private WrappingLabel fDataObjectNameFigure;
 
         /**
          * @generated
          */
-        public org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel getFigureDataObjectNameFigure() {
+        public WrappingLabel getFigureDataObjectNameFigure() {
             return fDataObjectNameFigure;
         }
 
@@ -295,7 +296,7 @@ public class DataObject2EditPart extends ShapeNodeEditPart {
          * @generated
          */
         private void setFigureDataObjectNameFigure(
-                org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig) {
+                WrappingLabel fig) {
             fDataObjectNameFigure = fig;
         }
 
@@ -362,8 +363,8 @@ public class DataObject2EditPart extends ShapeNodeEditPart {
         if (getFigure() != null && getFigure().getChildren().size() > 0) {
             Object childFig =
                 ((IFigure)getFigure().getChildren().get(0)).getChildren().get(0);
-            if (childFig instanceof WrapLabel) {
-                return ((WrapLabel) childFig).isTextTruncated();
+            if (childFig instanceof WrappingLabel) {
+                return ((WrappingLabel) childFig).isTextWrapOn();
             }
         }
         return false;

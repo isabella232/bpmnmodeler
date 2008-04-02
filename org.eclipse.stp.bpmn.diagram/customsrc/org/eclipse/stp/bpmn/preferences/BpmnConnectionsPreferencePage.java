@@ -15,7 +15,9 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.ConnectionsPreferencePage;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.runtime.notation.Smoothness;
 import org.eclipse.jface.preference.BooleanFieldEditor;
+import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.RadioGroupFieldEditor;
+import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
@@ -34,47 +36,6 @@ import org.eclipse.swt.widgets.Group;
  */
 public class BpmnConnectionsPreferencePage extends ConnectionsPreferencePage {
 
-    /**
-     * the connection line style for the messaging edge;
-     */
-    private static String PREF_MSG_LINE_STYLE =
-        BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_STYLE;
-    /**
-     * the connection line style for the sequence edge;
-     */
-    private static String PREF_SEQ_LINE_STYLE =
-        BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_STYLE;
-    /**
-     * whether new message connections should be routed with the shortest path
-     */
-    private static String PREF_MSG_ROUTE_SHORTEST =
-        BpmnDiagramPreferenceInitializer.PREF_MSG_ROUTE_SHORTEST;
-    /**
-     * whether new sequence connections should be routed with the shortest path
-     */
-    private static String PREF_SEQ_ROUTE_SHORTEST =
-        BpmnDiagramPreferenceInitializer.PREF_SEQ_ROUTE_SHORTEST;
-    /**
-     * whether new message connections should use avoid obstacle algo
-     */
-    private static String PREF_MSG_ROUTE_AVOID_OBSTACLES =
-        BpmnDiagramPreferenceInitializer.PREF_MSG_ROUTE_AVOID_OBSTACLES;
-    /**
-     * whether new sequence connections should use avoid obstacle algo
-     */
-    private static String PREF_SEQ_ROUTE_AVOID_OBSTACLES =
-        BpmnDiagramPreferenceInitializer.PREF_SEQ_ROUTE_AVOID_OBSTACLES;
-    /**
-     * seq edge smoothness
-     */
-    private static String PREF_SEQ_ROUTE_SMOOTH_FACTOR =
-        BpmnDiagramPreferenceInitializer.PREF_SEQ_ROUTE_SMOOTH_FACTOR;
-    /**
-     * msg edge smoothness
-     */
-    private static String PREF_MSG_ROUTE_SMOOTH_FACTOR =
-        BpmnDiagramPreferenceInitializer.PREF_MSG_ROUTE_SMOOTH_FACTOR;
-    
     public BpmnConnectionsPreferencePage() {
         super();
         setPreferenceStore(BpmnDiagramEditorPlugin.getInstance().getPreferenceStore());
@@ -91,6 +52,13 @@ public class BpmnConnectionsPreferencePage extends ConnectionsPreferencePage {
         
         addSequenceConnectionFields(parent);
         addMessageConnectionFields(parent);
+        
+        addField(new BooleanFieldEditor(BpmnDiagramPreferenceInitializer.PREF_SNAP_BACK_ON_MOVE, 
+                "Snap back connection labels on move", getFieldEditorParent()));
+        addField(new BooleanFieldEditor(BpmnDiagramPreferenceInitializer.PREF_SHOW_CONNECTION_LABEL_BORDER, 
+                "Show connection labels border", getFieldEditorParent()));
+        addField( new ColorFieldEditor(BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BORDER_COLOR,
+                "Connection labels border color", getFieldEditorParent()));
     }
 
     /**
@@ -99,10 +67,12 @@ public class BpmnConnectionsPreferencePage extends ConnectionsPreferencePage {
      */
     protected void addMessageConnectionFields(Composite parent) {
         addConnectionFields(parent, BpmnDiagramMessages.BpmnConnectionsPreferencePage_message_connections_menu,
-                PREF_MSG_LINE_STYLE,
-                PREF_MSG_ROUTE_AVOID_OBSTACLES,
-                PREF_MSG_ROUTE_SHORTEST,
-                PREF_MSG_ROUTE_SMOOTH_FACTOR);
+                BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_STYLE,
+                BpmnDiagramPreferenceInitializer.PREF_MSG_ROUTE_AVOID_OBSTACLES,
+                BpmnDiagramPreferenceInitializer.PREF_MSG_ROUTE_SHORTEST,
+                BpmnDiagramPreferenceInitializer.PREF_MSG_ROUTE_SMOOTH_FACTOR,
+                BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_COLOR,
+                BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_ALPHA);
     }
     /**
      * Preferences for the messaging connection.
@@ -110,10 +80,12 @@ public class BpmnConnectionsPreferencePage extends ConnectionsPreferencePage {
      */
     protected void addSequenceConnectionFields(Composite parent) {
         addConnectionFields(parent, BpmnDiagramMessages.BpmnConnectionsPreferencePage_flow_connections_menu,
-                PREF_SEQ_LINE_STYLE,
-                PREF_SEQ_ROUTE_AVOID_OBSTACLES,
-                PREF_SEQ_ROUTE_SHORTEST,
-                PREF_SEQ_ROUTE_SMOOTH_FACTOR);
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_STYLE,
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_ROUTE_AVOID_OBSTACLES,
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_ROUTE_SHORTEST,
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_ROUTE_SMOOTH_FACTOR,
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_COLOR,
+                BpmnDiagramPreferenceInitializer.PREF_SEQ_LINE_ALPHA);
     }
     /**
      * Preferences for the messaging connection.
@@ -122,18 +94,33 @@ public class BpmnConnectionsPreferencePage extends ConnectionsPreferencePage {
     protected void addConnectionFields(Composite parent,
             String groupTitle, String msgLineStylePref,
             String prefAvoidObstacles, String prefShortestPath,
-            String prefSmoothness) {
+            String prefSmoothness, String prefConnColor, String prefConnTransparency) {
 
         Group bpmnGlobalGroup = new Group(parent, SWT.NONE);
-        GridLayout gridLayout = new GridLayout(2, false);
+        GridLayout gridLayout = new GridLayout(1, false);
         bpmnGlobalGroup.setLayout(gridLayout);
         GridData gridData = new GridData(GridData.FILL_HORIZONTAL);
         gridData.grabExcessHorizontalSpace = true;
-        gridData.horizontalSpan = 2;
+        //gridData.horizontalSpan = 2;
         bpmnGlobalGroup.setLayoutData(gridData);
         bpmnGlobalGroup.setText(groupTitle);
 
         Composite newParent = new Composite(bpmnGlobalGroup, SWT.NONE);
+        GridLayout gridLayout2 = new GridLayout(2, false);
+        newParent.setLayout(gridLayout2);
+        GridData gridData2 = new GridData(GridData.FILL_HORIZONTAL);
+        gridData2.grabExcessHorizontalSpace = true;
+
+        ColorFieldEditor connColorField = new ColorFieldEditor(prefConnColor,
+                BpmnDiagramMessages.BpmnConnectionsPreferencePage_color, newParent);
+        connColorField.setPreferenceStore(super.getPreferenceStore());
+        super.addField(connColorField);
+        
+        ScaleFieldEditor connTransparency = new ScaleFieldEditor(
+                prefConnTransparency, BpmnDiagramMessages.BpmnConnectionsPreferencePage_transparency,
+                newParent, 1, 255, 1, 5);
+        connTransparency.setPreferenceStore(super.getPreferenceStore());
+        super.addField(connTransparency);
         
         RadioGroupFieldEditor routerStyleEditor= new RadioGroupFieldEditor(
                 msgLineStylePref, BpmnDiagramMessages.BpmnConnectionsPreferencePage_style, 2,

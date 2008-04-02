@@ -194,7 +194,7 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             case ActivityType.GATEWAY_PARALLEL:
             case ActivityType.GATEWAY_COMPLEX:
             case ActivityType.EVENT_START_EMPTY:
-            case ActivityType.EVENT_START_MESSAGE:
+//            case ActivityType.EVENT_START_MESSAGE:
             case ActivityType.EVENT_START_RULE:
             case ActivityType.EVENT_START_LINK:
             case ActivityType.EVENT_START_MULTIPLE:
@@ -432,6 +432,12 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
                         .getElementTypesForMessagingEdgeSource());
                 types = filterElementTypes(target, types);
                 return types;
+            } else if (relationshipType == BpmnElementTypes.Association_3003) {
+                List types = new ArrayList();
+                types.addAll(BPMNElementTypesActivities
+                        .getElementTypesForAssociationSource());
+                types = filterElementTypes(target, types);
+                return types;
             }
         }
         if (isEditPartArtifact(targetEditPart) &&
@@ -511,13 +517,16 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             return types;
         }
         if (sourceEditPart instanceof PoolEditPart) {
+            List types = new ArrayList();
             if (relationshipType == BpmnElementTypes.MessagingEdge_3002) {
-                List types = new ArrayList();
                 types.addAll(BPMNElementTypesActivities
-                        .getElementTypesForMessagingEdgeSource());
-                types = filterElementTypes(source, types);
-                return types;
-            }
+                        .getElementTypesForMessagingEdgeTarget());
+            } else if (relationshipType == BpmnElementTypes.Association_3003) {
+                types.addAll(BPMNElementTypesActivities
+                        .getElementTypesForAssociationTarget());
+            } 
+            types = filterElementTypes(source, types);
+            return types;
         }
         if (isEditPartArtifact(sourceEditPart)) {
         	List types = new ArrayList();

@@ -18,6 +18,7 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.ConnectionRouter;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.emf.common.notify.Notification;
@@ -32,20 +33,27 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.Routing;
 import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.diagram.edit.policies.MessagingEdgeItemSemanticEditPolicy;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.figures.ConnectionLayerExEx;
 import org.eclipse.stp.bpmn.figures.ConnectionUtils;
+import org.eclipse.stp.bpmn.figures.MessagePolylineTargetDecoration;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
@@ -136,6 +144,13 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
          * @notgenerated
          */
         private boolean routerIsRectilinear = true;
+        
+                
+        @Override
+        public void paintFigure(Graphics graphics) {
+            graphics.setAlpha(ActivityPainter.getMessagingEdgeTransparency());
+            super.paintFigure(graphics);
+        }
 
         /**
          * Added the DASHES and the routing constraint
@@ -145,9 +160,10 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
         public ConnectionMessageFigure() {
             this.setLineStyle(org.eclipse.draw2d.Graphics.LINE_CUSTOM);
             this.setLineDash(DASHES);
-            this.setForegroundColor(org.eclipse.draw2d.ColorConstants.black
-
-            );
+            this.setForegroundColor(FigureUtilities.integerToColor(
+                    FigureUtilities.RGBToInteger(
+                            PreferenceConverter.getColor(BpmnDiagramEditorPlugin.PREF_STORE,
+                                    BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_COLOR))));
             setSourceDecoration(createSourceDecoration());
             setTargetDecoration(createTargetDecoration());
         }
@@ -165,8 +181,10 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
          * @generated
          */
         private org.eclipse.stp.bpmn.figures.MessagePolylineTargetDecoration createTargetDecoration() {
-            org.eclipse.stp.bpmn.figures.MessagePolylineTargetDecoration df = new org.eclipse.stp.bpmn.figures.MessagePolylineTargetDecoration();
-
+            org.eclipse.stp.bpmn.figures.MessagePolylineTargetDecoration df =
+                new org.eclipse.stp.bpmn.figures.MessagePolylineTargetDecoration(
+                        true);
+            
             return df;
         }
 
@@ -189,15 +207,25 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
             return smoothPoints;
         }
 
-        @Override
         /**
-         * @notgenerated
+         * @generated NOT
          */
+        @Override
         public void setVisible(boolean visible) {
             if (isReparented()) {
                 visible = true;
             }
             super.setVisible(visible);
+        }
+        
+        /**
+         * 
+         * @param isRoundStyle true if connected to a task, a pool a sub-process
+         * false for round shapes (events and co)
+         * @generated NOT
+         */
+        public void setTargetDecorationStyle(boolean isRoundStyle) {
+            ((MessagePolylineTargetDecoration)getTargetDecoration()).setStyle(isRoundStyle);
         }
 
     }
@@ -315,17 +343,29 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
                 resolveSemanticElement()), messagesList);
                 count = messagesList.size();
                 messages = messagesList.iterator();
+                
+                if (!isSource) {
+                    //update the target decoration to the TaskStyle.
+                    ((ConnectionMessageFigure)getFigure()).setTargetDecorationStyle(true);
+                }
+                
             } else {
-                messages = isSource ?
-                    ((Activity)((GraphicalEditPart) super.getSource())
-                            .resolveSemanticElement()).getOrderedMessages().valueListIterator() :
-                    ((Activity)((GraphicalEditPart) super.getTarget())
-                            .resolveSemanticElement()).getOrderedMessages().valueListIterator();
-                count = isSource ?
+                Activity connectedActivity = isSource ?
                         ((Activity)((GraphicalEditPart) super.getSource())
-                                .resolveSemanticElement()).getOrderedMessages().size() :
+                                .resolveSemanticElement()) :
                         ((Activity)((GraphicalEditPart) super.getTarget())
-                                .resolveSemanticElement()).getOrderedMessages().size();
+                                .resolveSemanticElement());
+                
+                messages = connectedActivity.getOrderedMessages().valueListIterator();
+                count = connectedActivity.getOrderedMessages().size();
+                
+                if (!isSource) {
+                    //update the target decoration to the TaskStyle.
+                    ((ConnectionMessageFigure)getFigure()).setTargetDecorationStyle(
+                            connectedActivity.getActivityType()
+                                .getLiteral().startsWith("Event"));//$NON-NLS-1$
+                }
+                
             }
             //int ind = messages.indexOf(msgEdge);
             int ind = 0;
@@ -415,57 +455,55 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
     @Override
     protected void handleNotificationEvent(Notification notification) {
         Object feature = notification.getFeature();
-        if (feature instanceof EAttribute) {
-            if ("anchor" //$NON-NLS-1$
-                    .equals(((EAttribute) feature).getDefaultValueLiteral())) {
-                String newValue = notification.getNewStringValue();
-                if (newValue != null) {
-                    PrecisionPoint p = BaseSlidableAnchor
-                            .parseTerminalString(newValue);
-                    IdentityAnchor notifier = (IdentityAnchor) notification
-                            .getNotifier();
-                    Edge connection = (Edge) notifier.eContainer();
-                    MessageVertex activity;
-                    boolean isSource;
-                    if (connection.getSourceAnchor() == notifier) {
-                        isSource = true;
-                        activity = (MessageVertex) connection.getSource()
-                                .getElement();
-                    } else {
-                        isSource = false;
-                        activity = (MessageVertex) connection.getTarget()
-                                .getElement();
+        if (feature instanceof EAttribute && "anchor" //$NON-NLS-1$
+                .equals(((EAttribute) feature).getDefaultValueLiteral())) {
+            String newValue = notification.getNewStringValue();
+            if (newValue != null) {
+                PrecisionPoint p = BaseSlidableAnchor
+                        .parseTerminalString(newValue);
+                IdentityAnchor notifier = (IdentityAnchor) notification
+                        .getNotifier();
+                Edge connection = (Edge) notifier.eContainer();
+                MessageVertex activity;
+                boolean isSource;
+                if (connection.getSourceAnchor() == notifier) {
+                    isSource = true;
+                    activity = (MessageVertex) connection.getSource()
+                            .getElement();
+                } else {
+                    isSource = false;
+                    activity = (MessageVertex) connection.getTarget()
+                            .getElement();
+                }
+                FeatureMap messages = activity.getOrderedMessages();
+                int connCount = messages.size();
+                int newIdx = -1;
+                for (int i = 0; i < connCount; i++) {
+                    if (p.preciseX < 1.0 / connCount * (i + 1)) {
+                        newIdx = i;
+                        break;
                     }
-                    FeatureMap messages = activity.getOrderedMessages();
-                    int connCount = messages.size();
-                    int newIdx = -1;
-                    for (int i = 0; i < connCount; i++) {
-                        if (p.preciseX < 1.0 / connCount * (i + 1)) {
-                            newIdx = i;
+                }
+                if (newIdx != -1) {
+                    //get the old index:
+                    int oldInd = 0;
+                    for (Iterator<FeatureMap.Entry> it = messages.iterator(); it.hasNext();) {
+                        FeatureMap.Entry entry = it.next();
+                        if (entry.getValue() == connection.getElement()) {
                             break;
                         }
+                        oldInd++;
                     }
-                    if (newIdx != -1) {
-                        //get the old index:
-                        int oldInd = 0;
-                        for (Iterator<FeatureMap.Entry> it = messages.iterator(); it.hasNext();) {
-                            FeatureMap.Entry entry = it.next();
-                            if (entry.getValue() == connection.getElement()) {
-                                break;
-                            }
-                            oldInd++;
-                        }
-                        if (oldInd < messages.size()) {
-                            messages.move(newIdx, oldInd);
-                        }
-                        EditPart activityEditPart;
-                        if (isSource) {
-                            activityEditPart = getSource();
-                        } else {
-                            activityEditPart = getTarget();
-                        }
-                        activityEditPart.refresh();
+                    if (oldInd < messages.size()) {
+                        messages.move(newIdx, oldInd);
                     }
+                    EditPart activityEditPart;
+                    if (isSource) {
+                        activityEditPart = getSource();
+                    } else {
+                        activityEditPart = getTarget();
+                    }
+                    activityEditPart.refresh();
                 }
             }
         }

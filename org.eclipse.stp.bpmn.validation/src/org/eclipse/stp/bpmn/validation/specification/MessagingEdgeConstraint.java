@@ -22,6 +22,8 @@ import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 
 /**
@@ -35,6 +37,9 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
     @Override
     public IStatus validate(IValidationContext ctx) {
         if (ctx.getTarget() instanceof MessagingEdge) {
+            boolean isBpmn11On = BpmnDiagramEditorPlugin.getInstance().
+            getPreferenceStore().getBoolean(
+                    BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
             if (ctx.getFeature() == null || // batch mode
                     ctx.getFeature(). // live mode
                     getFeatureID() == BpmnPackage.MESSAGING_EDGE) {
@@ -50,6 +55,9 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
                     case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
                     case ActivityType.EVENT_START_MULTIPLE:
                     case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
+                        if (isBpmn11On) {
+                            break;
+                        }
                         FeatureMap.Entry fentry = (FeatureMap.Entry) source.
                         getOrderedMessages().get(0);
                         MessagingEdge firstMsgOfSource =
@@ -89,6 +97,9 @@ public class MessagingEdgeConstraint extends AbstractModelConstraint {
                     switch (((Activity) target).getActivityType().getValue()) {	
                     case ActivityType.EVENT_END_MESSAGE:
                     case ActivityType.EVENT_END_MULTIPLE:
+                        if (isBpmn11On) {
+                            break;
+                        }
                         if (source.getOutgoingMessages().contains(
                                 source.getOrderedMessages().get(0).getValue())) {
                             return ctx.createFailureStatus(new Object[]{

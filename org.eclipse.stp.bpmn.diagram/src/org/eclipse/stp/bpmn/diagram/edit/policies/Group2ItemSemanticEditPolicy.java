@@ -12,6 +12,7 @@ package org.eclipse.stp.bpmn.diagram.edit.policies;
 
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
@@ -20,6 +21,7 @@ import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
@@ -63,14 +65,35 @@ public class Group2ItemSemanticEditPolicy extends
     }
 
     /**
-     * @generated NOT replaced == by getId().equals(
+     * @generated NOT
+     * the relationship is enabled in the two directions.
+     * Particularly important when trying to have an activity create it,
+     * in the case that the artifact has just been created.
+     * replaced == by getId().equals(
      */
     protected Command getCreateRelationshipCommand(CreateRelationshipRequest req) {
         if (BpmnElementTypes.Association_3003.getId().equals(req.getElementType().getId())) {
-            return req.getTarget() == null ? getCreateStartOutgoingAssociation3003Command(req)
-                    : null;
+            return req.getTarget() == null ? getCreateStartOutgoingAssociation3003Command(req) : 
+                getCreateCompleteIncomingAssociation3003Command(req);
         }
         return super.getCreateRelationshipCommand(req);
+    }
+
+    /**
+     * @generated NOT
+     * @param req
+     * @return an empty command
+     * added to enable the creation of an association with an activity.
+     */
+    protected Command getCreateCompleteIncomingAssociation3003Command(
+            CreateRelationshipRequest req) {
+        if (!(req.getSource() instanceof Artifact)) {
+            return UnexecutableCommand.INSTANCE;
+        }
+        if (!(req.getTarget() instanceof Artifact) || req.getTarget() == req.getSource()) {
+            return new Command(){};
+        }
+        return new Command() {};
     }
 
     /**

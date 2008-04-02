@@ -6,6 +6,7 @@ import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 
 /**
  * Defines an anchor aware of the type of the connection it supports, eventually
@@ -69,12 +70,11 @@ public interface IModelAwareAnchor extends ConnectionAnchor {
     
     /** 
      * Returns the owner Figure on which this anchor's location is dependent.
+     * In this case it is always an INodeFigureAnchorTerminalUpdatable
      *
-     * @since 2.0
      * @return  Owner of this anchor
-     * @see #setOwner(IFigure)
      */
-    public IFigure getOwner();
+    public INodeFigureAnchorTerminalUpdatable getCastedOwner();
     
     /**
      * @return POSITIONNING_SLIDEABLE or POSITIONNING_DOMAIN_AWARE
@@ -124,6 +124,9 @@ public interface IModelAwareAnchor extends ConnectionAnchor {
      * When using an IModelAwareAnchor, it is likely that the terminal string keeps
      * changing so it is highly recommended that the owner figure support
      * this method if the owner figure indexes the connection anchors that way.
+     * <p>
+     * Also the figure always extends NodeFigure
+     * </p>
      * 
      * @author hmalphettes
      * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
@@ -146,6 +149,12 @@ public interface IModelAwareAnchor extends ConnectionAnchor {
          * @return The factory used.
          */
         public IConnectionAnchorFactory getConnectionAnchorFactory();
+        
+        /**
+         * @param result The object on which the bounds will be set.
+         * By default it is the bounds of the figure itself.
+         */
+        public void computeAbsoluteHandleBounds(Rectangle result);
 
     }
 

@@ -15,8 +15,10 @@ import java.util.List;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionLocator;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
@@ -24,6 +26,7 @@ import org.eclipse.emf.transaction.RunnableWithResult;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.internal.ui.palette.editparts.RaisedBorder;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.DirectEditManager;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
@@ -39,7 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.RectangularDropShadowLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.LineBorderEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
@@ -48,17 +51,22 @@ import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
 import org.eclipse.gmf.runtime.notation.FontStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnTextSelectionEditPolicy;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.accessibility.AccessibleEvent;
 import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * @generated
@@ -137,8 +145,8 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
      * @generated
      */
     protected String getLabelTextHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getText();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getText();
         } else {
             return ((Label) figure).getText();
         }
@@ -148,8 +156,8 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
      * @generated
      */
     protected void setLabelTextHelper(IFigure figure, String text) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setText(text);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setText(text);
         } else {
             ((Label) figure).setText(text);
         }
@@ -159,8 +167,8 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
      * @generated
      */
     protected Image getLabelIconHelper(IFigure figure) {
-        if (figure instanceof WrapLabel) {
-            return ((WrapLabel) figure).getIcon();
+        if (figure instanceof WrappingLabel) {
+            return ((WrappingLabel) figure).getIcon();
         } else {
             return ((Label) figure).getIcon();
         }
@@ -170,8 +178,8 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
      * @generated
      */
     protected void setLabelIconHelper(IFigure figure, Image icon) {
-        if (figure instanceof WrapLabel) {
-            ((WrapLabel) figure).setIcon(icon);
+        if (figure instanceof WrappingLabel) {
+            ((WrappingLabel) figure).setIcon(icon);
         } else {
             ((Label) figure).setIcon(icon);
         }
@@ -245,9 +253,29 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
     }
 
     /**
-     * @generated
+     * @notgenerated Under linux it seems 
+     * to fix issues to have blanks in the text to edit when it is empty.
      */
     public String getEditText() {
+        if (TextAnnotationNameEditPart.IS_LINUX) {
+            if (getParser() == null) {
+                return " "; //$NON-NLS-1$
+            }
+            String res = getParser().getEditString(
+                    new EObjectAdapter(getParserElement()),
+                    getParserOptions().intValue());
+            if (res != null && res.length() == 0) {
+                res = " "; //$NON-NLS-1$
+            }
+            return res;
+        }
+        return getEditTextGen();
+    }
+    
+    /**
+     * @generated
+     */
+    public String getEditTextGen() {
         if (getParser() == null) {
             return ""; //$NON-NLS-1$
         }
@@ -429,14 +457,30 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
         refreshStrikeThrough();
     }
 
+    static Color borderColor = null;
+    
     /**
      * @generated not adding or removing the border.
      */
     protected void refreshLabel() {
-    	if (getLabelText() == null || "".equals(getLabelText())) { //$NON-NLS-1$
+    	boolean shouldShow = BpmnDiagramEditorPlugin.getInstance().
+    	    getPreferenceStore().getBoolean(
+    	        BpmnDiagramPreferenceInitializer.PREF_SHOW_CONNECTION_LABEL_BORDER);
+        if (!shouldShow || getLabelText() == null || "".equals(getLabelText())) { //$NON-NLS-1$
     		getFigure().setBorder(null);
     	} else {
-    		getFigure().setBorder(new LineBorderEx(ColorConstants.lightGray));
+    	    RGB rgb = PreferenceConverter.getColor(
+    	            BpmnDiagramEditorPlugin.getInstance().getPreferenceStore(), 
+    	            BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BORDER_COLOR);
+    	    if (borderColor == null || !borderColor.getRGB().equals(rgb)) {
+    	        if (borderColor != null) {
+    	            borderColor.dispose();
+    	        }
+    	        borderColor = new Color(null, rgb);
+    	    }
+    	    LineBorderEx border = new LineBorderEx();
+    	    border.setColor(borderColor);
+    		getFigure().setBorder(border);
     	}
         setLabelTextHelper(getFigure(), getLabelText());
         setLabelIconHelper(getFigure(), getLabelIcon());
@@ -452,8 +496,8 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
     protected void refreshUnderline() {
         FontStyle style = (FontStyle) getFontStyleOwnerView().getStyle(
                 NotationPackage.eINSTANCE.getFontStyle());
-        if (style != null && getFigure() instanceof WrapLabel) {
-            ((WrapLabel) getFigure()).setTextUnderline(style.isUnderline());
+        if (style != null && getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getFigure()).setTextUnderline(style.isUnderline());
         }
     }
 
@@ -463,8 +507,8 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
     protected void refreshStrikeThrough() {
         FontStyle style = (FontStyle) getFontStyleOwnerView().getStyle(
                 NotationPackage.eINSTANCE.getFontStyle());
-        if (style != null && getFigure() instanceof WrapLabel) {
-            ((WrapLabel) getFigure()).setTextStrikeThrough(style
+        if (style != null && getFigure() instanceof WrappingLabel) {
+            ((WrappingLabel) getFigure()).setTextStrikeThrough(style
                     .isStrikeThrough());
         }
     }
@@ -602,10 +646,9 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
     }
 
     /**
-     * @generated
+     * @generated NOT wrappingLabel joys.
      */
-    public class EdgeNameFigure extends
-            org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel {
+    public class EdgeNameFigure extends WrappingLabel {
 
         /**
          * @generated NOT set textWrap true

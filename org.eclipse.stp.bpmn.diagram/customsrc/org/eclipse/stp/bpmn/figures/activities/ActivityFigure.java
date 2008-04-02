@@ -57,7 +57,7 @@ public abstract class ActivityFigure extends Shape {
         } else if (ActivityType.VALUES_GATEWAYS.contains(at)) {
             setMinimumSize(new Dimension(ActivityEditPart.GATEWAY_FIGURE_SIZE, 
                     ActivityEditPart.GATEWAY_FIGURE_SIZE));
-        } 
+        }
         revalidate();
         repaint();
     }
@@ -91,6 +91,7 @@ public abstract class ActivityFigure extends Shape {
 
     @Override
     public void paintFigure(Graphics graphics) {
+//        System.err.println("activity height = " + getBounds().height + " graphics = " + graphics);
         switch (_activityType) {
         case ActivityType.TASK:
         case ActivityType.SUB_PROCESS:

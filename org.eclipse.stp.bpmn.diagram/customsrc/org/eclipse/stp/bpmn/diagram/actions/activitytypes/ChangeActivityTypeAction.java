@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Dec 18, 2006      Antoine Toulm�   Creation
+ * Dec 18, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.diagram.actions.activitytypes;
 
@@ -53,7 +53,7 @@ import org.eclipse.ui.IWorkbenchPart;
 /**
  * Abstract action to change the activity type of the selected
  * object into the one specified by the action.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ChangeActivityTypeAction extends AbstractActionHandler {
@@ -260,7 +260,7 @@ public class ChangeActivityTypeAction extends AbstractActionHandler {
 	
 	/**
 	 * Utility class used to simplify the use of AbstracTransactionalCommand.
-	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+	 * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
 	 * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
 	 */
 	private abstract class MyCommand extends AbstractTransactionalCommand {

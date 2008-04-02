@@ -16,8 +16,11 @@
 
 package org.eclipse.stp.bpmn.figures.activities;
 
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.stp.bpmn.figures.connectionanchors.DefaultSizeNodeFigureEx;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
+import org.eclipse.stp.bpmn.layouts.ActivityLayout;
 
 /**
  * Manages connection anchors.
@@ -27,9 +30,51 @@ import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
  */
 public class ActivityNodeFigure extends DefaultSizeNodeFigureEx {
 
+    private final boolean _isSubProcessEventHandler;
+    
     public ActivityNodeFigure(IConnectionAnchorFactory connectionAnchorFactory,
-            int width, int height) {
+            int width, int height, boolean isSubProcessEventHandler) {
         super(width, height, connectionAnchorFactory);
+        _isSubProcessEventHandler = isSubProcessEventHandler;
     }
+    
+    /**
+     * @param result The rectanlge on which the bounds will be set.
+     */
+    public void computeAbsoluteHandleBounds(Rectangle result) {
+        if (getLayoutManager() instanceof ActivityLayout) {
+            ActivityLayout activityLayout = (ActivityLayout)getLayoutManager();
+            if (_isSubProcessEventHandler) {
+                //check the label inside:
+                
+            }
+            IFigure fig = activityLayout.getOvalOrDiamondFigure();
+            result.setBounds(fig.getBounds());
+            fig.translateToAbsolute(result);
+        } else {
+            super.computeAbsoluteHandleBounds(result);
+        }
+
+    }
+    /**
+     * Exclude activity name label from handle bounds
+     */
+    @Override
+    public Rectangle getHandleBounds() {
+        if (getLayoutManager() instanceof ActivityLayout) {
+            ActivityLayout activityLayout = (ActivityLayout)getLayoutManager();
+            if (_isSubProcessEventHandler) {
+                //check the label inside:
+                
+            }
+            IFigure fig = activityLayout.getOvalOrDiamondFigure();
+            Rectangle res = fig.getBounds().getCopy();
+            fig.translateToParent(res);
+            return res;
+        } else {
+            return super.getHandleBounds();
+        }
+    }
+    
  
 }

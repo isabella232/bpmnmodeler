@@ -16,6 +16,9 @@
 
 package org.eclipse.stp.bpmn.figures;
 
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
+
 /**
  * 
  * 
@@ -24,4 +27,11 @@ package org.eclipse.stp.bpmn.figures;
  */
 public class SequenceEdgePolylineTargetDecoration extends FilledPolylineDecoration {
 
+    
+    @Override
+    public void paintFigure(Graphics graphics) {
+        graphics.setAlpha(ActivityPainter.getSequenceEdgeTransparency());
+        super.paintFigure(graphics);
+    }
+    
 }

@@ -9,13 +9,12 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Feb 12, 2007      Antoine Toulmé   Creation
+ * Feb 12, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.policies;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,23 +23,27 @@ import java.util.Map;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.EditPart;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
+import org.eclipse.gef.editparts.ZoomManager;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.XYLayoutEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest.ViewAndElementDescriptor;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewRequest.ViewDescriptor;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.DataObject2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
@@ -50,7 +53,7 @@ import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
  * hopefully some space between children:
  * as we cannot touch the pool before it is created, we move the pool below its
  * location.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
@@ -74,12 +77,13 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	        return null;
 	    }
 	 // let's skip groups, they do not resize the pool.
-        boolean onlyContainsGroups = true;
+        boolean onlyContainsArtifacts = true;
         for (Object o : request.getEditParts()) {
-            onlyContainsGroups = onlyContainsGroups && (
-                    o instanceof GroupEditPart || o instanceof Group2EditPart);
+            onlyContainsArtifacts = onlyContainsArtifacts && 
+            (o instanceof IGraphicalEditPart &&
+                    ((IGraphicalEditPart) o).resolveSemanticElement() instanceof Artifact);
         }
-        if (onlyContainsGroups) {
+        if (onlyContainsArtifacts) {
             return super.getResizeChildrenCommand(request);
         }
 		//calculate maxWidth
@@ -89,6 +93,7 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 		Map<Rectangle, IGraphicalEditPart> toSortBounds = 
 			new LinkedHashMap<Rectangle, IGraphicalEditPart>();
 		
+		ZoomManager zoom = ((DiagramRootEditPart) getHost().getRoot()).getZoomManager();
 		for (Object child : getHost().getChildren()) {
 			IGraphicalEditPart childPart = (IGraphicalEditPart) child;
 			if (!(child instanceof PoolEditPart)) {
@@ -100,12 +105,12 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
                     request.getEditParts().contains(child)) {
 			    
 				if (request.getSizeDelta() != null) {
-					rect.width += request.getSizeDelta().width;
-					rect.height += request.getSizeDelta().height;
+					rect.width += request.getSizeDelta().width/zoom.getZoom();
+					rect.height += request.getSizeDelta().height/zoom.getZoom();
 				}
 				if (request.getMoveDelta() != null) {
-					rect.y += request.getMoveDelta().y;
-					rect.x += request.getMoveDelta().x;
+					rect.y += request.getMoveDelta().y/zoom.getZoom();
+					rect.x += request.getMoveDelta().x/zoom.getZoom();
 				}
 			}
 			maxWidth = maxWidth < rect.width ? rect.width : maxWidth;
@@ -152,7 +157,7 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			Command co = createChangeConstraintCommand(part, key);
 			command.add(co);
 			
-			if (request.getEditParts().contains(part)) {
+			if (request.getEditParts().contains(part) && request.getSizeDelta().height != 0) {
 			    PoolPoolCompartmentEditPart compartment = 
 			        (PoolPoolCompartmentEditPart) part.getChildBySemanticHint(
 			                BpmnVisualIDRegistry.getType(
@@ -175,13 +180,22 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 			        final IGraphicalEditPart comp = part.getChildBySemanticHint(BpmnVisualIDRegistry.getType(
 			                PoolPoolCompartmentEditPart.VISUAL_ID));
 			        if (comp != null) { // if comp is null this wasn't a pool in the first place
-			            int ymove = request.getSizeDelta().height;
-			            for (Object child : comp.getChildren()) {
-			                IGraphicalEditPart ep = (IGraphicalEditPart) child;
-			                Rectangle rect = ep.getFigure().getBounds().getCopy();
-			                rect.y += ymove;
-			                command.add(createChangeConstraintCommand(ep, rect));
-			            }
+			            ChangeBoundsRequest move = new ChangeBoundsRequest(org.eclipse.gef.RequestConstants.REQ_MOVE_CHILDREN);
+                        move.setMoveDelta(new Point(0, request.getSizeDelta().height));
+                        //move.setConstrainedMove(true);//does nothing.
+			            move.setEditParts(comp.getChildren());
+                        Command c = comp.getCommand(move);
+                        if (c != null && c.canExecute()) {
+                            command.add(c);
+                        }
+                        //the code below is bug EDGE-2179
+//                      int ymove = (int) (request.getSizeDelta().height/zoom.getZoom());
+//                      for (Object child : comp.getChildren()) {
+//                      IGraphicalEditPart ep = (IGraphicalEditPart) child;
+//                      Rectangle rect = ep.getFigure().getBounds().getCopy();
+//                      rect.y += ymove;
+//                      command.add(createChangeConstraintCommand(ep, rect));
+//                  }
 			        }
 			    }
 			}
@@ -231,6 +245,15 @@ public class BpmnDiagramXYLayoutEditPolicy extends XYLayoutEditPolicy {
 	
 	@Override
 	protected Command getCreateCommand(CreateRequest request) {
+	    if (request instanceof CreateViewAndElementRequest) {
+	        String type = ((ViewAndElementDescriptor) 
+	                ((List) ((CreateViewAndElementRequest) request).getViewDescriptors()).iterator().next()).getSemanticHint();
+	        if (BpmnVisualIDRegistry.getType(Group2EditPart.VISUAL_ID).equals(type)  ||
+	                BpmnVisualIDRegistry.getType(DataObject2EditPart.VISUAL_ID).equals(type) ||
+	                BpmnVisualIDRegistry.getType(TextAnnotation2EditPart.VISUAL_ID).equals(type)) {
+	            return super.getCreateCommand(request);
+	        }
+	    }
 		CompoundCommand co = new CompoundCommand();
 		co.add(super.getCreateCommand(request));
 		ChangeBoundsRequest req = new ChangeBoundsRequest();

@@ -112,6 +112,26 @@ public class BpmnDiagramPreferenceInitializer extends
     public static final String PREF_SEQ_LINE_STYLE = "bpmn.sequence.Connectors.lineStyle"; //$NON-NLS-1$
 
     /**
+     * the connection line color for the sequence edge;
+     */
+    public static String PREF_MSG_LINE_COLOR = "bpmn.sequence.Connectors.lineColor"; //$NON-NLS-1$
+    /**
+     * the connection line alpha (transparency) for the sequence edge;
+     * 0 is completly transparent, 255 is fully opaque.
+     */
+    public static String PREF_MSG_LINE_ALPHA = "bpmn.sequence.Connectors.lineAlpha"; //$NON-NLS-1$
+    /**
+     * the connection line color for the messaging edge;
+     */
+    public static String PREF_SEQ_LINE_COLOR = "bpmn.message.Connectors.lineColor"; //$NON-NLS-1$
+    /**
+     * the connection line alpha (transparency) for the messaging edge;
+     * 0 is completly transparent, 255 is fully opaque.
+     */
+    public static String PREF_SEQ_LINE_ALPHA = "bpmn.message.Connectors.lineAlpha"; //$NON-NLS-1$
+
+    
+    /**
      * whether new message connections should be routed with the shortest path
      */
     public static String PREF_MSG_ROUTE_SHORTEST = "bpmn.sequence.Connectors.route.shortest"; //$NON-NLS-1$
@@ -140,6 +160,19 @@ public class BpmnDiagramPreferenceInitializer extends
      * whether shapes should be shown in a BPMN 1.0 or BPMN 1.1 style.
      */
     public static final String PREF_BPMN1_1_STYLE = "bpmn.1.1.style";
+
+    /**
+     * Whether the connection labels should be reset on move.
+     */
+    public static final String PREF_SNAP_BACK_ON_MOVE = "bpmn.connections.snap.back.on.move";
+
+    /**
+     * Shows the connection label border.
+     */
+    public static final String PREF_SHOW_CONNECTION_LABEL_BORDER = "bpmn.connections.label.border";
+
+    public static final String PREF_CONNECTION_LABEL_BORDER_COLOR = "bpmn.connections.label.border.color";
+    
     /**
      * Initializes all the generic diagram preferences with their default
      * values. Override to initialize new preferences added.
@@ -155,7 +188,7 @@ public class BpmnDiagramPreferenceInitializer extends
         
         getPreferenceStore().setDefault(PREF_SNAP_TO_GEOMETRY, true);
         getPreferenceStore().setDefault(PREF_CONN_DIAG_ASSISTANT_DELAY_MS, 0);
-        getPreferenceStore().setDefault(PREF_SP_COLLAPSE_STYLE, true);
+        getPreferenceStore().setDefault(PREF_SP_COLLAPSE_STYLE, false);
         
         getPreferenceStore().setDefault(PREF_SEQ_LINE_STYLE, Routing.RECTILINEAR);
         getPreferenceStore().setDefault(PREF_MSG_LINE_STYLE, Routing.RECTILINEAR);
@@ -189,6 +222,14 @@ public class BpmnDiagramPreferenceInitializer extends
             lineColor.getRGB());
         
         getPreferenceStore().setDefault(PREF_BPMN1_1_STYLE, true);
+        
+        getPreferenceStore().setDefault(PREF_SNAP_BACK_ON_MOVE, true);
+        
+        getPreferenceStore().setDefault(PREF_SHOW_CONNECTION_LABEL_BORDER, true);
+        
+        PreferenceConverter.setDefault(getPreferenceStore(), 
+                PREF_CONNECTION_LABEL_BORDER_COLOR, 
+                DiagramColorConstants.lightGray.getRGB());
     }
 
     /**
@@ -220,8 +261,6 @@ public class BpmnDiagramPreferenceInitializer extends
     }
 
     /**
-     * Hardcode the default font to Arial.
-     * TODO: use the correct way (symbolic name, font regsitry ?) if there is one.
      * @param store
      */
     private void internalSetFillColorPref(IPreferenceStore store) {
@@ -242,6 +281,13 @@ public class BpmnDiagramPreferenceInitializer extends
         PreferenceConverter.setDefault(store, PREF_SUBPROCESS_DEFAULT_FILL_COLOR,
                 ColorConstants.white.getRGB());
         
+        PreferenceConverter.setDefault(store, PREF_MSG_LINE_COLOR,
+                ColorConstants.black.getRGB());
+        PreferenceConverter.setDefault(store, PREF_SEQ_LINE_COLOR,
+                ColorConstants.black.getRGB());
+        
+        store.setDefault(PREF_MSG_LINE_ALPHA, 170);
+        store.setDefault(PREF_SEQ_LINE_ALPHA, 150);
     }
 
 }

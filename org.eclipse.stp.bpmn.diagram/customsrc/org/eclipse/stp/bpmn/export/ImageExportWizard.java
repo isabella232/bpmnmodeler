@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Jan 10, 2007      Antoine Toulm�   Creation
+ * Jan 10, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.export;
 
@@ -56,7 +56,7 @@ import org.eclipse.ui.IWorkbench;
  * 
  * Note that the wizard can only export BPMN diagrams.
  * 
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class ImageExportWizard extends Wizard implements IExportWizard {

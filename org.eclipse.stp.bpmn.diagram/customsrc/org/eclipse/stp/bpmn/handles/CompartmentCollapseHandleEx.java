@@ -44,7 +44,7 @@ public class CompartmentCollapseHandleEx extends CompartmentCollapseHandle {
             Rectangle theBounds = null;
             if (ownerParent instanceof SubProcessEditPart) {
                 theBounds = ((SubProcessEditPart) ownerParent)
-                    .getAbsCollapseHandleBounds();
+                    .getAbsCollapseHandleBounds(true);
             } else {//it is a pool put it in the top left corner
                 IFigure ownerParentFig = ((IGraphicalEditPart)ownerParent).getFigure();
                 theBounds = ownerParentFig.getClientArea().getCopy();          

@@ -13,20 +13,16 @@
  */
 package org.eclipse.stp.bpmn.layouts;
 
-import java.util.StringTokenizer;
-
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutManager;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.WrapperNodeFigure;
-import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip;
-import org.eclipse.swt.graphics.Font;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 
 /**
@@ -67,7 +63,7 @@ public class ActivityLayout implements LayoutManager {
     public static final Integer BOTTOM = new Integer(PositionConstants.BOTTOM);
 
     private IFigure center;
-    private WrapLabel bottom;
+    private WrappingLabel bottom;
     private int vGap = 0, hGap = 0;
 
     /**
@@ -82,15 +78,14 @@ public class ActivityLayout implements LayoutManager {
         }
         
         if (prefSize.width < EVENT_GATEWAYS_LABEL_MIN_WIDTH &&
-                bottom != null && bottom.isVisible() && bottom instanceof WrapLabelWithToolTip) {
+                bottom != null && bottom.isVisible() && bottom instanceof WrappingLabel) {
             //check that the width of the label is inferior to the
             //width of the preferred size otherwise
             //use the minimum width.
-            int prefWidth = ((WrapLabelWithToolTip)bottom).getTextSizeWidth(wHint, hHint);
-            if (prefWidth > EVENT_GATEWAYS_LABEL_MIN_WIDTH) {
+            Dimension prefLabel = ((WrappingLabel)bottom).getPreferredSize(wHint, hHint);
+            if (prefLabel.width > EVENT_GATEWAYS_LABEL_MIN_WIDTH) {
                 prefSize.width = EVENT_GATEWAYS_LABEL_MIN_WIDTH;
             }
-            
         }
         
         return prefSize;
@@ -101,21 +96,25 @@ public class ActivityLayout implements LayoutManager {
      * by adding the label.
      */
     public void layout(IFigure container) {
-        Rectangle area = container.getClientArea();
+        Rectangle area = container.getClientArea().getCopy();
         if (bottom.getSize().height == 0) {
             area.height = Math.min(area.height, area.width);
             area.width = area.height;
         }
         int squaresize =  0; // the size of the square formed by the event
         // shape or the gateway shape
-        if (bottom.getSize().height != 0) {
-            squaresize = area.height - bottom.getSize().height;
+//start unexpected computation: for an event shape: the container is the size of the center figure.
+        int bottomHeight = bottom.getPreferredSize().height;
+        if (bottomHeight > 0) {
+            squaresize = area.height - bottomHeight;
         } else {
+//end of unexpected computation.
             squaresize = area.width;
         }
         // now check that the center's minimum size is respected.
-        if (center.getMinimumSize().width > squaresize) {
-            squaresize = center.getMinimumSize().width;
+        int centerMinWidth = center.getMinimumSize().width;
+        if (centerMinWidth > squaresize) {
+            squaresize = centerMinWidth;
         }
         
         Rectangle rect = new Rectangle();
@@ -135,18 +134,29 @@ public class ActivityLayout implements LayoutManager {
             area.y += rect.height + vGap;
         }
         if (bottom != null && bottom.isVisible()) {
-            if (bottom instanceof WrapLabel) {
+            if (bottom instanceof WrappingLabel) {
                 if (area.height <= 0) {
                     area.height = FigureUtilities.getFontMetrics(
-                            ((WrapLabel) bottom).getFont()).getHeight() * 2;
+                            ((WrappingLabel) bottom).getFont()).getHeight() * 2;
                 }
             }
             // calculate the preferred size
-            childSize = bottom.getPreferredSize(area.width, area.height);
+            if (bottom.getText() != null 
+                    && !"".equals(bottom.getText())) {
+                childSize = bottom.getPreferredSize();
+                // because the height of the font is strangely clipped
+                // with the 'g' letter for example, we add 4 pixels.
+                childSize.height += 4; // maybe should multiply by zoom, hard to catch it.
+            } else {
+                childSize = Dimension.SINGLETON.getCopy();
+            }
+            /*
+            childSize = FigureUtilities.getTextExtents(((WrappingLabel) bottom).getText(), 
+                    ((WrappingLabel) bottom).getFont());
                         
             // change the height to have the whole text on screen
             Font f = bottom.getFont();
-            String s = ((WrapLabel) bottom).getText();
+            String s = ((WrappingLabel) bottom).getText();
             Dimension d = FigureUtilities.getTextExtents(s, f);
             IMapMode mapMode = MapModeUtil.getMapMode(bottom);
             int fontHeight = mapMode.DPtoLP(FigureUtilities.getFontMetrics(f).getHeight());
@@ -162,6 +172,7 @@ public class ActivityLayout implements LayoutManager {
             // because the height of the font is strangely clipped
             // with the 'g' letter for example, we add 5 pixels.
             childSize.height += mapMode.DPtoLP(5);
+            */
             rect.setSize(childSize);
             rect.setLocation(area.x, area.y);
             bottom.setBounds(rect);
@@ -178,11 +189,29 @@ public class ActivityLayout implements LayoutManager {
             } else {
                 center.setLocation(center.getBounds().getLocation().translate(x, 0));
             }
-            
         }
+        // experimental code to deal with the label pushing to the right
+        // not the right way to deal with it anymore:
+        // now we just set the location of the bottom according to the center.location
+        
+//        if (squaresize < bottom.getSize().width) {
+//            container.getBounds().x = center.getBounds().x - squaresize/2;
+//            bottom.getBounds().x = container.getClientArea().x;
+//            center.getBounds().x = bottom.getBounds().x - (squaresize - bottom.getSize().width)/2;
+//        } else {
+//            container.getBounds().x = bottom.getLocation().x - bottom.getBounds().width/2;
+//            center.getBounds().x = area.x;
+//            bottom.getBounds().x = center.getBounds().x + (squaresize - bottom.getSize().width)/2;
+//        }
+////        center.getBounds().y = area.y;
+//        System.err.println(bottom.getLocation().x + " " + center.getBounds().x + " " + squaresize + " " +bottom.getSize().width); //REMOVE
+        
+        
         Dimension b = new Dimension();
         b.height = center.getSize().height + bottom.getSize().height;
+        // the width of the total bounds is the max of the width
         b.width = Math.max(bottom.getSize().width, center.getSize().width);
+       
         container.setSize(b.getCopy());
         if (container.getParent() instanceof WrapperNodeFigure) {
           container.getParent().setSize(b.getCopy());
@@ -202,7 +231,7 @@ public class ActivityLayout implements LayoutManager {
     }
 
     /**
-     * Sets the location of hte given child in this layout.  Valid constraints:
+     * Sets the location of the given child in this layout.  Valid constraints:
      * <UL>
      *      <LI>{@link #CENTER}</LI>
      *      <LI>{@link #TOP}</LI>
@@ -233,13 +262,12 @@ public class ActivityLayout implements LayoutManager {
         if (constraint == null) {
             return;
         }
-        
         switch (((Integer) constraint).intValue()) {
             case PositionConstants.CENTER :
                 center = child;
                 break;
             case PositionConstants.BOTTOM :
-                bottom = (WrapLabel)child;
+                bottom = (WrappingLabel)child;
                 break;
             default :
                 break;
@@ -256,7 +284,7 @@ public class ActivityLayout implements LayoutManager {
     }
 
     /**
-     * Sets the vertical spacing ot be used between the children.  Default is 0.
+     * Sets the vertical spacing to be used between the children.  Default is 0.
      * 
      * @param gap The vertical spacing
      */
@@ -270,6 +298,13 @@ public class ActivityLayout implements LayoutManager {
 
     public void invalidate() {
         
+    }
+    
+    public IFigure getOvalOrDiamondFigure() {
+        return center;
+    }
+    public WrappingLabel getLabelFigure() {
+        return bottom;
     }
 
 }

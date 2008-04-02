@@ -47,8 +47,7 @@ public final class ConnectionUtils {
      * @return <code>PointList</code> that is a polyline approximation.
      */
     public static PointList getRoundedRectilinearSmoothPoints(
-            boolean isDuringDrag,
-            PointList points, int smoothness) {
+            boolean isDuringDrag, PointList points, int smoothness) {
 //        if (isDuringDrag) {
 //            return points;
 //        }
@@ -60,13 +59,12 @@ public final class ConnectionUtils {
             smoothness < 25 ? 12.0 : smoothness < 35 ? 16.0 : 22 ;
         PointList newPoints = new PointList();
         newPoints.addPoint(points.getFirstPoint());
-
         for (int i = 1; i < points.size() - 1; i++) {
             Point prev = points.getPoint(i - 1);
             Point curr = points.getPoint(i);
             Point next = points.getPoint(i + 1);
             
-            //first thing we do is to put ourselves in the situtation
+            //first thing we do is to put ourselves in the situation
             //where the prev point is on the left of the next.
             //it is easier to visualize (we assume x-s of prev and next are
             //not equal.)
@@ -78,7 +76,6 @@ public final class ConnectionUtils {
                 prev = next;
                 next = points.getPoint(i - 1);
                 reverse = true;
-                
             }
 
             // calculate radius

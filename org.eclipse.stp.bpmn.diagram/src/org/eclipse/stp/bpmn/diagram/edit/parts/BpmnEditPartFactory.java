@@ -11,6 +11,7 @@
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
 import org.eclipse.draw2d.DelegatingLayout;
+import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
 import org.eclipse.draw2d.FreeformLayer;
 import org.eclipse.draw2d.IFigure;
@@ -26,12 +27,13 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.tools.CellEditorLocator;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.ConnectionLayerExEx;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrapLabel;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
 
@@ -193,11 +195,13 @@ public class BpmnEditPartFactory implements EditPartFactory {
     }
 
     /**
-     * @generated
+     * @generated NOT WrappingLabel
      */
     public static CellEditorLocator getTextCellEditorLocator(
             ITextAwareEditPart source) {
-        if (source.getFigure() instanceof WrapLabel)
+        if (source.getFigure() instanceof WrappingLabel)
+            return new TextCellEditorLocator((WrappingLabel) source.getFigure());
+        else if (source.getFigure() instanceof WrapLabel)
             return new TextCellEditorLocator((WrapLabel) source.getFigure());
         else {
             IFigure figure = source.getFigure();
@@ -212,7 +216,7 @@ public class BpmnEditPartFactory implements EditPartFactory {
     public static final Class getTextCellEditorClass(GraphicalEditPart source){
         IFigure figure = source.getFigure();
                 
-        if (figure instanceof WrapLabel && ((WrapLabel) figure).isTextWrapped())
+        if (figure instanceof WrappingLabel && ((WrappingLabel) figure).isTextWrapOn())
             return WrapTextCellEditorEx.class;
         
         return TextCellEditorEx.class;
@@ -225,14 +229,14 @@ public class BpmnEditPartFactory implements EditPartFactory {
     static private class TextCellEditorLocator implements CellEditorLocator {
 
         /**
-         * @generated
+         * @generated NOT generalized to figure to accept the WrappingLabel
          */
-        private WrapLabel wrapLabel;
+        private Figure wrapLabel;
 
         /**
-         * @generated
+         * @generated NOT generalized to accept the wrappingLabel
          */
-        public TextCellEditorLocator(WrapLabel wrapLabel) {
+        public TextCellEditorLocator(Figure wrapLabel) {
             super();
             this.wrapLabel = wrapLabel;
         }
@@ -240,20 +244,43 @@ public class BpmnEditPartFactory implements EditPartFactory {
         /**
          * @generated
          */
-        public WrapLabel getWrapLabel() {
+        public Figure getWrapLabel() {
             return wrapLabel;
         }
+        
+        private Rectangle getTextBounds() {
+            if (wrapLabel instanceof WrappingLabel) {
+                return ((WrappingLabel) wrapLabel).getTextBounds();
+            } else {
+                return ((WrapLabel) wrapLabel).getTextBounds();
+            }
+        }
 
+        private boolean isTextWrapOn() {
+            if (wrapLabel instanceof WrappingLabel) {
+                return ((WrappingLabel) wrapLabel).isTextWrapOn();
+            } else {
+                return ((WrapLabel) wrapLabel).isTextWrapped();
+            }
+        }
+        
+        private String getText() {
+            if (wrapLabel instanceof WrappingLabel) {
+                return ((WrappingLabel) wrapLabel).getText();
+            } else {
+                return ((WrapLabel) wrapLabel).getText();
+            }
+        }
         /**
-         * @generated
+         * @generated not WrappingLabel
          */
         public void relocate(CellEditor celleditor) {
             Text text = (Text) celleditor.getControl();
-            Rectangle rect = getWrapLabel().getTextBounds().getCopy();
+            Rectangle rect = getTextBounds().getCopy();
             getWrapLabel().translateToAbsolute(rect);
 
-            if (getWrapLabel().isTextWrapped()
-                    && getWrapLabel().getText().length() > 0)
+            if (isTextWrapOn()
+                    && getText().length() > 0)
                 rect.setSize(new Dimension(text.computeSize(rect.width,
                         SWT.DEFAULT)));
             else {

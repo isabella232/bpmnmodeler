@@ -19,8 +19,8 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 
 /**
  * Transparent figure
@@ -28,12 +28,12 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
  * @author hmalphettes
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
-public class SubProcessFigure extends RoundedRectangle {
+public class SubProcessFigure extends RoundedRectangle
+implements HandleBounds {
 
     private boolean _isLoop;
-
     private boolean _isTransaction;
-
+    
     public boolean isLoop() {
         return _isLoop;
     }
@@ -50,23 +50,28 @@ public class SubProcessFigure extends RoundedRectangle {
         _isTransaction = isTransaction;
     }
 
-    public Rectangle getVisibleBounds() {
-        Rectangle r = getBounds().getCopy();
-        // if (super.getChildren().size() == 2) {
-        // int borderCompartmentHeight =
-        // ((IFigure) super.getChildren().get(1)).getBounds().height;
-        // r.height = r.height - borderCompartmentHeight;
-        // }
-        
+    /**
+     * Returns the Rectangle around which handles are to be placed.  The Rectangle should be
+     * in the same coordinate system as the figure itself.
+     * @return The rectangle used for handles
+     */
+    public Rectangle getHandleBounds() {
+        Rectangle r = getBounds().getCopy();        
         if (getParent() != null && (getParent().getParent() != null)) {
             int borderHeight = 0;
             for (Object child : getChildren()) {
                 if (child instanceof SubProcessBorderFigure) {
                     borderHeight = ((SubProcessBorderFigure) child).getBorderHeight();
+                    break;
                 }
             }
-        	r.height = r.height - borderHeight + ActivityEditPart.EVENT_FIGURE_SIZE/2 ;
+            if (borderHeight != 0) {
+                //r.height = (int) Math.floor(r.height - borderHeight/2);
+                //the labels of the event shapes on the border might make the border bigger than one might think.
+                r.height = r.height - borderHeight + ActivityEditPart.EVENT_FIGURE_SIZE/2;
+            }
         }
+//        System.err.println("current height=" + getBounds().height);
         return r;
     }
 
@@ -74,7 +79,7 @@ public class SubProcessFigure extends RoundedRectangle {
      * @see Shape#fillShape(Graphics)
      */
     protected void fillShape(Graphics graphics) {
-        graphics.fillRoundRectangle(getVisibleBounds(), corner.width,
+        graphics.fillRoundRectangle(getHandleBounds(), corner.width,
                 corner.height);
     }
 
@@ -83,7 +88,7 @@ public class SubProcessFigure extends RoundedRectangle {
      */
     protected void outlineShape(Graphics graphics) {
         Rectangle f = Rectangle.SINGLETON;
-        Rectangle r = getVisibleBounds();
+        Rectangle r = getHandleBounds();
         f.x = r.x + lineWidth / 2;
         f.y = r.y + lineWidth / 2;
         f.width = r.width - lineWidth;

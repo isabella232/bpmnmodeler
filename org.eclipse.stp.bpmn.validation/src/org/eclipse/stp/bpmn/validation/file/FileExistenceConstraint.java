@@ -7,7 +7,7 @@
  * program(s) have been supplied.
  *
  * Dates       		 Author              Changes
- * Mar 5, 2007      Antoine Toulmé   Creation
+ * Mar 5, 2007      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.validation.file;
 
@@ -26,7 +26,7 @@ import org.eclipse.stp.bpmn.validation.builder.BatchValidationBuilder;
 
 /**
  * This class checks that files associated with shapes are existing.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulmé</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class FileExistenceConstraint extends AbstractModelConstraint {

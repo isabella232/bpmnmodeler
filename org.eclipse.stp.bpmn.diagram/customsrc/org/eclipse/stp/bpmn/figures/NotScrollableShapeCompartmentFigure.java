@@ -17,10 +17,10 @@ package org.eclipse.stp.bpmn.figures;
 
 import java.util.Iterator;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FreeformLayout;
-import org.eclipse.draw2d.FreeformViewport;
+import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.MarginBorder;
 import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -40,11 +40,21 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class NotScrollableShapeCompartmentFigure extends ShapeCompartmentFigure {
-
+    
     public NotScrollableShapeCompartmentFigure(String title, IMapMode mm) {
         super(title, mm);
     }
-    
+    public void paintFigure(Graphics graphics) {
+        // transparent
+        super.paintFigure(graphics);
+//        if (!isPool) {
+//graphics.drawRectangle(getBounds());
+//graphics.setAlpha(120);
+//graphics.setBackgroundColor(ColorConstants.blue);
+//graphics.fillRectangle(getClientArea());
+//        }
+    }
+
     /**
      * Creates the animatable scroll pane
      * Override to try prevent the scrollbar from appearing.
@@ -69,24 +79,24 @@ public class NotScrollableShapeCompartmentFigure extends ShapeCompartmentFigure 
         res.setVerticalScrollBarVisibility(ScrollPane.NEVER);
         return res;
     }    
-    private static final Point ZERO = new Point(0,0);
-/*    protected void configureFigure(IMapMode mm) {
-        super.configureFigure(mm);
-        super.getScrollPane().setViewport(new FreeformViewport() {
+//    private static final Point ZERO = new Point(0,0);
+//    protected void configureFigure(IMapMode mm) {
+//        super.configureFigure(mm);
+//        super.getScrollPane().setViewport(new FreeformViewport() {
+//
+//            @Override
+//            public Point getViewLocation() {
+//                return ZERO;
+//            }
+//
+//            @Override
+//            public void setViewLocation(int x, int y) {
+//                super.setViewLocation(0, 0);
+//            }
+//            
+//        });
+//    }
 
-            @Override
-            public Point getViewLocation() {
-                return ZERO;
-            }
-
-            @Override
-            public void setViewLocation(int x, int y) {
-                super.setViewLocation(0, 0);
-            }
-            
-        });
-    }    */
-/*
     protected void configureFigure(IMapMode mm) {
         ScrollPane scrollpane = getScrollPane();
         if(scrollpane==null){
@@ -101,13 +111,13 @@ public class NotScrollableShapeCompartmentFigure extends ShapeCompartmentFigure 
         scrollpane.setContents(contents);
         
         int MB = mm.DPtoLP(5);
-        scrollpane.setBorder(new MarginBorder(MB, MB, MB, MB));
+//        scrollpane.setBorder(new MarginBorder(MB, MB, MB, MB));
         int SZ = mm.DPtoLP(10);
         scrollpane.setMinimumSize(new Dimension(SZ, SZ));
     
         this.setFont(FONT_TITLE);
     }    
-*/
+
 
     
 }

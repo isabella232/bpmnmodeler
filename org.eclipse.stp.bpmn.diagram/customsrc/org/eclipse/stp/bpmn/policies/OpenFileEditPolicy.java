@@ -9,7 +9,7 @@
  *     Intalio Inc. - initial API and implementation
  *******************************************************************************
  * Dates       		 Author              Changes
- * Dec 20, 2006      Antoine Toulm�   Creation
+ * Dec 20, 2006      Antoine Toulm&eacute;   Creation
  */
 package org.eclipse.stp.bpmn.policies;
 
@@ -40,7 +40,7 @@ import org.eclipse.ui.ide.IDE;
 /**
  * This edit policy opens a file when there is one attached
  * to the edit part through an annotation.
- * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm�</a>
+ * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class OpenFileEditPolicy extends OpenEditPolicy {

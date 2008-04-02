@@ -246,12 +246,10 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 	                    String name = ((TextAnnotation) ((View) eobj).getElement()).getName();
 	                    if (name != null) {
 	                        int taskPriority = -1;
-	                        if (name.startsWith("TODO ") || name.contains(" TODO ")) {
+	                        if (name.indexOf("TODO") != -1 || name.indexOf("XXX") != -1) {
 	                            taskPriority = IMarker.PRIORITY_NORMAL;
-	                        } else if (name.startsWith("FIXME ") || name.contains(" FIXME ")) {
+	                        } else if (name.indexOf("FIXME") != -1) {
 	                            taskPriority = IMarker.PRIORITY_HIGH;
-	                        } else if (name.startsWith("XXX ") || name.contains(" XXX ")) {
-	                            taskPriority = IMarker.PRIORITY_NORMAL;
 	                        }
 	                        if (taskPriority != -1) {
 	                            try {

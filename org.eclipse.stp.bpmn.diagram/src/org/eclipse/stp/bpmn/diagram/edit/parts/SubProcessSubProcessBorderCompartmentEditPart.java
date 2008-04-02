@@ -21,13 +21,12 @@ import org.eclipse.gef.editpolicies.FlowLayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.CreateRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ListCompartmentEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.notation.DrawerStyle;
-import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
@@ -159,6 +158,9 @@ public class SubProcessSubProcessBorderCompartmentEditPart extends
 
             @Override
             protected EditPolicy createChildEditPolicy(EditPart child) {
+                if ( child instanceof ShapeEditPart ) {
+                    return ((ShapeEditPart)child).getPrimaryDragEditPolicy();
+                }
                 NonResizableEditPolicy policy = (NonResizableEditPolicy) super
                         .createChildEditPolicy(child);
                 // disable drag functionality

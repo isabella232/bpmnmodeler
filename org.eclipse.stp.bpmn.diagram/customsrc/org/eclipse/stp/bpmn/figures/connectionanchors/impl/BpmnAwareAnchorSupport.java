@@ -15,24 +15,13 @@
  **/
 package org.eclipse.stp.bpmn.figures.connectionanchors.impl;
 
-import java.util.Set;
-
 import org.eclipse.draw2d.Connection;
-import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
-import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart.ActivityFigure;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart.SubProcessFigure;
-import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
-import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchorSupport;
-import org.eclipse.stp.bpmn.figures.connectionanchors.WrapperNodeFigureEx;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor.INodeFigureAnchorTerminalUpdatable;
 import org.eclipse.stp.bpmn.figures.router.EdgeRectilinearRouter;
 
@@ -76,8 +65,8 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
                 //we don't know.
                 return returnDefaultLocation(anchor, reference);
             }
-            Rectangle thisBox = getOwnerBounds(anchor);
-            anchor.getOwner().translateToAbsolute(thisBox);
+            Rectangle thisBox = new Rectangle();
+            computeOwnerBounds(anchor, thisBox);
             Point thisCenter = thisBox.getCenter();
             Point res = new Point();
             if (!anchor.getConnectionType().equals(
@@ -85,14 +74,14 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
                 //this is for an event handler
                 //shape on the border of a sub-process.
                 res.x = thisCenter.x;
-                res.y = thisCenter.y + thisBox.height/2;
+                res.y = thisBox.y + thisBox.height;
             } else {
                 if (anchor.isSourceAnchor() == IModelAwareAnchor.SOURCE_ANCHOR) {
                     //it must be on the right-side of the owner's figure.
-                    res.x = thisCenter.x + thisBox.width/2;
+                    res.x = thisBox.x + thisBox.width;
                 } else {//tis target anchor
                     //it must be on the left-side of the owner's figure.
-                    res.x = thisCenter.x - thisBox.width/2;
+                    res.x = thisBox.x;
                 }
 
                 if (anchor.getCount() > 0 && anchor.getOrderNumber() != -1) {
@@ -105,19 +94,18 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
                                     ((SequenceEdgeEditPart.EdgeFigure) anchor.getConnectionOwner()).getTargetGatewayConstraint();
                     }
                     if (constraint == EdgeRectilinearRouter.CONSTRAINT_ON_TOP) {
-                        res.y = thisCenter.y - thisBox.height/2;
+                        res.y = thisBox.y;
                         res.x = thisCenter.x;
                     } else if (constraint == EdgeRectilinearRouter.CONSTRAINT_BOTTOM) {
                         res.x = thisCenter.x;
-                        res.y = thisCenter.y + thisBox.height/2;
+                        res.y = thisBox.y + thisBox.height;
                     }  else if (constraint == EdgeRectilinearRouter.CONSTRAINT_MIDDLE) {
                         res.y = thisCenter.y;
                     } else {
                         //well let's try distributing on the y axis for the rest of them.
                         int height = thisBox.height;
-                        res.y = thisCenter.y - height / 2 + 
-                        (height / (anchor.getCount() + 1))
-                        * (anchor.getOrderNumber() + 1);
+                        res.y = thisBox.y + 
+                            (height / (anchor.getCount() + 1)) * (anchor.getOrderNumber() + 1);
                     }
                 } else {
                     res.y = thisCenter.y;
@@ -137,8 +125,8 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
             }
             Connection conn = anchor.getConnectionOwner();
             
-            Rectangle thisBox = getOwnerBounds(anchor);
-            anchor.getOwner().translateToAbsolute(thisBox);
+            Rectangle thisBox = new Rectangle();
+            computeOwnerBounds(anchor, thisBox);
             Point thisCenter = thisBox.getCenter();
             Point otherCenter = null;
             if (anchor.isSourceAnchor() == IModelAwareAnchor.SOURCE_ANCHOR) {
@@ -162,16 +150,15 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
             Point res = new Point();
             if (thisCenter.y > otherCenter.y) {
                 //at the top.
-                res.y = thisCenter.y - thisBox.height/2;
+                res.y = thisBox.y;// thisCenter.y - thisBox.height/2;
             } else {
                 //at the bottom.
-                res.y = thisCenter.y + thisBox.height/2;
+                res.y = thisBox.y + thisBox.height; // thisCenter.y + thisBox.height/2;
             }
             if (anchor.getCount() > 0 && anchor.getOrderNumber() != -1) {
                 int width = thisBox.width;
-                res.x = thisCenter.x - width / 2 + 
-                (width / (anchor.getCount() + 1))
-                * (anchor.getOrderNumber() + 1);
+                res.x = thisBox.x //thisCenter.x - width / 2 + 
+                    + (width / (anchor.getCount() + 1)) * (anchor.getOrderNumber() + 1);
 
             } else {
                 res.x = thisCenter.x;
@@ -195,8 +182,8 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
      */
     protected Point returnDefaultLocation(IModelAwareAnchor anchor, Point reference) {
         if (reference == null && anchor.getOwner() != null) {
-            Point thisCenter = getOwnerBounds(anchor).getCenter();
-            anchor.getOwner().translateToAbsolute(thisCenter);
+            computeOwnerBounds(anchor, Rectangle.SINGLETON);
+            Point thisCenter = Rectangle.SINGLETON.getCenter();
             return thisCenter;
         }
         return anchor.getDefaultLocation(reference);
@@ -205,52 +192,13 @@ public class BpmnAwareAnchorSupport implements IModelAwareAnchorSupport {
     /**
      * Helper method to return the bounds of the owner,
      * or only the ones from its interesting feature.
+     * Translate to absolute.
      * @param anchor
      * @return the bounds to create the anchor on.
      */
-    protected Rectangle getOwnerBounds(IModelAwareAnchor anchor) {
-        IFigure interestingOwner = anchor.getOwner() instanceof WrapperNodeFigureEx ?
-                ((WrapperNodeFigureEx) anchor.getOwner()).getSubfigure() :
-                    anchor.getOwner();
-    	for (Object child : interestingOwner.getChildren()) {
-    		if (child instanceof ActivityDiamondFigure || 
-    				child instanceof ActivityOvalFigure) {
-    			return ((IFigure) child).getBounds().getCopy();
-    		}
-    		if (child instanceof SubProcessFigure) {
-    		    if (((SubProcessFigure) child).getFigureSubProcessBodyFigure() != null &&
-    		            !((SubProcessFigure) child).isCollapsed()) {
-    		        Rectangle bounds = ((SubProcessFigure) child).getFigureSubProcessBodyFigure().
-    		            getBounds().getCopy();
-    		        bounds.height += SubProcessEditPart.INSETS.getHeight() + 1;
-    		        if (((SubProcessFigure) child).getFigureSubProcessNameFigure() != null) {
-    		            bounds.union(((SubProcessFigure) child).getFigureSubProcessNameFigure().getBounds().getCopy());
-    		        }
-    		        return bounds;
-    		    }
-    		}
-    	}
-    	
-    	return anchor.getOwner().getBounds().getCopy();
+    protected void computeOwnerBounds(IModelAwareAnchor anchor, Rectangle result) {
+        INodeFigureAnchorTerminalUpdatable n = anchor.getCastedOwner();
+        n.computeAbsoluteHandleBounds(result);
     }
     
-    /**
-     * 
-     * @param figure
-     * @return true if the figure represents a gateway
-     */
-    private boolean isGateway(IFigure figure) {
-        IFigure interestingOwner = figure instanceof WrapperNodeFigureEx ? ((WrapperNodeFigureEx) figure)
-                .getSubfigure()
-                : figure;
-        for (Object child : interestingOwner.getChildren()) {
-            if (child instanceof ActivityDiamondFigure) {
-                return true;
-            }
-            if (child instanceof ActivityFigure) {
-                return ActivityType.VALUES_GATEWAYS.contains(((ActivityFigure) child).getActivityType());
-            }
-        }
-        return false;
-    }
 }

@@ -24,7 +24,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
@@ -46,6 +45,7 @@ import org.eclipse.stp.bpmn.layouts.ActivityLayout;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy;
+import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * @generated
@@ -147,6 +147,17 @@ public class Activity2EditPart extends ShapeNodeEditPart {
         ActivityFigure figure = new ActivityFigure();
         return primaryShape = figure;
     }
+    
+    /**
+     * Helper method
+     * @return The figure for the oval or diamond or rectangle figure.
+     */
+    public IFigure getHandleBoundsFigure() {
+        if (primaryShape.getLayoutManager() instanceof ActivityLayout) {
+            return ((ActivityLayout)primaryShape.getLayoutManager()).getOvalOrDiamondFigure();
+        }
+        return getPrimaryShape();
+    }
 
     /**
      * @notgenerated
@@ -170,7 +181,7 @@ public class Activity2EditPart extends ShapeNodeEditPart {
             ActivityFigure activityFigure, Activity activity) {
         activityFigure.setActivityType(activity.getActivityType().getLiteral());
         if (activity.getName() == null) {
-            WrapLabel wl = activityFigure.getFigureActivityNameFigure();
+            WrappingLabel wl = activityFigure.getFigureActivityNameFigure();
             if (activity.getActivityType().getValue() == ActivityType.TASK) {
                 if (!BpmnDiagramMessages.ActivityEditPart_task_default_name.equals(wl.getText())) {
                     wl.setText(BpmnDiagramMessages.ActivityEditPart_task_default_name);
@@ -224,7 +235,7 @@ public class Activity2EditPart extends ShapeNodeEditPart {
      */
     protected NodeFigure createNodePlate() {
         int size = getMapMode().DPtoLP(EVENT_FIGURE_SIZE);
-        return new ActivityNodeFigure(getConnectionAnchorFactory(), size, size);
+        return new ActivityNodeFigure(getConnectionAnchorFactory(), size, size, true);
     }
 
     /**
@@ -240,8 +251,8 @@ public class Activity2EditPart extends ShapeNodeEditPart {
         figure.setLayoutManager(new ActivityLayout());
         IFigure shape = createNodeShape();
         figure.add(shape, ActivityLayout.CENTER);
-        figure.add(((ActivityFigure) shape).
-                getFigureActivityNameFigure(), ActivityLayout.BOTTOM);
+        figure.add(((ActivityFigure) shape).getFigureActivityNameFigure(),
+                    ActivityLayout.BOTTOM);
         contentPane = setupContentPane(shape);
         return figure;
     }
@@ -282,11 +293,13 @@ public class Activity2EditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @notgenerated
+     * @generated NOT
      */
     @Override
     public EditPolicy getPrimaryDragEditPolicy() {
-        return new ResizableActivityEditPolicy();
+        ResizableActivityEditPolicy r = new ResizableActivityEditPolicy();
+        r.setDragAllowed(false);
+        return r;
     }
 
     /**
@@ -348,18 +361,18 @@ public class Activity2EditPart extends ShapeNodeEditPart {
             );
 
             int size = getMapMode().DPtoLP(EVENT_FIGURE_SIZE);
-            setPreferredSize(size, size);
+//            setPreferredSize(size, size);
             setSize(size, size);
             createContents();
         }
 
         /**
-         * @generated
+         * @generated WrappingLabel
          */
         private void createContentsGen() {
-            org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 =
+            WrappingLabel fig_0 =
                 new WrapLabelWithToolTip(Activity2EditPart.this.getToolTipProvider(),
-                        null, null, true, PositionConstants.TOP);
+                        null, null, true, PositionConstants.TOP, PositionConstants.TOP);
             setFigureActivityNameFigure(fig_0);
 
             Object layData0 = null;
@@ -376,7 +389,7 @@ public class Activity2EditPart extends ShapeNodeEditPart {
             //org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig_0 = new org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel();
             WrapLabelWithToolTip fig_0 = new WrapLabelWithToolTip(
                     Activity2EditPart.this.getToolTipProvider(),
-                    null, null, true, PositionConstants.TOP);
+                    null, null, true, PositionConstants.TOP, PositionConstants.TOP);
             setFigureActivityNameFigure(fig_0);
 
 //            Object layData0 = null;
@@ -385,22 +398,21 @@ public class Activity2EditPart extends ShapeNodeEditPart {
         }
 
         /**
-         * @generated
+         * @generated NOT 
          */
-        private org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fActivityNameFigure;
+        private WrappingLabel fActivityNameFigure;
 
         /**
-         * @generated
+         * @generated NOT
          */
-        public org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel getFigureActivityNameFigure() {
+        public WrappingLabel getFigureActivityNameFigure() {
             return fActivityNameFigure;
         }
 
         /**
-         * @generated
+         * @generated NOT wrapping labels
          */
-        private void setFigureActivityNameFigure(
-                org.eclipse.gmf.runtime.draw2d.ui.figures.WrapLabel fig) {
+        private void setFigureActivityNameFigure(WrappingLabel fig) {
             fActivityNameFigure = fig;
         }
 
