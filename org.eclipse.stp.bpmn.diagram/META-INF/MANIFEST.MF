@@ -30,6 +30,7 @@ Export-Package: org.eclipse.draw2d,
  org.eclipse.stp.bpmn.palette,
  org.eclipse.stp.bpmn.policies,
  org.eclipse.stp.bpmn.properties,
+ org.eclipse.stp.bpmn.properties.section,
  org.eclipse.stp.bpmn.tools,
  org.eclipse.stp.gmf.runtime.draw2d.ui.figures,
  org.eclipse.stp.gmf.runtime.draw2d.ui.text
