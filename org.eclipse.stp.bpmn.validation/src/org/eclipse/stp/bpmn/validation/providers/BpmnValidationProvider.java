@@ -80,7 +80,7 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
      * @generated
      */
     public static final String MARKER_TASK_TYPE =
-        "org.eclipse.stp.bpmn.diagram" + ".taskmarker"; //$NON-NLS-1$
+        "org.eclipse.stp.bpmn.diagram" + ".taskmarker"; //$NON-NLS-1$ //$NON-NLS-2$
 	/**
 	 * @generated
 	 */
@@ -246,17 +246,17 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 	                    String name = ((TextAnnotation) ((View) eobj).getElement()).getName();
 	                    if (name != null) {
 	                        int taskPriority = -1;
-	                        if (name.indexOf("TODO") != -1 || name.indexOf("XXX") != -1) {
+	                        if (name.indexOf("TODO") != -1 || name.indexOf("XXX") != -1) { //$NON-NLS-1$ //$NON-NLS-2$
 	                            taskPriority = IMarker.PRIORITY_NORMAL;
-	                        } else if (name.indexOf("FIXME") != -1) {
+	                        } else if (name.indexOf("FIXME") != -1) { //$NON-NLS-1$
 	                            taskPriority = IMarker.PRIORITY_HIGH;
 	                        }
 	                        if (taskPriority != -1) {
 	                            try {
 	                                IMarker marker = diagramFile.createMarker(MARKER_TASK_TYPE);//IMarker.TASK);
 	                                String location = EMFCoreUtil.getQualifiedName(eobj, true);
-	                                if (location.startsWith("<Diagram>::")) {
-	                                    location = location.substring("<Diagram>::".length());
+	                                if (location.startsWith("<Diagram>::")) { //$NON-NLS-1$
+	                                    location = location.substring("<Diagram>::".length()); //$NON-NLS-1$
 	                                }
 	                                marker.setAttribute(IMarker.LOCATION, location);
 	                                marker.setAttribute(
@@ -407,8 +407,8 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 				marker.setAttribute(IMarker.MESSAGE, message);
 				
 				String location = EMFCoreUtil.getQualifiedName(element, true);
-				if (location.startsWith("<Diagram>::")) {
-				    location = location.substring("<Diagram>::".length());
+				if (location.startsWith("<Diagram>::")) { //$NON-NLS-1$
+				    location = location.substring("<Diagram>::".length()); //$NON-NLS-1$
 				}
 				marker.setAttribute(IMarker.LOCATION, location);
 				
