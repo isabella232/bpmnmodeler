@@ -32,6 +32,7 @@ import org.eclipse.stp.bpmn.diagram.edit.policies.DataObject2CanonicalEditPolicy
 import org.eclipse.stp.bpmn.diagram.edit.policies.DataObject2GraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.DataObject2ItemSemanticEditPolicy;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.bpmn.figures.DataObjectNodeFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
@@ -170,10 +171,10 @@ public class DataObject2EditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @generated
+     * @generated not using a custom figure to have anchors placed right.
      */
     protected NodeFigure createNodePlate() {
-        return new DefaultSizeNodeFigure(getMapMode().DPtoLP(40), getMapMode()
+        return new DataObjectNodeFigure(getMapMode().DPtoLP(40), getMapMode()
                 .DPtoLP(40));
     }
 

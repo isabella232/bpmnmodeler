@@ -240,7 +240,7 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
         public SetGroupsCommand(List<Group> groups, Activity activity) {
             super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
                     getEditingDomainFor(activity),
-                    "Sets the groups on the activity", 
+                    BpmnDiagramMessages.ResizableActivityEditPolicy_groups_command_name, 
                     getWorkspaceFiles(activity));
             _groups = groups;
             _activity = activity;
@@ -258,7 +258,7 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
                 EObject container) {
             super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
                     getEditingDomainFor(container),
-                    "Sets the groups on the activity", 
+                    BpmnDiagramMessages.ResizableActivityEditPolicy_groups_command_name, 
                     getWorkspaceFiles(container));
             _groups = groups;
             _request = request;

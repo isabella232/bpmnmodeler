@@ -19,12 +19,15 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart.ActivityFigure;
+import org.eclipse.stp.bpmn.diagram.ui.OvalSchemeBorder;
+import org.eclipse.stp.bpmn.diagram.ui.RoundedSchemeBorder;
 import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
@@ -42,7 +45,7 @@ public class SubProcessBorderFigure extends RectangleFigure {
             return height/2;
         } else {
             int nameHeight = findNameHeight(this, 5); 
-            int h = nameHeight + mm.LPtoDP(ActivityEditPart.EVENT_FIGURE_SIZE);
+            int h = nameHeight + mm.LPtoDP(ActivityEditPart.EVENT_FIGURE_SIZE) + OvalSchemeBorder.INSETS.bottom;
             return h;
         }
     }
@@ -99,13 +102,13 @@ public class SubProcessBorderFigure extends RectangleFigure {
         // from white spaces.
         if (fig instanceof Label) {
             if (!(((Label) fig).getText() == null || 
-                    ("".equals(((Label) fig).getText().trim())))) {
+                    ("".equals(((Label) fig).getText().trim())))) { //$NON-NLS-1$
                 nameHeight = Math.max(nameHeight, fig.getBounds().height);
             }
         }
         if (fig instanceof WrappingLabel) {
             if (!(((WrappingLabel) fig).getText() == null || 
-                    ("".equals(((WrappingLabel) fig).getText().trim())))) {
+                    ("".equals(((WrappingLabel) fig).getText().trim())))) { //$NON-NLS-1$
                 nameHeight = Math.max(nameHeight, fig.getBounds().height);
             }
         }

@@ -21,6 +21,7 @@ import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.ui.RoundedSchemeBorder;
 
 /**
  * Transparent figure
@@ -31,6 +32,10 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 public class SubProcessFigure extends RoundedRectangle
 implements HandleBounds {
 
+    public SubProcessFigure() {
+        setBorder(new RoundedSchemeBorder());
+    }
+    
     private boolean _isLoop;
     private boolean _isTransaction;
     
@@ -56,7 +61,7 @@ implements HandleBounds {
      * @return The rectangle used for handles
      */
     public Rectangle getHandleBounds() {
-        Rectangle r = getBounds().getCopy();        
+        Rectangle r = getBounds().getCopy().crop(getBorder().getInsets(this));        
         if (getParent() != null && (getParent().getParent() != null)) {
             int borderHeight = 0;
             for (Object child : getChildren()) {
@@ -94,5 +99,34 @@ implements HandleBounds {
         f.width = r.width - lineWidth;
         f.height = r.height - lineWidth;
         graphics.drawRoundRectangle(f, corner.width, corner.height);
+    }
+    
+    /**
+     * Paints this Figure and its children.
+     * Overridden to have the border paint before the children of the shape.
+     * 
+     * @param graphics The Graphics object used for painting
+     * @see #paintFigure(Graphics)
+     * @see #paintClientArea(Graphics)
+     * @see #paintBorder(Graphics)
+     */
+    public void paint(Graphics graphics) {
+        if (getLocalBackgroundColor() != null)
+            graphics.setBackgroundColor(getLocalBackgroundColor());
+        if (getLocalForegroundColor() != null)
+            graphics.setForegroundColor(getLocalForegroundColor());
+        if (font != null)
+            graphics.setFont(font);
+
+        graphics.pushState();
+        try {
+            paintBorder(graphics);
+            paintFigure(graphics);
+            graphics.restoreState();
+            paintClientArea(graphics);
+            
+        } finally {
+            graphics.popState();
+        }
     }
 }

@@ -17,7 +17,10 @@
 package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.ui.DiamondSchemeBorder;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.figures.connectionanchors.NodeFigureEx;
 
@@ -33,6 +36,7 @@ public class ActivityDiamondFigure extends NodeFigureEx {
 
     public ActivityDiamondFigure(IConnectionAnchorFactory connectionAnchorFactory) {
         super(connectionAnchorFactory);
+        setBorder(new DiamondSchemeBorder());
     }
     
     /* (non-Javadoc)
@@ -63,8 +67,22 @@ public class ActivityDiamondFigure extends NodeFigureEx {
     }
     
     @Override
-    protected void paintFigure(Graphics g) {
-        //stay transparent
+    protected void paintFigure(Graphics graphics) {
+        paintShadow(graphics);
+        // otherwise stay transparent
     }
 
+    protected void paintShadow(Graphics graphics) {
+        super.paintBorder(graphics);
+    }
+
+    @Override
+    protected void paintBorder(Graphics graphics) {
+        //do nothing. we paint the border before the rest of the figure as it is where we paint the shadow.
+    }
+
+    @Override
+    public IFigure getToolTip() {
+        return ((ActivityEditPart.ActivityFigure) getChildren().iterator().next()).getFigureActivityNameFigure().getToolTip();
+    }
 }

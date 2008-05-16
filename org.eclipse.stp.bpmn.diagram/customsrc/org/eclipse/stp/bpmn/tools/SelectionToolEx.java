@@ -193,7 +193,7 @@ public class SelectionToolEx extends SelectionTool {
      */
     @Override
     protected boolean handleKeyDown(KeyEvent e) {
-    	if (e.stateMask == SWT.CTRL && e.keyCode == ' ') {
+    	if (e.stateMask == SWT.MOD1 && e.keyCode == ' ') {
             EditPart part = getTargetEditPart();
             if (!(part instanceof IGraphicalEditPart)) {
                 return super.handleKeyDown(e);

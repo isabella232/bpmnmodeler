@@ -36,6 +36,7 @@ import org.eclipse.stp.bpmn.diagram.edit.policies.DataObjectCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.DataObjectGraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.DataObjectItemSemanticEditPolicy;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
+import org.eclipse.stp.bpmn.figures.DataObjectNodeFigure;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip.IToolTipProvider;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
@@ -176,10 +177,10 @@ public class DataObjectEditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @generated NOT override to add the tooltip.
+     * @generated not using a custom figure to have anchors placed right.
      */
     protected NodeFigure createNodePlate() {
-        return new DefaultSizeNodeFigure(getMapMode().DPtoLP(40), getMapMode()
+        return new DataObjectNodeFigure(getMapMode().DPtoLP(40), getMapMode()
                 .DPtoLP(40));
     }
 

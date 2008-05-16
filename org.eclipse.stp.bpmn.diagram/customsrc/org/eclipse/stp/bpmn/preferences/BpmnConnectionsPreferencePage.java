@@ -54,11 +54,11 @@ public class BpmnConnectionsPreferencePage extends ConnectionsPreferencePage {
         addMessageConnectionFields(parent);
         
         addField(new BooleanFieldEditor(BpmnDiagramPreferenceInitializer.PREF_SNAP_BACK_ON_MOVE, 
-                "Snap back connection labels on move", getFieldEditorParent()));
-        addField(new BooleanFieldEditor(BpmnDiagramPreferenceInitializer.PREF_SHOW_CONNECTION_LABEL_BORDER, 
-                "Show connection labels border", getFieldEditorParent()));
-        addField( new ColorFieldEditor(BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BORDER_COLOR,
-                "Connection labels border color", getFieldEditorParent()));
+                BpmnDiagramMessages.BpmnConnectionsPreferencePage_snap_back_on_move_label, getFieldEditorParent()));
+        addField(new ColorFieldEditor(BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BORDER_COLOR,
+                BpmnDiagramMessages.BpmnConnectionsPreferencePage_connection_labels_border_picker_color_label, getFieldEditorParent()));
+        addField(new ColorFieldEditor(BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BACKGROUND_COLOR,
+                BpmnDiagramMessages.BpmnConnectionsPreferencePage_connection_labels_background_color_picker, getFieldEditorParent()));
     }
 
     /**

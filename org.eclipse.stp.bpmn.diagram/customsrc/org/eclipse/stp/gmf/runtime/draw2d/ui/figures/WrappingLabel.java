@@ -260,7 +260,7 @@ public class WrappingLabel
      * 
      * @see Figure#MAX_FLAG
      */
-    @SuppressWarnings("hiding")
+    @SuppressWarnings("hiding") //$NON-NLS-1$
     protected static final int MAX_FLAG = FLAG_TEXT_PLACEMENT;
 
     private static abstract class IconInfo {
@@ -1138,7 +1138,7 @@ public class WrappingLabel
      *            The graphics context
      */
     private void paintIcons(Graphics graphics) {
-        Point p = Point.SINGLETON;
+        Point p = Point.SINGLETON.getCopy();
 
         if (getIconLocation() != null) {
             p.setLocation(getIconLocation());

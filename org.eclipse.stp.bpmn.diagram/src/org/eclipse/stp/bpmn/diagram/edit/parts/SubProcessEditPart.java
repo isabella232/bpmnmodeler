@@ -15,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
@@ -78,6 +79,8 @@ import org.eclipse.stp.bpmn.diagram.actions.SetTransactionalAction;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessGraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessItemSemanticEditPolicy;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
@@ -613,8 +616,12 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             SubProcess model = (SubProcess) ((View) getModel()).getElement();
 
             paintCollapseHandle(graphics);
-            SubProcessEditPart.this.paintLoopMarker(graphics);
-            SubProcessEditPart.this.paintCompensationMarker(graphics);
+            if (shouldPaintMultipleInstances()) {
+                SubProcessEditPart.this.paintMultipleInstances(graphics);
+            } else {
+                SubProcessEditPart.this.paintLoopMarker(graphics);
+                SubProcessEditPart.this.paintCompensationMarker(graphics);
+            }
         }
 
         /**
@@ -757,6 +764,53 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
     }
     
     /**
+     * Paint the multiple instance 
+     * @param graphics
+     */
+    protected void paintMultipleInstances(Graphics graphics) {
+        if (shouldPaintMultipleInstances()) {
+            int size = COLLAPSE_HANDLE_HEIGHT;
+            Rectangle bounds = getAbsBoundsWithoutBorder();
+            getPrimaryShape().translateToRelative(bounds);
+            Rectangle loopRect = new Rectangle();
+            loopRect.x = bounds.x + bounds.width/2 - size + 4;
+            loopRect.y = bounds.y + bounds.height -size + 2;
+            if (getPrimaryShape().getFigureSubProcessBorderFigure().hasChildren()) {
+                loopRect.y = (int) (loopRect.y - (ActivityEditPart.EVENT_FIGURE_SIZE*getZoom())/2);
+            }
+            loopRect.height = size -4;
+            loopRect.width = size - 6;
+            if (BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().
+                    getBoolean(BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE)) {
+                int width = 2;
+                graphics.pushState();
+                graphics.setBackgroundColor(ColorConstants.black);
+                graphics.fillRectangle(loopRect.x, loopRect.y, width, loopRect.height);
+                graphics.fillRectangle(loopRect.x + (-width + loopRect.width)/2, loopRect.y, width, loopRect.height);
+                graphics.fillRectangle(loopRect.x + loopRect.width - width, 
+                        loopRect.y, width, loopRect.height);
+                graphics.popState();
+            } else {
+                int width = size/2 -4;
+                graphics.pushState();
+                graphics.setBackgroundColor(ColorConstants.black);
+                graphics.fillRectangle(loopRect.x, loopRect.y, width, loopRect.height);
+                graphics.fillRectangle(loopRect.x + loopRect.width - width, 
+                        loopRect.y, width, loopRect.height);
+                graphics.popState();
+            }
+        }
+    }
+
+    /**
+     * TODO
+     * @return true if a multiple instance marker should be painted.
+     */
+    protected boolean shouldPaintMultipleInstances() {
+        return false; //TODO
+    }
+
+    /**
      * @return true if the subprocess is transactional, in which case
      * the border is painted twice.
      */
@@ -768,7 +822,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         SubProcess sp = (SubProcess) resolveSemanticElement();
         String ann = EcoreUtil.getAnnotation(sp, SetTransactionalAction.IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
                 SetTransactionalAction.IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID);
-        if (ann == null || ann.equals("false")) {
+        if (ann == null || ann.equals("false")) { //$NON-NLS-1$
             return false;
         }
         return true;
@@ -1059,10 +1113,6 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                 NotationPackage.eINSTANCE.getLocation_Y().equals(notification.getFeature()) ||
                 NotationPackage.eINSTANCE.getLocation().equals(notification.getFeature()) ||
                 NotationPackage.eINSTANCE.getLayoutConstraint().equals(notification.getFeature())) {
-            getPrimaryShape().fSubProcessBodyFigure.getBounds().height = 
-                getPrimaryShape().getBounds().height 
-                    - getPrimaryShape().fSubProcessBorderFigure.getBounds().height 
-                        + ActivityEditPart.EVENT_FIGURE_SIZE/2;
             for (Object e : getSourceConnections()) {
                 if (e instanceof ConnectionEditPart) {
                     ((ConnectionEditPart) e).getTarget().refresh();

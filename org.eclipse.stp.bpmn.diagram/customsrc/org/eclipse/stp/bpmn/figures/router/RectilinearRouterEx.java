@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.ObliqueRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.routers.OrthogonalRouter;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.figures.SubProcessFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityDiamondFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityNodeFigure;
@@ -481,7 +482,17 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
     static final boolean areGrosslyEqual(int one, int two) {
         return Math.abs(one - two) <= 2*ALMOST_EQUAL;
     }
-        
+     
+    /**
+     * It 2 numbers are vaguely equal, the shapes they are attached to
+     * should be using the same range of the y axis, with the default
+     * shape size.
+     * @param rawCompute
+     * @return true when they are less than half a task height away from each other.
+     */
+    static final boolean areVaguelyEqual(int one, int two) {
+        return Math.abs(one - two) <= ActivityEditPart.ACTIVITY_FIGURE_SIZE.height/2;
+    }
     /**
      * Our very own router. Implements a center based routing
      * @param conn
@@ -576,6 +587,7 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 //this seems to be fixing the issue.
                 //make it perfectly vertical:
                 newPoints.removeAllPoints();
+                
                 int midY = (oldPointA.y+oldPointB.y)/2;
                 newPoints.addPoint(new Point(oldPointA.x, midY));
                 newPoints.addPoint(new Point(oldPointB.x, midY));
@@ -719,8 +731,11 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 newLine.addPoint(new Point(ptOrig.x, ptTerm.y));
             }
         } else if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
-            if (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER && 
-                    ptOrig.x + extra > ptTerm.x) {
+            if (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER 
+                    && ptOrig.x >= ptTerm.x 
+                    || (normalizeBehavior == NORMALIZE_ON_HORIZONTAL_CENTER && 
+                       (ptOrig.x + extra >= ptTerm.x 
+                            && !areVaguelyEqual(ptOrig.y, ptTerm.y)))) {
                 // if the origin is after the term, then the algorithm will route around shapes.
                 // so we just exit.
                 newLine.addPoint(ptTerm);
@@ -815,7 +830,9 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
             //special algo when the sequence edge goes from right to left:
             int tolerance = mm.DPtoLP(3);
             int extra = mm.DPtoLP(16);
-            if (ptOrig.x + extra >= ptTerm.x) {
+            if (ptOrig.x >= ptTerm.x 
+                    || (ptOrig.x + extra >= ptTerm.x 
+                            && !areVaguelyEqual(ptOrig.y, ptTerm.y))) {
                 newLine.setSize(newLine.size()-1);
                 
                 Rectangle src = conn.getSourceAnchor().getOwner() == null ?
@@ -867,21 +884,41 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 if (NORMALIZE_ON_HORIZONTAL_EXCEPT_FIRST_SEG != normalizeBehavior
                         && topRightSrcY > bottomLeftTargetY + extra) {
                     //src is below the target go in between:
-                    aboveY = (topRightSrcY + bottomLeftTargetY) /2;
+                    PointList oldLine = routeFromConstraint(conn);
+                    aboveY = oldLine.getMidpoint().y;
+                    if (topRightSrcY < aboveY 
+                            || bottomLeftTargetY > aboveY) {
+                        aboveY = (topRightSrcY + bottomLeftTargetY) /2;
+                    }
                     farRightX = ptOrig.x + extra;
                 } else if (topLeftTargetY > bottomRightSrcY + extra) {
                     //target is below the src go in between:
-                    aboveY = (topLeftTargetY + bottomRightSrcY) /2;
+                    PointList oldLine = routeFromConstraint(conn);
+                    aboveY = oldLine.getMidpoint().y;
+                    if (topLeftTargetY < aboveY 
+                            || bottomRightSrcY > aboveY) {
+                        aboveY = (topLeftTargetY + bottomRightSrcY) /2;
+                    }
                     farRightX = ptOrig.x + extra;
                 } else {
                     int extraY = //extra;
                         Math.max(extra,
                             Math.min(heightOwnerSrc/2, heightOwnerTarget/2));
+                    PointList oldLine = routeFromConstraint(conn);
+                    int belowYone = oldLine.getMidpoint().y;
+                    if (bottomLeftTargetY + extraY > belowYone 
+                            || bottomRightSrcY  + extraY < belowYone) {
+                        belowYone = Math.max(bottomLeftTargetY, bottomRightSrcY);
+                    }
                 
                     //min y if we go above
-                    int aboveYone = Math.min(topRightSrcY, topLeftTargetY);
+                    int aboveYone = oldLine.getMidpoint().y;
+                    if (aboveYone < topRightSrcY + extraY
+                            || aboveYone > topLeftTargetY + extraY) {
+                        aboveYone = Math.min(topRightSrcY, topLeftTargetY);
+                    }
                     //max y if we go below
-                    int belowYone = Math.max(bottomLeftTargetY, bottomRightSrcY);
+                    
                     
                     if (NORMALIZE_ON_HORIZONTAL_EXCEPT_FIRST_SEG != normalizeBehavior) {
                         //in that case, always go below as we are already at

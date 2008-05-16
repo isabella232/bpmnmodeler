@@ -21,6 +21,7 @@ import org.eclipse.draw2d.ConnectionAnchor;
 import org.eclipse.draw2d.ConnectionLayer;
 import org.eclipse.draw2d.ConnectionRouter;
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.PolygonDecoration;
 import org.eclipse.draw2d.RotatableDecoration;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PointList;
@@ -53,9 +54,12 @@ import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SequenceFlowConditionType;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SequenceEdgeItemSemanticEditPolicy;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.figures.ConnectionLayerExEx;
 import org.eclipse.stp.bpmn.figures.ConnectionUtils;
+import org.eclipse.stp.bpmn.figures.FilledPolylineDecoration;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IModelAwareAnchor;
 import org.eclipse.stp.bpmn.figures.router.EdgeRectilinearRouter;
@@ -228,6 +232,26 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
                 g.setLineDash(new int[] {1, 2});
             } 
             super.outlineShape(g);
+            int alpha = BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().
+            getInt(BpmnDiagramPreferenceInitializer.PREF_SHOW_SHADOWS_TRANSPARENCY);
+            alpha -= 255 - ActivityPainter.getSequenceEdgeTransparency();
+            if (alpha > 0) {
+                g.pushState();
+                g.setAlpha(alpha);
+                PointList pl = smoothPoints.getCopy();
+                pl.translate(4, 6);
+                pl.setPoint(pl.getFirstPoint().translate(-2, 0), 0);
+                pl.setPoint(pl.getLastPoint().translate(-8, 0), pl.size() -1);
+                g.drawPolyline(pl);
+                PointList head = new PointList();
+                head.addPoint(pl.getLastPoint().getCopy().translate(4, -2));
+                head.addPoint(pl.getLastPoint().getCopy().translate(4, 2));
+                head.addPoint(pl.getLastPoint().getCopy().translate(0, 3));
+                head.addPoint(pl.getLastPoint().getCopy().translate(0, -3));
+                g.setBackgroundColor(ColorConstants.black);
+                g.fillPolygon(head);
+                g.popState();
+            }
             if (isDefault && isConditional()) {
                 Point res = new Point();
                 PointList points = smoothPoints;

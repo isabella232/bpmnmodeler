@@ -128,7 +128,7 @@ implements INodeFigureAnchorTerminalUpdatable {
      * By default it is the bounds of the figure itself.
      */
     public void computeAbsoluteHandleBounds(Rectangle result) {
-        result.setBounds(super.getBounds());
+        result.setBounds(getHandleBounds());
         super.translateToAbsolute(result);
     }
     

@@ -29,14 +29,21 @@ import org.eclipse.core.runtime.IAdapterFactory;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.FigureCanvas;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.RoundedRectangle;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EcorePackage;
 import org.eclipse.emf.edit.command.SetCommand;
+import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -49,16 +56,26 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.PopupMenuCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.DropObjectsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart.ConnectionMessageFigure;
 import org.eclipse.stp.bpmn.diagram.ui.IMenuItemWithDisableSupport;
 import org.eclipse.stp.bpmn.diagram.ui.PopupMenuWithDisableSupport;
 import org.eclipse.stp.bpmn.dnd.IDnDHandler;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.swt.dnd.DND;
+import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Shell;
@@ -70,6 +87,7 @@ import org.eclipse.swt.widgets.Shell;
  */
 public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
     
+    private static final Color disabledFeedbackColor = new Color(null, 255, 64, 64);
     /**
      * A cache so that we only adapt the request objects once.
      * @author atoulme
@@ -213,7 +231,8 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
         }
         
         // now we can leave if we need to.
-        if (dndHandlers == null||dndHandlers.isEmpty()) {
+        if (dndHandlers == null
+                ||dndHandlers.isEmpty()) {
             return UnexecutableCommand.INSTANCE;
         }
         
@@ -380,7 +399,11 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
                                 //if we don't call this method
                                 //the adapter factory is not returned unless the
                                 //plugin is already loaded.
-                                ((IAdapterFactoryExt)f).loadFactory(true);
+                                try {
+                                    ((IAdapterFactoryExt)f).loadFactory(true);
+                                } catch(Exception e) {
+                                    e.printStackTrace(); // loading the factories must happen.
+                                }
                             }
                             Object adapted = factory.getAdapter(dropped, IDnDHandler.class);
                             if (adapted instanceof IDnDHandler) {
@@ -453,5 +476,108 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
         return null;
     }
         
+    private IFigure _feedback = null;
+    
+    @Override
+    public void showTargetFeedback(Request request) {
+        if (understandsRequest(request)) {
+            if (_feedback == null) {
+                Command co = getCommand(request);
+                _feedback = createFeedback(co != null 
+                        && co.canExecute() 
+                        && ((DropObjectsRequest) request).getRequiredDetail() != DND.DROP_NONE);
+            }
+
+            Rectangle bounds = ((IGraphicalEditPart) getHost()).
+            getFigure().getBounds().getCopy();
+            if (!(getHost() instanceof MessagingEdgeEditPart) 
+                    && !(getHost() instanceof SequenceEdgeEditPart)
+                    && !(getHost() instanceof AssociationEditPart)) {
+                bounds.expand(3, 3);
+            }
+            if (getHost() instanceof PoolEditPart || 
+                    getHost() instanceof PoolPoolCompartmentEditPart) {
+                getFeedbackLayer().add(_feedback);
+                _feedback.setBounds(bounds);
+            } else {
+                IFigure contentPane = ((GraphicalEditPart)getHost()).getContentPane();
+
+                contentPane.translateToParent(bounds);
+                contentPane.translateToAbsolute(bounds);
+                getFeedbackLayer().add(_feedback);
+                _feedback.translateToRelative(bounds);
+                _feedback.setBounds(bounds);
+            }
+        }
+    }
+    
+    /**
+     * @see org.eclipse.gef.EditPolicy#eraseTargetFeedback(org.eclipse.gef.Request)
+     */
+    public void eraseTargetFeedback(Request request) {
+            if (_feedback != null && 
+                    _feedback.getParent() != null) {
+                
+                _feedback.getParent().remove(_feedback);
+            }
+            //once the feedback has been removed we must not use it anymore
+            _feedback = null;
+    }
+    
+    protected IFigure createFeedback(boolean executable) {
+        if (((IGraphicalEditPart) getHost()) instanceof MessagingEdgeEditPart
+                || ((IGraphicalEditPart) getHost()) instanceof SequenceEdgeEditPart
+                || ((IGraphicalEditPart) getHost()) instanceof AssociationEditPart) {
+            Connection conn = (Connection) ((ConnectionEditPart) getHost()).getFigure();
+            PolylineConnectionEx feedback = null;
+            if (((IGraphicalEditPart) getHost()) instanceof MessagingEdgeEditPart) {
+                feedback = ((MessagingEdgeEditPart) getHost()).new ConnectionMessageFigure() {
+                    @Override
+                    public void paintFigure(Graphics graphics) {
+                        graphics.setAlpha(ActivityPainter.getMessagingEdgeTransparency()/2);
+                        super.paintFigure(graphics);
+                    }
+                };
+            } else if (((IGraphicalEditPart) getHost()) instanceof SequenceEdgeEditPart) {
+                feedback = ((SequenceEdgeEditPart) getHost()).new EdgeFigure() {
+                    @Override
+                    public void paintFigure(Graphics graphics) {
+                        graphics.setAlpha(ActivityPainter.getSequenceEdgeTransparency()/2);
+                        super.paintFigure(graphics);
+                    }
+                };
+            } else if (((IGraphicalEditPart) getHost()) instanceof AssociationEditPart) {
+                feedback = ((AssociationEditPart) getHost()).new ConnectionAssociationFigure() {
+                    @Override
+                    public void paintFigure(Graphics graphics) {
+                        graphics.setAlpha(127);
+                        super.paintFigure(graphics);
+                    }
+                };
+            }
+            PointList pl = conn.getPoints();
+//            pl.translate(0, 4);
+//            pl.setPoint(pl.getFirstPoint().translate(0, -4), 0);
+//            pl.setPoint(pl.getLastPoint().translate(0, -4), pl.size() -1);
+            feedback.setPoints(pl);
+            feedback.setBounds(conn.getBounds());
+            feedback.setForegroundColor(executable 
+                    ? DiagramColorConstants.lightBlue 
+                    : disabledFeedbackColor);
+            feedback.setLineWidth(3);
+            feedback.setSmoothness(PolylineConnectionEx.SMOOTH_NORMAL);
+            feedback.setConnectionRouter(conn.getConnectionRouter());
+            return feedback;
+        } else {
+            RoundedRectangle feedback = new RoundedRectangle();
+            feedback.setFill(false);
+            feedback.setLineWidth(3);
+            feedback.setForegroundColor(executable 
+                    ? DiagramColorConstants.lightBlue 
+                    : disabledFeedbackColor);
+            
+            return feedback;
+        }
+    }
     
 }

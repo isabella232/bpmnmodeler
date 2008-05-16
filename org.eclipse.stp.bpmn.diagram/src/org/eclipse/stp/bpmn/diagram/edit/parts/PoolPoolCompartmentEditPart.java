@@ -230,7 +230,8 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
 
     @Override
     /**
-     * @notgenerated
+     * @generated NOT have the lanes be the first children, followed by the groups
+     * then by everyone else. That way groups and lanes always appear below the other shapes.
      */
     protected List getModelChildren() {
         Object model = getModel();
@@ -238,18 +239,20 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
             List list = ((View) model).getVisibleChildren();
             List res = new ArrayList();
             List groups = new ArrayList();
+            List lanes = new ArrayList();
             for (Object object : list) {
                 Node node = (Node) object;
                 if (node.getType().equals(
                         Integer.toString(LaneEditPart.VISUAL_ID))) {
-                    res.add(0, object);
+                    lanes.add(object);
                 } else if (node.getType().equals(Integer.toString(GroupEditPart.VISUAL_ID))) {
                     groups.add(object);
                 } else {
                     res.add(object);
                 }
             }
-            res.addAll(groups);
+            res.addAll(0, groups);
+            res.addAll(0, lanes);
             return res;
         }
         return Collections.EMPTY_LIST;
@@ -350,8 +353,8 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
             if (isLane) {
                 ChangeBoundsRequest dummyRequest = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE_CHILDREN);
                 dummyRequest.setEditParts(Collections.EMPTY_LIST);
-                dummyRequest.setMoveDelta(Point.SINGLETON.getCopy());
-                dummyRequest.setSizeDelta(Dimension.SINGLETON.getCopy());
+                dummyRequest.setMoveDelta(new Point(0, 0));
+                dummyRequest.setSizeDelta(new Dimension(0, 0));
                 Command co = getCommand(dummyRequest);
                 if (co != null) {
                     co.execute();

@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.stp.bpmn.SubProcess;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -38,9 +39,9 @@ public class SetTransactionalAction extends DiagramAction {
         super(workbenchPage);
     }
 
-    public final static String ID = "SetTransactionalAction";
+    public final static String ID = "SetTransactionalAction"; //$NON-NLS-1$
 
-    public static final String IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID = "isThrowing";
+    public static final String IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID = "isThrowing"; //$NON-NLS-1$
     
     private boolean isTransactional;
     
@@ -65,16 +66,14 @@ public class SetTransactionalAction extends DiagramAction {
         SubProcess sp = (SubProcess) ((SubProcessEditPart) getStructuredSelection().getFirstElement()).resolveSemanticElement();
         String ann = EcoreUtil.getAnnotation(sp, IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
                 IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID);
-        if (ann == null || ann.equals("false")) {
+        if (ann == null || ann.equals("false")) { //$NON-NLS-1$
             isTransactional = true;
-            setText("Set as transactional");
-            setToolTipText("If selected this action will show the " +
-                    "shape as \"transactional\".");
+            setText(BpmnDiagramMessages.SetTransactionalAction_label_transactional);
+            setToolTipText(BpmnDiagramMessages.SetTransactionalAction_transactional_tooltip); 
         } else {
             isTransactional = false;
-            setText("Set as non-transactional");
-            setToolTipText("If selected this action will show the " +
-                    "shape as \"not transactional\".");
+            setText(BpmnDiagramMessages.SetTransactionalAction_label_non_transactional);
+            setToolTipText(BpmnDiagramMessages.SetTransactionalAction_non_transactional_tooltip);
         }
     }
 
@@ -112,12 +111,12 @@ public class SetTransactionalAction extends DiagramAction {
                     EcoreUtil.setAnnotation(sp, 
                             IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
                             IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
-                            "true");
+                            "true"); //$NON-NLS-1$
                 } else {
                     EcoreUtil.setAnnotation(sp, 
                             IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
                             IS_TRANSACTIONAL_ANNOTATION_SOURCE_AND_KEY_ID, 
-                            "false");
+                            "false"); //$NON-NLS-1$
                 }
                 ((SubProcessEditPart) getStructuredSelection().getFirstElement()).getFigure().repaint();
                 return CommandResult.newOKCommandResult();

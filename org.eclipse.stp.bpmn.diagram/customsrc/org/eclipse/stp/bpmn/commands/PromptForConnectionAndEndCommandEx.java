@@ -15,6 +15,8 @@
  **/
 package org.eclipse.stp.bpmn.commands;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -34,14 +36,19 @@ import org.eclipse.gmf.runtime.emf.type.core.IMetamodelType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.ILabelProvider;
-import org.eclipse.osgi.util.NLS;
+import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
+import org.eclipse.stp.bpmn.diagram.ui.PopupMenuWithDisableSupport;
+import org.eclipse.stp.bpmn.diagram.ui.PopupMenuWithDisableSupport.CascadingMenuWithDisableSupport;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Menu;
 
 /**
  * Makes sure that the message connections are between pools.
@@ -49,6 +56,7 @@ import org.eclipse.swt.graphics.Image;
  * 
  * @author MPeleshchyshyn
  * @author hmalphettes
+ * @author atoulme
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
 public class PromptForConnectionAndEndCommandEx extends
@@ -83,15 +91,17 @@ public class PromptForConnectionAndEndCommandEx extends
         
         @Override
         public Image getImage(Object object) {
-            if (EXISTING_ELEMENT.equals(object)) {
-                if (EXISTING != null && !EXISTING.isDisposed()) {
-                    return EXISTING;
-                }
-                EXISTING = BpmnDiagramEditorPlugin.
-                    getBundledImageDescriptor("icons/obj24/existingElement.png"). //$NON-NLS-1$
-                    createImage();
-                return EXISTING;
-            }
+            // either we have images for all root elements, or we have none.
+            // For now let's stick to none.
+//            if (EXISTING_ELEMENT.equals(object)) {
+//                if (EXISTING != null && !EXISTING.isDisposed()) {
+//                    return EXISTING;
+//                }
+//                EXISTING = BpmnDiagramEditorPlugin.
+//                    getBundledImageDescriptor("icons/obj24/existingElement.png"). //$NON-NLS-1$
+//                    createImage();
+//                return EXISTING;
+//            } 
             return super.getImage(object);
         }
         /*
@@ -105,27 +115,11 @@ public class PromptForConnectionAndEndCommandEx extends
                     return BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_ConnectToExisting;
                 }
                 if (UNDERLYING_POOL.equals(element)) {
-                    return "underlying pool";
+                    return BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_underlying_pool_label;
                 }
+                return (String) element;
             }
-            String theInputStr = null;
-            if (element instanceof IElementType) {
-                if (isDirectionReversed())
-                    theInputStr = BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_ConnectFromNew;
-                else
-                    theInputStr = BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_ConnectToNew;
-                String text = NLS.bind(theInputStr, new Object[] {
-                    super.getText(element)});
-                return text;
-            } else {
-                if (isDirectionReversed())
-                    theInputStr = BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_ConnectFrom;
-                else
-                    theInputStr = BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_ConnectTo;
-                String text = NLS.bind(theInputStr, new Object[] {
-                    super.getText(element)});
-                return text;
-            }
+            return super.getText(element);
         }
         
         /**
@@ -185,13 +179,13 @@ public class PromptForConnectionAndEndCommandEx extends
      * 
      * @see org.eclipse.gmf.runtime.diagram.ui.commands.PromptForConnectionAndEndCommand#getEndMenuContent(java.lang.Object)
      */
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     @Override
     protected List getEndMenuContent(Object connectionItem) {
         List l = super.getEndMenuContent(connectionItem);
         if ((IMetamodelType) connectionItem == BpmnElementTypes.Association_3003) {
         	// remove the possibility to connect to an existing artifact for now.
         	l.remove(EXISTING_ELEMENT);
-            return l;
         }
         EditPart source = request.getSourceEditPart();
         EditPart target = request.getTargetEditPart();
@@ -208,7 +202,7 @@ public class PromptForConnectionAndEndCommandEx extends
                 l.clear();
 //                l.add(lastElement);
             } else {
-                l.add(UNDERLYING_POOL);
+                l.add(0, UNDERLYING_POOL);
             }
         } else if ((IMetamodelType) connectionItem == BpmnElementTypes.SequenceEdge_3001) {
             if (tPool != null && 
@@ -218,7 +212,77 @@ public class PromptForConnectionAndEndCommandEx extends
 //                l.add(lastElement);
             }
         }
-        return l;
+        
+        if (l.isEmpty()) {
+            return l;
+        }
+        List result = new ArrayList();
+        List activities = new ArrayList();
+        List tasks = new ArrayList();
+        List gateways = new ArrayList();
+        List startEvents = new ArrayList();
+        List intermediateEvents = new ArrayList();
+        List endEvents = new ArrayList();
+        IElementType simpleTask = null;
+        for (Object elt : l) {
+            if (elt instanceof IElementTypeEx) {
+                IElementTypeEx eltType = (IElementTypeEx) elt;
+                String secHint = eltType.getSecondarySemanticHint();
+                ActivityType actype = ActivityType.get(secHint);
+                if (ActivityType.VALUES_EVENTS.contains(actype)) {
+                    if (ActivityType.VALUES_EVENTS_START.contains(actype)) {
+                        startEvents.add(elt);
+                    } else if (ActivityType.VALUES_EVENTS_INTERMEDIATE.contains(actype)) {
+                        intermediateEvents.add(elt);
+                    } else {
+                        endEvents.add(elt);
+                    }
+                } else if (ActivityType.VALUES_GATEWAYS.contains(actype)) {
+                    gateways.add(elt);
+                } else if (eltType.getId().equals(BpmnElementTypes.Activity_2001.getId()) 
+                        && ActivityType.TASK_LITERAL.equals(actype)) {
+                    simpleTask = (IElementType) elt;
+                } else {
+                    tasks.add(elt);
+                }
+            } else if (elt == BpmnElementTypes.SubProcess_2002) {
+                tasks.add(elt);
+            } else if (elt != null) {
+                result.add(elt);
+            }
+        }
+        
+        ILabelProvider provider = getConnectionAndEndLabelProvider(connectionItem);
+        if (simpleTask != null) {
+            activities.add(simpleTask);
+        }
+        if (!tasks.isEmpty()) {
+            activities.add(new CascadingMenuWithDisableSupport(
+                    BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_activities_menu_label, 
+                    new PopupMenuWithDisableSupport(tasks, provider)));
+        }
+        if (!gateways.isEmpty()) {
+            activities.add(new CascadingMenuWithDisableSupport(
+                    BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_gateways_menu_label, 
+                    new PopupMenuWithDisableSupport(gateways, provider)));
+        }
+        if (!startEvents.isEmpty()) {
+            activities.add(new CascadingMenuWithDisableSupport(
+                    BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_start_events_menu_label, 
+                    new PopupMenuWithDisableSupport(startEvents, provider)));
+        }
+        if (!intermediateEvents.isEmpty()) {
+            activities.add(new CascadingMenuWithDisableSupport(
+                    BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_intermediate_label, 
+                    new PopupMenuWithDisableSupport(intermediateEvents, provider)));
+        }
+        if (!endEvents.isEmpty()) {
+            activities.add(new CascadingMenuWithDisableSupport(
+                    BpmnDiagramMessages.PromptForConnectionAndEndCommandEx_end_events_menu_label, 
+                    new PopupMenuWithDisableSupport(endEvents, provider)));
+        }
+        result.addAll(0, activities);
+        return result;
     }
 
     /**
@@ -338,7 +402,9 @@ public class PromptForConnectionAndEndCommandEx extends
                 connectionAdapter.setObject(resultList.get(0));
 
                 Object targetResult = resultList.get(1);
-
+                if (targetResult instanceof List) {
+                    targetResult = ((List) targetResult).get(((List) targetResult).size() -1);
+                }
                 if (targetResult.equals(EXISTING_ELEMENT)) {
                     targetResult = isDirectionReversed() ? ModelingAssistantService
                         .getInstance().selectExistingElementForSource(
@@ -353,6 +419,7 @@ public class PromptForConnectionAndEndCommandEx extends
                     targetResult = ((IGraphicalEditPart) getPool(request.getTargetEditPart())).
                         resolveSemanticElement();
                 }
+                
                 endAdapter.setObject(targetResult);
                 return CommandResult.newOKCommandResult();
             }
@@ -393,6 +460,62 @@ public class PromptForConnectionAndEndCommandEx extends
      */
     public IAdaptable getEndAdapter() {
         return endAdapter;
+    }
+    
+    @Override
+    protected PopupMenu createPopupMenu() {
+        final List connectionMenuContent = getConnectionMenuContent();
+
+        if (connectionMenuContent == null || connectionMenuContent.isEmpty()) {
+            return null;
+        } else if (connectionMenuContent.size() == 1) {
+            List menuContent = getEndMenuContent(connectionMenuContent.get(0));
+            if (menuContent == null || menuContent.isEmpty()) {
+                return null;
+            }
+
+            ILabelProvider labelProvider = getConnectionAndEndLabelProvider(connectionMenuContent
+                .get(0));
+            return new PopupMenuWithDisableSupport(menuContent, labelProvider) {
+
+                /**
+                 * @see org.eclipse.gmf.runtime.diagram.ui.menus.PopupMenu#getResult()
+                 */
+                public Object getResult() {
+                    Object endResult = super.getResult();
+                    if (endResult == null) {
+                        return null;
+                    } else {
+                        List resultList = new ArrayList(2);
+                        resultList.add(connectionMenuContent.get(0));
+                        resultList.add(endResult);
+                        return resultList;
+                    }
+                }
+            };
+        } else {
+            List menuContent = new ArrayList();
+            for (Iterator iter = connectionMenuContent.iterator(); iter
+                .hasNext();) {
+                Object connectionItem = iter.next();
+
+                List subMenuContent = getEndMenuContent(connectionItem);
+
+                if (subMenuContent.isEmpty()) {
+                    continue;
+                }
+
+                PopupMenu subMenu = new PopupMenuWithDisableSupport(subMenuContent,
+                    getEndLabelProvider());
+
+                menuContent.add(new PopupMenu.CascadingMenu(connectionItem,
+                    subMenu));
+            }
+            if (!menuContent.isEmpty()) {
+                return new PopupMenuWithDisableSupport(menuContent, getConnectionLabelProvider());
+            }
+        }
+        return null;
     }
     
 //    @Override

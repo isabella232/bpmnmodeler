@@ -1204,6 +1204,28 @@
             file-extensions="bpmn,bpmn_diagram">
       </file-association>
    </extension>
+   <extension
+         point="org.eclipse.ui.views.properties.tabbed.propertySections">
+      <propertySections
+            contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
+         <propertySection
+               class="org.eclipse.stp.bpmn.properties.section.ConnectionLabelPropertiesSection"
+               enablesFor="1"
+               filter="org.eclipse.stp.bpmn.properties.section.ConnectionLabelPropertiesSectionFilter"
+               id="org.eclipse.stp.bpmn.diagram.propertySection.connectionLabels"
+               tab="property.tab.AppearancePropertySection">
+            <input
+                  type="org.eclipse.stp.bpmn.SequenceEdge">
+            </input>
+            <input
+                  type="org.eclipse.stp.bpmn.MessagingEdge">
+            </input>
+            <input
+                  type="org.eclipse.stp.bpmn.Association">
+            </input>
+         </propertySection>
+      </propertySections>
+   </extension>
    
    
 </plugin>

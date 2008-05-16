@@ -24,6 +24,7 @@ import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -40,9 +41,9 @@ public class SetAsThrowingOrCatchingAction extends DiagramAction {
         super(workbenchPage);
     }
 
-    public final static String ID = "SetAsThrowingOrCatchingAction";
+    public final static String ID = "SetAsThrowingOrCatchingAction"; //$NON-NLS-1$
 
-    public static final String IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID = "isThrowing";
+    public static final String IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID = "isThrowing"; //$NON-NLS-1$
     
     private boolean toThrow;
     
@@ -67,16 +68,14 @@ public class SetAsThrowingOrCatchingAction extends DiagramAction {
         Activity activity = (Activity) ((ActivityEditPart) getStructuredSelection().getFirstElement()).resolveSemanticElement();
         String ann = EcoreUtil.getAnnotation(activity, IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
                 IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID);
-        if (ann == null || ann.equals("false")) {
+        if (ann == null || ann.equals("false")) { //$NON-NLS-1$
             toThrow = true;
-            setText("Set as a throwing shape");
-            setToolTipText("If selected this action will show the " +
-            		"shape as \"throwing\" per the BPMN 1.1 standard.");
+            setText(BpmnDiagramMessages.SetAsThrowingOrCatchingAction_throwing_label);
+            setToolTipText(BpmnDiagramMessages.SetAsThrowingOrCatchingAction_throwing_tooltip);
         } else {
             toThrow = false;
-            setText("Set as a catching shape");
-            setToolTipText("If selected this action will show the " +
-                    "shape as \"catching\" per the BPMN 1.1 standard.");
+            setText(BpmnDiagramMessages.SetAsThrowingOrCatchingAction_catching_label);
+            setToolTipText(BpmnDiagramMessages.SetAsThrowingOrCatchingAction_catching_tooltip);
         }
     }
 
@@ -114,12 +113,12 @@ public class SetAsThrowingOrCatchingAction extends DiagramAction {
                     EcoreUtil.setAnnotation(activity, 
                             IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
                             IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
-                            "true");
+                            "true"); //$NON-NLS-1$
                 } else {
                     EcoreUtil.setAnnotation(activity, 
                             IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
                             IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
-                            "false");
+                            "false"); //$NON-NLS-1$
                 }
                 ((ActivityEditPart) getStructuredSelection().getFirstElement()).getFigure().repaint();
                 return CommandResult.newOKCommandResult();

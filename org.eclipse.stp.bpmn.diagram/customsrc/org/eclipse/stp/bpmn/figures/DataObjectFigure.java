@@ -106,4 +106,11 @@ public class DataObjectFigure extends RectangleFigure {
 	protected void outlineShape(Graphics graphics) {
 		dopaint(graphics, true);
 	}
+	
+	/**
+	 * @return the size of the fold in the top right corner.
+	 */
+	public int getFoldSize() {
+	    return _foldSize;
+	}
 }

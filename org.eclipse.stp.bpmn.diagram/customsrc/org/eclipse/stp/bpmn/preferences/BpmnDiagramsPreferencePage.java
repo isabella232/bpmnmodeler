@@ -14,6 +14,7 @@ package org.eclipse.stp.bpmn.preferences;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.DiagramsPreferencePage;
 import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.IntegerFieldEditor;
+import org.eclipse.jface.preference.ScaleFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
@@ -97,6 +98,13 @@ public class BpmnDiagramsPreferencePage extends DiagramsPreferencePage {
         
         addField(new BooleanFieldEditor(BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE,
                 BpmnDiagramMessages.BpmnDiagramsPreferencePage_bpmn_style, bpmnGlobalGroup));
+        
+        
+        ScaleFieldEditor shadowsTransparency = new ScaleFieldEditor(
+                BpmnDiagramPreferenceInitializer.PREF_SHOW_SHADOWS_TRANSPARENCY, BpmnDiagramMessages.BpmnDiagramsPreferencePage_shadow_label,
+                bpmnGlobalGroup, 0, 255, 1, 5);
+        shadowsTransparency.setPreferenceStore(super.getPreferenceStore());
+        super.addField(shadowsTransparency);
     }
     
 }

@@ -51,7 +51,7 @@ public class TextFlowEx
      * 
      * @see Figure#MAX_FLAG
      */
-    @SuppressWarnings("hiding")
+    @SuppressWarnings("hiding") //$NON-NLS-1$
     protected static final int MAX_FLAG = FLAG_STRIKEDTHROUGH;
 
     private String truncationString = "..."; //$NON-NLS-1$

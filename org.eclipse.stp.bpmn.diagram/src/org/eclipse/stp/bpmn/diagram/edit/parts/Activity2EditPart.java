@@ -10,9 +10,11 @@
  */
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
+import org.eclipse.draw2d.BorderLayout;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -31,6 +33,7 @@ import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart.ActivityFigure;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Activity2CanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Activity2GraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Activity2ItemSemanticEditPolicy;
@@ -38,6 +41,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip.IToolTipProvider;
 import org.eclipse.stp.bpmn.figures.activities.ActivityNodeFigure;
+import org.eclipse.stp.bpmn.figures.activities.ActivityOvalFigure;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.figures.connectionanchors.impl.ConnectionAnchorFactory;
@@ -248,12 +252,27 @@ public class Activity2EditPart extends ShapeNodeEditPart {
      */
     protected NodeFigure createNodeFigure() {
         NodeFigure figure = createNodePlate();
-        figure.setLayoutManager(new ActivityLayout());
         IFigure shape = createNodeShape();
-        figure.add(shape, ActivityLayout.CENTER);
-        figure.add(((ActivityFigure) shape).getFigureActivityNameFigure(),
-                    ActivityLayout.BOTTOM);
-        contentPane = setupContentPane(shape);
+        IFigure ovalOrDiamond = new ActivityOvalFigure(getConnectionAnchorFactory());
+        ActivityLayout layout = new ActivityLayout();
+        figure.setLayoutManager(layout);
+        WrappingLabel wrapLabel = new WrapLabelWithToolTip(getToolTipProvider(),
+                null, null, true, PositionConstants.TOP, PositionConstants.CENTER);
+        ovalOrDiamond.setLayoutManager(new BorderLayout());
+        ovalOrDiamond.add(shape, BorderLayout.CENTER);
+        
+        figure.add(ovalOrDiamond, BorderLayout.CENTER);
+        figure.add(wrapLabel, BorderLayout.BOTTOM);
+        
+        ActivityFigure activityFigure = (ActivityFigure)shape;
+        activityFigure.setFigureActivityNameFigure(wrapLabel);
+
+        contentPane = setupContentPane(figure);
+        EObject sem = resolveSemanticElement();
+//        if (sem instanceof Activity) {
+//            setAlignments(activityFigure, (Activity)sem, wrapLabel, true);
+//        }
+        
         return figure;
     }
 

@@ -40,6 +40,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramGraphicalViewer;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Pool;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
@@ -114,8 +115,8 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
         ChangeBoundsRequest request = 
             new ChangeBoundsRequest(RequestConstants.REQ_MOVE);
         request.setEditParts(Collections.emptyList());
-        request.setSizeDelta(Dimension.SINGLETON.getCopy());
-        request.setMoveDelta(Point.SINGLETON.getCopy());
+        request.setSizeDelta(new Dimension(0, 0));
+        request.setMoveDelta(new Point(0, 0));
         for (IGraphicalEditPart part : _movingShapes) {
             part.eraseSourceFeedback(request);
         }
@@ -123,8 +124,8 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
         ChangeBoundsRequest spRequest = new ChangeBoundsRequest(
                 RequestConstants.REQ_RESIZE);
         spRequest.setEditParts(Collections.emptyList());
-        spRequest.setSizeDelta(Dimension.SINGLETON.getCopy());
-        spRequest.setMoveDelta(Point.SINGLETON.getCopy());
+        spRequest.setSizeDelta(new Dimension(0, 0));
+        spRequest.setMoveDelta(new Point(0, 0));
         for (IGraphicalEditPart sp : _subProcesses) {
             sp.eraseSourceFeedback(spRequest);
         }
@@ -137,7 +138,7 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
         if (_container == null) {
             return null;
         }
-        CompoundCommand command = new CompoundCommand("Insert space tool");
+        CompoundCommand command = new CompoundCommand(BpmnDiagramMessages.MultipleShapesMoveTool_command_name);
         TransactionalEditingDomain editingDomain = _container.getEditingDomain();
         
         Point moveDelta  = ((ChangeBoundsRequest) getSourceRequest()).getMoveDelta().getCopy();
@@ -160,7 +161,7 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
             Dimension spDim = sp.getFigure().getBounds().getSize().getCopy();
             spDim.expand(spSizeDelta);
             SetBoundsCommand setBounds = 
-                new SetBoundsCommand(editingDomain, "Resizing subprocesses", sp, spDim);
+                new SetBoundsCommand(editingDomain, BpmnDiagramMessages.MultipleShapesMoveTool_resizing, sp, spDim);
             command.add(new ICommandProxy(setBounds));
         }
         return command;

@@ -38,6 +38,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
@@ -57,6 +58,7 @@ import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.Size;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.stp.bpmn.Activity;
@@ -67,6 +69,7 @@ import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.commands.CreateSubProcessCommand;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
@@ -368,6 +371,28 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
                 ((EditPart) connection).activate();
             }
         }
+        
+        // one last thing: make sure there is enouh room in the container.
+        if (containerEditPart.getParent() instanceof PoolEditPart) {
+            ChangeBoundsRequest request = new ChangeBoundsRequest(RequestConstants.REQ_RESIZE_CHILDREN);
+            request.setEditParts(containerEditPart.getChildren());
+            request.setMoveDelta(new Point(0, 0));
+            request.setSizeDelta(new Dimension(0, 0));
+            Command co = containerEditPart.getCommand(request);
+            if (co != null && co.canExecute()) {
+                co.execute();
+            }
+        } else {
+            int height = rect.y + rect.height + 10;
+            int width = rect.x + rect.width + 10;
+            View parentView = (View) containerEditPart.getParent().getModel();
+            if (((Bounds) ((Node) parentView).getLayoutConstraint()).getHeight() < height) {
+                ((Bounds) ((Node) parentView).getLayoutConstraint()).setHeight(height);
+            }
+            if (((Bounds) ((Node) parentView).getLayoutConstraint()).getWidth() < width) {
+                ((Bounds) ((Node) parentView).getLayoutConstraint()).setWidth(width);
+            }
+        }
         return CommandResult.newOKCommandResult();
     }
 
@@ -474,8 +499,8 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         // let's get comfortable in there. For some reason scrollbars show
         // when grouping activities, even though we thought we have added
         // enough width and height to be comfortable.
-        height += 5;
-        width += 5;
+        height += 10;
+        width += 10;
         
         Point pt = new Point(x, y);
         return new Rectangle(pt, new Dimension(width, height));

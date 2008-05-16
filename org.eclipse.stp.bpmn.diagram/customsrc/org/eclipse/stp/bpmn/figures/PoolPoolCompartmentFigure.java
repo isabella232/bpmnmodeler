@@ -121,4 +121,33 @@ public class PoolPoolCompartmentFigure extends ShapeCompartmentFigure {
         super.paint(graphics);
     }
     
+    private static final Point PRIVATE_POINT = new Point();
+    
+    /**
+     * Skips the groups to keep their mouse events for the compartment, so that
+     * the popup toolbar will show up.
+     */
+    protected IFigure findMouseEventTargetInDescendantsAt(int x, int y) {
+        PRIVATE_POINT.setLocation(x, y);
+        translateFromParent(PRIVATE_POINT);
+
+        if (!getClientArea(Rectangle.SINGLETON).contains(PRIVATE_POINT))
+            return null;
+
+        IFigure fig;
+        for (int i = getChildren().size(); i > 0;) {
+            i--;
+            fig = (IFigure)getChildren().get(i);
+            if (fig.isVisible() && fig.isEnabled()) {
+                if (fig.containsPoint(PRIVATE_POINT.x, PRIVATE_POINT.y)) {
+                    fig = fig.findMouseEventTargetAt(PRIVATE_POINT.x, PRIVATE_POINT.y);
+                    if (fig instanceof GroupFigure || (fig != null && fig.getParent() instanceof GroupFigure)) {
+                        return null; // the mouse events are redirected to us if the target would be a group.
+                    }
+                    return fig;
+                }
+            }
+        }
+        return null;
+    }
 }

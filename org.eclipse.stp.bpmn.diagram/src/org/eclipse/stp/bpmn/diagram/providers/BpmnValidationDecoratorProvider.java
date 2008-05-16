@@ -310,7 +310,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
             switch (severity) {
             case IMarker.SEVERITY_ERROR:
                return BpmnDiagramEditorPlugin.getInstance().
-                   getBundledImage("icons/obj16/error.png");
+                   getBundledImage("icons/obj16/error.png"); //$NON-NLS-1$
             case IMarker.SEVERITY_WARNING:
                 imageName = ISharedImages.IMG_OBJS_WARN_TSK;
                 break;
@@ -787,7 +787,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                 if (foundMarker == null) {
                     foundMarker = marker;
                     toolTip = new Label(marker.getAttribute(
-                            IMarker.MESSAGE, ""), 
+                            IMarker.MESSAGE, ""),  //$NON-NLS-1$
                             PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK)); //$NON-NLS-1$
                 } else {
                     if (toolTip.getChildren().isEmpty()) {

@@ -27,6 +27,7 @@ import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnEditPartFactory;
 import org.eclipse.stp.bpmn.dnd.BpmnDropTargetListener;
 import org.eclipse.stp.bpmn.palette.BpmnPaletteViewer;
+import org.eclipse.stp.bpmn.provider.ActivityItemProvider;
 import org.eclipse.ui.IEditorInput;
 import org.eclipse.ui.ide.IGotoMarker;
 
@@ -179,6 +180,10 @@ public class BpmnDiagramEditor extends FileDiagramEditor implements IGotoMarker 
                     //System.err.println("invalidating the connection layer");
                     connLayer.repaint();                    
                 }
+            } else if (event.getProperty().equals(
+                            BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE)) {
+                ActivityItemProvider.IS_BPMN_11_STYLE = "true".equals( //$NON-NLS-1$
+                        String.valueOf(event.getNewValue()));
             }
         }
         

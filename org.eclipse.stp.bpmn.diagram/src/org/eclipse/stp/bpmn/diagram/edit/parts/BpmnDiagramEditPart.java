@@ -15,8 +15,13 @@ import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LayoutAnimator;
+import org.eclipse.draw2d.LayoutListener;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.TreeSearch;
 import org.eclipse.draw2d.geometry.Insets;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.gef.CompoundSnapToHelper;
 import org.eclipse.gef.EditPart;
@@ -33,11 +38,14 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramDragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.figures.BorderItemsAwareFreeFormLayer;
+import org.eclipse.gmf.runtime.diagram.ui.figures.CanonicalShapeCompartmentLayout;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnDiagramCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnDiagramItemSemanticEditPolicy;
+import org.eclipse.stp.bpmn.figures.GroupFigure;
 import org.eclipse.stp.bpmn.policies.BpmnDiagramXYLayoutEditPolicy;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.PopupBarEditPolicyEx;
@@ -47,6 +55,21 @@ import org.eclipse.stp.bpmn.policies.PopupBarEditPolicyEx;
  */
 public class BpmnDiagramEditPart extends DiagramEditPart {
 
+    /**
+     * @generated NOT copied from superclass, needed for the createFigure method.
+     * @author mmostafa
+     * PageBreaksLayoutListener Listens to post layout so it can update the page breaks  
+     */
+    private class PageBreaksLayoutListener extends LayoutListener.Stub {
+
+        public void postLayout(IFigure container) {
+            super.postLayout(container);
+            updatePageBreaksLocation();
+        }
+        
+        
+    }
+    
     /**
      * @generated
      */
@@ -94,10 +117,90 @@ public class BpmnDiagramEditPart extends DiagramEditPart {
     /**
      * @generated NOT: add insets to make sure there are white spaces around 
      * the pools.
+     * We also create the figure ourselves to override the way mouse events
+     * are propagated, as to avoid that they touch the groups.
      */
     @Override
     protected IFigure createFigure() {
-        IFigure f = super.createFigure();
+     // Override the containsPoint and findFigureAt methods
+        // to treat this layer (Primary Layer) as if it were opaque.
+
+        // This is for the grid layer so that it can be seen beneath the
+        // figures.
+        IFigure f = new BorderItemsAwareFreeFormLayer() {   
+            /* (non-Javadoc)
+             * @see org.eclipse.draw2d.Layer#containsPoint(int, int)
+             */
+            public boolean containsPoint(int x, int y) {
+                return getBounds().contains(x, y);
+            }
+
+            /* (non-Javadoc)
+             * @see org.eclipse.draw2d.Layer#findFigureAt(int, int, org.eclipse.draw2d.TreeSearch)
+             */
+            public IFigure findFigureAt(int x, int y, TreeSearch search) {
+                if (!isEnabled())
+                    return null;
+                if (!containsPoint(x, y))
+                    return null;
+                if (search.prune(this))
+                    return null;
+                IFigure child = findDescendantAtExcluding(x, y, search);
+                if (child != null)
+                    return child;
+                if (search.accept(this))
+                    return this;
+                return null;
+            }
+
+            /* (non-Javadoc)
+             * @see org.eclipse.draw2d.Figure#validate()
+             * Antoine: not sure that was needed, since the shouldUpdatePageBreakLocation
+             * field is never set to true in the super class.
+             */
+            public void validate() {                
+                super.validate();
+//                if (shouldUpdatePageBreakLocation){
+//                    shouldUpdatePageBreakLocation = false;
+//                    updatePageBreaksLocation();
+//                }
+            }
+            
+            private Point PRIVATE_POINT = new Point();
+            
+            /**
+             * Skips the groups to keep their mouse events for the compartment, so that
+             * the popup toolbar will show up.
+             */
+            protected IFigure findMouseEventTargetInDescendantsAt(int x, int y) {
+                PRIVATE_POINT.setLocation(x, y);
+                translateFromParent(PRIVATE_POINT);
+
+                if (!getClientArea(Rectangle.SINGLETON).contains(PRIVATE_POINT))
+                    return null;
+
+                IFigure fig;
+                for (int i = getChildren().size(); i > 0;) {
+                    i--;
+                    fig = (IFigure)getChildren().get(i);
+                    if (fig.isVisible() && fig.isEnabled()) {
+                        if (fig.containsPoint(PRIVATE_POINT.x, PRIVATE_POINT.y)) {
+                            fig = fig.findMouseEventTargetAt(PRIVATE_POINT.x, PRIVATE_POINT.y);
+                            if (fig instanceof GroupFigure || (fig != null && fig.getParent() instanceof GroupFigure)) {
+                                continue; // the mouse events are redirected to us if the target would be a group.
+                            }
+                            return fig;
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+        // the super class uses a FreeFormLayoutEx as its layout, but we don't have access to it.
+        // so we settle for its subclass, that we feed with an empty map.
+        f.setLayoutManager(new CanonicalShapeCompartmentLayout(Collections.emptyMap()));
+        f.addLayoutListener(LayoutAnimator.getDefault());
+        f.addLayoutListener(new PageBreaksLayoutListener());
         f.setBorder(new MarginBorder(new Insets(16, 16, 80, 16)));
         // f.addLayoutListener(new ArrangeLayoutListener());
         return f;

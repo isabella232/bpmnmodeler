@@ -906,7 +906,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
                     String str = EcoreUtil.getAnnotation(activity, 
                             SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID, 
                             SetAsThrowingOrCatchingAction.IS_THROWING_ANNOTATION_SOURCE_AND_KEY_ID);
-                    if ("true".equals(str)) {
+                    if ("true".equals(str)) { //$NON-NLS-1$
                         return false;
                     } else {
                         return true;

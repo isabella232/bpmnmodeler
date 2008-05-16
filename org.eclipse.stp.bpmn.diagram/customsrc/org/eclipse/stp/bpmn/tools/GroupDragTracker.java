@@ -61,7 +61,7 @@ public class GroupDragTracker extends DragEditPartsTrackerEx {
         if (part instanceof BpmnDiagramEditPart) {
             return (BpmnDiagramEditPart) part;
         } else if (part == null) {
-            throw new IllegalArgumentException("Invalid hierarchy");
+            throw new IllegalArgumentException("Invalid hierarchy"); //$NON-NLS-1$
         }
         return getDiagramEditPart((IGraphicalEditPart) part.getParent());
     }

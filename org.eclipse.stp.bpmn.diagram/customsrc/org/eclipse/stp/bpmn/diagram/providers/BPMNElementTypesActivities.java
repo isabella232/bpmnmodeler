@@ -240,7 +240,7 @@ public class BPMNElementTypesActivities {
                 ActivityType attype = (ActivityType)at;
                 if (attype.getValue() != ActivityType.SUB_PROCESS) {
                     TypesForAssociationTarget.add(ElementTypeEx.wrap(
-                            BpmnElementTypes.Activity_2001, attype.getLiteral()));
+                            BpmnElementTypes.Activity_2001, attype.getName()));
                 }
             }
             TypesForAssociationTarget.add(

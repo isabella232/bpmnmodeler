@@ -12,16 +12,36 @@ package org.eclipse.stp.bpmn.diagram.view.factories;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.core.runtime.IAdaptable;
+import org.eclipse.emf.common.notify.Adapter;
+import org.eclipse.emf.common.notify.Notification;
+import org.eclipse.emf.common.util.EList;
+import org.eclipse.emf.common.util.TreeIterator;
+import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EReference;
+import org.eclipse.emf.ecore.EStructuralFeature;
+import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
-import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractLabelViewFactory;
-import org.eclipse.gmf.runtime.notation.Node;
-import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.diagram.ui.properties.internal.l10n.DiagramUIPropertiesMessages;
 import org.eclipse.gmf.runtime.diagram.ui.util.MeasurementUnitHelper;
-
+import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractLabelViewFactory;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-
+import org.eclipse.gmf.runtime.notation.FillStyle;
+import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.Location;
+import org.eclipse.gmf.runtime.notation.Node;
+import org.eclipse.gmf.runtime.notation.NotationFactory;
+import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.gmf.runtime.notation.impl.FontStyleImpl;
+import org.eclipse.jface.preference.PreferenceConverter;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
+import org.eclipse.swt.graphics.RGB;
 
 /**
  * @generated
@@ -45,10 +65,33 @@ public class SequenceEdgeNameViewFactory extends AbstractLabelViewFactory {
     }
 
     /**
-     * @generated
+     * @generated NOT adding the fill and line styles.
      */
     protected List createStyles(View view) {
         List styles = new ArrayList();
+        styles.add(NotationFactory.eINSTANCE.createFillStyle());
+        styles.add(NotationFactory.eINSTANCE.createLineStyle());
         return styles;
+    }
+    
+    /**
+     * @generated NOT adding the fill and line styles.
+     * Setting a default value for the line style
+     */
+    @Override
+    protected void initializeFromPreferences(View view) {
+        super.initializeFromPreferences(view);
+        LineStyle style = (LineStyle) view.getStyle(NotationPackage.eINSTANCE.getLineStyle());
+        // later, a mix between not showing, and showing with a specific color.
+        style.setLineColor(FigureUtilities.RGBToInteger(
+                PreferenceConverter.getColor(
+                        BpmnDiagramEditorPlugin.getInstance().getPreferenceStore(), 
+                BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BORDER_COLOR)));
+        
+        FillStyle fill = (FillStyle) view.getStyle(NotationPackage.eINSTANCE.getFillStyle());
+        fill.setFillColor(FigureUtilities.RGBToInteger(
+                PreferenceConverter.getColor(
+                        BpmnDiagramEditorPlugin.getInstance().getPreferenceStore(), 
+                BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BACKGROUND_COLOR)));
     }
 }

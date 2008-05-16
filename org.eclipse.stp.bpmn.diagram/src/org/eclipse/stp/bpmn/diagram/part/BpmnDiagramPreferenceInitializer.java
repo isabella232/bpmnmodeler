@@ -32,6 +32,7 @@ import org.eclipse.swt.graphics.RGB;
 public class BpmnDiagramPreferenceInitializer extends
         DiagramPreferenceInitializer {
 
+    public static final RGB TRANSPARENCY_COLOR = new RGB(255, 254, 255);
 	/**
 	 * @generated not string representing the state of the filters
 	 * contributed to the plugin. The string is a sequence of 
@@ -159,19 +160,21 @@ public class BpmnDiagramPreferenceInitializer extends
     /**
      * whether shapes should be shown in a BPMN 1.0 or BPMN 1.1 style.
      */
-    public static final String PREF_BPMN1_1_STYLE = "bpmn.1.1.style";
+    public static final String PREF_BPMN1_1_STYLE = "bpmn.1.1.style"; //$NON-NLS-1$
 
     /**
      * Whether the connection labels should be reset on move.
      */
-    public static final String PREF_SNAP_BACK_ON_MOVE = "bpmn.connections.snap.back.on.move";
+    public static final String PREF_SNAP_BACK_ON_MOVE = "bpmn.connections.snap.back.on.move"; //$NON-NLS-1$
+
+    public static final String PREF_CONNECTION_LABEL_BORDER_COLOR = "bpmn.connections.label.border.color"; //$NON-NLS-1$
+
+    public static final String PREF_CONNECTION_LABEL_BACKGROUND_COLOR = "bpmn.connections.label.background.color"; //$NON-NLS-1$
 
     /**
-     * Shows the connection label border.
+     * if more than 0, shadows are displayed around the shapes, and sets the transparency of the shadows.
      */
-    public static final String PREF_SHOW_CONNECTION_LABEL_BORDER = "bpmn.connections.label.border";
-
-    public static final String PREF_CONNECTION_LABEL_BORDER_COLOR = "bpmn.connections.label.border.color";
+    public static final String PREF_SHOW_SHADOWS_TRANSPARENCY = "bpmn.global.shadows.transparency"; //$NON-NLS-1$
     
     /**
      * Initializes all the generic diagram preferences with their default
@@ -225,11 +228,17 @@ public class BpmnDiagramPreferenceInitializer extends
         
         getPreferenceStore().setDefault(PREF_SNAP_BACK_ON_MOVE, true);
         
-        getPreferenceStore().setDefault(PREF_SHOW_CONNECTION_LABEL_BORDER, true);
-        
+        // new RGB(1, 0, 0) is a default color that we use for transparency.
         PreferenceConverter.setDefault(getPreferenceStore(), 
                 PREF_CONNECTION_LABEL_BORDER_COLOR, 
-                DiagramColorConstants.lightGray.getRGB());
+                TRANSPARENCY_COLOR);
+        
+        PreferenceConverter.setDefault(getPreferenceStore(), 
+                PREF_CONNECTION_LABEL_BACKGROUND_COLOR, 
+                TRANSPARENCY_COLOR);
+        
+        
+        getPreferenceStore().setDefault(PREF_SHOW_SHADOWS_TRANSPARENCY, 70);
     }
 
     /**

@@ -19,6 +19,7 @@ import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart.SubProcessFigure;
+import org.eclipse.stp.bpmn.diagram.ui.RoundedSchemeBorder;
 import org.eclipse.stp.bpmn.figures.SubProcessBodyFigure;
 import org.eclipse.stp.bpmn.figures.SubProcessBorderFigure;
 
@@ -136,12 +137,12 @@ public class SubProcessLayout extends StackLayout {
         name.setSize(namePrefSize);
         body.setLocation(new Point(area.x, area.y));
         body.setSize(bodyPrefSize);
-        border.setLocation(new Point(area.x, area.y + selfSize.height - borderPrefSize.height));
+        border.setLocation(new Point(area.x, area.y + selfSize.height - borderPrefSize.height - RoundedSchemeBorder.INSETS.bottom));
         border.setSize(borderPrefSize);
         // set the final size on the container
         
         container.setSize(selfSize.width, selfSize.height);
-        container.getParent().setSize(container.getSize());
+        container.getParent().setSize(selfSize.width, selfSize.height);
     }
 
     public void remove(IFigure figure) {
@@ -167,8 +168,7 @@ public class SubProcessLayout extends StackLayout {
             name = figure;
             break;
         default:
-            throw new IllegalArgumentException("Invalid constraint");
+            throw new IllegalArgumentException("Invalid constraint"); //$NON-NLS-1$
         }
     }
-    
 }

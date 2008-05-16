@@ -205,7 +205,7 @@ public class PoolPoolCompartmentItemSemanticEditPolicy extends
                         Pool pool = (Pool)element;
                         String laneName = lane.getName();
                         if (laneName == null) {
-                            laneName = "lane";
+                            laneName = BpmnDiagramMessages.PoolPoolCompartmentItemSemanticEditPolicy_lane_base_name;
                         }
                         String baseName = laneName;
                         int i = 0;

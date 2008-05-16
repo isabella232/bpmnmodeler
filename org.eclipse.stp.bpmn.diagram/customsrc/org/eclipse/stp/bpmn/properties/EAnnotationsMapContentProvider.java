@@ -10,7 +10,7 @@
  *******************************************************************************/
 package org.eclipse.stp.bpmn.properties;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EAnnotation;
@@ -31,14 +31,14 @@ public class EAnnotationsMapContentProvider implements IStructuredContentProvide
 	 */
 	public Object[] getElements(Object inputElement) {
 		if (inputElement instanceof EModelElement) {
+		    List<Object[]> values = new ArrayList<Object[]>();
 			for (Object objea : ((EModelElement) inputElement).getEAnnotations()) {
 				EAnnotation ea = (EAnnotation) objea;
-				List<Object[]> values = new LinkedList<Object[]>();
 				for (Object key : ea.getDetails().keySet()) {
 					values.add(new Object[] {ea,key});
 				}
-				return values.toArray();
 			}
+			return values.toArray();
 		}
 		return new Object[] {new Object[] {null, null}};
 	}

@@ -108,6 +108,10 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnConnectionsPreferencePage_avoid_obstacles;
 
+    public static String BpmnConnectionsPreferencePage_connection_labels_background_color_picker;
+
+    public static String BpmnConnectionsPreferencePage_connection_labels_border_picker_color_label;
+
     public static String BpmnConnectionsPreferencePage_flow_connections_menu;
 
     public static String BpmnConnectionsPreferencePage_message_connections_menu;
@@ -116,7 +120,15 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnConnectionsPreferencePage_shortest_path;
 
+    public static String BpmnConnectionsPreferencePage_show_conditional_edges_labels_label;
+
+    public static String BpmnConnectionsPreferencePage_show_connections_border_label;
+
+    public static String BpmnConnectionsPreferencePage_show_connections_label_background_label;
+
     public static String BpmnConnectionsPreferencePage_smoothness;
+
+    public static String BpmnConnectionsPreferencePage_snap_back_on_move_label;
 
     public static String BpmnConnectionsPreferencePage_style;
     
@@ -166,6 +178,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnDiagramsPreferencePage_other_settings_group_title;
 
+    public static String BpmnDiagramsPreferencePage_shadow_label;
+
     public static String BpmnDiagramsPreferencePage_snap_to_geometry_label;
 
     public static String BpmnDiagramXYLayoutEditPolicy_command_name;
@@ -206,6 +220,10 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnPaletteFactory_basic_bpmn_drawer_label;
 
+    public static String BpmnPaletteFactory_cancel_end_label;
+
+    public static String BpmnPaletteFactory_cancel_end_tooltip;
+
     public static String BpmnPaletteFactory_cancel_intermediate_description;
 
     public static String BpmnPaletteFactory_cancel_intermediate_label;
@@ -213,6 +231,10 @@ public class BpmnDiagramMessages extends NLS {
 	public static String BpmnPaletteFactory_compensation_intermediate_label;
 
 	public static String BpmnPaletteFactory_compensation_intermediate_tooltip;
+
+    public static String BpmnPaletteFactory_complex_label;
+
+    public static String BpmnPaletteFactory_complex_tooltip;
 
     public static String BpmnPaletteFactory_create_association_description;
 
@@ -306,6 +328,10 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnPaletteFactory_end_events_label;
 
+    public static String BpmnPaletteFactory_end_signal_label;
+
+    public static String BpmnPaletteFactory_end_signal_tooltip;
+
 	public static String BpmnPaletteFactory_error_intermediate_label;
 
 	public static String BpmnPaletteFactory_error_intermediate_tooltip;
@@ -326,6 +352,22 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnPaletteFactory_inter_events_label;
 
+    public static String BpmnPaletteFactory_intermediate_signal_event_label;
+
+    public static String BpmnPaletteFactory_intermediate_signal_event_tooltip;
+
+    public static String BpmnPaletteFactory_link_end_label;
+
+    public static String BpmnPaletteFactory_link_end_tooltip;
+
+    public static String BpmnPaletteFactory_link_intermediate_label;
+
+    public static String BpmnPaletteFactory_link_intermediate_tooltip;
+
+    public static String BpmnPaletteFactory_link_start_label;
+
+    public static String BpmnPaletteFactory_link_start_tooltip;
+
 	public static String BpmnPaletteFactory_message_end_label;
 
 	public static String BpmnPaletteFactory_message_end_tooltip;
@@ -338,6 +380,18 @@ public class BpmnDiagramMessages extends NLS {
 
 	public static String BpmnPaletteFactory_message_start_tooltip;
 
+    public static String BpmnPaletteFactory_multiple_end_label;
+
+    public static String BpmnPaletteFactory_multiple_end_tooltip;
+
+    public static String BpmnPaletteFactory_multiple_intermediate_label;
+
+    public static String BpmnPaletteFactory_multiple_intermediate_tooltip;
+
+    public static String BpmnPaletteFactory_multiple_start_label;
+
+    public static String BpmnPaletteFactory_multiple_start_tooltip;
+
 	public static String BpmnPaletteFactory_rule_intermediate_label;
 
 	public static String BpmnPaletteFactory_rule_intermediate_tooltip;
@@ -345,6 +399,10 @@ public class BpmnDiagramMessages extends NLS {
 	public static String BpmnPaletteFactory_rule_start_label;
 
 	public static String BpmnPaletteFactory_rule_start_tooltip;
+
+    public static String BpmnPaletteFactory_signal_start_label;
+
+    public static String BpmnPaletteFactory_signal_start_tooltip;
 
     public static String BpmnPaletteFactory_start_events_description;
 
@@ -412,6 +470,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String Commands_SetConnectionEndsCommand_Target;
 
+    public static String ConnectionHandle_Popup_ExistingElement;
+
     public static String DeleteFileLinkAction_label;
 
     public static String DeleteFileLinkAction_label_path;
@@ -434,6 +494,10 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String ModelAwareAnchor_warning_invalidIndex;
 
+    public static String MultipleShapesMoveTool_command_name;
+
+    public static String MultipleShapesMoveTool_resizing;
+
     public static String OpenFileEditPolicy_command_name;
 
     public static String OpenFileEditPolicy_command_name_with_line;
@@ -452,9 +516,13 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String PoolPoolCompartmentEditPart_set_bounds_pool_label_command_name;
 
+    public static String PoolPoolCompartmentItemSemanticEditPolicy_lane_base_name;
+
     public static String PoolPoolCompartmentXYLayoutEditPolicy_command_name;
 
     public static String PopupBalloon_add_new;
+
+    public static String PromptForConnectionAndEndCommandEx_activities_menu_label;
     
     public static String PromptForConnectionAndEndCommandEx_ConnectFrom;
 
@@ -466,11 +534,25 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String PromptForConnectionAndEndCommandEx_ConnectToNew;
 
+    public static String PromptForConnectionAndEndCommandEx_end_events_menu_label;
+
+    public static String PromptForConnectionAndEndCommandEx_gateways_menu_label;
+
+    public static String PromptForConnectionAndEndCommandEx_intermediate_label;
+
+    public static String PromptForConnectionAndEndCommandEx_start_events_menu_label;
+
+    public static String PromptForConnectionAndEndCommandEx_underlying_pool_label;
+
     public static String ResetBendpointsAction_label;
 
     public static String ResetBendpointsAction_tooltip;
 
     public static String ResizableActivityEditPolicy_command_name;
+
+    public static String ResizableActivityEditPolicy_groups_command_name;
+
+    public static String ResizableGroupEditPolicy_command_name;
 
     public static String SecondarySemanticHintProcessorForAssociationDirection_createAssociation;
     
@@ -524,6 +606,14 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String ChangeActivityTypeAction_settingActivityTypeCommand;
 
+    public static String SetAsThrowingOrCatchingAction_catching_label;
+
+    public static String SetAsThrowingOrCatchingAction_catching_tooltip;
+
+    public static String SetAsThrowingOrCatchingAction_throwing_label;
+
+    public static String SetAsThrowingOrCatchingAction_throwing_tooltip;
+
     public static String SetDefaultAction_command;
 
     public static String SetDefaultAction_description;
@@ -551,6 +641,14 @@ public class BpmnDiagramMessages extends NLS {
     public static String SetLoopAction_subprocess_default;
 
     public static String SetLoopAction_task_default;
+
+    public static String SetTransactionalAction_label_non_transactional;
+
+    public static String SetTransactionalAction_label_transactional;
+
+    public static String SetTransactionalAction_non_transactional_tooltip;
+
+    public static String SetTransactionalAction_transactional_tooltip;
 
     public static String SubProcessCollapseStyleToolbarAction_label;
 

@@ -17,13 +17,14 @@
 package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Shape;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.ui.RoundedSchemeBorder;
 
 /**
  * Figure that morphes into various shapes according to the type of activity.
@@ -38,6 +39,14 @@ public abstract class ActivityFigure extends Shape {
     private boolean isLooping;
 
     public ActivityFigure() {
+        setBorder(new RoundedSchemeBorder() {
+            @Override
+            public void paint(IFigure fig, Graphics graphics, Insets insets) {
+                if (_activityType == ActivityType.TASK) {
+                    super.paint(fig, graphics, insets);
+                }
+            }
+        });
     }
 
     /**
@@ -69,10 +78,10 @@ public abstract class ActivityFigure extends Shape {
     @Override
     protected void fillShape(Graphics graphics) {
         if (_activityType != ActivityType.TASK) {
-            ActivityPainter.paint(graphics, this);
-            // graphics.fillOval(getBounds());
+//            ActivityPainter.paint(graphics, this);
+             graphics.fillOval(getBounds());
         } else {
-            graphics.fillRoundRectangle(getBounds(), 9, 9);
+            graphics.fillRoundRectangle(getBounds().getCopy().crop(getBorder().getInsets(this)), 9, 9);
         }
     }
 
@@ -80,7 +89,7 @@ public abstract class ActivityFigure extends Shape {
     protected void outlineShape(Graphics graphics) {
         if (_activityType == ActivityType.TASK) {
             Rectangle f = Rectangle.SINGLETON;
-            Rectangle r = getBounds();
+            Rectangle r = getBounds().getCopy().crop(getBorder().getInsets(this));
             f.x = r.x + lineWidth / 2;
             f.y = r.y + lineWidth / 2;
             f.width = r.width - lineWidth;
@@ -91,6 +100,7 @@ public abstract class ActivityFigure extends Shape {
 
     @Override
     public void paintFigure(Graphics graphics) {
+        paintShadow(graphics);
 //        System.err.println("activity height = " + getBounds().height + " graphics = " + graphics);
         switch (_activityType) {
         case ActivityType.TASK:
@@ -103,6 +113,15 @@ public abstract class ActivityFigure extends Shape {
         default:
             ActivityPainter.paint(graphics, this);
         }
+    }
+    
+    protected void paintShadow(Graphics graphics) {
+        super.paintBorder(graphics);
+    }
+
+    @Override
+    protected void paintBorder(Graphics graphics) {
+        //do nothing. we paint the border before the rest of the figure as it is where we paint the shadow.
     }
 
     /**

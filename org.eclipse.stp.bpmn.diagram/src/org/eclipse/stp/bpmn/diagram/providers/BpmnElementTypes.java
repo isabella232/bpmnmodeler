@@ -166,7 +166,7 @@ public class BpmnElementTypes {
                         ActivityType at = ActivityType.get(activityString);
                         if (at != null) {
                             ((Activity) eo).setActivityType(at);
-                        } else if ("looping".equals(activityString)) {
+                        } else if ("looping".equals(activityString)) { //$NON-NLS-1$
                             ((Activity) eo).setLooping(true);
                         }
                     }

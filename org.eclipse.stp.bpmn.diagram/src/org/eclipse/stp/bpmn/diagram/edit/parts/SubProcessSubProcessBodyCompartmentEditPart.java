@@ -13,6 +13,7 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.eclipse.core.commands.ExecutionException;
@@ -25,6 +26,7 @@ import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.common.command.Command;
 import org.eclipse.emf.common.notify.Notification;
@@ -57,6 +59,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableCompartmentEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
+import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
@@ -73,6 +76,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
+import org.eclipse.stp.bpmn.figures.GroupFigure;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ContainerNodeEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.PopupBarEditPolicyEx;
@@ -150,20 +154,53 @@ public class SubProcessSubProcessBodyCompartmentEditPart extends
         result.setTitleVisibility(false); 
         return result; 
     } 
- 
+
+    private static final Point PRIVATE_POINT = new Point();
+    
     /** 
      * @generated Not 
      */ 
     public IFigure createFigure() { 
-        ResizableCompartmentFigure result = (ResizableCompartmentFigure) this 
-                .createFigureGen(); 
+        ShapeCompartmentFigure scf = new ShapeCompartmentFigure(getCompartmentName(), getMapMode())  {
+            
+            /**
+             * Skips the groups to keep their mouse events for the compartment, so that
+             * the popup toolbar will show up.
+             */
+            protected IFigure findMouseEventTargetInDescendantsAt(int x, int y) {
+                PRIVATE_POINT.setLocation(x, y);
+                translateFromParent(PRIVATE_POINT);
+
+                if (!getClientArea(Rectangle.SINGLETON).contains(PRIVATE_POINT))
+                    return null;
+
+                IFigure fig;
+                for (int i = getChildren().size(); i > 0;) {
+                    i--;
+                    fig = (IFigure)getChildren().get(i);
+                    if (fig.isVisible() && fig.isEnabled()) {
+                        if (fig.containsPoint(PRIVATE_POINT.x, PRIVATE_POINT.y)) {
+                            fig = fig.findMouseEventTargetAt(PRIVATE_POINT.x, PRIVATE_POINT.y);
+                            if (fig instanceof GroupFigure || (fig != null && fig.getParent() instanceof GroupFigure)) {
+                                return null; // the mouse events are redirected to us if the target would be a group.
+                            }
+                            return fig;
+                        }
+                    }
+                }
+                return null;
+            }
+        };
+        scf.getContentPane().setLayoutManager(getLayoutManager());
+        scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
+        
 //        NotScrollableShapeCompartmentFigure result = 
 //            new NotScrollableShapeCompartmentFigure(getCompartmentNameGen(), getMapMode(), false); 
-        result.getContentPane().setLayoutManager(getLayoutManager()); 
-        result.getContentPane().addLayoutListener(LayoutAnimator.getDefault()); 
-        result.setTitleVisibility(false); 
-        result.setBorder(null); 
-        return result; 
+        scf.getContentPane().setLayoutManager(getLayoutManager()); 
+        scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault()); 
+        scf.setTitleVisibility(false); 
+        scf.setBorder(null); 
+        return scf; 
     } 
  
     /** 
@@ -636,5 +673,30 @@ public class SubProcessSubProcessBodyCompartmentEditPart extends
     public boolean isCollapsed() {
         return ((Boolean) getStructuralFeatureValue(NotationPackage.eINSTANCE
                         .getDrawerStyle_Collapsed())).booleanValue(); 
+    }
+    
+    @Override
+    /**
+     * @generated NOT have the lanes be the first children, followed by the groups
+     * then by everyone else. That way groups and lanes always appear below the other shapes.
+     */
+    protected List getModelChildren() {
+        Object model = getModel();
+        if (model != null && model instanceof View) {
+            List list = ((View) model).getVisibleChildren();
+            List res = new ArrayList();
+            List groups = new ArrayList();
+            for (Object object : list) {
+                Node node = (Node) object;
+                if (node.getType().equals(Integer.toString(GroupEditPart.VISUAL_ID))) {
+                    groups.add(object);
+                } else {
+                    res.add(object);
+                }
+            }
+            res.addAll(0, groups);
+            return res;
+        }
+        return Collections.EMPTY_LIST;
     }
 } 

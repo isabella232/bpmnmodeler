@@ -297,7 +297,7 @@ public class BpmnShapesDefaultSizes {
                 (SubProcessSubProcessBorderCompartmentEditPart) subprocessEditPart.
                 getChildBySemanticHint(BpmnVisualIDRegistry.getType(
                         SubProcessSubProcessBorderCompartmentEditPart.VISUAL_ID));
-            maxRoomOfChildren.height += border.getFigure().getBounds().height;
+            maxRoomOfChildren.height += border.getFigure().getBounds().height - ActivityEditPart.EVENT_FIGURE_SIZE/2;
         }
 //        System.err.println(subprocessEditPart + " min.height=" + maxRoomOfChildren.height + "  currently: " + subprocessEditPart.getPrimaryShape().getBounds().height);
         return maxRoomOfChildren;

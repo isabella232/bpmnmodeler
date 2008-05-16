@@ -12,10 +12,15 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 
 import java.util.List;
 
+import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.RectangleFigure;
+import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.StackLayout;
+import org.eclipse.draw2d.SchemeBorder.Scheme;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.GraphicalEditPart;
@@ -28,7 +33,9 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
+import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.GravityConstrainedFlowLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.GravityDirectionType;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -37,6 +44,8 @@ import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.preference.IPreferenceStore;
+import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.policies.PoolCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.PoolGraphicalNodeEditPolicy;
@@ -323,11 +332,11 @@ public class PoolEditPart extends ShapeNodeEditPart {
     /**
      * @generated
      */
-    public class PoolFigure extends org.eclipse.draw2d.RectangleFigure {
+    public class PoolFigure extends RectangleFigure {
 
 
 		/**
-         * @generated
+         * @generated NOT testing an other border  
          */
         public PoolFigure() {
             this.setForegroundColor(org.eclipse.draw2d.ColorConstants.black
@@ -339,6 +348,9 @@ public class PoolEditPart extends ShapeNodeEditPart {
             this.setBorder(new org.eclipse.draw2d.LineBorder(BORDER
 
             ));
+//            setBorder(new SchemeBorder(new Scheme(new Color[] {BORDER}, 
+//                    new Color[] {ColorConstants.lightGray, ColorConstants.gray, 
+//                    ColorConstants.darkGray, ColorConstants.black, BORDER})));
             createContents();
         }
 
@@ -466,5 +478,16 @@ public class PoolEditPart extends ShapeNodeEditPart {
     @Override
     public EditPolicy getPrimaryDragEditPolicy() {
         return new ResizablePoolEditPolicy();
+    }
+    
+    /**
+     * Overridden to return the predefined fill color for pools only.
+     */
+    @Override
+    public Object getPreferredValue(EStructuralFeature feature) {
+        if (feature == NotationPackage.eINSTANCE.getFillStyle_FillColor()) {
+                return FigureUtilities.RGBToInteger(POOLFIGURE_BACK.getRGB());
+            }
+        return super.getPreferredValue(feature);
     }
 }

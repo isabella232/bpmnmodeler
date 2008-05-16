@@ -142,7 +142,7 @@ public class ActivityLayout implements LayoutManager {
             }
             // calculate the preferred size
             if (bottom.getText() != null 
-                    && !"".equals(bottom.getText())) {
+                    && !"".equals(bottom.getText())) { //$NON-NLS-1$
                 childSize = bottom.getPreferredSize();
                 // because the height of the font is strangely clipped
                 // with the 'g' letter for example, we add 4 pixels.

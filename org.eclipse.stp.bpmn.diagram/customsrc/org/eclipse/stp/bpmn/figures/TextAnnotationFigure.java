@@ -8,11 +8,12 @@ import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 
-public class TextAnnotationFigure extends DefaultSizeNodeFigure {
+public class TextAnnotationFigure extends DefaultSizeNodeFigure implements IPolygonAnchorableFigure {
     
     /**
      * Constructor
@@ -72,6 +73,18 @@ public class TextAnnotationFigure extends DefaultSizeNodeFigure {
         return super.getPreferredSize(wHint, hHint).getUnioned(new Dimension(
                                 mm.DPtoLP(50), 
                                 mm.DPtoLP(30)));
+    }
+
+    public PointList getPolygonPoints() {
+        Rectangle rect = getBounds().getCopy();
+        rect.height--;
+        rect.width = Math.min(rect.width, 30);
+        PointList pl = new PointList();
+        pl.addPoint(rect.getTop());
+        pl.addPoint(rect.getTopLeft());
+        pl.addPoint(rect.getBottomLeft());
+        pl.addPoint(rect.getBottom());
+        return pl;
     }
 
 }

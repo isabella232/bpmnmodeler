@@ -17,7 +17,11 @@
 package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.ui.OvalSchemeBorder;
 import org.eclipse.stp.bpmn.figures.connectionanchors.IConnectionAnchorFactory;
 import org.eclipse.stp.bpmn.figures.connectionanchors.NodeFigureEx;
 
@@ -34,6 +38,7 @@ public class ActivityOvalFigure extends NodeFigureEx {
     
     public ActivityOvalFigure(IConnectionAnchorFactory connectionAnchorFactory) {
         super(connectionAnchorFactory);
+        setBorder(new OvalSchemeBorder());
     }
 
     /**
@@ -56,22 +61,33 @@ public class ActivityOvalFigure extends NodeFigureEx {
         r.height = r.width;
         super.setBounds(r);
     }
+    
+    @Override
+    protected void paintFigure(Graphics graphics) {
+        paintShadow(graphics);
+        // otherwise stay transparent
+    }
+
+    protected void paintShadow(Graphics graphics) {
+        super.paintBorder(graphics);
+    }
 
     @Override
-    protected void paintFigure(Graphics g) {
-        //stay transparent
-    }
-    
-    /**
-     * @return Rectangle that bounds the oval that is to be drawn.
-     * This may or may not be the same as the bounds of the figure itself.
-     */
-    public Rectangle getOvalBounds() {
-        Rectangle r = getBounds();
-        Rectangle ovalRect = new Rectangle(r);
-        // avoid edge of the oval being chopped off:
-//        ovalRect.setSize(r.width-1, r.height-1);
-        return ovalRect;
+    protected void paintBorder(Graphics graphics) {
+        //do nothing. we paint the border before the rest of the figure as it is where we paint the shadow.
     }
 
+    @Override
+    public IFigure getToolTip() {
+        if (getChildren().iterator().next() instanceof ActivityEditPart.ActivityFigure) {
+            return ((ActivityEditPart.ActivityFigure) getChildren().iterator().
+                    next()).getFigureActivityNameFigure().getToolTip();
+        } else {
+            if (getChildren().iterator().next() instanceof Activity2EditPart.ActivityFigure) {
+                return ((Activity2EditPart.ActivityFigure) getChildren().iterator().
+                        next()).getFigureActivityNameFigure().getToolTip();
+            }
+        }
+        return null;
+    }
 }

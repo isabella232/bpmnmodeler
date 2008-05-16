@@ -18,9 +18,12 @@ import java.util.ListIterator;
 
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.draw2d.PositionConstants;
+import org.eclipse.draw2d.geometry.Point;
+import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.EditPartViewer.Conditional;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IPrimaryEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeEditPart;
@@ -34,11 +37,14 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.modelingassistant.ModelingAssistantService;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.viewers.StructuredSelection;
+import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.handles.ConnectionHandleForAssociation;
+import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -207,5 +213,34 @@ public class ConnectionHandleToolEx extends ConnectionHandleTool {
                 }
             });
         }
+    }
+    
+    /**
+     * Overridden for groups. We only select them when the cursor
+     * is placed at less than 5 pixels from the border of the groups,
+     * otherwise the parent of the group is selected.
+     */
+    @Override
+    protected Conditional getTargetingConditional() {
+        return new EditPartViewer.Conditional() {
+            public boolean evaluate(EditPart editpart) {
+                if (editpart instanceof GroupEditPart || 
+                        editpart instanceof Group2EditPart) {
+                    IGraphicalEditPart part = (IGraphicalEditPart) editpart;
+                    Rectangle rect = part.getFigure().getBounds().getCopy();
+                    Point loc = getLocation().getCopy();
+                    part.getFigure().translateToRelative(loc);
+                    boolean onX = Math.abs(loc.x - rect.x) < 5 ||
+                        Math.abs(loc.x - (rect.x + rect.width)) < 5;
+                    boolean onY = Math.abs(loc.y - rect.y) < 5 ||
+                        Math.abs(loc.y - (rect.y + rect.height)) < 5;
+                    if (!(onX || onY)) {
+                        return false;
+                    }
+                }
+                
+                return editpart.isSelectable();
+            }
+        };
     }
 }

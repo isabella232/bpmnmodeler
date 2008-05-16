@@ -13,46 +13,64 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 import java.util.Collections;
 import java.util.List;
 
+import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.ConnectionLocator;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.EStructuralFeature;
 import org.eclipse.emf.transaction.RunnableWithResult;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.AccessibleEditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
+import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.internal.ui.palette.editparts.RaisedBorder;
+import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.requests.DirectEditRequest;
 import org.eclipse.gef.tools.DirectEditManager;
+import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserEditStatus;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserOptions;
 import org.eclipse.gmf.runtime.common.ui.services.parser.ParserService;
+import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
+import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.LabelEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.LabelDirectEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableLabelEditPolicy;
+import org.eclipse.gmf.runtime.diagram.ui.internal.editpolicies.LabelSnapBackEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
+import org.eclipse.gmf.runtime.diagram.ui.requests.GroupRequestViaKeyboard;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.TextDirectEditManager;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.RectangularDropShadowLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.internal.figures.LineBorderEx;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ISemanticParser;
 import org.eclipse.gmf.runtime.emf.ui.services.parser.ParserHintAdapter;
+import org.eclipse.gmf.runtime.notation.FillStyle;
 import org.eclipse.gmf.runtime.notation.FontStyle;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.jface.text.contentassist.IContentAssistProcessor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.jface.viewers.ICellEditorValidator;
 import org.eclipse.stp.bpmn.diagram.edit.policies.BpmnTextSelectionEditPolicy;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
@@ -67,6 +85,7 @@ import org.eclipse.swt.graphics.Color;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.ui.actions.LabelRetargetAction;
 
 /**
  * @generated
@@ -133,9 +152,17 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
      // adding default drag and drop edit policy
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, 
                 new BpmnDragDropEditPolicy(this));
+        installEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE,
+                new NonResizableLabelEditPolicy());
+        // we remove the component edit policy: 
+        // we don't want the labels to disappear when pressing Delete.
+        removeEditPolicy(EditPolicy.COMPONENT_ROLE);
+        installEditPolicy(EditPolicyRoles.SNAP_FEEDBACK_ROLE,
+                new LabelSnapBackEditPolicy());
     }
     /**
-     * @generated
+     * @generated not, when the edge is conditional have the label placed
+     * at the source.
      */
     public int getKeyPoint() {
         return ConnectionLocator.MIDDLE;
@@ -446,42 +473,69 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
     }
 
     /**
-     * @generated
+     * @generated NOT added refreshing for line and background style.
      */
     protected void refreshVisuals() {
         super.refreshVisuals();
+        refreshForegroundColor();
+        refreshBackgroundColor();
         refreshLabel();
         refreshFont();
         refreshFontColor();
         refreshUnderline();
         refreshStrikeThrough();
     }
-
-    static Color borderColor = null;
+    
+    
+    private boolean needBorder() {
+        return getLabelIcon() != null 
+            || (getLabelText() != null && !getLabelText().trim().equals(""));
+    }
+    
+    /** Refresh the border's figure foreground colour. */
+    protected void refreshForegroundColor() {
+        LineStyle style = (LineStyle)  ((View) getModel()).getStyle(NotationPackage.Literals.LINE_STYLE);
+        if ( style != null ) {
+            if (style.getLineColor() == FigureUtilities.RGBToInteger(
+                    BpmnDiagramPreferenceInitializer.TRANSPARENCY_COLOR) 
+                    || !needBorder()) {
+                if (getFigure().getBorder() != null) {
+                    getFigure().setBorder(null);
+                }
+            } else {
+                if (getFigure().getBorder() == null) {
+                    getFigure().setBorder(new LineBorderEx(1));
+                }
+                Border border = getFigure().getBorder();
+                if (border instanceof LineBorder) {
+                    ((LineBorder) border).setColor(DiagramColorRegistry.getInstance().
+                            getColor(new Integer(style.getLineColor())));
+                }
+            }
+        }
+    }
+    
+    /** Refresh the figure background colour. */
+    protected void refreshBackgroundColor() {
+        FillStyle style = (FillStyle)  ((View) getModel()).getStyle(NotationPackage.Literals.FILL_STYLE);
+        if ( style != null ) {
+            if (style.getFillColor() == FigureUtilities.RGBToInteger(
+                    BpmnDiagramPreferenceInitializer.TRANSPARENCY_COLOR) 
+                    || !needBorder()) {
+                getFigure().setBackgroundColor(null);
+                getFigure().setOpaque(false);
+            } else {
+                getFigure().setBackgroundColor(DiagramColorRegistry.getInstance().
+                        getColor(new Integer(style.getFillColor())));
+                getFigure().setOpaque(true);
+            }
+        }
+    }
     
     /**
-     * @generated not adding or removing the border.
+     * @generated
      */
     protected void refreshLabel() {
-    	boolean shouldShow = BpmnDiagramEditorPlugin.getInstance().
-    	    getPreferenceStore().getBoolean(
-    	        BpmnDiagramPreferenceInitializer.PREF_SHOW_CONNECTION_LABEL_BORDER);
-        if (!shouldShow || getLabelText() == null || "".equals(getLabelText())) { //$NON-NLS-1$
-    		getFigure().setBorder(null);
-    	} else {
-    	    RGB rgb = PreferenceConverter.getColor(
-    	            BpmnDiagramEditorPlugin.getInstance().getPreferenceStore(), 
-    	            BpmnDiagramPreferenceInitializer.PREF_CONNECTION_LABEL_BORDER_COLOR);
-    	    if (borderColor == null || !borderColor.getRGB().equals(rgb)) {
-    	        if (borderColor != null) {
-    	            borderColor.dispose();
-    	        }
-    	        borderColor = new Color(null, rgb);
-    	    }
-    	    LineBorderEx border = new LineBorderEx();
-    	    border.setColor(borderColor);
-    		getFigure().setBorder(border);
-    	}
         setLabelTextHelper(getFigure(), getLabelText());
         setLabelIconHelper(getFigure(), getLabelIcon());
         Object pdEditPolicy = getEditPolicy(EditPolicy.PRIMARY_DRAG_ROLE);
@@ -490,6 +544,7 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
         }
     }
 
+    
     /**
      * @generated
      */
@@ -609,10 +664,16 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
                 || NotationPackage.eINSTANCE.getFontStyle_Italic().equals(
                         feature)) {
             refreshFont();
+        } else if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature) ||
+                NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {
+            refreshVisuals();
+            return; // forbid going in the super method
         } else {
             if (getParser() != null
                     && getParser().isAffectingEvent(event,
                             getParserOptions().intValue())) {
+                refreshForegroundColor();
+                refreshBackgroundColor();
                 refreshLabel();
             }
             if (getParser() instanceof ISemanticParser) {
@@ -625,7 +686,7 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
                     refreshLabel();
                 }
             }
-        }
+        } 
         super.handleNotificationEvent(event);
     }
 
@@ -688,4 +749,17 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
 
     }
 
+    /**
+     * @generated NOT we override default settings to have our own border.
+     */
+    @Override
+    public Object getPreferredValue(EStructuralFeature feature) {
+        if (NotationPackage.eINSTANCE.getLineStyle_LineColor().equals(feature) ||
+                NotationPackage.eINSTANCE.getFillStyle_FillColor().equals(feature)) {
+            return FigureUtilities.RGBToInteger(BpmnDiagramPreferenceInitializer.TRANSPARENCY_COLOR); 
+            // we customize the value returned by default
+            // for the label border. This value triggers border transparency
+        }
+        return super.getPreferredValue(feature);
+    }
 }

@@ -43,6 +43,7 @@ import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.ZoomManager;
+import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gef.handles.NonResizableHandleKit;
 import org.eclipse.gef.handles.RelativeHandleLocator;
@@ -54,6 +55,7 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.ResizableShapeEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramUIMessages;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
@@ -62,9 +64,11 @@ import org.eclipse.gmf.runtime.emf.type.core.ElementTypeRegistry;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.commands.ElementTypeEx;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
+import org.eclipse.stp.bpmn.diagram.ui.RoundedSchemeBorder;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.figures.FeedbackShape;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
@@ -108,7 +112,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
         IFigure f = getHostFigure();
         IFigure feedback = getDragSourceFeedbackFigure();
         
-        PrecisionRectangle rect = new PrecisionRectangle(getInitialFeedbackBounds().getCopy());
+        PrecisionRectangle rect = new PrecisionRectangle(getInitialFeedbackBounds().getCopy().expand(RoundedSchemeBorder.INSETS));
         f.translateToAbsolute(rect);
         
         rect.translate(request.getMoveDelta());
@@ -237,17 +241,17 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
             //compartment.
             SubProcessSubProcessBodyCompartmentEditPart spCompartment =
                 (SubProcessSubProcessBodyCompartmentEditPart)getHost().getParent();
-            IFigure compartmentFigure = spCompartment.getFigure();
-            
-            IFigure currentFigure = getHostFigure().getParent();
-            while (currentFigure != null && currentFigure != spCompartment) {
-                if (currentFigure instanceof FreeformViewport) {
-                    compartmentFigure = currentFigure;
-                    break;
-                }
-                currentFigure = currentFigure.getParent();
-            }
-            sibAbsBounds.setBounds(compartmentFigure.getBounds());
+//            IFigure compartmentFigure = spCompartment.getFigure();
+//            
+//            IFigure currentFigure = getHostFigure().getParent();
+//            while (currentFigure != null && currentFigure != spCompartment) {
+//                if (currentFigure instanceof FreeformViewport) {
+//                    compartmentFigure = currentFigure;
+//                    break;
+//                }
+//                currentFigure = currentFigure.getParent();
+//            }
+            sibAbsBounds.setBounds(((HandleBounds) ((SubProcessEditPart) spCompartment.getParent()).getFigure()).getHandleBounds());
             spCompartment.getCompartmentFigure().translateToAbsolute(sibAbsBounds);
             sibAbsBounds.intersect(absBounds);
             if (sibAbsBounds.height != absBounds.height
@@ -345,7 +349,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
             SubProcessSubProcessBodyCompartmentEditPart body =
                 (SubProcessSubProcessBodyCompartmentEditPart)
                 ((IGraphicalEditPart)getHost()).getChildBySemanticHint(
-                        SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID+"");
+                        SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID+""); //$NON-NLS-1$
             if (body != null) {
                 //children.addAll(getHost().getChildren());
                 for (Object child : body.getChildren()) {
@@ -383,14 +387,14 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
     
     /** key in the request extended data to store
      * if the current move/resize is creating an overlap */
-    private static final String IS_OVER_LAPPING = "IsOverLapping";
+    private static final String IS_OVER_LAPPING = "IsOverLapping"; //$NON-NLS-1$
     /** key in the request extended data to store
      * if the current move/resize is creating an overlap */
-    private static final String OTHER_SELECTED_EDITPARTS = "OtherSelectedEditParts";
+    private static final String OTHER_SELECTED_EDITPARTS = "OtherSelectedEditParts"; //$NON-NLS-1$
     
     /** key in the request extended data to store
      * if the current move/resize is used during a scope change of the moved activity */
-    private static final String IS_CHANGING_SCOPE = "ChangingScope";
+    private static final String IS_CHANGING_SCOPE = "ChangingScope"; //$NON-NLS-1$
     
     /**
      * @param request
@@ -410,7 +414,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
             && Boolean.TRUE.equals(request.getExtendedData().get(IS_CHANGING_SCOPE));
     }
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     public static void setIsChangingScope(boolean changingScope, Request request) {
         Map data = request.getExtendedData();
         if (changingScope) {
@@ -431,7 +435,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
      * @param request
      * @return
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     public static Collection<?extends EditPart> getOtherSelectedEditParts(Request request) {
         return request.getExtendedData() != null
             ? (Collection<?extends EditPart>) request.getExtendedData().get(OTHER_SELECTED_EDITPARTS)
@@ -441,7 +445,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
      * Set in the extended data of the request a collection of editparts that 
      * must not be takn into acount for the overlap computation.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     public static void setOtherSelectedEditParts(Collection<?extends EditPart> otherSelectedEPs, Request request) {
         Map data = request.getExtendedData();
         if (otherSelectedEPs != null && !otherSelectedEPs.isEmpty()) {
@@ -457,7 +461,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
     }
 
     
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked") //$NON-NLS-1$
     protected final void setIsOverlapping(ChangeBoundsRequest request, boolean isOverlapping) {
         Map extendedData = request.getExtendedData();
         if (isOverlapping) {
@@ -656,7 +660,7 @@ public abstract class ResizableShapeEditPolicyEx extends ResizableShapeEditPolic
         TransactionalEditingDomain editingDomain = ((IGraphicalEditPart) getHost()).getEditingDomain();
         Rectangle rect = new Rectangle(getHostFigure().getBounds().getLocation().getCopy(), size);
         ICommand resizeCommand = new SetBoundsCommand(editingDomain, 
-            DiagramUIMessages.SetAutoSizeCommand_Label,
+            "", //$NON-NLS-1$
             (org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart) getHost(), rect);
         return new ICommandProxy(resizeCommand);
     }

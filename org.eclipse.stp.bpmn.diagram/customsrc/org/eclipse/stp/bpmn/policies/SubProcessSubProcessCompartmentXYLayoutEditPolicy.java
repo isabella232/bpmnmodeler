@@ -163,9 +163,6 @@ public class SubProcessSubProcessCompartmentXYLayoutEditPolicy extends XYLayoutE
                         Command c = comp.getCommand(move);
                         if (c != null && c.canExecute()) {
                             command.add(c);
-                            System.err.println("able to move the children.");
-                        } else {
-                            System.err.println("Unable to move the children " + c);
                         }
                     }
                 }

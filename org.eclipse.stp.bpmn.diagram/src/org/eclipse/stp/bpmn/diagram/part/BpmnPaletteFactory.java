@@ -184,8 +184,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_START_LINK_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Link start", 
-                "Create a link start event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_link_start_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_link_start_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
 
@@ -206,8 +206,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_START_MULTIPLE_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Multiple start event", 
-                "Create a multiple start event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_multiple_start_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_multiple_start_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
 
@@ -249,8 +249,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_START_SIGNAL_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Signal start event", 
-                "Create a signal start event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_signal_start_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_signal_start_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
 
@@ -289,8 +289,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_INTERMEDIATE_LINK_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Link intermediate event", 
-                "Create a link intermediate event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_link_intermediate_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_link_intermediate_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
         
@@ -313,8 +313,8 @@ public class BpmnPaletteFactory {
                 BpmnElementTypes.Activity_2003,
                 ActivityType.EVENT_INTERMEDIATE_MULTIPLE_LITERAL.getLiteral()));
 
-        ToolEntry result = new NodeToolEntry("Multiple intermediate event", 
-                "Create a multiple intermediate event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_multiple_intermediate_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_multiple_intermediate_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
         
@@ -349,8 +349,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_END_LINK_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Link end", 
-                "Create a link end event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_link_end_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_link_end_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
         
@@ -367,8 +367,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_END_CANCEL_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Cancel end", 
-                "Create a cancel end event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_cancel_end_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_cancel_end_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
         
@@ -387,8 +387,8 @@ public class BpmnPaletteFactory {
                 ActivityType.EVENT_END_MULTIPLE_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Multiple end event", 
-                "Create a multiple end event", smallImage, largeImage,
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_multiple_end_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_multiple_end_tooltip, smallImage, largeImage,
                 elementTypes) {
         };
         
@@ -420,8 +420,8 @@ public class BpmnPaletteFactory {
 
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("Complex", 
-                "Creates a complex gateway",
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_complex_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_complex_tooltip,
                 smallImage, largeImage, elementTypes) {
         };
 
@@ -1306,7 +1306,7 @@ public class BpmnPaletteFactory {
     public static final String START_TIMER = "start_timer"; //$NON-NLS-1$
     public static final String START_MULTIPLE = "start_multiple"; //$NON-NLS-1$
     public static final String START_LINK = "start_link"; //$NON-NLS-1$
-    public static final String START_SIGNAL = "start_signal"; // $NON-NLS-1$
+    public static final String START_SIGNAL = "start_signal"; // $NON-NLS-1$ //$NON-NLS-1$
     public static final String SUB_PROCESS = "sub_process"; //$NON-NLS-1$
     public static final String SUB_PROCESS_EXPANDED = "sub_process_expanded"; //$NON-NLS-1$
     public static final String SUB_PROCESS_EXPANDED_LOOPING = "sub_process_expanded_looping"; //$NON-NLS-1$
@@ -1403,8 +1403,8 @@ public class BpmnPaletteFactory {
         elementTypes.add(ElementTypeEx.wrap(
                 BpmnElementTypes.Activity_2003,
                 ActivityType.EVENT_INTERMEDIATE_SIGNAL_LITERAL.getLiteral()));
-        ToolEntry result = new NodeToolEntry("Intermediate signal event", 
-                "Create an intermediate signal event", smallImage, largeImage, 
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_intermediate_signal_event_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_intermediate_signal_event_tooltip, smallImage, largeImage, 
                 elementTypes) {
         };
 
@@ -1424,8 +1424,8 @@ public class BpmnPaletteFactory {
                         ActivityType.EVENT_END_SIGNAL_LITERAL.getLiteral());
         elementTypes.add(activity);
 
-        ToolEntry result = new NodeToolEntry("End signal event", 
-                "Create an end signal event", smallImage, largeImage, 
+        ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_end_signal_label, 
+                BpmnDiagramMessages.BpmnPaletteFactory_end_signal_tooltip, smallImage, largeImage, 
                 elementTypes) {
         };
 

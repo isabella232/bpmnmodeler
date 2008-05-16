@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Group;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
@@ -97,7 +98,7 @@ public class ResizableGroupEditPolicy extends ResizableArtifactEditPolicy {
         public SetActivitiesCommand(Group elt, List<Activity> activities) {
             super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
                     getEditingDomainFor(elt),
-                    "Sets the activities on the group", 
+                    BpmnDiagramMessages.ResizableGroupEditPolicy_command_name, 
                     getWorkspaceFiles(elt));
             _group = elt;
             _activities = activities;

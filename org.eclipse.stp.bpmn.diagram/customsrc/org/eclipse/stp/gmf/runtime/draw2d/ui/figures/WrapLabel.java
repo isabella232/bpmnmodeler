@@ -1196,7 +1196,7 @@ public class WrapLabel
      * @param graphics The graphics context
      */
     private void paintIcons(Graphics graphics) {
-        Point p = Point.SINGLETON;
+        Point p = Point.SINGLETON.getCopy();
         p.setLocation(getIconLocation());
 
         int num = getNumberofIcons();

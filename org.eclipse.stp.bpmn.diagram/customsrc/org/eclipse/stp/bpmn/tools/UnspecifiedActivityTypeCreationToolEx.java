@@ -105,7 +105,7 @@ public class UnspecifiedActivityTypeCreationToolEx extends
             return part;
         } else {
             if (part == null) {
-                throw new IllegalArgumentException("Could not find parent");
+                throw new IllegalArgumentException("Could not find parent"); //$NON-NLS-1$
             }
             return findParent(part.getParent());
         }
