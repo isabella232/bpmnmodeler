@@ -22,6 +22,7 @@ import org.eclipse.emf.ecore.impl.ENotificationImpl;
 import org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.ArtifactsContainer;
 import org.eclipse.stp.bpmn.BpmnPackage;
@@ -435,6 +436,14 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
         if (isTransactionESet) result.append(isTransaction); else result.append("<unset>");
         result.append(')');
         return result.toString();
+    }
+    
+    /**
+     * @generated NOT the activity type of a subprocess is always subprocess.
+     */
+    @Override
+    public ActivityType getActivityType() {
+        return ActivityType.SUB_PROCESS_LITERAL;
     }
 
 } //SubProcessImpl
