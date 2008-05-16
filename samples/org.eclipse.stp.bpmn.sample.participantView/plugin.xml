@@ -29,10 +29,16 @@
       <propertySections contributorId="org.eclipse.gmf.runtime.diagram.ui.properties">
          <propertySection
                class="org.eclipse.stp.bpmn.sample.participantView.participant.properties.ParticipantPropertySection"
+               enablesFor="1"
+               filter="org.eclipse.stp.bpmn.sample.participantView.participant.properties.ParticipantTabFilter"
                id="ParticipantsSection"
                tab="Participants">
-            <input type="org.eclipse.stp.bpmn.Activity"/>
-            <input type="java.lang.Object"/>
+            <input
+                  type="org.eclipse.stp.bpmn.Activity">
+            </input>
+            <input
+                  type="java.lang.Object">
+            </input>
          </propertySection>
       </propertySections>
    </extension>
