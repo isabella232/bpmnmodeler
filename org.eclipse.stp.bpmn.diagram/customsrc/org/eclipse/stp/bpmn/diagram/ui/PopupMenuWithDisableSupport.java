@@ -30,7 +30,7 @@ import org.eclipse.swt.widgets.MenuItem;
 /**
  * @author atoulme
  * adds the support to disabled menu items when the descriptor
- * is disabled.
+ * is disabled, or the sub menu is empty.
  */
 public class PopupMenuWithDisableSupport extends PopupMenu {
 
@@ -78,15 +78,19 @@ public class PopupMenuWithDisableSupport extends PopupMenu {
                 PopupMenuWithDisableSupport subMenu = 
                     ((CascadingMenuWithDisableSupport) contentObject)
                     .getSubMenu();
-                contentObject = ((CascadingMenu) contentObject)
-                    .getParentMenuItem();
-                List thisResult = new ArrayList(resultThusFar);
-                thisResult.add(contentObject);
-                menuItem = new MenuItem(parentMenu, SWT.CASCADE);
-                menuItem.setMenu(new Menu(parentMenu));
+                contentObject = ((CascadingMenu) contentObject).getParentMenuItem();
+                if (subMenu.getContent().isEmpty()) {
+                    menuItem = new MenuItem(parentMenu, SWT.NONE);
+                    menuItem.setEnabled(false);
+                } else {
+                    List thisResult = new ArrayList(resultThusFar);
+                    thisResult.add(contentObject);
+                    menuItem = new MenuItem(parentMenu, SWT.CASCADE);
+                    menuItem.setMenu(new Menu(parentMenu));
 
-                subMenu.createMenuItems(menuItem.getMenu(), rootMenu,
-                    thisResult);
+                    subMenu.createMenuItems(menuItem.getMenu(), rootMenu,
+                            thisResult);
+                }
             } else {
                 menuItem = new MenuItem(parentMenu, SWT.NONE);
             }

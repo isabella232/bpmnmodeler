@@ -57,6 +57,7 @@ public class RoundedRectangleWithTail extends RoundedRectangle {
 		 * @see org.eclipse.draw2d.Figure#paintFigure(org.eclipse.draw2d.Graphics)
 		 */
 		public void paintFigure(Graphics graphics) {
+		    graphics.setAlpha(127);
 			int shiftWidth = 3;
 			Image theTail = getTail();
 			Rectangle theBounds = this.getBounds().getCopy();
