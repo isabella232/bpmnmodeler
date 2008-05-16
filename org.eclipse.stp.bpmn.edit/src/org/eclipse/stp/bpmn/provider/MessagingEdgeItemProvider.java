@@ -80,8 +80,8 @@ public class MessagingEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -102,8 +102,8 @@ public class MessagingEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -124,8 +124,8 @@ public class MessagingEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
                  true,
                  false,
@@ -146,8 +146,8 @@ public class MessagingEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessagingEdge_source_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessagingEdge_source_feature", "_UI_MessagingEdge_type"),
+                 getString("_UI_MessagingEdge_source_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessagingEdge_source_feature", "_UI_MessagingEdge_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.MESSAGING_EDGE__SOURCE,
                  true,
                  false,
@@ -168,8 +168,8 @@ public class MessagingEdgeItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessagingEdge_target_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessagingEdge_target_feature", "_UI_MessagingEdge_type"),
+                 getString("_UI_MessagingEdge_target_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessagingEdge_target_feature", "_UI_MessagingEdge_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.MESSAGING_EDGE__TARGET,
                  true,
                  false,
@@ -187,7 +187,7 @@ public class MessagingEdgeItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/MessagingEdge"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/MessagingEdge")); //$NON-NLS-1$
     }
 
     /**
@@ -200,8 +200,8 @@ public class MessagingEdgeItemProvider
     public String getText(Object object) {
         String label = ((MessagingEdge)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_MessagingEdge_type") :
-            getString("_UI_MessagingEdge_type") + " " + label;
+            getString("_UI_MessagingEdge_type") : //$NON-NLS-1$
+            getString("_UI_MessagingEdge_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

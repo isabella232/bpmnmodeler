@@ -82,8 +82,8 @@ public class VertexItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Vertex_incomingEdges_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Vertex_incomingEdges_feature", "_UI_Vertex_type"),
+                 getString("_UI_Vertex_incomingEdges_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Vertex_incomingEdges_feature", "_UI_Vertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.VERTEX__INCOMING_EDGES,
                  true,
                  false,
@@ -104,8 +104,8 @@ public class VertexItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Vertex_outgoingEdges_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Vertex_outgoingEdges_feature", "_UI_Vertex_type"),
+                 getString("_UI_Vertex_outgoingEdges_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Vertex_outgoingEdges_feature", "_UI_Vertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.VERTEX__OUTGOING_EDGES,
                  true,
                  false,
@@ -123,7 +123,7 @@ public class VertexItemProvider
      */
 	@Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Vertex"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Vertex")); //$NON-NLS-1$
     }
 
     /**
@@ -136,8 +136,8 @@ public class VertexItemProvider
     public String getText(Object object) {
         String label = ((Vertex)object).getID();
         return label == null || label.length() == 0 ?
-            getString("_UI_Vertex_type") :
-            getString("_UI_Vertex_type") + " " + label;
+            getString("_UI_Vertex_type") : //$NON-NLS-1$
+            getString("_UI_Vertex_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

@@ -16,6 +16,7 @@ package org.eclipse.stp.bpmn.provider;
 import java.util.Collection;
 import java.util.List;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.emf.common.notify.AdapterFactory;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.common.util.ResourceLocator;
@@ -35,6 +36,7 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.BpmnFactory;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.BpmnPackage;
+import org.osgi.framework.Bundle;
 
 /**
  * This is the item provider adapter for a {@link org.eclipse.stp.bpmn.Activity} object.
@@ -50,6 +52,13 @@ public class ActivityItemProvider
 		ITreeItemContentProvider,	
 		IItemLabelProvider,	
 		IItemPropertySource {
+    
+    /** boolean updated by the preference store of the 
+     * BpmnDiagramEditorPlugin when the preference to show BPMN_10 is changed.
+     * by default BPMN-1.1 style */
+    public static boolean IS_BPMN_11_STYLE = true;
+    
+    
     /**
      * This constructs an instance from a factory and a notifier.
      * <!-- begin-user-doc -->
@@ -95,8 +104,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_incomingMessages_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"),
+                 getString("_UI_MessageVertex_incomingMessages_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES,
                  true,
                  false,
@@ -117,8 +126,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_outgoingMessages_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"),
+                 getString("_UI_MessageVertex_outgoingMessages_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES,
                  true,
                  false,
@@ -139,8 +148,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_groups_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_groups_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_groups_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_groups_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__GROUPS,
                  true,
                  false,
@@ -161,8 +170,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_activityType_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_activityType_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_activityType_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_activityType_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__ACTIVITY_TYPE,
                  true,
                  false,
@@ -183,8 +192,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -205,8 +214,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_lane_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_lane_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_lane_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_lane_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__LANE,
                  true,
                  false,
@@ -227,8 +236,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_looping_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_looping_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_looping_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_looping_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__LOOPING,
                  true,
                  false,
@@ -279,8 +288,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -301,8 +310,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
                  true,
                  false,
@@ -358,13 +367,15 @@ public class ActivityItemProvider
                 filename = END_SIGNAL;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_COMPENSATION:
-                filename = INTERMEDIATE_COMPENSATION;
+                filename = IS_BPMN_11_STYLE
+                    ? INTERMEDIATE_COMPENSATION : INTERMEDIATE_COMPENSATION_10;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_EMPTY:
                 filename = INTERMEDIATE_EMPTY;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_ERROR:
-                filename = INTERMEDIATE_ERROR;
+                filename = IS_BPMN_11_STYLE
+                    ? INTERMEDIATE_ERROR : INTERMEDIATE_ERROR_10;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
                 filename = INTERMEDIATE_MESSAGE;
@@ -376,10 +387,12 @@ public class ActivityItemProvider
                 filename = INTERMEDIATE_TIMER;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_CANCEL:
-                filename = INTERMEDIATE_CANCEL;
+                filename = IS_BPMN_11_STYLE
+                    ? INTERMEDIATE_CANCEL : INTERMEDIATE_CANCEL_10;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_LINK:
-                filename = INTERMEDIATE_LINK;
+                filename = IS_BPMN_11_STYLE
+                    ? INTERMEDIATE_LINK : INTERMEDIATE_LINK_10;
                 break;
             case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
                 filename = INTERMEDIATE_MULTIPLE;
@@ -415,7 +428,8 @@ public class ActivityItemProvider
                 filename = GATEWAY_DATABASED_INCLUSIVE;
                 break;
             case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
-                filename = GATEWAY_EVENT_BASED;
+                filename = IS_BPMN_11_STYLE
+                    ? GATEWAY_EVENT_BASED : GATEWAY_EVENT_BASED_10;
                 break;
             case ActivityType.GATEWAY_PARALLEL:
                 filename = GATEWAY_PARALLEL;
@@ -446,7 +460,7 @@ public class ActivityItemProvider
      * @generated
      */
     public Object getImageGen(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity")); //$NON-NLS-1$
     }
 
     /**
@@ -459,8 +473,8 @@ public class ActivityItemProvider
     public String getText(Object object) {
         String label = ((Activity)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_Activity_type") :
-            getString("_UI_Activity_type") + " " + label;
+            getString("_UI_Activity_type") : //$NON-NLS-1$
+            getString("_UI_Activity_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -538,7 +552,7 @@ public class ActivityItemProvider
 
         if (qualify) {
             return getString
-                ("_UI_CreateChild_text2",
+                ("_UI_CreateChild_text2", //$NON-NLS-1$
                  new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
         }
         return super.getCreateChildText(owner, feature, child, selection);
@@ -569,6 +583,7 @@ public class ActivityItemProvider
     public static final String GATEWAY_DATABASED_EXCLUSIVE = "gateway_databased_exclusive"; //$NON-NLS-1$
     public static final String GATEWAY_DATABASED_INCLUSIVE = "gateway_databased_inclusive"; //$NON-NLS-1$
     public static final String GATEWAY_EVENT_BASED = "gateway_event_based"; //$NON-NLS-1$
+    public static final String GATEWAY_EVENT_BASED_10 = "gateway_event_based_10"; //$NON-NLS-1$
     public static final String GATEWAY_PARALLEL = "gateway_parallel"; //$NON-NLS-1$
     public static final String GATEWAY_COMPLEX = "gateway_complex"; //$NON-NLS-1$
     public static final String INTERMEDIATE_CANCEL = "intermediate_cancel"; //$NON-NLS-1$
@@ -581,7 +596,12 @@ public class ActivityItemProvider
     public static final String INTERMEDIATE_LINK = "intermediate_link"; //$NON-NLS-1$
     public static final String INTERMEDIATE_MULTIPLE = "intermediate_multiple"; //$NON-NLS-1$
     public static final String INTERMEDIATE_SIGNAL = "intermediate_signal"; //$NON-NLS-1$
-    
+
+    public static final String INTERMEDIATE_CANCEL_10 = "intermediate_cancel_10"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_COMPENSATION_10 = "intermediate_compensation_10"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_ERROR_10 = "intermediate_error_10"; //$NON-NLS-1$
+    public static final String INTERMEDIATE_LINK_10 = "intermediate_link_10"; //$NON-NLS-1$
+
     
     public static final String POOL = "pool"; //$NON-NLS-1$
     public static final String START_EMPTY = "start_empty"; //$NON-NLS-1$
@@ -600,7 +620,6 @@ public class ActivityItemProvider
 
     public static final String FLOW_CONNECTOR = "flow_connector";     //$NON-NLS-1$
     public static final String MESSAGE_CONNECTOR = "message_connector";     //$NON-NLS-1$
-
-
-
+    
+    
 }
