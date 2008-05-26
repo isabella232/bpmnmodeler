@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:BpmnDiagram xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:bpmn="http://stp.eclipse.org/bpmn" xmlns:ecore="http://www.eclipse.org/emf/2002/Ecore" xmi:id="_BOhGQeFAEdyhdM0Mgz8gRA" iD="_BOhGQOFAEdyhdM0Mgz8gRA">
+  <pools xmi:type="bpmn:Pool" xmi:id="_BQFMgeFAEdyhdM0Mgz8gRA" iD="_BQFMgOFAEdyhdM0Mgz8gRA" name="Pool">
+    <vertices xmi:type="bpmn:Activity" xmi:id="_BQHBseFAEdyhdM0Mgz8gRA" iD="_BQHBsOFAEdyhdM0Mgz8gRA" name="annotated" activityType="Task">
+      <eAnnotations xmi:type="ecore:EAnnotation" xmi:id="_FmwYMOFIEdyR1KSKpBx8yg" source="textAnnotationSource">
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_FmwYMeFIEdyR1KSKpBx8yg" key="content-type" value="Text"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_FmwYMuFIEdyR1KSKpBx8yg" key="fileExtension" value="txt"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_FmwYM-FIEdyR1KSKpBx8yg" key="text" value="This file contains data that can be placed on a bpmn diagram by drag and drop."/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_FmwYNOFIEdyR1KSKpBx8yg" key="lastModified" value="1203682627000"/>
+        <details xmi:type="ecore:EStringToStringMapEntry" xmi:id="_FmwYNeFIEdyR1KSKpBx8yg" key="name" value="sample.txt"/>
+      </eAnnotations>
+    </vertices>
+  </pools>
+</bpmn:BpmnDiagram>
