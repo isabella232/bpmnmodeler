@@ -73,6 +73,7 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart.ConnectionM
 import org.eclipse.stp.bpmn.diagram.ui.IMenuItemWithDisableSupport;
 import org.eclipse.stp.bpmn.diagram.ui.PopupMenuWithDisableSupport;
 import org.eclipse.stp.bpmn.dnd.IDnDHandler;
+import org.eclipse.stp.bpmn.dnd.IDnDHandler2;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.swt.dnd.DND;
 import org.eclipse.swt.graphics.Color;
@@ -212,9 +213,15 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
                 adapted = retrieveDnDHandlers(dropRequest.getObjects());
                 Collections.sort(adapted, new Comparator<IDnDHandler>() {
 					public int compare(IDnDHandler o1, IDnDHandler o2) {
-						if (o1.getPriority() > o2.getPriority()) {
+					    int p1 = o1 instanceof IDnDHandler2 ? 
+					            ((IDnDHandler2) o1).getPriority((IGraphicalEditPart) getHost()) :
+					        o1.getPriority();
+					    int p2 = o2 instanceof IDnDHandler2 ? 
+					            ((IDnDHandler2) o2).getPriority((IGraphicalEditPart) getHost()) :
+					        o2.getPriority();
+						if (p1 > p2) {
 							return -1;
-						} else if (o1.getPriority() < o2.getPriority()){
+						} else if (p1 < p2){
 							return 1;
 						} else {
 							return 0;
@@ -303,7 +310,10 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
             		List<DnDHandlerMenuItemData> items = 
             			new ArrayList<DnDHandlerMenuItemData>();
             		for (IDnDHandler handler : handlers) {
-            			for (int i = 0 ; i < handler.getItemCount(); i++) {
+            		    int itemCount = handler instanceof IDnDHandler2 ?
+            		            ((IDnDHandler2) handler).getItemCount((IGraphicalEditPart) getHost())
+            		            : handler.getItemCount();
+            			for (int i = 0 ; i < itemCount; i++) {
             				DnDHandlerMenuItemData data = new DnDHandlerMenuItemData();
             				data.handler = handler;
             				data.index = i;
