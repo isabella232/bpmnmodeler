@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BugDnD Plug-in
+Bundle-SymbolicName: org.eclipse.stp.bpmn.sample.bugDnD;singleton:=true
+Bundle-Version: 0.8.0.qualifier
+Bundle-Activator: org.eclipse.stp.bpmn.sample.bugDnD.BugDnDPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.stp.bpmn.diagram,
+ org.eclipse.stp.bpmn.sample.bugView
+Eclipse-LazyStart: true
+Export-Package: org.eclipse.stp.bpmn.sample.bugDnD.dnd
+Bundle-ClassPath: src/,
+ .
