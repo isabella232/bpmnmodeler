@@ -21,7 +21,9 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ClipboardSupportUtil;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
@@ -30,6 +32,7 @@ import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.stp.bpmn.Identifiable;
 
 /**
  * [hmalphettes] as advised in GMF Q&amp;answers regarding copy/paste support.
@@ -61,6 +64,21 @@ public class BpmnConnectorViewPostPasteChildOperation
     public void paste()
         throws Exception {
 
+        EObject pasted = ((View) getEObject()).getElement();
+        if (pasted instanceof Identifiable) {
+            ((Identifiable) pasted).setID(EcoreUtil.generateUUID());
+        }
+        if (pasted instanceof EObject) {
+            TreeIterator<EObject> iter = ((EObject) pasted).eAllContents();
+            while (iter.hasNext()) {
+                EObject next = iter.next();
+                if (next instanceof Identifiable) {
+                    Identifiable elt = (Identifiable) next;
+                    elt.setID(EcoreUtil.generateUUID());
+                }
+            }
+
+        }
         EObject pastedElement = doPaste();
         //did we succeed?
         if (pastedElement != null) {

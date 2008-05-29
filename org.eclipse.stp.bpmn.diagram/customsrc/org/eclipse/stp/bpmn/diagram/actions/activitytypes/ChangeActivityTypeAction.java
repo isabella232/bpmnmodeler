@@ -127,7 +127,7 @@ public class ChangeActivityTypeAction extends AbstractActionHandler {
 							sp.setDocumentation(act.getDocumentation());
 							sp.setGraph(act.getGraph());
 							sp.setID(act.getID());
-							sp.setLane(act.getLane());
+//							sp.setLane(act.getLane());
 							sp.setLooping(act.isLooping());
 							sp.getIncomingEdges().addAll(act.getIncomingEdges());
 							sp.getOutgoingEdges().addAll(act.getOutgoingEdges());

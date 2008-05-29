@@ -34,7 +34,7 @@ public interface Lane extends AssociationTarget, NamedBpmnObject {
     /**
      * Returns the value of the '<em><b>Activities</b></em>' reference list.
      * The list contents are of type {@link org.eclipse.stp.bpmn.Activity}.
-     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Activity#getLane <em>Lane</em>}'.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Activity#getLanes <em>Lanes</em>}'.
      * <!-- begin-user-doc -->
      * <p>
      * If the meaning of the '<em>Activities</em>' reference list isn't clear,
@@ -43,8 +43,8 @@ public interface Lane extends AssociationTarget, NamedBpmnObject {
      * <!-- end-user-doc -->
      * @return the value of the '<em>Activities</em>' reference list.
      * @see org.eclipse.stp.bpmn.BpmnPackage#getLane_Activities()
-     * @see org.eclipse.stp.bpmn.Activity#getLane
-     * @model opposite="lane" resolveProxies="false"
+     * @see org.eclipse.stp.bpmn.Activity#getLanes
+     * @model opposite="lanes" resolveProxies="false"
      *        extendedMetaData="kind='element' name='activities'"
      * @generated
      */

@@ -285,7 +285,7 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
                 int aboveY = -1;
                 int farRightX = -1;
                 //see if we should go in between the 2 shapes:
-                if (topRightSrcY > bottomLeftTargetY + extra) {
+                if (topRightSrcY > bottomLeftTargetY + extra && sourceGatewayConstraint != CONSTRAINT_BOTTOM) {
                     //src is below the target go in between:
                     aboveY = (topRightSrcY + bottomLeftTargetY) /2;
                     farRightX = ptOrig.x + extra;

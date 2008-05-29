@@ -44,6 +44,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.figures.FeedbackShape;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetGroupsCommand;
+import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetLanesCommand;
 import org.eclipse.stp.bpmn.tools.SubProcessResizeTracker;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
 
@@ -113,7 +114,7 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
 	}
     
     /** 
-     * Overridden to set the groups on the subprocess
+     * Overridden to set the groups and the lanes on the subprocess
      */
     @Override
     protected Command getMoveCommand(ChangeBoundsRequest request) {
@@ -123,11 +124,15 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
                 new SetGroupsCommand(ResizableActivityEditPolicy.
                         findContainingGroups(request, (IGraphicalEditPart) getHost()), 
                         (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        compound.add(new ICommandProxy(
+                new SetLanesCommand(ResizableActivityEditPolicy.
+                        findContainingLanes(request, (IGraphicalEditPart) getHost()),
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
         return compound;
     }
     
     /**
-     * Overridden to set the groups on the subprocess
+     * Overridden to set the groups and the lanes on the subprocess
      */
     @Override
     public Command getResizeCommand(final ChangeBoundsRequest request) {
@@ -138,7 +143,9 @@ public class ResizableSubProcessEditPolicy extends ResizableShapeEditPolicyEx {
                         findContainingGroups(request, (IGraphicalEditPart) getHost()), 
                         (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement()));
         compound.add(resizeCmd);
-        // resizing the body edit part figure directly, to help with the layout.
+        compound.add(new ICommandProxy(
+                new SetLanesCommand(ResizableActivityEditPolicy.findContainingLanes(request, (IGraphicalEditPart) getHost()), 
+                        (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
         compound.add(iSetGroupCmd);
         return compound;
     }

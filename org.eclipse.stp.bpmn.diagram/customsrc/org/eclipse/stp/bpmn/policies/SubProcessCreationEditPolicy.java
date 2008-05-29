@@ -23,6 +23,7 @@ import org.eclipse.stp.bpmn.Group;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetGroupsCommand;
+import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetLanesCommand;
 
 
 /**
@@ -59,9 +60,14 @@ public class SubProcessCreationEditPolicy extends CreationEditPolicyEx {
                     rect, getHost().getViewer());
             SetGroupsCommand command = new ResizableActivityEditPolicy.SetGroupsCommand(
                     groups, request, ((IGraphicalEditPart) getHost()).resolveSemanticElement());
+            SetLanesCommand lanesCommand = new ResizableActivityEditPolicy.SetLanesCommand(
+                    ResizableActivityEditPolicy.findContainingLanes(rect, getHost().getViewer()), 
+                    request,
+                    ((IGraphicalEditPart) getHost()).resolveSemanticElement());
             CompoundCommand compound = new CompoundCommand();
             compound.add(super.getCreateElementAndViewCommand(request));
             compound.add(new ICommandProxy(command));
+            compound.add(new ICommandProxy(lanesCommand));
             return compound;
         }
         return super.getCreateElementAndViewCommand(request);

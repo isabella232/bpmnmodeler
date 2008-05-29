@@ -317,11 +317,20 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 
     /**
      * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EReference getActivity_Lanes() {
+        return (EReference)activityEClass.getEStructuralFeatures().get(1);
+    }
+
+    /**
+     * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @generated
      */
 	public EAttribute getActivity_ActivityType() {
-        return (EAttribute)activityEClass.getEStructuralFeatures().get(1);
+        return (EAttribute)activityEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -330,15 +339,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getActivity_EventHandlerFor() {
-        return (EReference)activityEClass.getEStructuralFeatures().get(2);
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public EReference getActivity_Lane() {
         return (EReference)activityEClass.getEStructuralFeatures().get(3);
     }
 
@@ -939,9 +939,9 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         // Create classes and their features
         activityEClass = createEClass(ACTIVITY);
         createEReference(activityEClass, ACTIVITY__GROUPS);
+        createEReference(activityEClass, ACTIVITY__LANES);
         createEAttribute(activityEClass, ACTIVITY__ACTIVITY_TYPE);
         createEReference(activityEClass, ACTIVITY__EVENT_HANDLER_FOR);
-        createEReference(activityEClass, ACTIVITY__LANE);
         createEAttribute(activityEClass, ACTIVITY__LOOPING);
 
         artifactEClass = createEClass(ARTIFACT);
@@ -1093,9 +1093,9 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         // Initialize classes and features; add operations and parameters
         initEClass(activityEClass, Activity.class, "Activity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getActivity_Groups(), this.getGroup(), this.getGroup_Activities(), "groups", null, 0, -1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getActivity_Lanes(), this.getLane(), this.getLane_Activities(), "lanes", null, 0, -1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getActivity_ActivityType(), this.getActivityType(), "activityType", "Task", 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getActivity_EventHandlerFor(), this.getSubProcess(), this.getSubProcess_EventHandlers(), "eventHandlerFor", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getActivity_Lane(), this.getLane(), this.getLane_Activities(), "lane", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getActivity_Looping(), theXMLTypePackage.getBoolean(), "looping", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1132,7 +1132,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         initEAttribute(getIdentifiable_ID(), theXMLTypePackage.getID(), "iD", null, 0, 1, Identifiable.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(laneEClass, Lane.class, "Lane", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getLane_Activities(), this.getActivity(), this.getActivity_Lane(), "activities", null, 0, -1, Lane.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getLane_Activities(), this.getActivity(), this.getActivity_Lanes(), "activities", null, 0, -1, Lane.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getLane_Pool(), this.getPool(), this.getPool_Lanes(), "pool", null, 0, 1, Lane.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(messageVertexEClass, MessageVertex.class, "MessageVertex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
@@ -1255,6 +1255,13 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
              "name", "groups"
            });		
         addAnnotation
+          (getActivity_Lanes(), 
+           source, 
+           new String[] {
+             "kind", "element",
+             "name", "lanes"
+           });		
+        addAnnotation
           (getActivity_ActivityType(), 
            source, 
            new String[] {
@@ -1267,13 +1274,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
            new String[] {
              "kind", "attribute",
              "name", "eventHandlerFor"
-           });		
-        addAnnotation
-          (getActivity_Lane(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "lane"
            });		
         addAnnotation
           (getActivity_Looping(), 

@@ -87,8 +87,8 @@ public class PoolItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_incomingMessages_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_MessageVertex_incomingMessages_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"),
                  BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES,
                  true,
                  false,
@@ -109,8 +109,8 @@ public class PoolItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_outgoingMessages_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_MessageVertex_outgoingMessages_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"),
                  BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES,
                  true,
                  false,
@@ -159,7 +159,7 @@ public class PoolItemProvider
      */
 	@Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Pool")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Pool"));
     }
 
     /**
@@ -172,8 +172,8 @@ public class PoolItemProvider
     public String getText(Object object) {
         String label = ((Pool)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_Pool_type") : //$NON-NLS-1$
-            getString("_UI_Pool_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_Pool_type") :
+            getString("_UI_Pool_type") + " " + label;
     }
 
     /**
@@ -250,7 +250,7 @@ public class PoolItemProvider
 
         if (qualify) {
             return getString
-                ("_UI_CreateChild_text2", //$NON-NLS-1$
+                ("_UI_CreateChild_text2",
                  new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
         }
         return super.getCreateChildText(owner, feature, child, selection);

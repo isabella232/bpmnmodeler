@@ -143,7 +143,7 @@ public class LaneImpl extends AssociationTargetImpl implements Lane {
      */
     public EList<Activity> getActivities() {
         if (activities == null) {
-            activities = new EObjectWithInverseEList<Activity>(Activity.class, this, BpmnPackage.LANE__ACTIVITIES, BpmnPackage.ACTIVITY__LANE);
+            activities = new EObjectWithInverseEList.ManyInverse<Activity>(Activity.class, this, BpmnPackage.LANE__ACTIVITIES, BpmnPackage.ACTIVITY__LANES);
         }
         return activities;
     }

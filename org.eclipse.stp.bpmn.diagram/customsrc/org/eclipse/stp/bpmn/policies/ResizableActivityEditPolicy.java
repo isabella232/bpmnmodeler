@@ -17,6 +17,7 @@ package org.eclipse.stp.bpmn.policies;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
@@ -49,12 +50,14 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Group;
+import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.commands.ElementTypeEx;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityName2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.tools.ActivityResizeTracker;
@@ -218,6 +221,116 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
         return groups;
     }
     
+    static List<Lane> findContainingLanes(ChangeBoundsRequest request, IGraphicalEditPart host) {
+    	Rectangle rect = host.getFigure().getBounds().getCopy();
+        host.getFigure().translateToAbsolute(rect);
+        rect.resize(request.getSizeDelta());
+        rect.translate(request.getMoveDelta());
+        return findContainingLanes(rect, host.getViewer());
+    }
+    
+    /**
+     * searches through all LaneEditParts and checks if <br>
+     * <ul><li>the activity starts in this lane</li>
+     * <li>the activity goes straight through the whole lane</li>
+     * <li>the activity ends in this lane</li></ul>
+     * and adds those activities to the returned list.
+     * @param activity Rectanlge representing the activity
+     * @param viewer EditPartViewer to receive the LaneEditParts
+     * @return List of all lanes contaning the given activity
+     * @author <a href="mailto:till.essers@gmail.com">Till Essers</a>
+     */
+    static List<Lane> findContainingLanes(Rectangle activity, EditPartViewer viewer) {
+    	List<Lane> lanes = new ArrayList<Lane>();
+    	int actUpper = activity.y;
+    	int actLower = activity.y + activity.height;
+    	int laneUpper, laneLower;
+        for (Object o : viewer.getVisualPartMap().keySet()) {
+            EditPart p = (EditPart) viewer.getVisualPartMap().get(o);
+            if (p instanceof LaneEditPart ) {
+                IGraphicalEditPart part = (IGraphicalEditPart) p;
+                Rectangle lane = part.getFigure().getBounds().getCopy();
+                part.getFigure().translateToAbsolute(lane);
+                laneUpper = lane.y;
+                laneLower = lane.y + lane.height;
+                if ((laneUpper <= actUpper && laneLower > actUpper) //start of the activity lies in this lane
+                		|| (laneLower < actLower && laneUpper > actUpper ) //activity crosses this lane completly
+                		|| (laneUpper < actLower && laneLower >= actLower)) {// end of the activity lies in this lane
+                    lanes.add((Lane) part.resolveSemanticElement());
+                }
+            }
+        }
+        return lanes;
+    }
+    
+    /**
+     * This command sets the lanes on the activity.
+     * @author <a href="mailto:till.essers@gmail.com">Till Essers</a>
+     */
+    public static class SetLanesCommand extends AbstractTransactionalCommand {
+    	
+    	private Activity activity;
+    	
+    	private List<Lane> lanes;
+    	
+    	private CreateViewAndElementRequest request;
+    	
+    	 /**
+         * Default constructor
+         * 
+         * @param lanes the lanes to add
+         * @param activity the activity to act on
+         */
+    	public SetLanesCommand(List<Lane> lanes, Activity activity) {
+    		super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
+                    getEditingDomainFor(activity),
+                    BpmnDiagramMessages.ResizableActivityEditPolicy_groups_command_name, 
+                    getWorkspaceFiles(activity));
+    		this.activity = activity;
+    		this.lanes = lanes;
+		}
+
+    	/**
+         * Constructor for newly created activities
+         * 
+         * @param lanes the lanes to add
+         * @param request the request which will contain the new activity
+         * @param container the container needed to resolve the editing domain
+         */
+		public SetLanesCommand(List<Lane> lanes, 
+                CreateViewAndElementRequest request, 
+                EObject container) {
+			 super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
+	                    getEditingDomainFor(container),
+	                    BpmnDiagramMessages.ResizableActivityEditPolicy_groups_command_name, 
+	                    getWorkspaceFiles(container));
+			 this.request = request;
+			 this.lanes = lanes;
+		}
+
+		@Override
+		protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
+				IAdaptable info) throws ExecutionException {
+			 if (request != null) {
+	                activity = (Activity) request.getViewAndElementDescriptor().
+	                    getCreateElementRequestAdapter().resolve();
+	            }
+	            List<Lane> toRemove = new ArrayList<Lane>();
+	            List<Lane> lanes = new ArrayList<Lane>(this.lanes);
+	            for (Lane a : activity.getLanes()) {
+	                if (!lanes.remove(a)) {
+	                    toRemove.add(a);
+	                }
+	            }
+	            
+	            activity.getLanes().removeAll(toRemove);
+	            activity.getLanes().addAll(lanes);
+            return CommandResult.newOKCommandResult();
+		}
+    	
+    }
+   
+    
     /**
      * This command sets the groups on the activity.
      * @author <a href="http://www.intalio.com">Intalio Inc.</a>
@@ -240,7 +353,7 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
         public SetGroupsCommand(List<Group> groups, Activity activity) {
             super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
                     getEditingDomainFor(activity),
-                    BpmnDiagramMessages.ResizableActivityEditPolicy_groups_command_name, 
+                    BpmnDiagramMessages.ResizableActivityEditPolicy_lanes_command_name, 
                     getWorkspaceFiles(activity));
             _groups = groups;
             _activity = activity;
@@ -293,6 +406,9 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
         compound.add(new ICommandProxy(
                 new SetGroupsCommand(findContainingGroups(request, (IGraphicalEditPart) getHost()), 
                         (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        compound.add(new ICommandProxy(
+        		new SetLanesCommand(findContainingLanes(request, (IGraphicalEditPart) getHost()),
+        				(Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
         return compound;
     }
     
@@ -303,6 +419,9 @@ public class ResizableActivityEditPolicy extends ResizableShapeEditPolicyEx {
         compound.add(new ICommandProxy(
                 new SetGroupsCommand(findContainingGroups(request, (IGraphicalEditPart) getHost()), 
                         (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
+        compound.add(new ICommandProxy(
+        		new SetLanesCommand(findContainingLanes(request, (IGraphicalEditPart) getHost()), 
+        				(Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
         return compound;
     }
     

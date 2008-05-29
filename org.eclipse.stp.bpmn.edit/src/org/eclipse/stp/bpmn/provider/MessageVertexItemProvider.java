@@ -89,8 +89,8 @@ public class MessageVertexItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Identifiable_iD_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Identifiable_iD_feature", "_UI_Identifiable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Identifiable_iD_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Identifiable_iD_feature", "_UI_Identifiable_type"),
                  BpmnPackage.Literals.IDENTIFIABLE__ID,
                  true,
                  false,
@@ -111,8 +111,8 @@ public class MessageVertexItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_incomingMessages_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_MessageVertex_incomingMessages_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"),
                  BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES,
                  true,
                  false,
@@ -133,8 +133,8 @@ public class MessageVertexItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_outgoingMessages_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_MessageVertex_outgoingMessages_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"),
                  BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES,
                  true,
                  false,
@@ -183,7 +183,7 @@ public class MessageVertexItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/MessageVertex")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/MessageVertex"));
     }
 
     /**
@@ -196,8 +196,8 @@ public class MessageVertexItemProvider
     public String getText(Object object) {
         String label = ((MessageVertex)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_MessageVertex_type") : //$NON-NLS-1$
-            getString("_UI_MessageVertex_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_MessageVertex_type") :
+            getString("_UI_MessageVertex_type") + " " + label;
     }
 
     /**
@@ -277,7 +277,7 @@ public class MessageVertexItemProvider
 
         if (qualify) {
             return getString
-                ("_UI_CreateChild_text2", //$NON-NLS-1$
+                ("_UI_CreateChild_text2",
                  new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
         }
         return super.getCreateChildText(owner, feature, child, selection);

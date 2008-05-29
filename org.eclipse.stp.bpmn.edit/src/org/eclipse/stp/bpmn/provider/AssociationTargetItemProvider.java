@@ -77,8 +77,8 @@ public class AssociationTargetItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_AssociationTarget_associations_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_AssociationTarget_associations_feature", "_UI_AssociationTarget_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_AssociationTarget_associations_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_AssociationTarget_associations_feature", "_UI_AssociationTarget_type"),
                  BpmnPackage.Literals.ASSOCIATION_TARGET__ASSOCIATIONS,
                  true,
                  false,
@@ -96,7 +96,7 @@ public class AssociationTargetItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/AssociationTarget")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/AssociationTarget"));
     }
 
     /**
@@ -109,8 +109,8 @@ public class AssociationTargetItemProvider
     public String getText(Object object) {
         String label = ((AssociationTarget)object).getID();
         return label == null || label.length() == 0 ?
-            getString("_UI_AssociationTarget_type") : //$NON-NLS-1$
-            getString("_UI_AssociationTarget_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_AssociationTarget_type") :
+            getString("_UI_AssociationTarget_type") + " " + label;
     }
 
     /**

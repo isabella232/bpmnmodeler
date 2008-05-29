@@ -282,9 +282,11 @@ public class GroupAction extends AbstractGroupUngroupAction {
                 ((SubProcessEditPart)editPart)
                     .getChildBySemanticHintOnPrimaryView(
                             SubProcessSubProcessBorderCompartmentEditPart.VISUAL_ID + ""); //$NON-NLS-1$
-                for (Object child : borderEditPart.getChildren()) {
-                    if (child instanceof Activity2EditPart) {
-                        almostSelectedBoundaryEvents.add((IGraphicalEditPart) child);
+                if (borderEditPart != null) {
+                    for (Object child : borderEditPart.getChildren()) {
+                        if (child instanceof Activity2EditPart) {
+                            almostSelectedBoundaryEvents.add((IGraphicalEditPart) child);
+                        }
                     }
                 }
             }

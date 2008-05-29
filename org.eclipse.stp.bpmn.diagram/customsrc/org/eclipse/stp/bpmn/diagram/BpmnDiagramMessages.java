@@ -551,6 +551,8 @@ public class BpmnDiagramMessages extends NLS {
     public static String ResizableActivityEditPolicy_command_name;
 
     public static String ResizableActivityEditPolicy_groups_command_name;
+    
+    public static String ResizableActivityEditPolicy_lanes_command_name;
 
     public static String ResizableGroupEditPolicy_command_name;
 

@@ -84,8 +84,8 @@ public class AssociationItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Association_direction_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Association_direction_feature", "_UI_Association_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Association_direction_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Association_direction_feature", "_UI_Association_type"),
                  BpmnPackage.Literals.ASSOCIATION__DIRECTION,
                  true,
                  false,
@@ -106,8 +106,8 @@ public class AssociationItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Association_source_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Association_source_feature", "_UI_Association_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Association_source_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Association_source_feature", "_UI_Association_type"),
                  BpmnPackage.Literals.ASSOCIATION__SOURCE,
                  true,
                  false,
@@ -128,8 +128,8 @@ public class AssociationItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Association_target_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Association_target_feature", "_UI_Association_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Association_target_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Association_target_feature", "_UI_Association_type"),
                  BpmnPackage.Literals.ASSOCIATION__TARGET,
                  true,
                  false,
@@ -147,7 +147,7 @@ public class AssociationItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Association")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Association"));
     }
 
     /**
@@ -161,8 +161,8 @@ public class AssociationItemProvider
         DirectionType labelValue = ((Association)object).getDirection();
         String label = labelValue == null ? null : labelValue.toString();
         return label == null || label.length() == 0 ?
-            getString("_UI_Association_type") : //$NON-NLS-1$
-            getString("_UI_Association_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_Association_type") :
+            getString("_UI_Association_type") + " " + label;
     }
 
     /**

@@ -50,9 +50,9 @@ import org.eclipse.stp.bpmn.SubProcess;
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getIncomingMessages <em>Incoming Messages</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getOutgoingMessages <em>Outgoing Messages</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getGroups <em>Groups</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getLanes <em>Lanes</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getActivityType <em>Activity Type</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getEventHandlerFor <em>Event Handler For</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getLane <em>Lane</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#isLooping <em>Looping</em>}</li>
  * </ul>
  * </p>
@@ -141,6 +141,16 @@ public class ActivityImpl extends VertexImpl implements Activity {
 	protected EList<Group> groups;
 
     /**
+     * The cached value of the '{@link #getLanes() <em>Lanes</em>}' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #getLanes()
+     * @generated
+     * @ordered
+     */
+    protected EList<Lane> lanes;
+
+    /**
      * The default value of the '{@link #getActivityType() <em>Activity Type</em>}' attribute.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
@@ -168,16 +178,6 @@ public class ActivityImpl extends VertexImpl implements Activity {
      * @ordered
      */
 	protected boolean activityTypeESet;
-
-    /**
-     * The cached value of the '{@link #getLane() <em>Lane</em>}' reference.
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @see #getLane()
-     * @generated
-     * @ordered
-     */
-	protected Lane lane;
 
     /**
      * The default value of the '{@link #isLooping() <em>Looping</em>}' attribute.
@@ -267,6 +267,18 @@ public class ActivityImpl extends VertexImpl implements Activity {
             groups = new EObjectWithInverseResolvingEList.ManyInverse<Group>(Group.class, this, BpmnPackage.ACTIVITY__GROUPS, BpmnPackage.GROUP__ACTIVITIES);
         }
         return groups;
+    }
+
+    /**
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     */
+    public EList<Lane> getLanes() {
+        if (lanes == null) {
+            lanes = new EObjectWithInverseResolvingEList.ManyInverse<Lane>(Lane.class, this, BpmnPackage.ACTIVITY__LANES, BpmnPackage.LANE__ACTIVITIES);
+        }
+        return lanes;
     }
 
     /**
@@ -382,66 +394,6 @@ public class ActivityImpl extends VertexImpl implements Activity {
 	 * <!-- end-user-doc -->
      * @generated
      */
-	public Lane getLane() {
-        if (lane != null && lane.eIsProxy()) {
-            InternalEObject oldLane = (InternalEObject)lane;
-            lane = (Lane)eResolveProxy(oldLane);
-            if (lane != oldLane) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, BpmnPackage.ACTIVITY__LANE, oldLane, lane));
-            }
-        }
-        return lane;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public Lane basicGetLane() {
-        return lane;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public NotificationChain basicSetLane(Lane newLane, NotificationChain msgs) {
-        Lane oldLane = lane;
-        lane = newLane;
-        if (eNotificationRequired()) {
-            ENotificationImpl notification = new ENotificationImpl(this, Notification.SET, BpmnPackage.ACTIVITY__LANE, oldLane, newLane);
-            if (msgs == null) msgs = notification; else msgs.add(notification);
-        }
-        return msgs;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public void setLane(Lane newLane) {
-        if (newLane != lane) {
-            NotificationChain msgs = null;
-            if (lane != null)
-                msgs = ((InternalEObject)lane).eInverseRemove(this, BpmnPackage.LANE__ACTIVITIES, Lane.class, msgs);
-            if (newLane != null)
-                msgs = ((InternalEObject)newLane).eInverseAdd(this, BpmnPackage.LANE__ACTIVITIES, Lane.class, msgs);
-            msgs = basicSetLane(newLane, msgs);
-            if (msgs != null) msgs.dispatch();
-        }
-        else if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.ACTIVITY__LANE, newLane, newLane));
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
 	public boolean isLooping() {
         return looping;
     }
@@ -540,14 +492,12 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 return ((InternalEList<InternalEObject>)(InternalEList<?>)getOutgoingMessages()).basicAdd(otherEnd, msgs);
             case BpmnPackage.ACTIVITY__GROUPS:
                 return ((InternalEList<InternalEObject>)(InternalEList<?>)getGroups()).basicAdd(otherEnd, msgs);
+            case BpmnPackage.ACTIVITY__LANES:
+                return ((InternalEList<InternalEObject>)(InternalEList<?>)getLanes()).basicAdd(otherEnd, msgs);
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 if (eInternalContainer() != null)
                     msgs = eBasicRemoveFromContainer(msgs);
                 return basicSetEventHandlerFor((SubProcess)otherEnd, msgs);
-            case BpmnPackage.ACTIVITY__LANE:
-                if (lane != null)
-                    msgs = ((InternalEObject)lane).eInverseRemove(this, BpmnPackage.LANE__ACTIVITIES, Lane.class, msgs);
-                return basicSetLane((Lane)otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -568,10 +518,10 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 return ((InternalEList<?>)getOutgoingMessages()).basicRemove(otherEnd, msgs);
             case BpmnPackage.ACTIVITY__GROUPS:
                 return ((InternalEList<?>)getGroups()).basicRemove(otherEnd, msgs);
+            case BpmnPackage.ACTIVITY__LANES:
+                return ((InternalEList<?>)getLanes()).basicRemove(otherEnd, msgs);
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 return basicSetEventHandlerFor(null, msgs);
-            case BpmnPackage.ACTIVITY__LANE:
-                return basicSetLane(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -613,13 +563,12 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 return getOutgoingMessages();
             case BpmnPackage.ACTIVITY__GROUPS:
                 return getGroups();
+            case BpmnPackage.ACTIVITY__LANES:
+                return getLanes();
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 return getActivityType();
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 return getEventHandlerFor();
-            case BpmnPackage.ACTIVITY__LANE:
-                if (resolve) return getLane();
-                return basicGetLane();
             case BpmnPackage.ACTIVITY__LOOPING:
                 return isLooping() ? Boolean.TRUE : Boolean.FALSE;
         }
@@ -659,14 +608,15 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 getGroups().clear();
                 getGroups().addAll((Collection<? extends Group>)newValue);
                 return;
+            case BpmnPackage.ACTIVITY__LANES:
+                getLanes().clear();
+                getLanes().addAll((Collection<? extends Lane>)newValue);
+                return;
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 setActivityType((ActivityType)newValue);
                 return;
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 setEventHandlerFor((SubProcess)newValue);
-                return;
-            case BpmnPackage.ACTIVITY__LANE:
-                setLane((Lane)newValue);
                 return;
             case BpmnPackage.ACTIVITY__LOOPING:
                 setLooping(((Boolean)newValue).booleanValue());
@@ -704,14 +654,14 @@ public class ActivityImpl extends VertexImpl implements Activity {
             case BpmnPackage.ACTIVITY__GROUPS:
                 getGroups().clear();
                 return;
+            case BpmnPackage.ACTIVITY__LANES:
+                getLanes().clear();
+                return;
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 unsetActivityType();
                 return;
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 setEventHandlerFor((SubProcess)null);
-                return;
-            case BpmnPackage.ACTIVITY__LANE:
-                setLane((Lane)null);
                 return;
             case BpmnPackage.ACTIVITY__LOOPING:
                 unsetLooping();
@@ -742,12 +692,12 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 return !getOutgoingMessages().isEmpty();
             case BpmnPackage.ACTIVITY__GROUPS:
                 return groups != null && !groups.isEmpty();
+            case BpmnPackage.ACTIVITY__LANES:
+                return lanes != null && !lanes.isEmpty();
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 return isSetActivityType();
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 return getEventHandlerFor() != null;
-            case BpmnPackage.ACTIVITY__LANE:
-                return lane != null;
             case BpmnPackage.ACTIVITY__LOOPING:
                 return isSetLooping();
         }

@@ -85,8 +85,8 @@ public class LaneItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Lane_activities_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_Lane_activities_feature", "_UI_Lane_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_Lane_activities_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_Lane_activities_feature", "_UI_Lane_type"),
                  BpmnPackage.Literals.LANE__ACTIVITIES,
                  true,
                  false,
@@ -107,8 +107,8 @@ public class LaneItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_documentation_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -129,8 +129,8 @@ public class LaneItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_name_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -151,8 +151,8 @@ public class LaneItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                 getString("_UI_NamedBpmnObject_ncname_feature"),
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
                  true,
                  false,
@@ -170,7 +170,7 @@ public class LaneItemProvider
      */
 	@Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Lane")); //$NON-NLS-1$
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Lane"));
     }
 
     /**
@@ -183,8 +183,8 @@ public class LaneItemProvider
     public String getText(Object object) {
         String label = ((Lane)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_Lane_type") : //$NON-NLS-1$
-            getString("_UI_Lane_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
+            getString("_UI_Lane_type") :
+            getString("_UI_Lane_type") + " " + label;
     }
 
     /**

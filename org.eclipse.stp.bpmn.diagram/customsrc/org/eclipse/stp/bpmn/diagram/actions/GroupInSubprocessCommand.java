@@ -488,9 +488,7 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         height -= y;
         // add the height of the border edit part
         // a figure is required to get the mapMode
-        height += MapModeUtil.getMapMode(
-                editParts.iterator().next().getFigure()).
-                LPtoDP(SubProcessEditPart.BORDER_HEIGHT)/2; // border. 
+        height += SubProcessEditPart.BORDER_HEIGHT/2; // border. 
         // insets
         height += SubProcessEditPart.INSETS.getHeight();
         

@@ -25,6 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.common.command.CompoundCommand;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EPackage;
@@ -59,12 +60,14 @@ import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Identifiable;
 import org.eclipse.stp.bpmn.Lane;
+import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
 
 /**
  * Following the advice of the Q&amp;A on GMF wiki.
@@ -160,7 +163,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
      * By default, don't provide any copy override behaviour.
      */
     public boolean shouldOverrideCopyOperation(Collection eObjects, Map hintMap) {
-        return false;
+        return true;
     }
 
     private boolean shouldAllowPaste(
@@ -298,9 +301,12 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
      */
     public OverrideCopyOperation getOverrideCopyOperation(
             CopyOperation overriddenCopyOperation) {
-        return null;
+        if (overriddenCopyOperation instanceof BpmnOverrideCopyOperation) {
+            return (OverrideCopyOperation) overriddenCopyOperation;
+        }
+        return new BpmnOverrideCopyOperation(overriddenCopyOperation);
     }
-
+    
     /**
      * Exclude the connections that source and target are not included in 
      * this set: basically excludes the connections.
@@ -442,17 +448,18 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     								@SuppressWarnings("unchecked") //$NON-NLS-1$
     								@Override
     								protected void doExecute() {
-    									Object source = se.getSource();
+    									Vertex source = se.getSource();
     									List vertices = new ArrayList(
     											vertex.getOutgoingEdges());
     									vertices.remove(se);
     									vertex.eSet(
     											BpmnPackage.eINSTANCE.getVertex_OutgoingEdges(),
     											vertices);
-    									se.eSet(
-    											BpmnPackage.eINSTANCE.getSequenceEdge_Source(),
-    											source);
-
+    									if (!source.getOutgoingEdges().contains(se)) {
+    									    se.eSet(
+    									            BpmnPackage.eINSTANCE.getSequenceEdge_Source(),
+    									            source);
+    									}
     								}});
     				}
     			}
@@ -487,17 +494,18 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     								@SuppressWarnings("unchecked") //$NON-NLS-1$
     								@Override
     								protected void doExecute() {
-    									Object target = se.getTarget();
+    									Vertex target = se.getTarget();
     									List vertices = new ArrayList(
     											vertex.getIncomingEdges());
     									vertices.remove(se);
     									vertex.eSet(
     											BpmnPackage.eINSTANCE.getVertex_IncomingEdges(),
     											vertices);
-    									se.eSet(
-    											BpmnPackage.eINSTANCE.getSequenceEdge_Target(),
-    											target);
-
+    									if (!target.getIncomingEdges().contains(se)) {
+    									    se.eSet(
+    									            BpmnPackage.eINSTANCE.getSequenceEdge_Target(),
+    									            target);
+    									}
     								}});
     				}
     			}
@@ -529,19 +537,6 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 
     	}
 
-    	for (final Object elt : pastedEObjects) {
-    		if (elt instanceof Identifiable) {
-    			command.appendAndExecute(
-    					new RecordingCommand(
-    							domain,BpmnDiagramMessages.BpmnClipboardSupport_createID) {
-
-    						@Override
-    						protected void doExecute() {
-    							((Identifiable)elt).setID(EcoreUtil.generateUUID());
-
-    						}});
-    		}
-    	}
 //  	for (Object co : command.getCommandList()) {
 //  	domain.getCommandStack().execute((Command) co);
 //        }
@@ -575,7 +570,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     								@SuppressWarnings("unchecked") //$NON-NLS-1$
     								@Override
     								protected void doExecute() {
-    									Object source = me.getSource();
+    									MessageVertex source = me.getSource();
     									List messages = new ArrayList(
     											act.getOutgoingMessages());
     									messages.remove(me);
@@ -587,10 +582,11 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 //  									act.eSet(
 //  									BpmnPackage.eINSTANCE.getActivity_OrderedMessages(),
 //  									ordered);
-    									me.eSet(
-    											BpmnPackage.eINSTANCE.getMessagingEdge_Source(),
-    											source);
-
+    									if (!source.getOutgoingMessages().contains(me)) {
+    									    me.eSet(
+    									            BpmnPackage.eINSTANCE.getMessagingEdge_Source(),
+    									            source);
+    									}
     								}});
     				}
     			}
@@ -612,7 +608,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     								@SuppressWarnings("unchecked") //$NON-NLS-1$
     								@Override
     								protected void doExecute() {
-    									Object target = me.getTarget();
+    									MessageVertex target = me.getTarget();
     									List messages = new ArrayList(
     											act.getIncomingMessages());
     									messages.remove(me);
@@ -624,10 +620,11 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 //  									act.eSet(
 //  									BpmnPackage.eINSTANCE.getActivity_OrderedMessages(),
 //  									ordered);
-    									me.eSet(
-    											BpmnPackage.eINSTANCE.getMessagingEdge_Target(),
-    											target);
-
+    									if (!target.getIncomingMessages().contains(target)) {
+    									    me.eSet(
+    									            BpmnPackage.eINSTANCE.getMessagingEdge_Target(),
+    									            target);
+    									}
     								}});
     				}
     			}
@@ -656,12 +653,11 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 
     @Override
     public void setName(EObject eObject, String name) {
-    	return; // do nothing.
-//        if (eObject instanceof Identifiable) {
-//            ((Identifiable)eObject).setID(EcoreUtil.generateUUID());
-//        } else {
-//            super.setName(eObject, name);
-//        }
+        /*if (eObject instanceof Identifiable) {
+            ((Identifiable)eObject).setID(EcoreUtil.generateUUID());
+        } else {
+            super.setName(eObject, name);
+        }*/
     }
 
     static Diagram getContainingDiagram(View view) {
@@ -680,4 +676,58 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
         return parent.getElement();
     }
 
+    private class BpmnOverrideCopyOperation extends OverrideCopyOperation {
+
+        public BpmnOverrideCopyOperation(CopyOperation overriddenCopyOperation) {
+            super(overriddenCopyOperation);
+            Set<View> edges = new HashSet<View>();
+            for (Object obj : getEObjects()) {
+                if (obj instanceof Node) {
+                    for (Object e : ((Node) obj).getSourceEdges()) {
+                        if (isValidEdge((Edge) e)) {
+                            edges.add((View) e);
+                        }
+                    }
+                    for (Object e : ((Node) obj).getTargetEdges()) {
+                        if (isValidEdge((Edge) e)) {
+                            edges.add((View) e);
+                        }
+                    }
+                    TreeIterator<EObject> iterator = ((Node) obj).eAllContents();
+                    while (iterator.hasNext()) {
+                        EObject next = iterator.next();
+                        if (next instanceof Node) {
+                            for (Object e : ((Node) next).getSourceEdges()) {
+                                if (isValidEdge((Edge) e)) {
+                                    edges.add((View) e);
+                                }
+                            }
+                            for (Object e : ((Node) next).getTargetEdges()) {
+                                if (isValidEdge((Edge) e)) {
+                                    edges.add((View) e);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            edges.addAll(getEObjects());
+            getEObjects().clear();
+            getEObjects().addAll(edges);
+        }
+        
+        @Override
+        public String copy() throws Exception {
+            return super.doCopy();
+        }
+        
+        private boolean isValidEdge(Edge edge) {
+            if (String.valueOf(MessagingEdgeEditPart.VISUAL_ID).equals(edge.getType())) {
+                return false;
+            }
+            return true;
+        }
+    }
+    
+    
 }

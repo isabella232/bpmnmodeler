@@ -351,13 +351,22 @@ public interface BpmnPackage extends EPackage {
 	int ACTIVITY__GROUPS = VERTEX_FEATURE_COUNT + 6;
 
     /**
+     * The feature id for the '<em><b>Lanes</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ACTIVITY__LANES = VERTEX_FEATURE_COUNT + 7;
+
+    /**
      * The feature id for the '<em><b>Activity Type</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ACTIVITY__ACTIVITY_TYPE = VERTEX_FEATURE_COUNT + 7;
+    int ACTIVITY__ACTIVITY_TYPE = VERTEX_FEATURE_COUNT + 8;
 
     /**
      * The feature id for the '<em><b>Event Handler For</b></em>' container reference.
@@ -366,16 +375,7 @@ public interface BpmnPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int ACTIVITY__EVENT_HANDLER_FOR = VERTEX_FEATURE_COUNT + 8;
-
-    /**
-     * The feature id for the '<em><b>Lane</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int ACTIVITY__LANE = VERTEX_FEATURE_COUNT + 9;
+    int ACTIVITY__EVENT_HANDLER_FOR = VERTEX_FEATURE_COUNT + 9;
 
     /**
      * The feature id for the '<em><b>Looping</b></em>' attribute.
@@ -1688,6 +1688,15 @@ public interface BpmnPackage extends EPackage {
 	int SUB_PROCESS__GROUPS = ACTIVITY__GROUPS;
 
     /**
+     * The feature id for the '<em><b>Lanes</b></em>' reference list.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SUB_PROCESS__LANES = ACTIVITY__LANES;
+
+    /**
      * The feature id for the '<em><b>Activity Type</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1704,15 +1713,6 @@ public interface BpmnPackage extends EPackage {
      * @ordered
      */
     int SUB_PROCESS__EVENT_HANDLER_FOR = ACTIVITY__EVENT_HANDLER_FOR;
-
-    /**
-     * The feature id for the '<em><b>Lane</b></em>' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int SUB_PROCESS__LANE = ACTIVITY__LANE;
 
     /**
      * The feature id for the '<em><b>Looping</b></em>' attribute.
@@ -1944,6 +1944,17 @@ public interface BpmnPackage extends EPackage {
 	EReference getActivity_Groups();
 
     /**
+     * Returns the meta object for the reference list '{@link org.eclipse.stp.bpmn.Activity#getLanes <em>Lanes</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the reference list '<em>Lanes</em>'.
+     * @see org.eclipse.stp.bpmn.Activity#getLanes()
+     * @see #getActivity()
+     * @generated
+     */
+    EReference getActivity_Lanes();
+
+    /**
      * Returns the meta object for the attribute '{@link org.eclipse.stp.bpmn.Activity#getActivityType <em>Activity Type</em>}'.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1964,17 +1975,6 @@ public interface BpmnPackage extends EPackage {
      * @generated
      */
     EReference getActivity_EventHandlerFor();
-
-    /**
-     * Returns the meta object for the reference '{@link org.eclipse.stp.bpmn.Activity#getLane <em>Lane</em>}'.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @return the meta object for the reference '<em>Lane</em>'.
-     * @see org.eclipse.stp.bpmn.Activity#getLane()
-     * @see #getActivity()
-     * @generated
-     */
-    EReference getActivity_Lane();
 
     /**
      * Returns the meta object for the attribute '{@link org.eclipse.stp.bpmn.Activity#isLooping <em>Looping</em>}'.
@@ -2692,6 +2692,14 @@ public interface BpmnPackage extends EPackage {
 		EReference ACTIVITY__GROUPS = eINSTANCE.getActivity_Groups();
 
         /**
+         * The meta object literal for the '<em><b>Lanes</b></em>' reference list feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EReference ACTIVITY__LANES = eINSTANCE.getActivity_Lanes();
+
+        /**
          * The meta object literal for the '<em><b>Activity Type</b></em>' attribute feature.
          * <!-- begin-user-doc -->
          * <!-- end-user-doc -->
@@ -2706,14 +2714,6 @@ public interface BpmnPackage extends EPackage {
          * @generated
          */
         EReference ACTIVITY__EVENT_HANDLER_FOR = eINSTANCE.getActivity_EventHandlerFor();
-
-        /**
-         * The meta object literal for the '<em><b>Lane</b></em>' reference feature.
-         * <!-- begin-user-doc -->
-         * <!-- end-user-doc -->
-         * @generated
-         */
-        EReference ACTIVITY__LANE = eINSTANCE.getActivity_Lane();
 
         /**
          * The meta object literal for the '<em><b>Looping</b></em>' attribute feature.

@@ -48,7 +48,6 @@
 	  <xsd:attribute name="ncname" type="xsd:string"/>
 	</xsd:complexType>
 		
-		
 <!-- abstract objects that define a graph one graph per pool or sub-process
 also contains artifacts -->	
 	<xsd:complexType name="Graph" ecore:implements="bpmn:ArtifactsContainer">
@@ -140,13 +139,16 @@ also contains artifacts -->
     	<xsd:complexContent>
 	    	<xsd:extension base="bpmn:Vertex">
 	    		<xsd:sequence>
+	    		<!-- the groups reference -->
             		<xsd:element ecore:opposite="groups" ecore:reference="bpmn:Group"
             			 maxOccurs="unbounded" minOccurs="0" name="groups" type="xsd:anyURI"/>
+            			 <!-- the lanes reference -->
+            			 <xsd:element ecore:opposite="activities" ecore:reference="bpmn:Lane"
+	    				 maxOccurs="unbounded" minOccurs="0" name="lanes" type="xsd:anyURI"/>
  	    		</xsd:sequence>
 	    		<!-- the type of activity -->
 	    		<xsd:attribute default="Task" name="activityType" type="bpmn:ActivityType"/>
-	    		<!-- the lane reference (optional) -->
-	    		<xsd:attribute ecore:opposite="activities" ecore:reference="bpmn:Lane" name="lane" type="xsd:anyURI" use="optional"/>
+	    		
 	    		<!-- should it carry the loop decoration?
 	    			Note: we do _not_ define the type of loop here.
 	    			That belongs to the data-editor that is specific to the target language -->

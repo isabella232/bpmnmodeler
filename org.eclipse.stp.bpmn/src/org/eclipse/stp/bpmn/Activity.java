@@ -21,9 +21,9 @@ import org.eclipse.emf.common.util.EList;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#getGroups <em>Groups</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.Activity#getLanes <em>Lanes</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#getActivityType <em>Activity Type</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#getEventHandlerFor <em>Event Handler For</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.Activity#getLane <em>Lane</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#isLooping <em>Looping</em>}</li>
  * </ul>
  * </p>
@@ -51,6 +51,25 @@ public interface Activity extends Vertex, MessageVertex {
      * @generated
      */
 	EList<Group> getGroups();
+
+    /**
+     * Returns the value of the '<em><b>Lanes</b></em>' reference list.
+     * The list contents are of type {@link org.eclipse.stp.bpmn.Lane}.
+     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Lane#getActivities <em>Activities</em>}'.
+     * <!-- begin-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Lanes</em>' reference list isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
+     * @return the value of the '<em>Lanes</em>' reference list.
+     * @see org.eclipse.stp.bpmn.BpmnPackage#getActivity_Lanes()
+     * @see org.eclipse.stp.bpmn.Lane#getActivities
+     * @model opposite="activities"
+     *        extendedMetaData="kind='element' name='lanes'"
+     * @generated
+     */
+    EList<Lane> getLanes();
 
     /**
      * Returns the value of the '<em><b>Activity Type</b></em>' attribute.
@@ -138,35 +157,6 @@ public interface Activity extends Vertex, MessageVertex {
      * @generated
      */
     void setEventHandlerFor(SubProcess value);
-
-    /**
-     * Returns the value of the '<em><b>Lane</b></em>' reference.
-     * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.Lane#getActivities <em>Activities</em>}'.
-     * <!-- begin-user-doc -->
-     * <p>
-     * If the meaning of the '<em>Lane</em>' reference isn't clear,
-     * there really should be more of a description here...
-     * </p>
-     * <!-- end-user-doc -->
-     * @return the value of the '<em>Lane</em>' reference.
-     * @see #setLane(Lane)
-     * @see org.eclipse.stp.bpmn.BpmnPackage#getActivity_Lane()
-     * @see org.eclipse.stp.bpmn.Lane#getActivities
-     * @model opposite="activities"
-     *        extendedMetaData="kind='attribute' name='lane'"
-     * @generated
-     */
-    Lane getLane();
-
-    /**
-     * Sets the value of the '{@link org.eclipse.stp.bpmn.Activity#getLane <em>Lane</em>}' reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @param value the new value of the '<em>Lane</em>' reference.
-     * @see #getLane()
-     * @generated
-     */
-    void setLane(Lane value);
 
     /**
      * Returns the value of the '<em><b>Looping</b></em>' attribute.
