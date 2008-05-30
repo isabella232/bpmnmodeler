@@ -26,9 +26,11 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gef.DragTracker;
+import org.eclipse.gef.EditPartViewer;
 import org.eclipse.gef.GraphicalEditPart;
 import org.eclipse.gef.Handle;
 import org.eclipse.gef.Request;
@@ -41,6 +43,7 @@ import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
@@ -50,6 +53,7 @@ import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.policies.ResizableGroupEditPolicy.SetActivitiesCommand;
@@ -74,6 +78,8 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
         private Lane _lane;
         
         private List<Activity> _activities;
+
+        private CreateViewAndElementRequest _request;
         
         public SetActivitiesCommand(Lane elt, List<Activity> activities) {
             super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
@@ -84,9 +90,29 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
             _activities = activities;
         }
 
+        /**
+         * Constructor for newly created lane.
+         * 
+         * @param request the request which will contain the new activity
+         * @param container the container needed to resolve the editing domain
+         */
+        public SetActivitiesCommand(List<Activity> activities, 
+                CreateViewAndElementRequest request, 
+                EObject container) {
+            super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
+                    getEditingDomainFor(container),
+                    BpmnDiagramMessages.ResizableActivityEditPolicy_groups_command_name, 
+                    getWorkspaceFiles(container));
+            _request = request;
+            _activities = activities;
+        }
         @Override
         protected CommandResult doExecuteWithResult(IProgressMonitor monitor,
                 IAdaptable info) throws ExecutionException {
+            if (_request != null) {
+                _lane = (Lane) _request.getViewAndElementDescriptor().
+                    getCreateElementRequestAdapter().resolve();
+            }
             List<Activity> toRemove = new ArrayList<Activity>();
             List<Activity> activities = new ArrayList<Activity>(_activities);
             for (Activity a : _lane.getActivities()) {
@@ -102,14 +128,23 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
         
     }
     
-    private List<Activity> findContainedActivities(ChangeBoundsRequest request) {
-        Rectangle rect = ((IGraphicalEditPart) getHost()).getFigure().getBounds().getCopy();
-        ((IGraphicalEditPart) getHost()).getFigure().translateToAbsolute(rect);
+    public static List<Activity> findContainedActivities(ChangeBoundsRequest request, LaneEditPart laneEditPart) {
+        Rectangle rect = laneEditPart.getFigure().getBounds().getCopy();
+        laneEditPart.getFigure().translateToAbsolute(rect);
         rect.translate(request.getMoveDelta());
         rect.resize(request.getSizeDelta());
+        return findContainedActivities(rect, laneEditPart);
+    }
+    
+    public static List<Activity> findContainedActivities(Rectangle rect, LaneEditPart laneEditPart) {
+        return findContainedActivities(rect, laneEditPart.getViewer());
+    }
+    
+    public static List<Activity> findContainedActivities(Rectangle rect,
+            EditPartViewer viewer) {
         List<Activity> activities = new ArrayList<Activity>();
-        for (Object fig : getHost().getViewer().getVisualPartMap().keySet()) {
-            Object part = getHost().getViewer().getVisualPartMap().get(fig);
+        for (Object fig : viewer.getVisualPartMap().keySet()) {
+            Object part = viewer.getVisualPartMap().get(fig);
             if (part instanceof ActivityEditPart ||
                     part instanceof Activity2EditPart ||
                     part instanceof SubProcessEditPart) {
@@ -125,7 +160,6 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
         }
         return activities;
     }
-    
     /*
      * (non-Javadoc)
      * 
@@ -177,7 +211,7 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
         req.setLocation(request.getLocation());
         req.setExtendedData(request.getExtendedData());
         req.setResizeDirection(PositionConstants.NORTH_SOUTH);
-        List<Activity> activities = findContainedActivities(request);
+        List<Activity> activities = findContainedActivities(request, (LaneEditPart) getHost());
         CompoundCommand compound = new CompoundCommand();
         SetActivitiesCommand command = new SetActivitiesCommand(
                 (Lane) ((IGraphicalEditPart) getHost()).resolveSemanticElement(), 
@@ -209,13 +243,7 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
         req.setLocation(request.getLocation());
         req.setExtendedData(request.getExtendedData());
         req.setResizeDirection(request.getResizeDirection());
-        
-        List<Activity> activities = findContainedActivities(request);
         CompoundCommand compound = new CompoundCommand();
-        SetActivitiesCommand command = new SetActivitiesCommand(
-                (Lane) ((IGraphicalEditPart) getHost()).resolveSemanticElement(), 
-                activities);
-        compound.add(new ICommandProxy(command));
         compound.add(getHost().getParent().getCommand(req));
         return compound;
     }
@@ -246,4 +274,5 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
             });
         }
     }
+
 }

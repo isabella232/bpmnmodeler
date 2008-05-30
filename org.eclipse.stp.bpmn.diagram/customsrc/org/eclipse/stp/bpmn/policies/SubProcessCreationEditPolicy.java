@@ -19,7 +19,9 @@ import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Group;
+import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy.SetGroupsCommand;
@@ -68,6 +70,33 @@ public class SubProcessCreationEditPolicy extends CreationEditPolicyEx {
             compound.add(super.getCreateElementAndViewCommand(request));
             compound.add(new ICommandProxy(command));
             compound.add(new ICommandProxy(lanesCommand));
+            return compound;
+        } else if (type != null 
+                && BpmnElementTypes.Lane_2007.getId().equals(type.getId())) {
+            Rectangle rect = new Rectangle();
+            rect.setLocation(request.getLocation());
+            if (request.getSize() != null) {
+                rect.setSize(request.getSize());
+            }
+            if (rect.getSize().width == -1 
+                    || rect.getSize().height == -1 
+                    || rect.getSize().width == 0 
+                    || rect.getSize().height == 0) {
+                rect.setSize(BpmnShapesDefaultSizes.getDefaultSize(type));
+                // since that won't work, as the layout disposes the lanes automatically:
+                Pool host = (Pool) ((IGraphicalEditPart) getHost()).resolveSemanticElement();
+                int height = ((IGraphicalEditPart) getHost()).getFigure().getSize().height;
+                rect.height = host.getLanes().size() != 0 ? height/host.getLanes().size() : height;
+            }
+            
+            List<Activity> activities = ResizableLaneEditPolicy.findContainedActivities(
+                    rect, getHost().getViewer());
+            CompoundCommand compound = new CompoundCommand();
+            compound.add(super.getCreateElementAndViewCommand(request));
+            compound.add(new ICommandProxy(new ResizableLaneEditPolicy.SetActivitiesCommand(
+                    activities, 
+                    request, 
+                    ((IGraphicalEditPart) getHost()).resolveSemanticElement())));
             return compound;
         }
         return super.getCreateElementAndViewCommand(request);

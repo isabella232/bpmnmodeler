@@ -59,6 +59,8 @@ import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.notation.Location;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
+import org.eclipse.stp.bpmn.Activity;
+import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
@@ -73,6 +75,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
+import org.eclipse.stp.bpmn.policies.ResizableLaneEditPolicy.SetActivitiesCommand;
 
 
 /**
@@ -589,6 +592,12 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
                 Command c = createChangeConstraintCommand(pep, rect);
                 cc.add(c);
             }
+            List<Activity> activities = ResizableLaneEditPolicy.findContainedActivities(rect, 
+                    (LaneEditPart) pep);
+            SetActivitiesCommand command = new SetActivitiesCommand(
+                    (Lane) pep.resolveSemanticElement(), 
+                    activities);
+            cc.add(new ICommandProxy(command));
         }
     }
 
