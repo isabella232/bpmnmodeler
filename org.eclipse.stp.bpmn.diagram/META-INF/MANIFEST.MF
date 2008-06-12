@@ -34,7 +34,7 @@ Export-Package: org.eclipse.draw2d,
  org.eclipse.stp.bpmn.tools,
  org.eclipse.stp.gmf.runtime.draw2d.ui.figures,
  org.eclipse.stp.gmf.runtime.draw2d.ui.text
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: com.ibm.icu,
  org.eclipse.core.resources,

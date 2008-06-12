@@ -4,7 +4,7 @@ Bundle-Name: %PluginName
 Bundle-SymbolicName: org.eclipse.stp.bpmn.validation;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.eclipse.stp.bpmn.validation.BpmnValidationPlugin
-Eclipse-LazyStart: true
+Bundle-ActivationPolicy: lazy
 Export-Package: org.eclipse.stp.bpmn.validation
 Require-Bundle: org.eclipse.core.resources,
  org.eclipse.core.runtime,
