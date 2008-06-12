@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.eclipse.stp.bpmn.feature"
-      label="BPMN Project Feature (Incubation)"
+      label="BPMN Project Feature"
       version="1.0.0.qualifier"
       provider-name="eclipse.org">
 

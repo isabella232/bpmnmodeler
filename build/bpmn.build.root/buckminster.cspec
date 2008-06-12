@@ -30,7 +30,7 @@
                 <cs:property key="targets" value="create.complex.site"/>
             </cs:actorProperties>
             <cs:properties>
-                <cs:property key="site.extra.suffix" value="_incubation"/>
+                <!-- cs:property key="site.extra.suffix" value="_incubation" -->
                 <cs:property key="site.name" value="stp.archivedsite"/>
             </cs:properties>
             <cs:prerequisites>
