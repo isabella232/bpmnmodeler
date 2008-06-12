@@ -1,0 +1,13 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Eclipsecon2007 Plug-in
+Bundle-SymbolicName: org.eclipse.stp.bpmn.sample.participantView;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.stp.bpmn.sample.participantView.ParticipantViewPlugin
+Bundle-Localization: plugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.ui.views.properties.tabbed,
+ org.eclipse.stp.bpmn,
+ org.eclipse.stp.bpmn.diagram
+Eclipse-LazyStart: false
