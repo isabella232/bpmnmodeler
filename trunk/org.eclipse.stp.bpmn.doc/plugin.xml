@@ -1,9 +1,0 @@
-<plugin
-   id="org.eclipse.stp.bpmn.doc"
-   name="BPMN Help"
-   version="0.4.0"
-   provider-name="eclipse.org">
-	<extension point="org.eclipse.help.toc">
-		<toc primary="false" file="toc.xml"/>
-	</extension>
-</plugin>
