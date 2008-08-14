@@ -1,6 +1,6 @@
 #file needed for Babel. It should point to the source of each plugin.
-plugin@org.eclipse.stp.bpmn=SVN,trunk,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/trunk/org.eclipse.stp.bpmn
-plugin@org.eclipse.stp.bpmn.diagram=SVN,trunk,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/trunk/org.eclipse.stp.bpmn.diagram
-plugin@org.eclipse.stp.bpmn.doc=SVN,trunk,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/trunk/org.eclipse.stp.bpmn.doc
-plugin@org.eclipse.stp.bpmn.edit=SVN,trunk,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/trunk/org.eclipse.stp.bpmn.edit
-plugin@org.eclipse.stp.bpmn.validation=SVN,trunk,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/trunk/org.eclipse.stp.bpmn.validation
+plugin@org.eclipse.stp.bpmn=SVN,3.4RC4,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/tags/3.4RC4/org.eclipse.stp.bpmn
+plugin@org.eclipse.stp.bpmn.diagram=SVN,3.4RC4,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/tags/3.4RC4/org.eclipse.stp.bpmn.diagram
+plugin@org.eclipse.stp.bpmn.doc=SVN,3.4RC4,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/tags/3.4RC4/org.eclipse.stp.bpmn.doc
+plugin@org.eclipse.stp.bpmn.edit=SVN,3.4RC4,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/tags/3.4RC4/org.eclipse.stp.bpmn.edit
+plugin@org.eclipse.stp.bpmn.validation=SVN,3.4RC4,http://dev.eclipse.org/svnroot/stp,,org.eclipse.stp.bpmn/tags/3.4RC4/org.eclipse.stp.bpmn.validation
