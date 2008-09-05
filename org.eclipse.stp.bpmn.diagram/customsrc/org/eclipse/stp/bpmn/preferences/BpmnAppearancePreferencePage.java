@@ -16,13 +16,9 @@ import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.jface.preference.ColorFieldEditor;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.preference.PreferenceConverter;
-import org.eclipse.jface.resource.JFaceResources;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.graphics.Font;
-import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.widgets.Composite;
 
 /**
@@ -55,6 +51,17 @@ public class BpmnAppearancePreferencePage extends AppearancePreferencePage {
     public static String PREF_GATEWAY_DEFAULT_FILL_COLOR =
         BpmnDiagramPreferenceInitializer.PREF_GATEWAY_DEFAULT_FILL_COLOR;
     
+    /**
+     * The system property name to override the name of the default font for diagrams.
+     */
+    public static String VM_ARG_DEFAULT_FONT_NAME =
+        BpmnDiagramPreferenceInitializer.VM_ARG_DEFAULT_FONT_NAME;
+    /**
+     * The system property name to override the name of the default font for diagrams.
+     */
+    public static String vM_ARG_DEFAULT_FONT_SIZE =
+        BpmnDiagramPreferenceInitializer.VM_ARG_DEFAULT_FONT_NAME;
+    
     public BpmnAppearancePreferencePage() {
         super();
         setPreferenceStore(BpmnDiagramEditorPlugin.getInstance().getPreferenceStore());
@@ -76,20 +83,16 @@ public class BpmnAppearancePreferencePage extends AppearancePreferencePage {
     
     
     /**
-     * Hack: hardocde the default font to Arial.
-     * TODO: use the correct way (symbolic name, font regsitry)
+     * Hack: hardcode the default font.
+     * Weird that this is not taken care of the BpmnDigramPrefereneInitializer ?
+     * Oh well leave it here until we find out.
      * @param store
      */
     private void internalSetDefaultFontPref(IPreferenceStore store) {
-        Font f = new Font(JFaceResources.getDefaultFont().getDevice(), "Arial", 9, SWT.NONE); //$NON-NLS-1$
-        FontData[] fontDataArray = f != null ? 
-                f.getFontData() : JFaceResources.getDefaultFont().getFontData();
-        FontData fontData = fontDataArray[0];
-        fontData.setHeight(9);
         PreferenceConverter.setDefault(
             store,
             IPreferenceConstants.PREF_DEFAULT_FONT,
-            fontData);      
+            BpmnDiagramPreferenceInitializer.getDefaultFont());      
     }
     
     /**

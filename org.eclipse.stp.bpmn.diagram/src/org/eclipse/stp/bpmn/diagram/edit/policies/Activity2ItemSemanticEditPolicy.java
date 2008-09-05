@@ -22,6 +22,7 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
@@ -170,6 +171,12 @@ public class Activity2ItemSemanticEditPolicy extends
             return UnexecutableCommand.INSTANCE;
         }
         
+        Activity srcActivity = (Activity)req.getSource();
+        if (srcActivity.getEventHandlerFor() != null) {
+            //on the sub-process border it cannot be sending the message.
+            return UnexecutableCommand.INSTANCE;
+        }
+        
         return getMSLWrapper(new CreateIncomingMessagingEdge3002Command(req) {
 
             /**
@@ -229,15 +236,12 @@ public class Activity2ItemSemanticEditPolicy extends
          */
         @Override
         public boolean canExecute() {
-            if ((!(getSource() instanceof Activity))|| 
-                    !(getTarget() instanceof Activity)) {
+            if (!(getSource() instanceof Activity && getTarget() instanceof Activity)) {
                 return false;
                 // the message is created at the same time as the activity is created.
             }
-            Activity source = getSource() instanceof Activity ?
-                    (Activity) getSource() : null;
-            Activity target = getTarget() instanceof Activity ?
-                    (Activity) getTarget() : null;
+            Activity source = (Activity) getSource();
+            Activity target = (Activity) getTarget();
                     
             /*
              * Message Flow Rules
@@ -245,7 +249,6 @@ public class Activity2ItemSemanticEditPolicy extends
             if (source.equals(target)) {
                 return false;
             }
-
             EList tInMessages = target == null ? ECollections.EMPTY_ELIST :
                     target.getIncomingMessages();
             EList tOutMessages = target == null ? ECollections.EMPTY_ELIST :
@@ -417,11 +420,18 @@ public class Activity2ItemSemanticEditPolicy extends
                 case ActivityType.TASK:
                     break;
                     
-                //we are being a little lax with the bpmn spec:
-                //if the message event shape receive a request, we
-                //allow the message response to answer from the same
-                //shape.
                 case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
+                    //an intermediate message event as an event handler
+                    //(on the sub-process border) cannot send a message:
+                    //this does not make a difference.
+//                    if (source.getEventHandlerFor() != null) {
+//                        return false;
+//                    }
+                    
+                    //we are being a little lax with the bpmn spec:
+                    //if the message event shape receive a request, we
+                    //allow the message response to answer from the same
+                    //shape.
                 case ActivityType.EVENT_START_MESSAGE:
                     if (!source.getOrderedMessages().isEmpty()) {
                         FeatureMap.Entry fentry = (FeatureMap.Entry) source.

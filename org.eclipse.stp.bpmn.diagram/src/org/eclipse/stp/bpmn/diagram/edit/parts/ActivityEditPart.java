@@ -49,7 +49,6 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.OneLineBorder;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
-import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Edge;
@@ -187,8 +186,7 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
                 new BpmnDragDropEditPolicy(this));
         // adding an open edit policy
-        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
-        		new OpenFileEditPolicy());
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
     }
     
     /**
@@ -197,6 +195,14 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      */
     protected DiagramAssistantEditPolicy createConnectionHandlerEditPolicy() {
         return new ConnectionHandleEditPolicyEx();
+    }
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
     }
 
     /**
@@ -1128,5 +1134,26 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         List<Edge> res = getTargetSequenceEdges(source, true);
         return res.indexOf(thisEdge);
     }
+////TESTING
+//    public Command getCommand(Request request) {
+//        Command command = null;
+//        EditPolicyIterator i = getEditPolicyIterator();
+//        while (i.hasNext()) {
+//            EditPolicy ep = i.next();
+//            Command nextCommand = ep.getCommand(request);
+//            if (nextCommand == null) {
+//                continue;
+//            }
+//            if (!nextCommand.canExecute()) {
+//                System.err.println("Edit Policy " + ep + " returned a non exec command on " + this.resolveSemanticElement());
+//            }
+//            if (command != null)
+//                command = command.chain(nextCommand);
+//            else
+//                command = nextCommand;
+//        }
+//        return command;
+//    }
+    
     
 }

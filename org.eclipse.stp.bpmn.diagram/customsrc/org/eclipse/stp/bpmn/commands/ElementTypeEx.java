@@ -38,7 +38,7 @@ public class ElementTypeEx extends ElementType implements IElementTypeEx,
      * Factory method makes sure all the interfaces implemented are returned
      * 
      * @param elem
-     * @param secondarySemanticHint
+     * @param secondarySemanticHint The activityType.getLiteral().getLiteral()
      * @return
      */
     public static IElementTypeEx wrap(IElementType elem,

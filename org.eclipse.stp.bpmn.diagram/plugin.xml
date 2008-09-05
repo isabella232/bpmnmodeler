@@ -15,6 +15,8 @@
    <extension-point id="EAnnotationDecorator" name="EAnnotationDecorator" schema="schema/EAnnotationDecorator.exsd"/>
    <extension-point id="DecorationFilter" name="DecorationFilter" schema="schema/DecorationFilter.exsd"/>
    <extension-point id="SecondarySemanticHintProcessor" name="SecondarySemanticHintProcessor" schema="schema/SecondarySemanticHintProcessor.exsd"/>
+   <extension-point id="BpmnDiagramEditorContextMenuContributor" name="BpmnDiagramEditorContextMenuContributor" schema="schema/BpmnDiagramEditorContextMenuContributor.exsd"/>
+   <extension-point id="FileDnDHandlers" name="FileDnDHandlers" schema="schema/FileDnDHandlers.exsd"/>
 
    <extension point="org.eclipse.core.runtime.preferences">
       <initializer class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer"/>
@@ -97,6 +99,11 @@
                class="org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor">
             <partAction menubarPath="/file/print" id="printPreviewAction">
             </partAction>
+            <partAction global="true" id="print">
+            </partAction>
+<!-- don't add this: it makes a second entry in the menu
+ <partAction menubarPath="/file/print" id="print">
+            </partAction-->
          </partContribution>
       </contributionItemProvider>
       <contributionItemProvider
@@ -530,6 +537,7 @@
       <MarkerNavigationProvider class="org.eclipse.stp.bpmn.diagram.providers.BpmnMarkerNavigationProvider">
          <MarkerType name="org.eclipse.stp.bpmn.diagram.diagnostic"/>
          <MarkerType name="org.eclipse.stp.bpmn.diagram.taskmarker"/>
+         <MarkerType name="org.eclipse.stp.bpmn.validation.diagnostic"/>
          <Priority name="Lowest"/>
       </MarkerNavigationProvider>
    </extension>
@@ -941,6 +949,10 @@
                   path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
             </popupAction>
             <popupAction
+                  id="setActivityTypeToEventIntermediateCancel"
+                  path="/ActivityTypes/ActivityTypes_IntermediateEvents/group0">
+            </popupAction>
+            <popupAction
                   id="setActivityTypeToEventEndEmpty"
                   path="/ActivityTypes/ActivityTypes_EndEvents/group0">
             </popupAction>
@@ -966,6 +978,10 @@
             </popupAction>
             <popupAction
                   id="setActivityTypeToEventEndTerminate"
+                  path="/ActivityTypes/ActivityTypes_EndEvents/group0">
+            </popupAction>
+            <popupAction
+                  id="setActivityTypeToEventEndCancel"
                   path="/ActivityTypes/ActivityTypes_EndEvents/group0">
             </popupAction>
             
@@ -1065,6 +1081,17 @@
                  objectCount="1">
            </popupStructuredContributionCriteria>
         </popupContribution>
+<!--        <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupAction
+                 id="Quickfixes"
+                 path="/Quickfixes">
+           </popupAction>
+           <popupStructuredContributionCriteria
+                 objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart"
+                 objectCount="1">
+           </popupStructuredContributionCriteria>
+        </popupContribution> -->
         <popupContribution
               class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
            <popupMenu

@@ -10,10 +10,13 @@
  */
 package org.eclipse.stp.bpmn.diagram.part;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.GraphicalViewer;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.SnapToGeometry;
 import org.eclipse.gef.ui.palette.PaletteViewerProvider;
@@ -22,10 +25,15 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.document.StorageDiagramDocumentProvider;
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.editor.FileDiagramEditor;
+import org.eclipse.jface.action.IMenuListener;
+import org.eclipse.jface.action.IMenuManager;
 import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnEditPartFactory;
+import org.eclipse.stp.bpmn.diagram.providers.BpmnMarkerNavigationProvider;
+import org.eclipse.stp.bpmn.diagram.providers.QuickfixResolutionMenuManager;
 import org.eclipse.stp.bpmn.dnd.BpmnDropTargetListener;
+import org.eclipse.stp.bpmn.menu.internal.ProxiedBpmnDiagramContextMenuListener;
 import org.eclipse.stp.bpmn.palette.BpmnPaletteViewer;
 import org.eclipse.stp.bpmn.provider.ActivityItemProvider;
 import org.eclipse.ui.IEditorInput;
@@ -99,6 +107,12 @@ public class BpmnDiagramEditor extends FileDiagramEditor implements IGotoMarker 
      */
     protected void configureGraphicalViewer() {
         super.configureGraphicalViewer();
+        getGraphicalViewer().getContextMenu().addMenuListener(
+                new QuickfixResolutionMenuManager(getGraphicalViewer()));
+        
+        getGraphicalViewer().getContextMenu().addMenuListener(
+                new BpmnContextMenuProvider());
+        
         DiagramRootEditPart root = (DiagramRootEditPart) getDiagramGraphicalViewer()
                                         .getRootEditPart();
         
@@ -110,7 +124,7 @@ public class BpmnDiagramEditor extends FileDiagramEditor implements IGotoMarker 
         getGraphicalViewer().addDropTargetListener(
         		new BpmnDropTargetListener(getGraphicalViewer()));
     }
-    
+        
     /**
      * Creates a diagram edit domain cutomized with the default selection tool.
      */
@@ -208,5 +222,50 @@ public class BpmnDiagramEditor extends FileDiagramEditor implements IGotoMarker 
         return BpmnPaletteViewer.getBpmnPaletteViewerProvider(getEditDomain());
     }
     
+    /**
+     * Override to make it public.
+     * Returns the graphical viewer.
+     * @return the graphical viewer
+     */
+    @Override
+    public GraphicalViewer getGraphicalViewer() {
+        return super.getGraphicalViewer();
+    }
+    
+    /**
+     * Navigates to the given bpmn shape defined either by its view id either by
+     * it bpmn id.
+     * @param gmfElementId
+     * @param bpmnId
+     * @return true if the shape was located false otherwise.
+     */
+    public boolean navigateTo(String gmfElementId, String bpmnId) {
+        return BpmnMarkerNavigationProvider.navigateTo(this, gmfElementId, bpmnId);
+    }
+
+    
+    
+    /**
+     * Calls the IBpmnDiagramContextMenuListener extensions declared in other plugins.
+     */
+    private class BpmnContextMenuProvider implements IMenuListener {
+        /**
+         * Notifies this listener that the menu is about to be shown by
+         * the given menu manager.
+         *
+         * @param manager the menu manager
+         */
+        public void menuAboutToShow(IMenuManager menuManager) {
+            List<ProxiedBpmnDiagramContextMenuListener> menuListeners =
+                BpmnDiagramEditorPlugin.getInstance().getContextMenuListeners(
+                    BpmnDiagramEditor.this.getEditorSite().getId());
+            if (menuListeners == null) {
+                return;//nothing for this editor.
+            }
+            for (ProxiedBpmnDiagramContextMenuListener listener : menuListeners) {
+                listener.menuAboutToShow(menuManager, BpmnDiagramEditor.this);
+            }
+        }
+    }
     
 }

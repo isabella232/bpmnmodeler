@@ -33,6 +33,7 @@ import org.eclipse.gef.editparts.AbstractConnectionEditPart;
 import org.eclipse.gef.handles.HandleBounds;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DecorationEditPolicy.DecoratorTarget;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
@@ -50,6 +51,8 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator;
+import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator2;
+import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator2.IEAnnotationDecoratorData;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.PlatformUI;
 
@@ -265,86 +268,103 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 							isSourceFiltered(ann.getSource())) {
 						continue;
 					}
-					IEAnnotationDecorator decorator = BpmnDiagramEditorPlugin.
+					Object decorator = BpmnDiagramEditorPlugin.
 						getInstance().getEAnnotationDecorator(ann.getSource());
 					// there might be no decorator for the annotation
 					if (decorator != null) {
+					    if (decorator instanceof IEAnnotationDecorator) {
+					        ImageDescriptor descriptor = ((IEAnnotationDecorator) decorator)
+                                .getImageDescriptor(editPart, elt, ann);
+					        Direction direction = 
+                                ((IEAnnotationDecorator) decorator).getDirection(editPart, elt, ann);
+					        IFigure tooltip = ((IEAnnotationDecorator) decorator).getToolTip(editPart, elt, ann);
+					        decorate(descriptor, tooltip, direction, editPart, elt, ann, view);
+					    } else if (decorator instanceof IEAnnotationDecorator2) {
+					        for (IEAnnotationDecoratorData data : 
+					            ((IEAnnotationDecorator2) decorator).getDecorators(editPart, elt, ann)) {
+					            ImageDescriptor descriptor = data.getImageDescriptor();
+					            Direction direction = data.getDirection();
+					            IFigure tooltip = data.getToolTip();
+					            decorate(descriptor, tooltip, direction, editPart, elt, ann, view);
+					        }
+					    }
 						if (editPart instanceof GraphicalEditPart) {
-							ImageDescriptor descriptor = decorator
-								.getImageDescriptor(editPart, elt, ann);
-							// there might be no descriptor for the decoration as well.
-							if (descriptor != null) {
-								Image image = images.get(descriptor);
-								if (image == null) {
-									image = descriptor.createImage();
-									images.put(descriptor, image);
-								}
-								IFigure parentFigure = ((GraphicalEditPart)
-										decoratorTarget.
-										getAdapter(GraphicalEditPart.class))
-										.getFigure();
-								if (parentFigure == null) {
-									parentFigure = ((GraphicalEditPart)
-                                       ((GraphicalEditPart)decoratorTarget
-											.getAdapter(GraphicalEditPart.class))
-											.getRoot()).getFigure();
-								}
-								
-								if (view instanceof Edge) {
-									ImageFigureEx figure = new ImageFigureEx();
-									figure.setImage(image);
-									parentFigure.add(figure);
-									figure.setSize(image.getBounds().width,
-											image.getBounds().height);
-									currentDecoration = (IFigure) decoratorTarget.
-									addConnectionDecoration(figure, 
-											55 + 7 * elt.getEAnnotations().indexOf(ann), 
-											false);
-									decorations.put((IDecoration) currentDecoration, 
-											Direction.CENTER);
-								} else {
-								    
-									ImageFigureEx figure = new ImageFigureEx(image);
-									parentFigure.add(figure);
-									figure.setSize(image.getBounds().width,
-											image.getBounds().height);
-									Direction direction = 
-										decorator.getDirection(editPart,elt,ann);
-									IDecoration deco = decoratorTarget
-									    .addDecoration(figure,
-											new StickyToBorderLocator(
-													parentFigure,
-													getPositionConstant(direction),
-															getOffset(direction)),
-															false);
-//									IDecoration deco = decoratorTarget.
-//									addShapeDecoration(image, Direction.NORTH_EAST, 
-//											-1, true);
-									// TODO add better support for multiple icons
-									// anything better here is welcome
-									// since for now the icons 
-									// are displayed oriented to the center.
-
-									currentDecoration = (IFigure) 
-										(deco instanceof IFigure ? deco : null);
-									
-									decorations.put((IDecoration) currentDecoration, 
-											Direction.NORTH_EAST);
-								}
-
-								if (currentDecoration != null) {
-									// callback to add a tooltip on the figure
-									currentDecoration.
-									setToolTip(decorator.
-											getToolTip(editPart, elt, ann));
-								}
-							}
+							
 						}
 					}
 				}
 			}
 		}
 
+		private void decorate(ImageDescriptor descriptor, IFigure tooltip, 
+		        Direction direction, EditPart editPart, EModelElement elt, 
+		        EAnnotation ann, View view) {
+	        // there might be no descriptor for the decoration as well.
+	        if (descriptor != null) {
+	            Image image = images.get(descriptor);
+	            if (image == null) {
+	                image = descriptor.createImage();
+	                images.put(descriptor, image);
+	            }
+	            IFigure parentFigure = ((GraphicalEditPart)
+	                    decoratorTarget.
+	                    getAdapter(GraphicalEditPart.class))
+	                    .getFigure();
+	            if (parentFigure == null) {
+	                parentFigure = ((GraphicalEditPart)
+	                        ((GraphicalEditPart)decoratorTarget
+	                                .getAdapter(GraphicalEditPart.class))
+	                                .getRoot()).getFigure();
+	            }
+
+	            if (view instanceof Edge) {
+	                ImageFigureEx figure = new ImageFigureEx();
+	                figure.setImage(image);
+	                parentFigure.add(figure);
+	                figure.setSize(image.getBounds().width,
+	                        image.getBounds().height);
+	                currentDecoration = (IFigure) decoratorTarget.
+	                addConnectionDecoration(figure, 
+	                        55 + 7 * elt.getEAnnotations().indexOf(ann), 
+	                        false);
+	                decorations.put((IDecoration) currentDecoration, 
+	                        Direction.CENTER);
+	            } else {
+
+	                ImageFigureEx figure = new ImageFigureEx(image);
+	                parentFigure.add(figure);
+	                figure.setSize(image.getBounds().width,
+	                        image.getBounds().height);
+	                IDecoration deco = decoratorTarget
+	                .addDecoration(figure,
+	                        new StickyToBorderLocator(
+	                                parentFigure,
+	                                getPositionConstant(direction),
+	                                getOffset(direction)),
+	                                false);
+//	              IDecoration deco = decoratorTarget.
+//	              addShapeDecoration(image, Direction.NORTH_EAST, 
+//	              -1, true);
+	                // TODO add better support for multiple icons
+	                // anything better here is welcome
+	                // since for now the icons 
+	                // are displayed oriented to the center.
+
+	                currentDecoration = (IFigure) 
+	                (deco instanceof IFigure ? deco : null);
+
+	                decorations.put((IDecoration) currentDecoration, 
+	                        Direction.NORTH_EAST);
+	            }
+
+	            if (currentDecoration != null) {
+	                // callback to add a tooltip on the figure
+	                currentDecoration.
+	                setToolTip(tooltip);
+	            }
+	        }
+	    }
+		
 		private int getOffset(Direction dir) {
 			int i = 0;
 			for (IDecoration deco : decorations.keySet()) {
@@ -576,5 +596,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 			}
 		}
 	}
+	
+	
 	
 }

@@ -421,6 +421,8 @@ public class BpmnDiagramMessages extends NLS {
     public static String BpmnReorientRelationshipCommand_command_name;
 
     public static String BpmnValidationProvider_action_label;
+    
+    public static String BpmnValidationDecoratorProvider_has_quickfix_suffix;
 
     public static String BPMNVisual2ProcessGenerator_activity_cannot_create_view;
 
@@ -605,6 +607,8 @@ public class BpmnDiagramMessages extends NLS {
     public static String FileDnDHandler_text;
     
     public static String ActivityTypesManager_menuTitle;
+
+    public static String QuickfixResolutionMenuManager_menuTitle;
 
     public static String ChangeActivityTypeAction_settingActivityTypeCommand;
 

@@ -25,6 +25,7 @@ import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.LayoutAnimator;
+import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -79,6 +80,7 @@ import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 import org.eclipse.stp.bpmn.figures.GroupFigure;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ContainerNodeEditPolicyEx;
+import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.PopupBarEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.ResizableCompartmentEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.SubProcessCreationEditPolicy;
@@ -197,7 +199,8 @@ public class SubProcessSubProcessBodyCompartmentEditPart extends
 //        NotScrollableShapeCompartmentFigure result = 
 //            new NotScrollableShapeCompartmentFigure(getCompartmentNameGen(), getMapMode(), false); 
         scf.getContentPane().setLayoutManager(getLayoutManager()); 
-        scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault()); 
+        scf.getContentPane().addLayoutListener(LayoutAnimator.getDefault());
+        scf.getScrollPane().setScrollBarVisibility(ScrollPane.NEVER);
         scf.setTitleVisibility(false); 
         scf.setBorder(null); 
         return scf; 
@@ -245,7 +248,18 @@ public class SubProcessSubProcessBodyCompartmentEditPart extends
                 new ContainerNodeEditPolicyEx()); 
         installEditPolicy(EditPolicy.LAYOUT_ROLE,  
                 new SubProcessSubProcessCompartmentXYLayoutEditPolicy()); 
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
+
     } 
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
  
     /** 
      * @generated 
@@ -395,9 +409,11 @@ public class SubProcessSubProcessBodyCompartmentEditPart extends
                     isCollapsed, isArrangeSiblings); 
 //            if (!isCollapsed) { 
                 // subProcessEditPart.setChildAdded(true); 
+            ((ShapeCompartmentFigure) this.getFigure())
+                .getScrollPane().setScrollBarVisibility(ScrollPane.NEVER);
                 subProcessEditPart.refresh(); 
 //            } 
-        } 
+        }
     } 
  
     /** 

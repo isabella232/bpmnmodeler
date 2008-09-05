@@ -11,6 +11,8 @@
  */
 package org.eclipse.stp.bpmn.validation.file;
 
+import java.util.List;
+
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IStatus;
@@ -22,7 +24,10 @@ import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
 import org.eclipse.stp.bpmn.BpmnDiagram;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin;
+import org.eclipse.stp.bpmn.validation.IConstraintStatusEx;
 import org.eclipse.stp.bpmn.validation.builder.BatchValidationBuilder;
+import org.eclipse.stp.bpmn.validation.quickfixes.IBpmnFileExistenceConstraintCustomizer;
+import org.eclipse.stp.bpmn.validation.quickfixes.internal.FileExistenceCustomizerHelper;
 
 /**
  * This class checks that files associated with shapes are existing.
@@ -43,7 +48,7 @@ public class FileExistenceConstraint extends AbstractModelConstraint {
 			EModelElement elt = (EModelElement) ctx.getTarget();
             if (elt instanceof BpmnDiagram) {
                 //remove the imports registered on this diagram as they will be put back.
-                //this enables removing the imports fi they were removed.
+                //this enables removing the imports if they were removed.
                 if (elt.eResource() != null) {
                     IFile file = WorkspaceSynchronizer.getFile(elt.eResource());
                     BpmnValidationPlugin.getResourceImportersRegistry(file.getProject(),
@@ -54,10 +59,12 @@ public class FileExistenceConstraint extends AbstractModelConstraint {
             
 			if (elt != null && elt.eResource() != null && elt.getEAnnotation(
 //					FileDnDConstants.ANNOTATION_SOURCE
-					// using the hard coded value not to import diagram
+// using the hard coded value to avoid depending on the bpmn.diagram plugin.
 					"genericFile") != null) { //$NON-NLS-1$
 				EAnnotation ea = elt.getEAnnotation("genericFile"); //$NON-NLS-1$
-				String str = (String) ea.getDetails().get(/*FileDnDConstants.PROJECT_RELATIVE_PATH*/
+				String str = (String) ea.getDetails().get(
+				        /*FileDnDConstants.PROJECT_RELATIVE_PATH*/
+// using the hard coded value to avoid depending on the bpmn.diagram plugin.
 						"projectRelativePath"); //$NON-NLS-1$
 				IFile file = WorkspaceSynchronizer.getFile(elt.eResource());
                 if (file != null) {
@@ -74,13 +81,45 @@ public class FileExistenceConstraint extends AbstractModelConstraint {
                             monitor).addImport(file, targetFile);
                     
 					if (targetFile == null || !targetFile.exists()) {
-						return ctx.createFailureStatus(new String[] 
+						IStatus st = ctx.createFailureStatus(new String[] 
 						        {targetFile.getProjectRelativePath().toString()});
+						if (targetFile != null) {//setup the bpmn quickfixes
+    						IConstraintStatusEx consSt = BpmnValidationPlugin.asConstraintStatusEx(st,
+    						        FileExistenceContraintQuickfixProvider.ID);
+    						if (consSt != null) {
+    						    //see the file existence customizers:
+    						    boolean setupTheStandardQuikcfix = true;
+    						    List<IBpmnFileExistenceConstraintCustomizer> custs =
+    						        FileExistenceCustomizerHelper.getFileExistenceCustomizers();
+    						    if (custs != null) {
+    						        for (IBpmnFileExistenceConstraintCustomizer cu : custs) {
+    						            if (cu.validates(elt, targetFile, consSt)) {
+    						                setupTheStandardQuikcfix = false;
+    						                break;
+    						            }
+    						        }
+    						    }
+    						    
+    						    if (setupTheStandardQuikcfix) {
+        						    //add the attributes for the marker
+        						    //so that the marker can be matched to a resolution marker.
+        						    consSt.addMarkerAttribute(
+        						        FileExistenceContraintQuickfixProvider.MISSING_FILE_PROJ_RELATIVE_PATH_ATTRIBUTE,
+        						        targetFile.getProjectRelativePath().toString());
+    						    }
+    						    return consSt;
+    						}
+						}
+						return st;
 					}
 				}
 			}
 		}
 		return ctx.createSuccessStatus();
 	}
+	
+
+	
+	
 
 }

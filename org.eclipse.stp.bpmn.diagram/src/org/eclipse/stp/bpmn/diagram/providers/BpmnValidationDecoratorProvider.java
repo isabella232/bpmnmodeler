@@ -33,10 +33,10 @@ import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.common.ui.resources.FileChangeManager;
 import org.eclipse.gmf.runtime.common.ui.resources.IFileObserver;
+import org.eclipse.gmf.runtime.common.ui.util.OverlayImageDescriptor;
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditDomain;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.AbstractDecorator;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.CreateDecoratorsOperation;
@@ -48,7 +48,10 @@ import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.resource.ImageRegistry;
 import org.eclipse.stp.bpmn.Identifiable;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
@@ -57,10 +60,11 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
-import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Shell;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
+import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IDE.SharedImages;
 
 /** 
@@ -77,12 +81,64 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
     /**
      * @generated NOT
      */
-    private static final String MARKER_TYPE =
+    public static final String MARKER_TYPE =
         "org.eclipse.stp.bpmn.validation.diagnostic"; //$NON-NLS-1$ //$NON-NLS-2$
 
-    private static final String BPMN_ID = "bpmnId"; //$NON-NLS-1$
-    private static final String ELEMENT_ID =
+    public static final String BPMN_ID = "bpmnId"; //$NON-NLS-1$
+    public static final String ELEMENT_ID =
         org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID;
+    
+    
+    /**
+     * @generated NOT
+     */
+    public static Image getProblemImage(IMarker marker, boolean addQuickfixDecoEventually) {
+        int severity = marker.getAttribute(IMarker.SEVERITY, IMarker.SEVERITY_INFO);
+        if (addQuickfixDecoEventually && IDE.getMarkerHelpRegistry().hasResolutions(marker)) {
+            return getProblemImage(severity, true);
+        } else {
+            return getProblemImage(severity, false);
+        }
+    }
+
+    /**
+     * @generated NOT
+     */
+    public static Image getProblemImage(int severity, boolean hasQuickFix) {
+        //String imageName = ISharedImages.IMG_OBJS_ERROR_TSK;
+        Image image = null;
+        switch (severity) {
+        case IMarker.SEVERITY_ERROR:
+            image = BpmnDiagramEditorPlugin.getInstance().
+               getBundledImage("icons/obj16/error.png"); //$NON-NLS-1$
+            break;
+        case IMarker.SEVERITY_WARNING:
+            image = PlatformUI.getWorkbench().getSharedImages().getImage(
+                    ISharedImages.IMG_OBJS_WARN_TSK);
+            break;
+        default:
+            image = PlatformUI.getWorkbench().getSharedImages().getImage(
+                    ISharedImages.IMG_OBJS_INFO_TSK);
+        }
+        if (hasQuickFix) {
+            ImageRegistry reg = BpmnDiagramEditorPlugin.getInstance().getImageRegistry();
+            String key = severity + "/quickfix";
+            if (reg.getDescriptor(key) == null) {
+                //put the image descriptor in an image resgitry so that we don't keep
+                //creating the same image all the time.
+                ImageDescriptor imgDesc = new OverlayImageDescriptor(image,
+                        BpmnDiagramEditorPlugin.getBundledImageDescriptor(
+                                "icons/small_quickfix.gif")//,
+                        /*20, 20*/);
+                reg.put(key, imgDesc);
+            }
+            image = reg.get(key);
+
+        }
+        return image;
+    }
+
+    
     /**
      * @generated
      */
@@ -118,10 +174,10 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                 return;
             }
             if (((DiagramEditDomain) ed).getEditorPart() instanceof BpmnDiagramEditor) {
-                decoratorTarget.installDecorator(KEY, new StatusDecorator(
-                        decoratorTarget));
-                decoratorTarget.installDecorator(TASK_KEY, new TaskDecorator(
-                        decoratorTarget));
+                decoratorTarget.installDecorator(KEY,
+                        new StatusDecorator(decoratorTarget));
+                decoratorTarget.installDecorator(TASK_KEY,
+                        new TaskDecorator(decoratorTarget));
             }
         }
     }
@@ -226,6 +282,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
             IMarker foundMarker = null;
             Label toolTip = null;
             int severity = IMarker.SEVERITY_INFO;
+            boolean atLeastOneQuickfix = false;
             for (int i = 0; i < markers.length; i++) {
                 IMarker marker = markers[i];
 //              don't add a decoration if this marker type is filtered.
@@ -249,11 +306,12 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
     			}
                 int nextSeverity = marker.getAttribute(IMarker.SEVERITY,
                         IMarker.SEVERITY_INFO);
-                Image nextImage = getImage(nextSeverity);
+                boolean hasQuickFix = IDE.getMarkerHelpRegistry().hasResolutions(marker);
+                atLeastOneQuickfix = atLeastOneQuickfix || hasQuickFix;
                 if (foundMarker == null) {
                     foundMarker = marker;
-                    toolTip = new Label(marker.getAttribute(
-                            IMarker.MESSAGE, ""), nextImage); //$NON-NLS-1$
+                    toolTip = createMarkerLabel(marker, nextSeverity, hasQuickFix,
+                            editPart.getViewer().getControl().getShell());
                 } else {
                     if (toolTip.getChildren().isEmpty()) {
                         Label comositeLabel = new Label();
@@ -263,11 +321,10 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                         comositeLabel.add(toolTip);
                         toolTip = comositeLabel;
                     }
-                    toolTip.add(new Label(marker.getAttribute(
-                            IMarker.MESSAGE, ""), nextImage)); //$NON-NLS-1$
+                    toolTip.add(createMarkerLabel(marker, nextSeverity, hasQuickFix,
+                            editPart.getViewer().getControl().getShell()));
                 }
-                severity = (nextSeverity > severity) ? nextSeverity
-                        : severity;
+                severity = (nextSeverity > severity) ? nextSeverity : severity;
             }
             if (foundMarker == null) {
                 return;
@@ -275,7 +332,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
 
             // add decoration
             if (editPart instanceof IGraphicalEditPart) {
-                Image img = getImage(severity);
+                Image img = getProblemImage(severity, atLeastOneQuickfix);
                 if (view instanceof Edge) {
                     setDecoration(getDecoratorTarget().addConnectionDecoration(
                             img, 50, true));
@@ -303,24 +360,34 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
         }
 
         /**
-         * @generated
+         * Create a label for the marker.
+         * Add a the bulb decoration on the top of it
+         * and a push button it if there is a marker resolution for it.
+         * 
+         * @param marker
+         * @return
          */
-        private Image getImage(int severity) {
-            String imageName = ISharedImages.IMG_OBJS_ERROR_TSK;
-            switch (severity) {
-            case IMarker.SEVERITY_ERROR:
-               return BpmnDiagramEditorPlugin.getInstance().
-                   getBundledImage("icons/obj16/error.png"); //$NON-NLS-1$
-            case IMarker.SEVERITY_WARNING:
-                imageName = ISharedImages.IMG_OBJS_WARN_TSK;
-                break;
-            default:
-                imageName = ISharedImages.IMG_OBJS_INFO_TSK;
+        private Label createMarkerLabel(final IMarker marker, int severity,
+                boolean hasQuickfix, final Shell shell) {
+            Image image = getProblemImage(marker, hasQuickfix);
+            Label res = new Label(marker.getAttribute(
+                    IMarker.MESSAGE, ""), image);//$NON-NLS-1$
+            if (hasQuickfix) {
+                res.setText(res.getText() + 
+                        BpmnDiagramMessages.BpmnValidationDecoratorProvider_has_quickfix_suffix);
+//hard to add mouselisteners to tooltips :(                
+//                res.addMouseListener(new MouseListener.Stub() {
+//                    public void mouseReleased(MouseEvent me) {
+//                        MarkerResolutionSelectionDialog dialog =
+//                            new MarkerResolutionSelectionDialog(
+//                                shell, IDE.getMarkerHelpRegistry().getResolutions(marker));
+//                        dialog.open();
+//                    }
+//                });
             }
-            return PlatformUI.getWorkbench().getSharedImages().getImage(
-                    imageName);
+            return res;
         }
-
+        
         /**
          * @generated
          */
@@ -580,6 +647,22 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                         //|| !MARKER_TYPE.equals(getType(marker))) {
                     return;
                 }
+                // Extract the element ID list from the marker and retrieve
+                // corresponding view   
+                String elementId = (String)marker.getAttribute(ELEMENT_ID); //$NON-NLS-1$
+                List list = elementId != null ? (List) mapOfIdsToDecorators
+                        .get(elementId) : null;
+                        
+                if (list == null) {
+                    String bpmnId = (String)marker.getAttribute(BPMN_ID); //$NON-NLS-1$
+                    if (bpmnId != null) {
+                        list = (List) mapOfBpmnIdsToDecorators.get(bpmnId);
+                    }
+                }
+
+                if (list != null && !list.isEmpty()) {
+                    refreshDecorators(list);
+                }
             } catch (CoreException e) {
                 if (!MARKER_TYPE.equals(getType(marker)) && 
                         !IMarker.TASK.equals(getType(marker))) {
@@ -587,22 +670,6 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                     return;
                 }
             
-            }
-            // Extract the element ID list from the marker and retrieve
-            // corresponding view	
-            String elementId = (String)marker.getAttribute(ELEMENT_ID, ""); //$NON-NLS-1$
-            List list = elementId != null ? (List) mapOfIdsToDecorators
-                    .get(elementId) : null;
-                    
-            if (list == null) {
-                String bpmnId = marker.getAttribute(BPMN_ID, ""); //$NON-NLS-1$
-                if (bpmnId != null) {
-                    list = (List) mapOfBpmnIdsToDecorators.get(bpmnId);
-                }
-            }
-
-            if (list != null && !list.isEmpty()) {
-                refreshDecorators(list);
             }
         }
 

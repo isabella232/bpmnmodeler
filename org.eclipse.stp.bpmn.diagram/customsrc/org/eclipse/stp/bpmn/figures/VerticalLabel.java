@@ -28,6 +28,7 @@ import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Color;
@@ -121,8 +122,8 @@ public class VerticalLabel extends WrapLabel {
             super.paintFigure(graphics);
             return;
         }
-        
-        if (labelImage != null && cacheScale != graphics.getAbsoluteScale()) {
+        double scale = ActivityPainter.getAbsoluteScale(graphics);
+        if (labelImage != null && cacheScale != scale) {
             disposeImage();
         }
         if (labelImage == null || 
@@ -145,10 +146,9 @@ public class VerticalLabel extends WrapLabel {
                 super.paintFigure(graphics);
                 return;
             }
-            cacheScale = graphics.getAbsoluteScale();
+            cacheScale = scale;
         }
         
-        double scale = graphics.getAbsoluteScale();
         graphics.pushState();
         
         graphics.scale(1 / scale);
@@ -196,7 +196,7 @@ public class VerticalLabel extends WrapLabel {
         // take all font datas, mac and linux specific
         for (FontData data : font.getFontData()) {
             FontData data2 = new FontData(data.getName(), 
-                    (int) (data.getHeight() * g.getAbsoluteScale()), data.getStyle());
+                    (int) (data.getHeight() * ActivityPainter.getAbsoluteScale(g)), data.getStyle());
             fontDatas.add(data2);
         }
         // create the new font

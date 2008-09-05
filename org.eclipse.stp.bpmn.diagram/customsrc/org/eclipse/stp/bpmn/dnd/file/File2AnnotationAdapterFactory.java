@@ -13,8 +13,14 @@
  */
 package org.eclipse.stp.bpmn.dnd.file;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.IAdapterFactory;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.dnd.IDnDHandler;
 
 /**
@@ -24,10 +30,47 @@ import org.eclipse.stp.bpmn.dnd.IDnDHandler;
  */
 public class File2AnnotationAdapterFactory implements IAdapterFactory {
 
+    
 	@SuppressWarnings("unchecked") //$NON-NLS-1$
 	public Object getAdapter(Object adaptableObject, Class adapterType) {
 		if (adapterType.equals(IDnDHandler.class)) {
 			if (adaptableObject instanceof IResource) {
+			    List<IFileDnDHandlerFactory> factories = 
+			        BpmnDiagramEditorPlugin.getInstance().getFileDnDHandlerFactories();
+			    List<IFileDnDHandlerFactory> filtered = new ArrayList<IFileDnDHandlerFactory>();
+			    final IResource r = (IResource) adaptableObject;
+			    for (IFileDnDHandlerFactory factory : factories) {
+			        if (factory.registers(r)) {
+			            filtered.add(factory);
+			        }
+			    }
+			    Collections.sort(filtered, new Comparator<IFileDnDHandlerFactory>() {
+
+                    public int compare(IFileDnDHandlerFactory o1,
+                            IFileDnDHandlerFactory o2) {
+                        if (o1.getPriority(r) < o2.getPriority(r)) {
+                            return -1;
+                        }
+                        if (o1.getPriority(r) > o2.getPriority(r)) {
+                            return 1;
+                        }
+                        return 0;
+                    }});
+			    
+			    for (IFileDnDHandlerFactory factory : filtered) {
+			        IDnDHandler handler = (IDnDHandler) factory.getAdapter(adaptableObject, adapterType);
+			        if (handler == null) {
+			            if (!factory.keepIteratingIfNull(r)) {
+			                if (factory.useDefaultIfNull(r)) {
+			                    break;
+			                } else {
+			                    return null;
+			                }
+			            }
+			        } else {
+			            return handler;
+			        }
+			    }
 				return new FileDnDHandler((IResource) adaptableObject);
 			}
 		}

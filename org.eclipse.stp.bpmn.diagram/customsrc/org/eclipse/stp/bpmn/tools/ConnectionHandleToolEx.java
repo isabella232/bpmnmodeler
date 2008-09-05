@@ -44,7 +44,6 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartme
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.handles.ConnectionHandleForAssociation;
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 
 /**
@@ -76,6 +75,7 @@ public class ConnectionHandleToolEx extends ConnectionHandleTool {
         List<IElementType> relTypes = null;
         ConnectionHandle connHandle = getConnectionHandle();
         if (connHandle.isIncoming()) {
+            //reversed direction.
             relTypes = ModelingAssistantService.getInstance().getRelTypesOnTarget(
                     connHandle.getOwner());
         } else {
@@ -120,6 +120,7 @@ public class ConnectionHandleToolEx extends ConnectionHandleTool {
         CreateUnspecifiedTypeConnectionRequest request = 
             new CreateUnspecifiedTypeConnectionRequest(
                     relTypes, useModelingAssistantService(), getPreferencesHint()) {
+            
             public void setTargetEditPart(EditPart part) {
                 if (part instanceof SubProcessEditPart) {
                     if (getSourceEditPart() != null && 

@@ -211,7 +211,9 @@ private int getBidiPrefixLength(TextFragmentBox box, int index) {
  */
 protected String getBidiSubstring(TextFragmentBox box, int index) {
 	if (box.getBidiLevel() < 1)
-		return getText().substring(box.offset, box.offset + box.length);
+		return getText() != null
+		    ? getText().substring(box.offset, box.offset + box.length)
+		    : "";
 	
 	StringBuffer buffer = new StringBuffer(box.length + 3);
 	buffer.append(box.isRightToLeft() ? BidiChars.RLO : BidiChars.LRO);

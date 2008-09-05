@@ -114,7 +114,6 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
         			}
         		}
         	}
-        	
         } else if (ChangeEdgeOrderMenuManager.ID.equals(menuId)) {
             return new ChangeEdgeOrderMenuManager();
         } else if (ChangeEdgeOrderMenuManager.SUB_MENU_SOURCE.equals(menuId)) {
@@ -122,9 +121,6 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
         } else if (ChangeEdgeOrderMenuManager.SUB_MENU_TARGET.equals(menuId)) {
             return ChangeEdgeOrderMenuManager.createSubmenu(BpmnDiagramMessages.BpmnDiagramActionProvider_change_edge_order_target_sub_menu, menuId);
         }
-        
-        
-        
         return super.createMenuManager(menuId, partDescriptor);
     }
 

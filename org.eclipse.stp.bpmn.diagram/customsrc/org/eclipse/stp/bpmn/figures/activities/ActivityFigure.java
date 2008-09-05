@@ -38,6 +38,8 @@ public abstract class ActivityFigure extends Shape {
 
     private boolean isLooping;
 
+//    private static final Insets INSETS_NOT_TASK = new Insets(0, 0, 0, 0);
+    
     public ActivityFigure() {
         setBorder(new RoundedSchemeBorder() {
             @Override
@@ -46,6 +48,13 @@ public abstract class ActivityFigure extends Shape {
                     super.paint(fig, graphics, insets);
                 }
             }
+//            public Insets getInsets(IFigure figure) {
+//                if (_activityType == ActivityType.TASK) {
+//                    return super.getInsets(figure);
+//                } else {
+//                    return INSETS_NOT_TASK;
+//                }
+//            }
         });
     }
 

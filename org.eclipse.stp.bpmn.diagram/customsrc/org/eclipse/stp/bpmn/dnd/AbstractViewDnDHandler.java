@@ -14,6 +14,7 @@
 package org.eclipse.stp.bpmn.dnd;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -79,7 +80,7 @@ public abstract class AbstractViewDnDHandler extends AbstractDnDHandler {
      * @return a command that enables the drop of a view 
      * on the edit policy host.
      */
-    protected Command getDropViewCommand(final List<View> views,
+    protected Command getDropViewCommand(final Collection<View> views,
             final Point dropLocation, final IGraphicalEditPart part) {
 
         AbstractTransactionalCommand viewCommand = 
@@ -98,7 +99,7 @@ public abstract class AbstractViewDnDHandler extends AbstractDnDHandler {
                 // domain, so we need to have its go for a write transaction.
                 TransactionalEditingDomain domain = 
                     (TransactionalEditingDomain) AdapterFactoryEditingDomain.
-                    getEditingDomainFor(views.get(0));
+                    getEditingDomainFor(views.iterator().next());
                 RecordingCommand command = 
                     new RecordingCommand(part.getEditingDomain()) {
                     @Override

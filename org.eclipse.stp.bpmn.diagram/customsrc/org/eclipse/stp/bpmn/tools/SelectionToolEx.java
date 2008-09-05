@@ -39,6 +39,7 @@ import org.eclipse.gef.tools.TargetingTool;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.render.editparts.RenderedDiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.jface.viewers.StructuredSelection;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
@@ -121,20 +122,27 @@ public class SelectionToolEx extends SelectionTool {
     			if (selectedEditPart instanceof IGraphicalEditPart) {
     				EObject object = ((IGraphicalEditPart) selectedEditPart).resolveSemanticElement();
     				if (object instanceof EModelElement) {
-    					EAnnotation src = ((EModelElement) object).
-    					getEAnnotation(FileDnDConstants.ANNOTATION_SOURCE);
-    					if (src != null) {
+//    					EAnnotation src = ((EModelElement) object).
+//    					getEAnnotation(FileDnDConstants.ANNOTATION_SOURCE);
+//    					if (src != null) {
     						Request request = new Request(
     								RequestConstants.REQ_OPEN);
     						selectedEditPart.performRequest(request);
     						return true;
-    					}
+//    					}
     				}
     			}
     		} else {
+    			if (selectedEditPart instanceof RenderedDiagramRootEditPart) {
+    				if (viewer.getSelectedEditParts().size() == 1) {
+    					EditPart ep = (EditPart)viewer.getSelectedEditParts().get(0);
+    					if (ep instanceof GroupEditPart || ep instanceof Group2EditPart) {
+    						selectedEditPart = ep;
+    					}
+    				}
+    			}
     			if (!(selectedEditPart instanceof ITextAwareEditPart)
     					&& selectedEditPart instanceof IGraphicalEditPart) {
-    			    
     				IGraphicalEditPart nodePart =
     					(IGraphicalEditPart) selectedEditPart;
     				if (nodePart instanceof SubProcessSubProcessBodyCompartmentEditPart) {

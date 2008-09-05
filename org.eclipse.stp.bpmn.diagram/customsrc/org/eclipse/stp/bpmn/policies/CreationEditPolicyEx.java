@@ -11,19 +11,7 @@
 
 package org.eclipse.stp.bpmn.policies;
 
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Point;
-import org.eclipse.draw2d.geometry.Rectangle;
-import org.eclipse.gef.GraphicalEditPart;
-import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
-import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
-import org.eclipse.gmf.runtime.emf.type.core.IElementType;
-import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
-import org.eclipse.stp.bpmn.figures.BpmnShapesDefaultSizes;
 
 /**
  * 

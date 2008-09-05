@@ -33,7 +33,6 @@ import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
-import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart.ActivityFigure;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Activity2CanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Activity2GraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.Activity2ItemSemanticEditPolicy;
@@ -48,6 +47,7 @@ import org.eclipse.stp.bpmn.figures.connectionanchors.impl.ConnectionAnchorFacto
 import org.eclipse.stp.bpmn.layouts.ActivityLayout;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
+import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizableActivityEditPolicy;
 import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
@@ -107,7 +107,18 @@ public class Activity2EditPart extends ShapeNodeEditPart {
      // adding default drag and drop edit policy
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, 
         		new BpmnDragDropEditPolicy(this));
+        
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
     }
+    
+    /**
+     * Override the OpenFileEditPolicy to support dataobkjects annotations
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
     
     /**
      * Ability to override the ConnectionHandleEditPolicy.

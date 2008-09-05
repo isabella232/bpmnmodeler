@@ -358,7 +358,7 @@ public class ActivityItemProvider
                 filename = END_ERROR;
                 break;
             case ActivityType.EVENT_END_MESSAGE:
-                filename = END_MESSAGE;
+                filename = IS_BPMN_11_STYLE ? END_MESSAGE : END_MESSAGE_10;
                 break;
             case ActivityType.EVENT_END_TERMINATE:
                 filename = END_TERMINATE;
@@ -573,6 +573,7 @@ public class ActivityItemProvider
     public static final String END_EMPTY = "end_empty"; //$NON-NLS-1$
     public static final String END_ERROR = "end_error"; //$NON-NLS-1$
     public static final String END_MESSAGE = "end_message"; //$NON-NLS-1$
+    public static final String END_MESSAGE_10 = "end_message_10"; //$NON-NLS-1$
     public static final String END_TERMINATE = "end_terminate"; //$NON-NLS-1$
     public static final String END_CANCEL = "end_cancel"; //$NON-NLS-1$
     public static final String END_MULTIPLE = "end_multiple"; //$NON-NLS-1$

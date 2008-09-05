@@ -12,6 +12,7 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 
 import org.eclipse.draw2d.FlowLayout;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ScrollPane;
 import org.eclipse.emf.common.notify.Notification;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.EditPart;
@@ -87,8 +88,8 @@ public class SubProcessSubProcessBorderCompartmentEditPart extends
      * @generated
      */
     public IFigure createFigureGen() {
-        ResizableCompartmentFigure result = (ResizableCompartmentFigure) super
-                .createFigure();
+        ResizableCompartmentFigure result =
+            (ResizableCompartmentFigure) super.createFigure();
         result.setTitleVisibility(false);
         return result;
     }
@@ -99,10 +100,12 @@ public class SubProcessSubProcessBorderCompartmentEditPart extends
      * @notgenerated
      */
     public IFigure createFigure() {
-        ResizableCompartmentFigure result = (ResizableCompartmentFigure) this
-                .createFigureGen();
+        ResizableCompartmentFigure result =
+            (ResizableCompartmentFigure) this.createFigureGen();
+        result.getScrollPane().setScrollBarVisibility(ScrollPane.NEVER);
+        
         FlowLayout layout = new FlowLayout();
-        layout.setMinorAlignment(FlowLayout.ALIGN_CENTER);
+        layout.setMinorAlignment(FlowLayout.ALIGN_LEFTTOP);
         layout.setMajorAlignment(FlowLayout.ALIGN_CENTER);
         layout.setMajorSpacing(getMapMode().DPtoLP(5));
         layout.setMinorSpacing(getMapMode().DPtoLP(5));
@@ -128,7 +131,7 @@ public class SubProcessSubProcessBorderCompartmentEditPart extends
     }
 
     /**
-     * @notgenerated
+     * @generated NOT
      */
     protected void createDefaultEditPolicies() {
         createDefaultEditPoliciesGen();
@@ -136,10 +139,9 @@ public class SubProcessSubProcessBorderCompartmentEditPart extends
                 new BpmnDragDropEditPolicy(this));
         // the following is added:
         installEditPolicy(EditPolicyRoles.POPUPBAR_ROLE,
-                new PopupBarEditPolicyEx(this));
+                createPopupBarEditPolicyEx());
         // install policy to allow activities to be selected on the border
         installEditPolicy(EditPolicy.LAYOUT_ROLE, new FlowLayoutEditPolicy() {
-
             @Override
             protected Command createAddCommand(EditPart child, EditPart after) {
                 return null;
@@ -169,7 +171,14 @@ public class SubProcessSubProcessBorderCompartmentEditPart extends
             }
         });
         
-     
+    }
+    
+    /**
+     * @generated NOT
+     * @return The edit policy that fills the popup edit bar. Can be overriden.
+     */
+    protected PopupBarEditPolicyEx createPopupBarEditPolicyEx() {
+        return new PopupBarEditPolicyEx(this);
     }
 
     /**

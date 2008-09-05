@@ -407,8 +407,6 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     	if (pastedEObjects.isEmpty()) {
     		return;
     	}
-    	CompoundCommand command = new CompoundCommand(
-    	BpmnDiagramMessages.BpmnClipboardSupport_PostPaste);
     	TransactionalEditingDomain domain = 
     		(TransactionalEditingDomain) AdapterFactoryEditingDomain.
     		getEditingDomainFor(pastedEObjects.iterator().next());
@@ -422,7 +420,8 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     		}
     		if (elt instanceof Vertex) {
     			final Vertex vertex = (Vertex) elt;
-    			for (Object edge : vertex.getOutgoingEdges()) {
+    			
+    			for (Object edge : new ArrayList(vertex.getOutgoingEdges())) {
     				final SequenceEdge se = (SequenceEdge) edge;
     				boolean delete = false;
     				boolean disconnect = false;
@@ -434,40 +433,19 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     					// the sequence edge doesn't refer to anything
     					delete = true;
     				}
-    				// add more reasons to disconnect or delete
-    				// if you like !
 
 
     				if (delete) {
-    					command.append(DeleteCommand.create(domain, se));
-    				} else if(disconnect) {
-    					command.append(
-    							new RecordingCommand(domain,
-    									BpmnDiagramMessages.BpmnClipboardSupport_SequenceEdgeDisconnect) 
-    							{
-    								@SuppressWarnings("unchecked") //$NON-NLS-1$
-    								@Override
-    								protected void doExecute() {
-    									Vertex source = se.getSource();
-    									List vertices = new ArrayList(
-    											vertex.getOutgoingEdges());
-    									vertices.remove(se);
-    									vertex.eSet(
-    											BpmnPackage.eINSTANCE.getVertex_OutgoingEdges(),
-    											vertices);
-    									if (!source.getOutgoingEdges().contains(se)) {
-    									    se.eSet(
-    									            BpmnPackage.eINSTANCE.getSequenceEdge_Source(),
-    									            source);
-    									}
-    								}});
+    					DeleteCommand.create(domain, se).execute();
+    				} else if (disconnect) {
+    				    Vertex source = se.getSource();
+    				    vertex.getOutgoingEdges().remove(se);
+    				    source.getOutgoingEdges().remove(se); // the se is duplicated.
+    				    se.setSource(source);
     				}
     			}
-    			command.execute();
     			
-    			command = new CompoundCommand(
-    			BpmnDiagramMessages.BpmnClipboardSupport_PostPaste);
-    			for (Object edge : vertex.getIncomingEdges()) {
+    			for (Object edge : new ArrayList(vertex.getIncomingEdges())) {
     				final SequenceEdge se = (SequenceEdge) edge;
     				boolean delete = false;
     				boolean disconnect = false;
@@ -479,56 +457,31 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     					// the sequence edge doesn't refer to anything
     					delete = true;
     				}
-    				// add more reasons to disconnect or delete
-    				// if you like !
 
 
     				if (delete) {
-    					command.append(DeleteCommand.create(domain, se));
+    				    DeleteCommand.create(domain, se).execute();
     				} else if(disconnect) {
-    					command.append(
-    							new RecordingCommand(domain,
-    									BpmnDiagramMessages.BpmnClipboardSupport_SequenceEdgeDisconnect) 
-    							{
-
-    								@SuppressWarnings("unchecked") //$NON-NLS-1$
-    								@Override
-    								protected void doExecute() {
-    									Vertex target = se.getTarget();
-    									List vertices = new ArrayList(
-    											vertex.getIncomingEdges());
-    									vertices.remove(se);
-    									vertex.eSet(
-    											BpmnPackage.eINSTANCE.getVertex_IncomingEdges(),
-    											vertices);
-    									if (!target.getIncomingEdges().contains(se)) {
-    									    se.eSet(
-    									            BpmnPackage.eINSTANCE.getSequenceEdge_Target(),
-    									            target);
-    									}
-    								}});
+    				    Vertex target = se.getTarget();
+    				    vertex.getIncomingEdges().remove(se);
+    				    target.getIncomingEdges().remove(se);
+    				    se.setTarget(target);
+    				    
     				}
     			}
-    			command.execute();
     			
-    			command = new CompoundCommand(BpmnDiagramMessages.BpmnClipboardSupport_unresolvedAssociations);
-                for (final Association association : vertex.getAssociations()) {
+                for (final Association association : new ArrayList<Association>(vertex.getAssociations())) {
                     boolean delete = false;
                     if (association.getSource() == null) {
                         // the association doesn't refer to anything
                         delete = true;
                     }
-                    // add more reasons to disconnect or delete
-                    // if you like !
 
 
                     if (delete) {
-                        command.append(DeleteCommand.create(domain, association));
+                        DeleteCommand.create(domain, association).execute();
                     }
                 }
-                command.execute();
-    			command = new CompoundCommand(
-    			BpmnDiagramMessages.BpmnClipboardSupport_PostPaste);
     		}
 
     		// process the messaging edges with
@@ -536,12 +489,6 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     		processMessagingEdges(domain, elt);
 
     	}
-
-//  	for (Object co : command.getCommandList()) {
-//  	domain.getCommandStack().execute((Command) co);
-//        }
-//        domain.getCommandStack().execute(command);
-        
     }
     
     /**
@@ -556,82 +503,43 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 			BpmnDiagramMessages.BpmnClipboardSupport_PostPaste);
     	if (elt instanceof Activity) {
     		final Activity act = (Activity) elt;
-    		for (Object edge : act.getOutgoingMessages()) {
+    		for (Object edge : new ArrayList(act.getOutgoingMessages())) {
     			if (edge instanceof MessagingEdge) {
     				final MessagingEdge me = (MessagingEdge) edge;
     				if (me.getTarget() == null) {
-    					command.append(DeleteCommand.create(domain, me));
+    					DeleteCommand.create(domain, me).execute();
     				} else if (!act.equals(me.getSource())) {
-    					command.append(
-    							new RecordingCommand(domain,
-    									BpmnDiagramMessages.BpmnClipboardSupport_MessagingEdgeDisconnect) 
-    							{
-
-    								@SuppressWarnings("unchecked") //$NON-NLS-1$
-    								@Override
-    								protected void doExecute() {
-    									MessageVertex source = me.getSource();
-    									List messages = new ArrayList(
-    											act.getOutgoingMessages());
-    									messages.remove(me);
-    									act.eSet(
-    											BpmnPackage.eINSTANCE.getMessageVertex_OutgoingMessages(),
-    											messages);
-//  									List ordered = new ArrayList(act.getOrderedMessages());
-//  									ordered.remove(me);
-//  									act.eSet(
-//  									BpmnPackage.eINSTANCE.getActivity_OrderedMessages(),
-//  									ordered);
-    									if (!source.getOutgoingMessages().contains(me)) {
-    									    me.eSet(
-    									            BpmnPackage.eINSTANCE.getMessagingEdge_Source(),
-    									            source);
-    									}
-    								}});
+    				    MessageVertex source = me.getSource();
+    				    act.getOutgoingMessages().remove(me);
+//  				    List ordered = new ArrayList(act.getOrderedMessages());
+//  				    ordered.remove(me);
+//  				    act.eSet(
+//  				    BpmnPackage.eINSTANCE.getActivity_OrderedMessages(),
+//  				    ordered);
+    				    source.getOutgoingMessages().remove(me);
+    				    me.setSource(source);
+    				        
     				}
     			}
     		}
-    		command.execute();
-    		command = new CompoundCommand(
-    						BpmnDiagramMessages.BpmnClipboardSupport_PostPaste);
-    		for (Object edge : act.getIncomingMessages()) {
+    		for (Object edge : new ArrayList(act.getIncomingMessages())) {
     			if (edge instanceof MessagingEdge) {
     				final MessagingEdge me = (MessagingEdge) edge;
     				if (me.getSource() == null) {
-    					command.append(DeleteCommand.create(domain, me));
+    					DeleteCommand.create(domain, me).execute();
     				} else if (!act.equals(me.getTarget())) {
-    					command.append(
-    							new RecordingCommand(domain,
-    									BpmnDiagramMessages.BpmnClipboardSupport_MessagingEdgeDisconnect) 
-    							{
-
-    								@SuppressWarnings("unchecked") //$NON-NLS-1$
-    								@Override
-    								protected void doExecute() {
-    									MessageVertex target = me.getTarget();
-    									List messages = new ArrayList(
-    											act.getIncomingMessages());
-    									messages.remove(me);
-    									act.eSet(
-    											BpmnPackage.eINSTANCE.getMessageVertex_IncomingMessages(),
-    											messages);
-//  									List ordered = new ArrayList(act.getOrderedMessages());
-//  									ordered.remove(me);
-//  									act.eSet(
-//  									BpmnPackage.eINSTANCE.getActivity_OrderedMessages(),
-//  									ordered);
-    									if (!target.getIncomingMessages().contains(target)) {
-    									    me.eSet(
-    									            BpmnPackage.eINSTANCE.getMessagingEdge_Target(),
-    									            target);
-    									}
-    								}});
+    				    MessageVertex target = me.getTarget();
+    				    act.getIncomingMessages().remove(me);
+//  				    List ordered = new ArrayList(act.getOrderedMessages());
+//  				    ordered.remove(me);
+//  				    act.eSet(
+//  				    BpmnPackage.eINSTANCE.getActivity_OrderedMessages(),
+//  				    ordered);
+    				    target.getIncomingMessages().remove(me);
+    				    me.setTarget(target);
     				}
     			}
     		}
-    		command.execute();
-    		command = new CompoundCommand(
-    					BpmnDiagramMessages.BpmnClipboardSupport_PostPaste);
     	}
     	
     	if (elt instanceof Graph) {
@@ -681,29 +589,35 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
         public BpmnOverrideCopyOperation(CopyOperation overriddenCopyOperation) {
             super(overriddenCopyOperation);
             Set<View> edges = new HashSet<View>();
+            Set<View> nodes = new HashSet<View>();
+            
+            for (Object o : getEObjects()) {
+                if (o instanceof EObject) {
+                    if (o instanceof Node) {
+                        nodes.add((View) o);
+                    }
+                    TreeIterator<EObject> iterator = ((EObject) o).eAllContents();
+                    while (iterator.hasNext()) {
+                        EObject next = iterator.next();
+                        if (next instanceof Node) {
+                            nodes.add((View) next);
+                        }
+                    }
+                }
+            }
             for (Object obj : getEObjects()) {
                 if (obj instanceof Node) {
-                    for (Object e : ((Node) obj).getSourceEdges()) {
-                        if (isValidEdge((Edge) e)) {
-                            edges.add((View) e);
-                        }
-                    }
-                    for (Object e : ((Node) obj).getTargetEdges()) {
-                        if (isValidEdge((Edge) e)) {
-                            edges.add((View) e);
-                        }
-                    }
                     TreeIterator<EObject> iterator = ((Node) obj).eAllContents();
                     while (iterator.hasNext()) {
                         EObject next = iterator.next();
                         if (next instanceof Node) {
                             for (Object e : ((Node) next).getSourceEdges()) {
-                                if (isValidEdge((Edge) e)) {
+                                if (isValidEdge((Edge) e, nodes)) {
                                     edges.add((View) e);
                                 }
                             }
                             for (Object e : ((Node) next).getTargetEdges()) {
-                                if (isValidEdge((Edge) e)) {
+                                if (isValidEdge((Edge) e, nodes)) {
                                     edges.add((View) e);
                                 }
                             }
@@ -721,11 +635,12 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
             return super.doCopy();
         }
         
-        private boolean isValidEdge(Edge edge) {
+        private boolean isValidEdge(Edge edge, Set<View> nodes) {
             if (String.valueOf(MessagingEdgeEditPart.VISUAL_ID).equals(edge.getType())) {
                 return false;
             }
-            return true;
+            
+            return nodes.contains(edge.getSource()) && nodes.contains(edge.getTarget());
         }
     }
     

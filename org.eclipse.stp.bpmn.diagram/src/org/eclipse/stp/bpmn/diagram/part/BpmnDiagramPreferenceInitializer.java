@@ -10,6 +10,9 @@
  */
 package org.eclipse.stp.bpmn.diagram.part;
 
+import java.util.Locale;
+
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.gef.ui.palette.PaletteViewerPreferences;
 import org.eclipse.gmf.runtime.diagram.ui.figures.DiagramColorConstants;
@@ -176,6 +179,18 @@ public class BpmnDiagramPreferenceInitializer extends
      */
     public static final String PREF_SHOW_SHADOWS_TRANSPARENCY = "bpmn.global.shadows.transparency"; //$NON-NLS-1$
     
+    
+    /**
+     * The system property name to override the name of the default font for diagrams.
+     */
+    public static String VM_ARG_DEFAULT_FONT_NAME = "bpmn.defaultfont.name";
+    /**
+     * The system property name to override the name of the default font for diagrams.
+     */
+    public static String VM_ARG_DEFAULT_FONT_SIZE = "bpmn.defaultfont.size";
+
+    private static FontData[] _defaultFontDataArray;
+    
     /**
      * Initializes all the generic diagram preferences with their default
      * values. Override to initialize new preferences added.
@@ -251,22 +266,14 @@ public class BpmnDiagramPreferenceInitializer extends
 
     /**
      * Hardcode the default font to Arial.
-     * TODO: use the correct way (symbolic name, font regsitry ?) if there is one.
+     * unless the locale is Japanese in that case, use MS Gothic
+     * TODO: use the correct way (symbolic name, font registry ?) if there is one.
      * @param store
      */
     private void internalSetDefaultFontPref(IPreferenceStore store) {
-        Font f = new Font(JFaceResources.getDefaultFont().getDevice(), "Arial", //$NON-NLS-1$
-                9, SWT.NONE);
-        FontData[] fontDataArray = f != null ? f.getFontData() : JFaceResources
-                .getDefaultFont().getFontData();
-        // use all the fontData for the Mac OS platform
-        for ( FontData fontData : fontDataArray) {
-            fontData.setHeight(9);
-        }
+        FontData[] fontDataArray = BpmnDiagramPreferenceInitializer.getDefaultFont();
         PreferenceConverter.setDefault(store,
                 IPreferenceConstants.PREF_DEFAULT_FONT, fontDataArray);
-        // end up disposing the font
-        f.dispose();
     }
 
     /**
@@ -297,6 +304,82 @@ public class BpmnDiagramPreferenceInitializer extends
         
         store.setDefault(PREF_MSG_LINE_ALPHA, 170);
         store.setDefault(PREF_SEQ_LINE_ALPHA, 150);
+    }
+    
+    /**
+     * @return The font to be used by default for bpmn diagrams until the user
+     * changes it in the preferences or on a per shape basis.
+     * The default font depends on the locale and the OS.
+     * <p>
+     * It can also be set via a system property:
+     * Starting the modeler with the options:
+     * -Dbpmn.defaultfont.name="MS Gothic" -Dbpmn.defaultfont.size=10
+     * will force the default font to "MS Gothic" size "10".
+     * </p>
+     */
+    public static FontData[] getDefaultFont() {
+        if (_defaultFontDataArray != null) {
+            return _defaultFontDataArray;
+        }
+        String fontName = System.getProperty(VM_ARG_DEFAULT_FONT_NAME,
+                getDefaultFontNameAccordingToNL());
+        int fontSize = 9;
+        try {
+            fontSize = Integer.parseInt(System.getProperty(
+                    VM_ARG_DEFAULT_FONT_SIZE,
+                getDefaultFontSizeAccordingToNL(fontName) + ""));
+        } catch (NumberFormatException e) {
+            System.err.println("Unable to parse the size of the font defined as " +
+                    System.getProperty(
+                            VM_ARG_DEFAULT_FONT_SIZE));
+        }
+        Font f = new Font(JFaceResources.getDefaultFont().getDevice(),
+                fontName,
+                fontSize, SWT.NONE);
+        FontData[] fontDataArray = f != null ? f.getFontData() : JFaceResources
+                .getDefaultFont().getFontData();
+        // use all the fontData for the Mac OS platform
+        for ( FontData fontData : fontDataArray) {
+            fontData.setHeight(fontSize);
+        }
+        //dispose the font.
+        f.dispose();
+        _defaultFontDataArray = fontDataArray;
+        return fontDataArray;
+    }
+    
+    private static String getDefaultFontNameAccordingToNL() {
+        String res = "Arial"; //$NON-NLS-1$
+        try {
+            String nl = Platform.getNL();
+            if (nl == null) {
+                return res;
+            }
+            //now we could use a resource bundle to define the default font
+            //according to the locale and to the OS
+            //at this point we are going to do the straight forward
+            //if/else as we handle only japanese:
+            String OS = Platform.getOS();
+            Locale loc = new Locale(nl);
+            if (Locale.JAPANESE.equals(loc.getLanguage())) {
+                if (OS.equals(Platform.OS_LINUX) || OS.equals(Platform.OS_SOLARIS)) {
+                    return "Konchi Gothic"; //$NON-NLS-1$
+                } else if (OS.equals(Platform.OS_MACOSX)) {
+                    return "Hiragino Kaku Gothic"; //$NON-NLS-1$
+                } else {
+                    return "MS Gothic"; //$NON-NLS-1$
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Unable to get the default font name according" +
+                    " to the locale: " + e);
+        }
+        return res;
+    }
+
+    private static int getDefaultFontSizeAccordingToNL(String defaultFontName) {
+        int res = 9;
+        return res;
     }
 
 }

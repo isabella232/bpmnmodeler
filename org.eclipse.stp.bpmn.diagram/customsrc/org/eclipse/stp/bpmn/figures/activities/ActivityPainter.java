@@ -10,11 +10,15 @@
  *******************************************************************************/
 package org.eclipse.stp.bpmn.figures.activities;
 
+import java.lang.reflect.Field;
+import java.util.WeakHashMap;
+
 import org.eclipse.draw2d.Border;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.MarginBorder;
+import org.eclipse.draw2d.PrinterGraphics;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
@@ -24,6 +28,7 @@ import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.draw2d.text.FlowPage;
 import org.eclipse.draw2d.text.TextFlow;
+import org.eclipse.gmf.runtime.draw2d.ui.internal.graphics.ScaledGraphics;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.jface.util.IPropertyChangeListener;
 import org.eclipse.jface.util.PropertyChangeEvent;
@@ -43,7 +48,7 @@ import org.eclipse.swt.SWT;
  */
 public class ActivityPainter {
     
-    private static boolean isBPMN11On() {
+    public static boolean isBPMN11On() {
         return BpmnDiagramEditorPlugin.getInstance().getPreferenceStore().getBoolean(
                 BpmnDiagramPreferenceInitializer.PREF_BPMN1_1_STYLE);
     }
@@ -427,7 +432,7 @@ public class ActivityPainter {
         //don't set the background color! EDGE-1119
 //        graphics.setBackgroundColor(ColorConstants.white);
 
-        double lineWidth = fig.getBounds().width * graphics.getAbsoluteScale()/10;
+        double lineWidth = fig.getBounds().width * getAbsoluteScale(graphics)/10;
         graphics.setLineWidth((int)Math.floor(lineWidth));
         
         PrecisionRectangle outerCircle = new PrecisionRectangle(fig.getBounds());
@@ -555,14 +560,15 @@ public class ActivityPainter {
         innerRect.setHeight(innerWidth);
         innerRect.setX(innerRect.preciseX + innerx/2);
         innerRect.setY(innerRect.preciseY + innerx);
-        paintCompensation(graphics, innerRect, fig.isCatching());
+        int lineWidth = MapModeUtil.getMapMode(fig).LPtoDP(1);
+        paintCompensation(graphics, innerRect, lineWidth, fig.isCatching());
     }
         
-    public static void paintCompensation(Graphics graphics, Rectangle rect) {
-        paintCompensation(graphics, rect, false);
+    public static void paintCompensation(Graphics graphics, Rectangle rect, int lineWidth) {
+        paintCompensation(graphics, rect, lineWidth, false);
     }
     
-    public static void paintCompensation(Graphics graphics, Rectangle rect, boolean isCatching) {   
+    public static void paintCompensation(Graphics graphics, Rectangle rect, int lineWidth, boolean isCatching) {   
         graphics.pushState();
         // linewidth is 1/22 of the figure. rectangle width is 12 for 22:
         // and height is 10 for 22
@@ -574,7 +580,7 @@ public class ActivityPainter {
         pl.addPoint(rect.getTop().getCopy());
         pl.addPoint(rect.getBottom().getCopy());
         if (isCatching && isBPMN11On()) {
-            graphics.setLineWidth(2);
+            graphics.setLineWidth(2*lineWidth);
             graphics.drawPolygon(pl);
         } else {
             graphics.fillPolygon(pl);
@@ -685,15 +691,26 @@ public class ActivityPainter {
         Rectangle rect = fig.getBounds().getCopy();
         rect.shrink(rect.width / 4, rect.height / 4);
         // graphics.drawRoundRectangle(rect, 6, 6);
-        paintError(graphics, rect, fig.isCatching());
+        paintError(graphics, rect, MapModeUtil.getMapMode(fig).LPtoDP(1), fig.isCatching());
     }
     
-    public static void paintError(Graphics graphics, Rectangle rect) {
-        paintError(graphics, rect, false);
+    public static void paintError(Graphics graphics, Rectangle rect, int lineWidth) {
+        paintError(graphics, rect, lineWidth, false);
     }
     
-    public static void paintError(Graphics graphics, Rectangle rect, boolean isCatching) {
+    /**
+     * graphics.setLineWidth();
+     * @param graphics
+     * @param rect
+     * @param lineWidth
+     * @param isCatching
+     */
+    public static void paintError(Graphics graphics, Rectangle rect,
+                                  int lineWidth, boolean isCatching) {
         graphics.pushState();
+        
+        graphics.setLineWidth(lineWidth);
+        
         // linewidth is 1/22 of the figure. rectangle width is 12 for 22:
         // and height is 10 for 22
         graphics.setForegroundColor(ColorConstants.black);
@@ -707,9 +724,9 @@ public class ActivityPainter {
                 3 * rect.height / 4);
         Point twobis = two.getCopy().translate(-1 * rect.width / 7,
                 -1 * rect.height / 7);
-        int lineWidth = (int)Math.floor(rect.height / 8);
-        onebis.y += lineWidth;
-        twobis.y -= lineWidth;
+        int lineW = (int)Math.floor(rect.height / 8);
+        onebis.y += lineW;
+        twobis.y -= lineW;
         
         PointList pl = new PointList(6);
         pl.addPoint(rect.getBottomLeft());
@@ -893,7 +910,7 @@ public class ActivityPainter {
 
         graphics.setForegroundColor(ColorConstants.darkGray);
 
-        double lineWidth = rect.preciseWidth * graphics.getAbsoluteScale()/6;
+        double lineWidth = rect.preciseWidth * getAbsoluteScale(graphics)/6;
         shrink(rect, 3.0* rect.preciseWidth / 8,
                      3.0* rect.preciseHeight / 8);
         try {
@@ -921,7 +938,7 @@ public class ActivityPainter {
 
         graphics.setForegroundColor(ColorConstants.darkGray);
 
-        double lineWidth = rect.preciseWidth * graphics.getAbsoluteScale()/6;
+        double lineWidth = rect.preciseWidth * getAbsoluteScale(graphics)/6;
         shrink(rect, 3.0* rect.preciseWidth / 9.5,
                      3.0* rect.preciseHeight / 9.5);
         try {
@@ -948,13 +965,20 @@ public class ActivityPainter {
      *            activity figure.
      */
     public static void paintCancelX(Graphics graphics, ActivityFigure fig, PrecisionRectangle rect) {
+        paintCancelX(graphics, rect, MapModeUtil.getMapMode(fig).LPtoDP(1), fig.isCatching() && isBPMN11On());
+    }
+    
+    public static void paintCancelX(Graphics graphics,
+                    PrecisionRectangle rect, int lineWidth, boolean isCatching) {
+        
+        graphics.setLineWidth(lineWidth);
         graphics.pushState();
 
         graphics.setForegroundColor(ColorConstants.darkGray);
 
 //        rect = new PrecisionRectangle(fig.getBounds());
         
-        double lineWidth = rect.preciseWidth /4;
+        double lineW = rect.preciseWidth /4;
         shrink(rect, 3.0* rect.preciseWidth / 15,
                      3.0* rect.preciseHeight / 15);
         try {
@@ -964,8 +988,8 @@ public class ActivityPainter {
         }
         
         
-        if (fig.isCatching() && isBPMN11On()) {
-            int half = (int) (lineWidth/2);
+        if (isCatching) {
+            int half = (int) (lineW/2);
             PointList pointList = new PointList();
             pointList.addPoint(rect.getTopLeft().getCopy().translate(-half, half));
             pointList.addPoint(rect.getTopLeft().getCopy().translate(half, -half));
@@ -981,8 +1005,8 @@ public class ActivityPainter {
             pointList.addPoint(rect.getLeft().getCopy().translate(half, 0));
             graphics.drawPolygon(pointList);
         } else {
-            lineWidth *= graphics.getAbsoluteScale();
-            graphics.setLineWidth((int)Math.floor(lineWidth));
+            lineW *= getAbsoluteScale(graphics);
+            graphics.setLineWidth((int)Math.floor(lineW));
             graphics.drawLine(rect.getTopLeft(), rect.getBottomRight());
             graphics.drawLine(rect.getTopRight(), rect.getBottomLeft());
         }
@@ -1002,7 +1026,7 @@ public class ActivityPainter {
         graphics.pushState();
         graphics.setForegroundColor(ColorConstants.darkGray);
 
-        double lineWidth = rect.preciseWidth * graphics.getAbsoluteScale()/6;
+        double lineWidth = rect.preciseWidth * getAbsoluteScale(graphics)/6;
         shrink(rect, 5*rect.preciseWidth / 16,
                      5*rect.preciseHeight / 16);
         try {
@@ -1081,7 +1105,7 @@ public class ActivityPainter {
         int oriw = rect.width;
 
         Rectangle rr = rect.getCopy().shrink(11 * oriw / 44, 11 * orih / 44);
-        graphics.setLineWidth((int)Math.round(graphics.getAbsoluteScale()*rr.width/8));
+        graphics.setLineWidth((int)Math.round(getAbsoluteScale(graphics)*rr.width/8));
         graphics.drawOval(rr);
 
         graphics.popState();
@@ -1303,4 +1327,89 @@ public class ActivityPainter {
         }
         graphics.popState();
     }
+    
+    private static Field graphicsField;
+    private static Field zoomField;
+    private static void init() {
+        if (graphicsField != null) {
+            return;
+        }
+        try {
+        	graphicsField = ScaledGraphics.class.getDeclaredField("graphics"); //$NON-NLS-1$
+        	graphicsField.setAccessible(true);
+        	zoomField = org.eclipse.draw2d.ScaledGraphics.class.getDeclaredField("zoom"); //$NON-NLS-1$
+        	zoomField.setAccessible(true);
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private static Graphics getWrappedGraphics(ScaledGraphics scaledGraphics) {
+    	try {
+			return (Graphics)graphicsField.get(scaledGraphics);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return null;
+    }
+
+    private static double getZoom(org.eclipse.draw2d.ScaledGraphics scaledGraphics) {
+    	try {
+			return zoomField.getDouble(scaledGraphics);
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		}
+		return 1/scaledGraphics.getAbsoluteScale();
+    }
+
+    /**
+     * Caches the absolute scale for the PrinterGraphics.
+     * There is a bug in the method getAbsoluteScale() in GMF
+     * when printing.
+     * After some introspection we can fix it.
+     * We cache the result as it does not change for the whole printer.
+     */
+    private static WeakHashMap<Graphics, Double> _graphicsPrintingObjectsToZoom =
+    	new WeakHashMap<Graphics, Double>();
+    
+    /**
+     * @param graphics
+     * @return The absolute suitable even during a print where the method 
+     * getAbsoluteScale returns a number where the zoom has been taken into account twice.
+     * We take that number and divide it by zoom to get back to the correct result.
+     */
+    public static double getAbsoluteScale(Graphics graphics) {
+    	Double zoom = _graphicsPrintingObjectsToZoom.get(graphics);
+    	double scale = graphics.getAbsoluteScale();
+    	if (zoom != null) {
+    		if (zoom == Double.NEGATIVE_INFINITY) {
+    			//normal result: not a printing object
+    			return scale;
+    		} else {
+    			return scale/zoom.doubleValue();
+    			//return Math.sqrt(graphics.getAbsoluteScale());
+    		}
+    	}
+    	if (scale != 1.0) {
+    		if (graphics instanceof ScaledGraphics) {
+    			init();
+    			Graphics wrapped = getWrappedGraphics((ScaledGraphics)graphics);
+    			if (wrapped instanceof PrinterGraphics) {
+    				zoom = getZoom((PrinterGraphics)wrapped);
+    				_graphicsPrintingObjectsToZoom.put(graphics, zoom);
+    				return scale/zoom.doubleValue();
+    				//return Math.sqrt(graphics.getAbsoluteScale());
+    			}
+    		}
+    	}
+    	_graphicsPrintingObjectsToZoom.put(graphics, Double.NEGATIVE_INFINITY);
+    	return scale;
+    }
+    
 }

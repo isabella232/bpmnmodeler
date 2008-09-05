@@ -701,6 +701,7 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
      * the closest distance possible to route the line.
      */
     public PointList routeClosestDistance(Connection conn) {
+                
         PointList newLine = routeFromConstraint(conn);
         
         Point ptOrig = new Point(newLine.getFirstPoint());
@@ -782,8 +783,8 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
                 Point abovePoint = belowPoint == ptOrig ? ptTerm : ptOrig;
                 if (ptAlignedWithOrig.y > belowPoint.y || ptAlignedWithOrig.y < abovePoint.y) {
                     ptAlignedWithOrig.y = (ptOrig.y + ptTerm.y)/2;
-                    int i = ((IModelAwareAnchor) conn.getSourceAnchor()).getOrderNumber();
-                    int otheri = ((IModelAwareAnchor) conn.getTargetAnchor()).getOrderNumber();
+                    int i = safeGetOrderNumber(conn.getSourceAnchor());
+                    int otheri = safeGetOrderNumber(conn.getTargetAnchor());
                     i = ptOrig.y < ptTerm.y ? i : otheri;
                     boolean AisAboveB = ptOrig.y < ptTerm.y && ptOrig.x > ptTerm.x;
                     if (i != -1) {
@@ -808,6 +809,13 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
 
         newLine.addPoint(ptTerm);
         return newLine;
+    }
+    
+    private static int safeGetOrderNumber(ConnectionAnchor ca) {
+        if (ca instanceof IModelAwareAnchor) {
+            return ((IModelAwareAnchor)ca).getOrderNumber();
+        }
+        return 1;
     }
         
     /**

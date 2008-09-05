@@ -35,7 +35,7 @@ import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
  */
 public class ActivityLayout implements LayoutManager {
 
-    private static final int EVENT_GATEWAYS_LABEL_MIN_WIDTH = 90;
+    private static final int EVENT_GATEWAYS_LABEL_MIN_WIDTH = 30;
     
     public Dimension getMinimumSize(IFigure container, int wHint, int hHint) {
         return getPreferredSize(container, wHint, hHint);
@@ -79,12 +79,20 @@ public class ActivityLayout implements LayoutManager {
         
         if (prefSize.width < EVENT_GATEWAYS_LABEL_MIN_WIDTH &&
                 bottom != null && bottom.isVisible() && bottom instanceof WrappingLabel) {
-            //check that the width of the label is inferior to the
-            //width of the preferred size otherwise
-            //use the minimum width.
-            Dimension prefLabel = ((WrappingLabel)bottom).getPreferredSize(wHint, hHint);
-            if (prefLabel.width > EVENT_GATEWAYS_LABEL_MIN_WIDTH) {
-                prefSize.width = EVENT_GATEWAYS_LABEL_MIN_WIDTH;
+                
+            if (((WrappingLabel)bottom).getText() == null 
+                    || "".equals(((WrappingLabel)bottom).getText())) {
+                
+            } else {
+                
+                //check that the width of the label is inferior to the
+                //width of the preferred size otherwise
+                //use the minimum width.
+                Dimension prefLabel = ((WrappingLabel)bottom).getPreferredSize(wHint, hHint);
+                if (prefLabel.width > EVENT_GATEWAYS_LABEL_MIN_WIDTH) {
+                    prefSize.width = EVENT_GATEWAYS_LABEL_MIN_WIDTH;
+                }
+            
             }
         }
         

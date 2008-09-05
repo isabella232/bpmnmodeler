@@ -15,7 +15,6 @@ package org.eclipse.stp.bpmn.validation.providers;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -63,7 +62,9 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin;
+import org.eclipse.stp.bpmn.validation.IConstraintStatusEx;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin.IValidationMarkerCreationHook;
+import org.eclipse.stp.bpmn.validation.builder.ValidationMarkerCustomAttributes;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
@@ -290,22 +291,46 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 			if (target.isSetElement() && target.getElement() != null) {
 				status = validator.validate(target.getElement());
 			}
-			List allStatuses = new ArrayList();
-			allStatuses.addAll(Arrays.asList(status.isMultiStatus() ? status
-					.getChildren() : new IStatus[] { status }));
+			List<IStatus> allStatuses = new ArrayList<IStatus>();
+			if (status.isMultiStatus()) {
+			    if (status instanceof IConstraintStatusEx) {
+			        //sometimes, a single status is retuned
+			        //but itself should be interpreted as an error.
+			        //instead of just a wrapper for a list of errors.
+			        allStatuses.add(status);
+			    } else {
+    			    for (IStatus st : status.getChildren()) {
+    			        allStatuses.add(st);
+    			    }
+			    }
+			} else {
+			    allStatuses.add(status);
+			}
 
-			HashSet targets = new HashSet();
-			for (Iterator it = diagnostic.getChildren().iterator(); it
-					.hasNext();) {
+			HashSet<EObject> targets = new HashSet<EObject>();
+			for (Iterator it = diagnostic.getChildren().iterator(); it.hasNext();) {
 				targets.add(getDiagnosticTarget((Diagnostic) it.next()));
 			}
-
-			for (Iterator it = allStatuses.iterator(); it.hasNext();) {
-				Object nextStatus = it.next();
+			
+			//also add the children statuses:
+			//if a single validation constraint actually created multiple statuses
+			//by taking advantage of IConstraintStatusEx addChild API.
+			List<IStatus> moreStatuses = new ArrayList<IStatus>();
+			for (Iterator<IStatus> it = allStatuses.iterator(); it.hasNext();) {
+			    IStatus nextStatus = it.next();
 				if (nextStatus instanceof IConstraintStatus) {
 					targets.add(((IConstraintStatus) nextStatus).getTarget());
+					if (((IConstraintStatus) nextStatus).isMultiStatus()) {
+					    for (IStatus child : ((IConstraintStatus)nextStatus).getChildren()) {
+					        if (child instanceof IConstraintStatus) {
+			                    targets.add(((IConstraintStatus) child).getTarget());
+			                    moreStatuses.add((IConstraintStatus)child);
+					        }
+					    }
+					}
 				}
 			}
+			allStatuses.addAll(moreStatuses);
 
 			Map viewMap = buildElement2ViewMap(target, targets);
 			for (Iterator it = diagnostic.getChildren().iterator(); it
@@ -318,9 +343,9 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 					if (diagramFile != null)
 						addMarker(diagramFile, view != null ? view : target,
 								element, nextDiagnostic.getMessage(),
-								diagnosticToStatusSeverity(
-										nextDiagnostic.getSeverity()),
-										nextDiagnostic.getCode());
+								diagnosticToStatusSeverity(nextDiagnostic.getSeverity()),
+								nextDiagnostic.getCode(),
+								getCustomMarkerAttributes(nextDiagnostic));
 				}
 			}
 
@@ -334,7 +359,8 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 								nextStatus.getTarget(),
 								nextStatus.getMessage(), 
 								nextStatus.getSeverity(),
-								nextStatus.getCode());
+								nextStatus.getCode(),
+								getCustomMarkerAttributes(nextStatus));
 				}
 			}
 		}
@@ -395,24 +421,37 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 				}
 			}
 		}
+		
+        private static Map<String,Object> getCustomMarkerAttributes(Diagnostic diagnostic) {
+            return ValidationMarkerCustomAttributes.getMarkerAttributesMap(diagnostic);
+        }
+        private static Map<String,Object> getCustomMarkerAttributes(IConstraintStatus constrainStatus) {
+            return constrainStatus instanceof IConstraintStatusEx
+                ? ((IConstraintStatusEx)constrainStatus).getMarkerCustomAttributes() : null;
+        }
 
 		/**
 		 * @notgenerated
 		 * adding a code to keep track of the error.
 		 */
 		private static void addMarker(IFile file, View view, EObject element,
-				String message, int statusSeverity, int code) {
+				String message, int statusSeverity, int code, Map<String,Object> customAttributes) {
 			try {
                 IMarker marker = file.createMarker(MARKER_TYPE);
-				marker.setAttribute(IMarker.MESSAGE, message);
+                
+                if (customAttributes == null) {
+                    customAttributes = new HashMap<String, Object>();
+                }
+                
+                customAttributes.put(IMarker.MESSAGE, message);
 				
 				String location = EMFCoreUtil.getQualifiedName(element, true);
 				if (location.startsWith("<Diagram>::")) { //$NON-NLS-1$
 				    location = location.substring("<Diagram>::".length()); //$NON-NLS-1$
 				}
-				marker.setAttribute(IMarker.LOCATION, location);
+				customAttributes.put(IMarker.LOCATION, location);
 				
-				marker.setAttribute(
+				customAttributes.put(
 								org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
 								ViewUtil.getIdStr(view));
 				int markerSeverity = IMarker.SEVERITY_INFO;
@@ -422,8 +461,10 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 						|| statusSeverity == IStatus.CANCEL) {
 					markerSeverity = IMarker.SEVERITY_ERROR;
 				}
-				marker.setAttribute(IMarker.SEVERITY, markerSeverity);
-				marker.setAttribute("code", code); //$NON-NLS-1$
+				customAttributes.put(IMarker.SEVERITY, markerSeverity);
+				customAttributes.put("code", code); //$NON-NLS-1$
+				
+				marker.setAttributes(customAttributes);
 				
 				List<IValidationMarkerCreationHook> hooks =
 				    BpmnValidationPlugin.getDefault().getCreationMarkerCallBacks();

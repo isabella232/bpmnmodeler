@@ -137,8 +137,17 @@ public class PoolEditPart extends ShapeNodeEditPart {
         		new BpmnDragDropEditPolicy(this));
      // adding an open edit policy
         installEditPolicy(EditPolicyRoles.OPEN_ROLE,
-                new OpenFileEditPolicy());
+                createOpenFileEditPolicy());
     }
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
 
     /**
      * @generated

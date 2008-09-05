@@ -28,6 +28,7 @@ import org.eclipse.gmf.runtime.diagram.ui.figures.ShapeCompartmentFigure;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
+import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
 import org.eclipse.stp.bpmn.figures.activities.LaneFigure;
 
 /**
@@ -74,7 +75,7 @@ public class PoolPoolCompartmentFigure extends ShapeCompartmentFigure {
                 } else {
                     graphics.setForegroundColor(ColorConstants.black);
                 }
-                graphics.setLineWidth((int) (4 * graphics.getAbsoluteScale()));
+                graphics.setLineWidth((int) (4 * ActivityPainter.getAbsoluteScale(graphics)));
                 graphics.setBackgroundColor(fig.getBackgroundColor());
                 Rectangle rectangle = new Rectangle();
                 rectangle.width = getBounds().width;

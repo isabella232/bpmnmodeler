@@ -21,10 +21,12 @@ import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCo
 import org.eclipse.swt.graphics.Image;
 
 /**
- * @author atoulme
- * an abstract class representing the IDnDHandler.
+ * An abstract class representing the IDnDHandler.
  * 
  * Clients can subclass this class.
+ * 
+ * @author atoulme
+ * @author Intalio Inc
  */
 public abstract class AbstractDnDHandler implements IDnDHandler {
 
@@ -37,10 +39,7 @@ public abstract class AbstractDnDHandler implements IDnDHandler {
 	 */
 	protected abstract class EasyCommand extends AbstractTransactionalCommand {
 		public EasyCommand(EObject elt) {
-			super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
-					getEditingDomainFor(elt),
-					"", //$NON-NLS-1$
-					getWorkspaceFiles(elt));
+			this(elt, ""); //$NON-NLS-1$
 		}
 		
 		public EasyCommand(EObject elt, String name) {

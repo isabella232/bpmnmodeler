@@ -335,11 +335,15 @@ public class BatchValidationBuilder extends IncrementalProjectBuilder {
                 try {
                     BpmnValidationProvider.ValidateAction.runValidation(diagram);
                 } catch (Exception e) {
+                    if (BpmnValidationPlugin.getDefault() != null) {
                     BpmnValidationPlugin.getDefault().getLog().log(
                             new Status(IStatus.ERROR,
                                     BpmnValidationPlugin.PLUGIN_ID,
                                     IStatus.ERROR,
                                     BpmnValidationMessages.BatchValidationBuilder_taskValidateActionFailed, e));
+                    } else {
+                        e.printStackTrace();
+                    }
                 }
             } else {
             }

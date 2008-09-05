@@ -41,8 +41,8 @@ public class BpmnMarkerNavigationProvider extends
             if (!(getEditor() instanceof DiagramEditor)) {
                 return;
             }
-            bpmnId = marker.getAttribute("bpmnId", ""); //$NON-NLS-1$ //$NON-NLS-2$
-            if (bpmnId == null) {
+            bpmnId = marker.getAttribute("bpmnId", (String)null); //$NON-NLS-1$ //$NON-NLS-2$
+            if (bpmnId == null || bpmnId.length() == 0) {
                 return;
             }
 		}

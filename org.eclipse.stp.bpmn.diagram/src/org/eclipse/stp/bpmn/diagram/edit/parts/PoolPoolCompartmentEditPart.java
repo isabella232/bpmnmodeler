@@ -51,12 +51,13 @@ import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CreationEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DragDropEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.diagram.ui.figures.ResizableCompartmentFigure;
+import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnectionRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
 import org.eclipse.gmf.runtime.notation.View;
-import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.policies.PoolPoolCompartmentCanonicalEditPolicy;
@@ -207,9 +208,17 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, 
                 new BpmnDragDropEditPolicy(this));
         // adding an open edit policy
-        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
-        		new OpenFileEditPolicy());
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
     }
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
 
     /**
      * @generated
@@ -549,5 +558,35 @@ public class PoolPoolCompartmentEditPart extends ShapeCompartmentEditPart {
             }
         };
     }
-
+    
+    
+//  //TESTING
+//    public Command getCommand(Request request) {
+//        Command command = null;
+//        EditPolicyIterator i = getEditPolicyIterator();
+//        while (i.hasNext()) {
+//            EditPolicy ep = i.next();
+//            Command nextCommand = ep.getCommand(request);
+//            if (nextCommand == null) {
+//                continue;
+//            }
+//            if (!nextCommand.canExecute()) {
+//                if (ep instanceof ContainerNodeEditPolicyEx) {
+//                    CreateUnspecifiedTypeConnectionRequest rel = (CreateUnspecifiedTypeConnectionRequest)request;
+//                    System.err.println("humf! " + request.getType() + " - " + rel.getSourceEditPart().getParent() + " -> " + rel.getTargetEditPart());
+//                    if (rel.getSourceEditPart() != null && 
+//                            !rel.getSourceEditPart().getParent().equals(rel.getTargetEditPart())) {
+//                        System.err.println("dd");
+//                        ep.getCommand(request).canExecute();
+//                    }
+//                }
+//                System.err.println("Edit Policy " + ep + " returned a non exec command on " + this.resolveSemanticElement());
+//            }
+//            if (command != null)
+//                command = command.chain(nextCommand);
+//            else
+//                command = nextCommand;
+//        }
+//        return command;
+//    }
 }

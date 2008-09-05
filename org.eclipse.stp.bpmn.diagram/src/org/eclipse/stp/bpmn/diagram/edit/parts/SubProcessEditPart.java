@@ -91,6 +91,7 @@ import org.eclipse.stp.bpmn.figures.connectionanchors.impl.ConnectionAnchorFacto
 import org.eclipse.stp.bpmn.layouts.SubProcessLayout;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.DelegateToCompartmentEditPolicy;
+import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizableSubProcessEditPolicy;
 import org.eclipse.stp.bpmn.tools.EdgeConnectionValidator;
 import org.eclipse.stp.bpmn.tools.TaskDragEditPartsTrackerEx;
@@ -210,7 +211,19 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                         BpmnVisualIDRegistry
                                 .getType(SubProcessSubProcessBodyCompartmentEditPart.VISUAL_ID),
                         EditPolicy.CONTAINER_ROLE));
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
+
     }
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
+    
     /**
      * Ability to override the ConnectionHandleEditPolicy.
      * @generated NOT
@@ -755,7 +768,8 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                     loopRect.height = size;
                     loopRect.width = size;
                     
-                    ActivityPainter.paintCompensation(graphics, loopRect);
+                    ActivityPainter.paintCompensation(graphics, loopRect,
+                            MapModeUtil.getMapMode(getFigure()).LPtoDP(1));
                     
                     break;
                 }

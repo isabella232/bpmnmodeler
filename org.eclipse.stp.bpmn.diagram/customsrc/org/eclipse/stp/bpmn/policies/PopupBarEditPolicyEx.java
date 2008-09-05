@@ -689,7 +689,7 @@ public class PopupBarEditPolicyEx extends DiagramAssistantEditPolicy {
 
     /**
      * This is the entry point that subclasses can override to fill the popup
-     * bar descrioptors if they have customized tools that cannot be done using
+     * bar descriptors if they have customized tools that cannot be done using
      * the type along with the modeling assistant service.
      */
     protected void fillPopupBarDescriptors() {

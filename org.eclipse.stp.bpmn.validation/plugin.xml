@@ -13,6 +13,8 @@
 *******************************************************************************
 -->
 <plugin>
+   <extension-point id="BpmnMarkerResolutionProvider" name="BpmnMarkerResolutionProvider" schema="schema/BpmnMarkerResolutionProvider.exsd"/>
+   <extension-point id="BpmnFileExistenceConstraintCustomizer" name="BpmnFileExistenceConstraintCustomizer" schema="schema/BpmnFileExistenceConstraintCustomizer.exsd"/>
 
 	
 	
@@ -127,6 +129,18 @@
                <message>%constraint.message.6</message>
                <target class="Activity"/>
             </constraint>
+            <constraint
+                  class="org.eclipse.stp.bpmn.validation.specification.GatewayGatesConstraint"
+                  id="org.eclipse.stp.bpmn.validation.gatewayGatesValidity"
+                  lang="java"
+                  mode="Batch"
+                  name="Gateway Gates Validity"
+                  severity="WARNING"
+                  statusCode="1">
+               <description>This constraint warns the user if no default gate is defined on forking XOR and OR gateways. Such gateways may throw errors at runtime if no gate is chosen.</description>
+               <message>{0}</message>
+               <target class="Activity"/>
+            </constraint>
          </constraints>
          <description>%constraintProvider.description.0</description>
          
@@ -198,4 +212,25 @@
                type="org.eclipse.stp.bpmn.validation.diagnostic"/>
       </filter>
    </extension>
+   
+   <extension
+         name="BPMN quickfixes"
+         point="org.eclipse.ui.ide.markerResolution">
+      <markerResolutionGenerator
+            class="org.eclipse.stp.bpmn.validation.quickfixes.internal.BpmnQuickfixes"
+            markerType="org.eclipse.stp.bpmn.validation.diagnostic">
+         <attribute
+               name="bpmnquickfixable"
+               value="true">
+         </attribute>
+      </markerResolutionGenerator>
+   </extension>
+   <extension
+         point="org.eclipse.stp.bpmn.validation.BpmnMarkerResolutionProvider">
+      <bpmnQuickfixProvider id="FileExistenceContraintQuickfixProvider"
+            class="org.eclipse.stp.bpmn.validation.file.FileExistenceContraintQuickfixProvider">
+      </bpmnQuickfixProvider>
+   </extension>
+   
+   
 </plugin>

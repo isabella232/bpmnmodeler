@@ -14,6 +14,7 @@ import org.eclipse.osgi.util.NLS;
 
 /**
  * Messages for the bpmn.validation plugin.
+ * 
  * @author <a href="http://www.intalio.com">Intalio Inc.</a>
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
  */

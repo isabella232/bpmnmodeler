@@ -122,12 +122,20 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
      // adding default drag and drop edit policy
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, 
                 new BpmnDragDropEditPolicy(this));
-        // adding an open edit policy
-        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
-        		new OpenFileEditPolicy());
         installEditPolicy(EditPolicy.CONNECTION_ENDPOINTS_ROLE,
                 new ConnectionEndPointEditPolicyEx());
+        // adding an open edit policy
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
     }
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
     
     /**
      * Creates figure for this edit part.
@@ -163,6 +171,11 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
          */
         private boolean routerIsRectilinear = false;
 
+        public EdgeFigure(boolean isRectilinear) {
+            this();
+            routerIsRectilinear = isRectilinear;
+        }
+        
         /**
          * @notgenerated added the setting of isDefault.
          */
@@ -563,7 +576,8 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         List<SequenceEdgeEditPart> targets = new ArrayList<SequenceEdgeEditPart>();
         int index = ((Activity) target.resolveSemanticElement()).
             getIncomingEdges().indexOf(resolveSemanticElement());
-        if (!isOrderImportant(true)) {
+        
+        if (!isOrderImportant(false)) {
             index = ActivityEditPart.getTargetAnchorVisualIndex((Edge)getModel());
         }
         int tgtsize = 0;
@@ -617,6 +631,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
             return getGatewayConstraintFor2Connections(bottomLimit,
                     topLimit, midY, sourceMidY, otherSourceMidY, index);
         }
+        
         if (index == 0) {
             return EdgeRectilinearRouter.CONSTRAINT_ON_TOP;
         } else if (index == tgtsize -1) {

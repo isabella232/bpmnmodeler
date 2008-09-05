@@ -11,10 +11,7 @@
 package org.eclipse.stp.bpmn.diagram.edit.policies;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
@@ -31,17 +28,23 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.impl.EObjectImpl;
 import org.eclipse.emf.ecore.util.FeatureMap;
-import org.eclipse.emf.ecore.util.FeatureMapUtil;
 import org.eclipse.emf.ecore.util.FeatureMap.ValueListIterator;
+import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
+import org.eclipse.emf.transaction.TransactionalEditingDomain;
+import org.eclipse.gef.Request;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
+import org.eclipse.gmf.runtime.diagram.core.services.ViewService;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.gmf.runtime.diagram.ui.requests.EditCommandRequestWrapper;
+import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
+import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.type.core.commands.DestroyElementCommand;
 import org.eclipse.gmf.runtime.emf.type.core.requests.CreateRelationshipRequest;
 import org.eclipse.gmf.runtime.emf.type.core.requests.DestroyElementRequest;
+import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
@@ -49,6 +52,7 @@ import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.AssociationTarget;
 import org.eclipse.stp.bpmn.BpmnDiagram;
+import org.eclipse.stp.bpmn.BpmnFactory;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Identifiable;
@@ -56,10 +60,14 @@ import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
+import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.commands.CreateRelationshipCommandEx;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
+import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
+import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**
@@ -68,6 +76,15 @@ import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 public class ActivityItemSemanticEditPolicy extends
         BpmnBaseItemSemanticEditPolicy {
 
+    /**
+     * The constant for all requests regarding the change of activity type
+     */
+    public static final String ACTIVITY_TYPE_CHANGE_REQUEST = "activity_type_change_request";
+    /**
+     * The constant for the activity type stored in the extended data map of
+     * the request.
+     */
+    public static final Object ACTIVITY_TYPE_EXTENDED_DATA = "activity_type_extended_data";
     /**
      * @generated
      */
@@ -281,20 +298,19 @@ public class ActivityItemSemanticEditPolicy extends
          */
         @Override
         public boolean canExecute() {
-        	if ((getSource() == null)|| getTarget() == null) {
+            /*
+             * Sequence Flow Rules
+             */
+        	if (getSource() == null|| getTarget() == null) {
         		return true;
         		// in this case the sequence flow is created as the activity is created.
         	}
             
-            /*
-             * Sequence Flow Rules
-             */
-            if (getSource().equals(getTarget())) {
+            if (!(getSource() instanceof Activity && getTarget() instanceof Activity)) {
+                //it does not look right!
                 return false;
             }
-            if (!(getSource() instanceof Activity) ||
-                    !(getTarget() instanceof Activity)) {
-                //it does not look right!
+            if (getSource().equals(getTarget())) {
                 return false;
             }
             
@@ -415,19 +431,16 @@ public class ActivityItemSemanticEditPolicy extends
          */
         @Override
         public boolean canExecute() {
-            if (getSource() instanceof Pool || 
-                    getTarget() instanceof Pool) {
+            
+            if (getSource() instanceof Pool || getTarget() instanceof Pool) {
                 return true;
             }
-        	if ((!(getSource() instanceof Activity))|| 
-        			!(getTarget() instanceof Activity)) {
+        	if (!(getSource() instanceof Activity && getTarget() instanceof Activity)) {
         		return false;
         		// the message is created at the same time as the activity is created.
         	}
-            Activity source = getSource() instanceof Activity ?
-                    (Activity) getSource() : null;
-            Activity target = getTarget() instanceof Activity ?
-                    (Activity) getTarget() : null;
+            Activity source = (Activity) getSource();
+            Activity target = (Activity) getTarget();
                     
             /*
              * Message Flow Rules
@@ -619,6 +632,10 @@ public class ActivityItemSemanticEditPolicy extends
                 //allow the message response to answer from the same
                 //shape.
                 case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
+                    if (source.getEventHandlerFor() != null) {
+                        return false;//no outgoing message on the event handler.
+                    }
+                    
                 case ActivityType.EVENT_START_MESSAGE:
                 case ActivityType.EVENT_INTERMEDIATE_MULTIPLE:
                 case ActivityType.EVENT_START_MULTIPLE:
@@ -741,6 +758,164 @@ public class ActivityItemSemanticEditPolicy extends
                 newElement.setSource((Artifact) getSource());
             }
             return newElement;
+        }
+    }
+    
+    /**
+     * @generated not
+     * overridden for activity type command
+     */
+    @Override
+    public boolean understandsRequest(Request request) {
+        return super.understandsRequest(request) 
+            || (ACTIVITY_TYPE_CHANGE_REQUEST.equals(request.getType()));
+    }
+    
+    /**
+     * @generated not
+     * overridden for activity type command
+     */
+    @Override
+    public Command getCommand(Request request) {
+        if (ACTIVITY_TYPE_CHANGE_REQUEST.equals(request.getType())) {
+            return getCommandForActivityTypeChange(request);
+        }
+        return super.getCommand(request);
+    }
+
+    /**
+     * 
+     * @param request
+     * @return a command that changes the activity type of an activity.
+     */
+    protected Command getCommandForActivityTypeChange(Request request) {
+        ActivityType type = (ActivityType) request.getExtendedData().get(ACTIVITY_TYPE_EXTENDED_DATA);
+        return getMSLWrapper(new ActivityTypeChangeCommand(type));
+    }
+    
+    /**
+     * Command to change the activity type of an activity.
+     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
+     * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
+     */
+    protected class ActivityTypeChangeCommand extends AbstractTransactionalCommand {
+        
+        private ActivityType _type;
+        
+        public ActivityTypeChangeCommand(ActivityType type) {
+            super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
+                    getEditingDomainFor(((IGraphicalEditPart) getHost()).resolveSemanticElement()),
+                    BpmnDiagramMessages.ChangeActivityTypeAction_settingActivityTypeCommand,
+                    getWorkspaceFiles(((IGraphicalEditPart) getHost()).resolveSemanticElement()));
+            _type = type;
+        }
+        
+        @Override
+        protected CommandResult doExecuteWithResult(
+                IProgressMonitor monitor, IAdaptable info)
+        throws ExecutionException {
+            if (ActivityType.SUB_PROCESS_LITERAL.equals(_type)) {
+                Activity act = (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement();
+                Node actnode = (Node) ((IGraphicalEditPart) getHost()).getNotationView();
+                SubProcess sp = BpmnFactory.eINSTANCE.createSubProcess();
+                sp.setActivityType(ActivityType.SUB_PROCESS_LITERAL);
+                sp.setName(act.getName());
+                sp.setNcname(act.getNcname());
+                sp.setDocumentation(act.getDocumentation());
+                sp.setGraph(act.getGraph());
+                sp.setID(act.getID());
+//              sp.setLane(act.getLane());
+                sp.setLooping(act.isLooping());
+                sp.getIncomingEdges().addAll(act.getIncomingEdges());
+                sp.getOutgoingEdges().addAll(act.getOutgoingEdges());
+                Node node = ViewService.createNode((View) actnode.eContainer(), 
+                        sp,BpmnVisualIDRegistry.getType(SubProcessEditPart.VISUAL_ID) , 
+                        BpmnDiagramEditorPlugin.DIAGRAM_PREFERENCES_HINT);
+                node.setLayoutConstraint(actnode.getLayoutConstraint());
+                node.getTargetEdges().addAll(actnode.getTargetEdges());
+                node.getSourceEdges().addAll(actnode.getSourceEdges());
+                Command co = getHost().getCommand(
+                        new EditCommandRequestWrapper(
+                                new DestroyElementRequest(act, false)));
+
+                co.execute();
+                Command autosize = 
+                    getHost().getCommand(new Request(RequestConstants.REQ_AUTOSIZE));
+                autosize.execute();
+                return CommandResult.newOKCommandResult();
+            } else {
+                Activity act = (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement();
+                if (getActivityType().getValue() != 
+                    ActivityType.TASK && 
+                    (getActivityType().getValue() != 
+                        ActivityType.SUB_PROCESS)) {
+                    act.setLooping(false);
+                }
+                act.setActivityType(getActivityType());
+                getHost().deactivate();
+                getHost().activate();
+                Command autosize = 
+                    getHost().getCommand(new Request(RequestConstants.REQ_AUTOSIZE));
+                autosize.execute();
+                return CommandResult.newOKCommandResult();
+            }
+        }
+        
+        private ActivityType getActivityType() {
+            return _type;
+        }
+        
+        @Override
+        public boolean canExecute() {
+            if (!super.canExecute()) {
+                return false;
+            }
+            boolean forbidEnablement = false;
+            Activity act = (Activity) ((IGraphicalEditPart) getHost()).resolveSemanticElement();
+            if (act instanceof SubProcess) {// changing a subprocess into an 
+                // activity is too complicated for now.
+                forbidEnablement = true;
+            }
+            // if the activity has messages, then don't allow it
+            // to be transformed into a gateway
+            // to avoid having something illegal here.
+            if (!act.getOrderedMessages().isEmpty() &&
+                    ActivityType.VALUES_GATEWAYS.contains(_type)) {
+                forbidEnablement = true;
+            }
+            // empty events are not authorized to be associated
+            // with messages
+            if (!act.getOrderedMessages().isEmpty() &&
+                    ActivityType.EVENT_END_EMPTY_LITERAL.equals(_type)) {
+                forbidEnablement = true;
+            }
+            
+            if (!act.getOrderedMessages().isEmpty() &&
+                    ActivityType.EVENT_INTERMEDIATE_EMPTY_LITERAL.equals(_type)) {
+                forbidEnablement = true;
+            }
+            
+            if (!act.getOrderedMessages().isEmpty() &&
+                    ActivityType.EVENT_START_EMPTY_LITERAL.equals(_type)) {
+                forbidEnablement = true;
+            }
+            
+            if (forbidEnablement) {
+                return false;
+            }
+            if (act.getActivityType().getValue() 
+                    == getActivityType().getValue()) {
+                forbidEnablement = true;
+            }
+            
+            // only accepting to change an activity into a subprocess if
+            // the activity doesn't have messages and is of type TASK.
+            if (_type.getValue() == ActivityType.SUB_PROCESS && 
+                    (act.getActivityType().getValue() != ActivityType.TASK || 
+                            (!act.getOrderedMessages().isEmpty()))) {
+                forbidEnablement = true;
+            }
+            return !forbidEnablement;
         }
     }
 }

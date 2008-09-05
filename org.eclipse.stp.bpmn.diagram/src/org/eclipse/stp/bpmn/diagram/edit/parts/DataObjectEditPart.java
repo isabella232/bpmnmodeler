@@ -103,8 +103,7 @@ public class DataObjectEditPart extends ShapeNodeEditPart {
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE,
                 new BpmnDragDropEditPolicy(this));
         // adding an open edit policy
-        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
-        		new OpenFileEditPolicy());
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
     }
     
     /**
@@ -113,6 +112,13 @@ public class DataObjectEditPart extends ShapeNodeEditPart {
      */
     protected DiagramAssistantEditPolicy createConnectionHandlerEditPolicy() {
         return new ConnectionHandleEditPolicyEx();
+    }
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
     }
 
     

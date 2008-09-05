@@ -155,7 +155,9 @@ public class PromptForConnectionAndEndCommandEx extends
 
     @Override
     protected List getConnectionMenuContent() {
-        List l = super.getConnectionMenuContent();
+        //it is necessary to clone the list otherwise it is hard to put the elements
+        //that used to be there back in the request that is not always re-created.
+        List l = new ArrayList(super.getConnectionMenuContent());
         
         EditPart source = request.getSourceEditPart();
         EditPart target = request.getTargetEditPart();

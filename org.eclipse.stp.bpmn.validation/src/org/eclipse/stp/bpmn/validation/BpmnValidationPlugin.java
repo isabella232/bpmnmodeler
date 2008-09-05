@@ -24,12 +24,18 @@ import org.eclipse.core.resources.ISaveParticipant;
 import org.eclipse.core.resources.ResourcesPlugin;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
+import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
+import org.eclipse.emf.validation.IValidationContext;
+import org.eclipse.emf.validation.model.IConstraintStatus;
 import org.eclipse.gmf.runtime.common.ui.util.UIModificationValidator;
 import org.eclipse.stp.bpmn.validation.builder.BatchValidationBuildAbleNature;
 import org.eclipse.stp.bpmn.validation.builder.BatchValidationBuilder;
 import org.eclipse.stp.bpmn.validation.builder.ResourceImportersRegistry;
+import org.eclipse.stp.bpmn.validation.builder.ValidationMarkerCustomAttributes;
+import org.eclipse.stp.bpmn.validation.quickfixes.IBpmnMarkerResolutionProvider;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -47,7 +53,65 @@ public class BpmnValidationPlugin extends AbstractUIPlugin {
     /** category of imports managed by the batch validation builder */
     public static String GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID = 
         BatchValidationBuilder.GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID;
-
+    
+    public static Map<String,Object> createMarkerAttributesMap(Diagnostic diagnostic) {
+        return ValidationMarkerCustomAttributes.createMarkerAttributesMap(diagnostic);
+    }
+    
+    /**
+     * Cast or wraps an IConstraintStatus into an IConstraintStatusEx
+     * @param st
+     * @param bpmnQuickfixResolutionID The id of the bpmn resolution
+     * provider that will be set on the custom attributes. null if no such thing
+     * is to be done.
+     * @return The same object or the same object wrapped or null
+     * if it was not an IConstraintStatus.
+     */
+    public static IConstraintStatusEx asConstraintStatusEx(IStatus st, String bpmnQuickfixResolutionID) {
+        IConstraintStatusEx cons = null;
+        if (st instanceof IConstraintStatusEx) {
+            cons = (IConstraintStatusEx)st;
+        } else if (st instanceof IConstraintStatus) {
+            cons = new ConstraintStatusEx((IConstraintStatus)st);
+        } else {
+            return null;//we should no be here really.
+        }
+        if (bpmnQuickfixResolutionID != null) {
+            cons.addMarkerAttribute(
+                    IBpmnMarkerResolutionProvider.MARKER_ATTRIBUTE_BPMN_QUICK_FIXABLE,
+                    Boolean.TRUE.toString());
+            cons.addMarkerAttribute(
+                    IBpmnMarkerResolutionProvider.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTION_ID,
+                    bpmnQuickfixResolutionID);
+        }
+        return cons;
+    }
+    
+    /**
+     * Creates a new IConstraintStatusEx
+     * @param ctxt
+     * @param messageArguments
+     * @return
+     */
+    public static IConstraintStatusEx createFailureStatus(IValidationContext ctxt,
+            EObject target, Object[] messageArguments) {
+        IStatus st = ctxt.createFailureStatus(messageArguments);
+        IConstraintStatusEx cons = asConstraintStatusEx(st, null);
+        if (target != null) {
+            ((ConstraintStatusEx)cons).setTarget(target);
+        }
+        return cons;
+    }
+    
+    /**
+     * Helper method used during the execution of the validation of the diagram.
+     * Adds the markers attributes that BpmnQuickfixes requires
+     * Calls the abstract method where attributes specific to this
+     * particular issue are created.
+     * 
+     * @param constrainedStatus
+     */
+    
     // The shared instance
 	private static BpmnValidationPlugin plugin;
 	

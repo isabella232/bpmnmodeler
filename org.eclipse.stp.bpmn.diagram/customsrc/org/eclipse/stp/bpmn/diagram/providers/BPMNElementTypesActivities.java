@@ -42,7 +42,12 @@ public class BPMNElementTypesActivities {
     private static Collection<IElementType> TypesForAssociationTarget;
     private static Collection<IElementType> TypesForAssociationTargetSource;
 
-    public static Collection<IElementTypeEx> getElementTypesForSubProcessBorder() {
+    /**
+     * @param excludeFCTHandlers true to no include the FCT-handlers (fautl-compensate-termninate)
+     * This is the case for sub-processes that are event handlers.
+     * @return
+     */
+    public static Collection<IElementTypeEx> getElementTypesForSubProcessBorder() {//boolean excludeFCTHandlers) {
 
         if (TypesForSubProcessBorder == null) {
             TypesForSubProcessBorder = Collections

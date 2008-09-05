@@ -22,7 +22,6 @@ import java.util.List;
 
 import org.eclipse.draw2d.FigureListener;
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -156,7 +155,7 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
     
     /**
      * Adds to the list of handles the handles for the different types of associations
-     * This method is made tobe overridden by a different implement 
+     * This method is made to be overridden by a different implement 
      * should the need arise to have more or less and different types of
      * association handles.
      * 
@@ -402,7 +401,9 @@ public class ConnectionHandleEditPolicyEx extends DiagramAssistantEditPolicy {
 		if (handles != null || !isSelectionToolActive()) {
 			return false;
 		}
-		
+		if (getMouseLocation() == null) {
+		    return false;
+		}
 		// only show if in the top, bottom, left or right quarter
 		Point mouse = getMouseLocation().getCopy();
 		Rectangle bounds = getOwnerBounds(getHostFigure());

@@ -18,6 +18,7 @@ package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
@@ -58,7 +59,9 @@ public class ActivityOvalFigure extends NodeFigureEx {
     @Override
     public void setBounds(Rectangle rect) {
         Rectangle r = rect.getCopy();
-        r.height = r.width;
+        r.height = Math.min(r.height, r.width);
+        r.width = r.height;
+//        r.height = r.width;
         super.setBounds(r);
     }
     
@@ -90,4 +93,18 @@ public class ActivityOvalFigure extends NodeFigureEx {
         }
         return null;
     }
+    
+    private static final Dimension MIN_SIZE = new Dimension(16, 16);
+
+    @Override
+    public Dimension getMinimumSize(int hint, int hint2) {
+        Dimension d = super.getMinimumSize(hint, hint2);
+        if (d.height < MIN_SIZE.height) {
+            return MIN_SIZE;
+        } else {
+            return d;
+        }
+    }
+    
+    
 }

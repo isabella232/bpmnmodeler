@@ -61,8 +61,7 @@ public class AssociationEditPart extends ConnectionNodeEditPart {
         installEditPolicy(EditPolicyRoles.DRAG_DROP_ROLE, 
                 new BpmnDragDropEditPolicy(this));
         // adding an open edit policy
-        installEditPolicy(EditPolicyRoles.OPEN_ROLE,
-        		new OpenFileEditPolicy());
+        installEditPolicy(EditPolicyRoles.OPEN_ROLE, createOpenFileEditPolicy());
     }
     /**
      * Creates figure for this edit part.
@@ -75,6 +74,15 @@ public class AssociationEditPart extends ConnectionNodeEditPart {
     protected Connection createConnectionFigure() {
         return new ConnectionAssociationFigure();
     }
+    
+    /**
+     * Ability to override the OpenFileEditPolicy.
+     * @generated NOT
+     */
+    protected OpenFileEditPolicy createOpenFileEditPolicy() {
+        return new OpenFileEditPolicy();
+    }
+
     
     /**
      * @generated NOT

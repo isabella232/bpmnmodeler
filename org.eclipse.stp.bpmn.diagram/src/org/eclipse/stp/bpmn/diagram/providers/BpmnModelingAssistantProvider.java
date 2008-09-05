@@ -257,7 +257,8 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             types.add(BpmnElementTypes.SequenceEdge_3001);
             // only add this possibility if the 
             // activity is not one of the types below
-            ActivityType actype = ((Activity) targetEditPart.resolveSemanticElement()).getActivityType();
+            ActivityType actype = ((Activity) targetEditPart
+                    .resolveSemanticElement()).getActivityType();
             switch (actype.getValue()) {
             case ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE:
             case ActivityType.GATEWAY_DATA_BASED_INCLUSIVE:
@@ -280,7 +281,16 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
         // only accept incoming associations.
         if (targetEditPart instanceof Activity2EditPart) {
             List types = new ArrayList();
-			types.add(BpmnElementTypes.Association_3003);
+            types.add(BpmnElementTypes.Association_3003);
+            //msg event on the sub-process border do accespt
+            //messaging edges:
+            EObject eo = targetEditPart.resolveSemanticElement();
+            if (eo instanceof Activity) {
+                if (((Activity) eo).getActivityType()
+                        .getValue() == ActivityType.EVENT_INTERMEDIATE_MESSAGE) {
+                    types.add(BpmnElementTypes.MessagingEdge_3002);
+                }
+            }
             types = filterElementTypes(target, types);
             return types;
         }
@@ -408,7 +418,7 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
                 types.addAll(BPMNElementTypesActivities
                         .getElementTypesForAssociationSource());
             }
-        	 types = filterElementTypes(target, types);
+        	types = filterElementTypes(target, types);
             return types;
         }
         if (targetEditPart instanceof SubProcessEditPart) {

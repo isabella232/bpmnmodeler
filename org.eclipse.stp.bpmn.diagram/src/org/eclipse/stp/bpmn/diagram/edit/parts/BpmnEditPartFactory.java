@@ -29,6 +29,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramRootEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ITextAwareEditPart;
 import org.eclipse.gmf.runtime.gef.ui.internal.parts.TextCellEditorEx;
 import org.eclipse.gmf.runtime.notation.View;
+import org.eclipse.jface.resource.FontRegistry;
 import org.eclipse.jface.viewers.CellEditor;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.ConnectionLayerExEx;
@@ -36,6 +37,7 @@ import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrapLabel;
 import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @generated
@@ -284,8 +286,8 @@ public class BpmnEditPartFactory implements EditPartFactory {
                 rect.setSize(new Dimension(text.computeSize(rect.width,
                         SWT.DEFAULT)));
             else {
-                int avr = FigureUtilities.getFontMetrics(text.getFont())
-                        .getAverageCharWidth();
+                int avr = FigureUtilities.getFontMetrics(text.getFont() != null ?
+                        text.getFont() : wrapLabel.getFont()).getAverageCharWidth();
                 rect.setSize(new Dimension(text.computeSize(SWT.DEFAULT,
                         SWT.DEFAULT)).expand(avr * 2, 0));
             }
