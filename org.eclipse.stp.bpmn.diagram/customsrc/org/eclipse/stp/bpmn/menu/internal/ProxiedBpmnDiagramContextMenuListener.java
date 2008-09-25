@@ -63,12 +63,12 @@ public class ProxiedBpmnDiagramContextMenuListener implements IBpmnDiagramContex
         if (_resolved == null && _errorWhenLoading == null) {
             try {
                 _resolved = (IBpmnDiagramContextMenuListener)
-                    _proxied.createExecutableExtension("class");
+                    _proxied.createExecutableExtension("class"); //$NON-NLS-1$
             } catch (CoreException e) {
-                _errorWhenLoading = "Unable to create an IBpmnDiagramContextMenuListener";
+                _errorWhenLoading = "Unable to create an IBpmnDiagramContextMenuListener"; //$NON-NLS-1$
                 BpmnDiagramEditorPlugin.getInstance().getLog().log(
                         new Status(IStatus.ERROR, BpmnDiagramEditorPlugin.ID,
-                                "Unable to create an IBpmnDiagramContextMenuListener", e));
+                                "Unable to create an IBpmnDiagramContextMenuListener", e)); //$NON-NLS-1$
             }
         }
         if (_resolved != null) {

@@ -81,7 +81,7 @@ public class ActivityLayout implements LayoutManager {
                 bottom != null && bottom.isVisible() && bottom instanceof WrappingLabel) {
                 
             if (((WrappingLabel)bottom).getText() == null 
-                    || "".equals(((WrappingLabel)bottom).getText())) {
+                    || "".equals(((WrappingLabel)bottom).getText())) { //$NON-NLS-1$
                 
             } else {
                 

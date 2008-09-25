@@ -79,12 +79,12 @@ public class ActivityItemSemanticEditPolicy extends
     /**
      * The constant for all requests regarding the change of activity type
      */
-    public static final String ACTIVITY_TYPE_CHANGE_REQUEST = "activity_type_change_request";
+    public static final String ACTIVITY_TYPE_CHANGE_REQUEST = "activity_type_change_request"; //$NON-NLS-1$
     /**
      * The constant for the activity type stored in the extended data map of
      * the request.
      */
-    public static final Object ACTIVITY_TYPE_EXTENDED_DATA = "activity_type_extended_data";
+    public static final Object ACTIVITY_TYPE_EXTENDED_DATA = "activity_type_extended_data"; //$NON-NLS-1$
     /**
      * @generated
      */

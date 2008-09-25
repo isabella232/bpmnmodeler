@@ -36,6 +36,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String ActivityGraphicalNodeEditPolicy_edge_order_command_name;
 
+    public static String ActivityPainter_unknown_label;
+
     public static String AddCommand_Label;
 
     public static String ArrangeSelectionAction_label;

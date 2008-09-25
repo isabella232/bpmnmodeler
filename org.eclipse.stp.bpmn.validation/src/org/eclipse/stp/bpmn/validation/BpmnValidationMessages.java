@@ -38,8 +38,14 @@ public class BpmnValidationMessages extends NLS {
     public static String BpmnValidationProvider_validateFailed;
 
     public static String BpmnValidationProvider_ValidationActionFailed;
+
+    public static String FileExistenceContraintQuickfixProvider_change_reference;
+
+    public static String FileExistenceContraintQuickfixProvider_remove_reference;
     
     public static String GatewayEdgesConstraint_named;
+
+    public static String GatewayGatesConstraint_defaultGateway_constraint;
 
     public static String MessageEventConstraint_named;
 

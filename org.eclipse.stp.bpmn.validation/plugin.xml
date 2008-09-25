@@ -134,11 +134,11 @@
                   id="org.eclipse.stp.bpmn.validation.gatewayGatesValidity"
                   lang="java"
                   mode="Batch"
-                  name="Gateway Gates Validity"
+                  name="%constraint.name.7"
                   severity="WARNING"
                   statusCode="1">
-               <description>This constraint warns the user if no default gate is defined on forking XOR and OR gateways. Such gateways may throw errors at runtime if no gate is chosen.</description>
-               <message>{0}</message>
+               <description>%constraint.description.7</description>
+               <message>%constraint.message.7</message>
                <target class="Activity"/>
             </constraint>
          </constraints>

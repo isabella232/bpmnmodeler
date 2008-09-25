@@ -19,6 +19,7 @@ import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.SequenceEdge;
+import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 
 /**
  * This constraint checks that there is a default path for the OR and XOR gateways,
@@ -44,7 +45,7 @@ public class GatewayGatesConstraint extends AbstractModelConstraint {
                         isDefault |= edge.isIsDefault();
                     }
                     if (!isDefault) {
-                        return ctxt.createFailureStatus(new String[] {"The gateway should have a default gate to ensure that at least one gate will be valid at runtime."});
+                        return ctxt.createFailureStatus(new String[] {BpmnValidationMessages.GatewayGatesConstraint_defaultGateway_constraint});
                     }
                 }
             }

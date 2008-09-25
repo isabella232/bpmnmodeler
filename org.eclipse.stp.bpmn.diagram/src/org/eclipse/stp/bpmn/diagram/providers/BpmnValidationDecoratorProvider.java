@@ -122,13 +122,13 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
         }
         if (hasQuickFix) {
             ImageRegistry reg = BpmnDiagramEditorPlugin.getInstance().getImageRegistry();
-            String key = severity + "/quickfix";
+            String key = severity + "/quickfix"; //$NON-NLS-1$
             if (reg.getDescriptor(key) == null) {
                 //put the image descriptor in an image resgitry so that we don't keep
                 //creating the same image all the time.
                 ImageDescriptor imgDesc = new OverlayImageDescriptor(image,
                         BpmnDiagramEditorPlugin.getBundledImageDescriptor(
-                                "icons/small_quickfix.gif")//,
+                                "icons/small_quickfix.gif")//, //$NON-NLS-1$
                         /*20, 20*/);
                 reg.put(key, imgDesc);
             }

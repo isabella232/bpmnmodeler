@@ -111,7 +111,7 @@ public class OpenFileEditPolicy extends OpenEditPolicy {
 			        //don't start to appear on the shapes.
 	                //must use this type of marker to be taken into account by the navigation service.
 			        new InMemoryMarker(fileToOpen,
-			                "org.eclipse.stp.bpmn.validation.diagnostic");
+			                "org.eclipse.stp.bpmn.validation.diagnostic"); //$NON-NLS-1$
                 otherOptionalGotoMarkerAttributes.put(IMarker.TRANSIENT, true);
                 if (line != null) {
                     otherOptionalGotoMarkerAttributes.put(IMarker.LINE_NUMBER, 

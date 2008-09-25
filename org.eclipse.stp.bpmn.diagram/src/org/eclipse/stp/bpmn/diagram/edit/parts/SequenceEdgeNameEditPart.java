@@ -489,7 +489,7 @@ public class SequenceEdgeNameEditPart extends LabelEditPart implements
     
     private boolean needBorder() {
         return getLabelIcon() != null 
-            || (getLabelText() != null && !getLabelText().trim().equals(""));
+            || (getLabelText() != null && !getLabelText().trim().equals("")); //$NON-NLS-1$
     }
     
     /** Refresh the border's figure foreground colour. */

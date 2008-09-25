@@ -213,7 +213,7 @@ protected String getBidiSubstring(TextFragmentBox box, int index) {
 	if (box.getBidiLevel() < 1)
 		return getText() != null
 		    ? getText().substring(box.offset, box.offset + box.length)
-		    : "";
+		    : ""; //$NON-NLS-1$
 	
 	StringBuffer buffer = new StringBuffer(box.length + 3);
 	buffer.append(box.isRightToLeft() ? BidiChars.RLO : BidiChars.LRO);

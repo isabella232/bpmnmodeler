@@ -34,7 +34,7 @@ public class FileExistenceCustomizerHelper {
 
     /** ID of the extension point for the BPMN quickfix providers */
     private static final String FILE_EXISTENCE_CUSTOMIZER_QUICKFIX_EXTENSION_POINT_ID =
-        "org.eclipse.stp.bpmn.validation.BpmnFileExistenceConstraintCustomizer";
+        "org.eclipse.stp.bpmn.validation.BpmnFileExistenceConstraintCustomizer"; //$NON-NLS-1$
     
     private static List<IBpmnFileExistenceConstraintCustomizer> INDEX = null;
     
@@ -112,13 +112,13 @@ class BpmnFileExistenceConstraintCustomizerProxy implements IBpmnFileExistenceCo
         }
         try {
             _cached = (IBpmnFileExistenceConstraintCustomizer)
-                    _conf.createExecutableExtension("class");
+                    _conf.createExecutableExtension("class"); //$NON-NLS-1$
         } catch (CoreException e) {
             _resolveFailed = true;
             BpmnValidationPlugin.getDefault().getLog()
                 .log(new Status(IStatus.ERROR, BpmnValidationPlugin.PLUGIN_ID,
-                        "Unable to load the IBPMNFileExistenceConstraintCustomizer: "
-                        + _conf.getAttribute("class"), e));
+                        "Unable to load the IBPMNFileExistenceConstraintCustomizer: " //$NON-NLS-1$
+                        + _conf.getAttribute("class"), e)); //$NON-NLS-1$
         }
         return _cached;
     }

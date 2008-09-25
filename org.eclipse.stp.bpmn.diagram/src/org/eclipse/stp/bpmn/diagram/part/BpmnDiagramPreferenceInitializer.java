@@ -183,11 +183,11 @@ public class BpmnDiagramPreferenceInitializer extends
     /**
      * The system property name to override the name of the default font for diagrams.
      */
-    public static String VM_ARG_DEFAULT_FONT_NAME = "bpmn.defaultfont.name";
+    public static String VM_ARG_DEFAULT_FONT_NAME = "bpmn.defaultfont.name"; //$NON-NLS-1$
     /**
      * The system property name to override the name of the default font for diagrams.
      */
-    public static String VM_ARG_DEFAULT_FONT_SIZE = "bpmn.defaultfont.size";
+    public static String VM_ARG_DEFAULT_FONT_SIZE = "bpmn.defaultfont.size"; //$NON-NLS-1$
 
     private static FontData[] _defaultFontDataArray;
     
@@ -327,9 +327,9 @@ public class BpmnDiagramPreferenceInitializer extends
         try {
             fontSize = Integer.parseInt(System.getProperty(
                     VM_ARG_DEFAULT_FONT_SIZE,
-                getDefaultFontSizeAccordingToNL(fontName) + ""));
+                getDefaultFontSizeAccordingToNL(fontName) + "")); //$NON-NLS-1$
         } catch (NumberFormatException e) {
-            System.err.println("Unable to parse the size of the font defined as " +
+            System.err.println("Unable to parse the size of the font defined as " + //$NON-NLS-1$
                     System.getProperty(
                             VM_ARG_DEFAULT_FONT_SIZE));
         }
@@ -371,8 +371,8 @@ public class BpmnDiagramPreferenceInitializer extends
                 }
             }
         } catch (Exception e) {
-            System.err.println("Unable to get the default font name according" +
-                    " to the locale: " + e);
+            System.err.println("Unable to get the default font name according" + //$NON-NLS-1$
+                    " to the locale: " + e); //$NON-NLS-1$
         }
         return res;
     }

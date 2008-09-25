@@ -748,11 +748,15 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
         thisSizeReq.setCenteredResize(true);
         thisSizeReq.setSizeDelta(getMinSizeForPool(request));
     	
-        Command diagCo = getHost().getParent().getParent().
-            getCommand(thisSizeReq);
-            if (diagCo != null) {
-                cc.compose(new CommandProxy(diagCo));
-            }
+        //may have a NPE here if the edit part parent is not set yet.
+        Command diagCo = getHost().getParent() == null 
+            ? null 
+            : getHost().getParent().getParent() == null 
+                ? null 
+                : getHost().getParent().getParent().getCommand(thisSizeReq);
+        if (diagCo != null) {
+            cc.compose(new CommandProxy(diagCo));
+        }
     	
         if (cc.reduce() == null)
             return null;

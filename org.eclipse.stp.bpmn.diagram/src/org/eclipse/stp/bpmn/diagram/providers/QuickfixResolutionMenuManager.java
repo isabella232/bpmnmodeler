@@ -206,7 +206,7 @@ public class QuickfixResolutionMenuManager implements IMenuListener {
                 @Override
                 public void run() {
                     //this seems to never be called;
-                    System.err.println("doRunAllQUickfixes");
+//                    System.err.println("doRunAllQUickfixes");
                     
                     ArrayList<IMarkerResolution> resolutions = new ArrayList<IMarkerResolution>(); 
                     for (final IMarker marker : allTheMarkers) {

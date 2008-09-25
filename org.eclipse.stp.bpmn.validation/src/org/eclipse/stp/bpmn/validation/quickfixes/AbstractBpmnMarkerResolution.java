@@ -75,7 +75,7 @@ public abstract class AbstractBpmnMarkerResolution extends WorkbenchMarkerResolu
      * @return The id of the affected bpmn object or null.
      */
     protected String getBpmnId(IMarker marker) {
-        return (String)marker.getAttribute("bpmnId", (String)null);
+        return (String)marker.getAttribute("bpmnId", (String)null); //$NON-NLS-1$
     }
     /**
      * @return The id of the affected gmf notation view object or null.
@@ -93,7 +93,7 @@ public abstract class AbstractBpmnMarkerResolution extends WorkbenchMarkerResolu
             return null;
         }
         String fileExt = marker.getResource().getFileExtension();
-        if (fileExt == null || !fileExt.endsWith("_diagram")) {
+        if (fileExt == null || !fileExt.endsWith("_diagram")) { //$NON-NLS-1$
             return null;
         }
         IEditorPart ep = IDE.openEditor(

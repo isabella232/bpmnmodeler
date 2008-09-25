@@ -10,6 +10,7 @@
  *******************************************************************************/
 package org.eclipse.stp.bpmn.diagram.providers;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -280,8 +281,14 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 					        IFigure tooltip = ((IEAnnotationDecorator) decorator).getToolTip(editPart, elt, ann);
 					        decorate(descriptor, tooltip, direction, editPart, elt, ann, view);
 					    } else if (decorator instanceof IEAnnotationDecorator2) {
-					        for (IEAnnotationDecoratorData data : 
-					            ((IEAnnotationDecorator2) decorator).getDecorators(editPart, elt, ann)) {
+					        Collection<IEAnnotationDecoratorData> decs = ((IEAnnotationDecorator2) decorator).getDecorators(editPart, elt, ann);
+					        if (decs == null) {
+					            continue;
+					        }
+					        for (IEAnnotationDecoratorData data : decs) {
+					            if (data == null) { 
+					                continue; 
+					            }
 					            ImageDescriptor descriptor = data.getImageDescriptor();
 					            Direction direction = data.getDirection();
 					            IFigure tooltip = data.getToolTip();
@@ -340,7 +347,8 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 	                        new StickyToBorderLocator(
 	                                parentFigure,
 	                                getPositionConstant(direction),
-	                                getOffset(direction)),
+	                                getOffset(direction),
+	                                figure),
 	                                false);
 //	              IDecoration deco = decoratorTarget.
 //	              addShapeDecoration(image, Direction.NORTH_EAST, 
@@ -457,23 +465,27 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 		/** the parent figure */
 		protected IFigure reference;
 
+        private IFigure figure;
+
 		/**
 		 * Constructor for <code>StickyToBorderLocator</code>.
 		 * 
 		 * @param reference the parent figure
 		 * @param direction A direction to place the figure relative to the reference
 		 * figure as defined in {@link PositionConstants}
+		 * @param figure 
 		 * @param margin The margin is the space between the reference figure's edge 
 		 * and the figure.  A positive margin will place the figure outside the
 		 * reference figure, a negative margin will place the figure inside the 
 		 * reference figure.
 		 */
 		public StickyToBorderLocator(
-			IFigure reference, int direction, int offset) {
+			IFigure reference, int direction, int offset, IFigure figure) {
 				
 			this.reference = reference;
 			this.direction = direction;
 			this.offset = offset;
+			this.figure = figure;
 		}
 
 		/**
@@ -517,7 +529,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 
 				} else if (direction == PositionConstants.NORTH_EAST) {
 
-					Dimension shift = new Dimension(offset, 0);
+					Dimension shift = new Dimension(-offset - figure.getBounds().width, 0);
 					target.setLocation(bounds.getTopRight().getTranslated(shift));
 
 				} else if (direction == PositionConstants.SOUTH_WEST) {
@@ -563,7 +575,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 
 				} else if (direction == PositionConstants.NORTH_EAST) {
 
-					Dimension shift = new Dimension(2, offset + 2);
+					Dimension shift = new Dimension(-2 - figure.getBounds().width, offset + 2);
 					target.setLocation(bounds.getTopRight().getTranslated(shift));
 
 				} else if (direction == PositionConstants.SOUTH_WEST) {

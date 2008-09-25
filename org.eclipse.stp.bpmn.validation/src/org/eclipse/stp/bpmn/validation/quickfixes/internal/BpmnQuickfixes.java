@@ -42,8 +42,8 @@ public class BpmnQuickfixes implements IMarkerResolutionGenerator2 {
         try {
             quickfixID = (String) marker
                 .getAttribute(IBpmnMarkerResolutionProvider.MARKER_ATTRIBUTE_QUICK_FIX_RESOLUTION_ID);
-            bpmnId = (String) marker.getAttribute("bpmnId");
-            elementId = (String) marker.getAttribute("elementId");
+            bpmnId = (String) marker.getAttribute("bpmnId"); //$NON-NLS-1$
+            elementId = (String) marker.getAttribute("elementId"); //$NON-NLS-1$
         } catch (CoreException e) {
             return new IMarkerResolution[0];
         }
@@ -67,15 +67,15 @@ public class BpmnQuickfixes implements IMarkerResolutionGenerator2 {
                         } catch (Exception e) {
                             BpmnValidationPlugin.getDefault().getLog()
                                 .log(new Status(IStatus.ERROR, BpmnValidationPlugin.PLUGIN_ID,
-                                    "Execution failure of " + prov +
-                                    " for marker resolution " + res, e));
+                                    "Execution failure of " + prov + //$NON-NLS-1$
+                                    " for marker resolution " + res, e)); //$NON-NLS-1$
                         }
                     }
                 }
             } catch (Exception e) {
                 BpmnValidationPlugin.getDefault().getLog()
                     .log(new Status(IStatus.ERROR, BpmnValidationPlugin.PLUGIN_ID,
-                            "Execution failure of " + prov, e));
+                            "Execution failure of " + prov, e)); //$NON-NLS-1$
             }
         }
         return list.toArray(new IMarkerResolution[list.size()]);
@@ -129,7 +129,7 @@ public class BpmnQuickfixes implements IMarkerResolutionGenerator2 {
 
     /** ID of the extension point for the BPMN quickfix providers */
     private static final String BPMN_QUICKFIX_EXTENSION_POINT_ID =
-        "org.eclipse.stp.bpmn.validation.BpmnMarkerResolutionProvider";
+        "org.eclipse.stp.bpmn.validation.BpmnMarkerResolutionProvider"; //$NON-NLS-1$
     
     /**
      * Caches the declared extension points for the bpmn quick fixes.
@@ -148,7 +148,7 @@ public class BpmnQuickfixes implements IMarkerResolutionGenerator2 {
                     IConfigurationElement el = configElems[j];
                     IBpmnMarkerResolutionProvider resProv = (IBpmnMarkerResolutionProvider)
                         el.createExecutableExtension("class"); //$NON-NLS-1$
-                    String id = el.getAttribute("id");
+                    String id = el.getAttribute("id"); //$NON-NLS-1$
                     Collection<IBpmnMarkerResolutionProvider> coll = BPMN_DATA_QUICK_FIXES.get(id);
                     if (coll == null) {
                         coll = new HashSet<IBpmnMarkerResolutionProvider>();

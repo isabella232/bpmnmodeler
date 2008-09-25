@@ -35,6 +35,7 @@ import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.NamedBpmnObject;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramPreferenceInitializer;
 import org.eclipse.stp.bpmn.figures.WrapLabelWithToolTip.IToolTipProvider;
@@ -1272,7 +1273,11 @@ public class ActivityPainter {
                         return null;
                     }
                 } else {
-                    return bpmnObj.getName();
+                    if (isActivity) {
+                        return bpmnObj.getName();
+                    } else {
+                        return BpmnDiagramMessages.ActivityPainter_unknown_label;
+                    }
                 }
             }
             

@@ -25,6 +25,7 @@ import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.stp.bpmn.diagram.actions.DeleteFileLinkAction;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor;
 import org.eclipse.stp.bpmn.dnd.file.FileDnDConstants;
+import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 import org.eclipse.stp.bpmn.validation.quickfixes.AbstractBpmnMarkerResolution;
 import org.eclipse.stp.bpmn.validation.quickfixes.IBpmnMarkerResolutionProvider;
 import org.eclipse.swt.graphics.Image;
@@ -39,8 +40,8 @@ import org.eclipse.ui.model.WorkbenchLabelProvider;
  */
 public class FileExistenceContraintQuickfixProvider implements IBpmnMarkerResolutionProvider {
     
-    public static String ID = "FileExistenceContraintQuickfixProvider";
-    static String MISSING_FILE_PROJ_RELATIVE_PATH_ATTRIBUTE = "missingFileProjectRelativePath";
+    public static String ID = "FileExistenceContraintQuickfixProvider"; //$NON-NLS-1$
+    static String MISSING_FILE_PROJ_RELATIVE_PATH_ATTRIBUTE = "missingFileProjectRelativePath"; //$NON-NLS-1$
     
     /**
      * @return The ID of the class according to its extension point.
@@ -87,7 +88,7 @@ public class FileExistenceContraintQuickfixProvider implements IBpmnMarkerResolu
          * @return a short label for this resolution
          */
         public String getLabel() {
-            return "change reference of " + getMissingFileHandle(_marker);
+            return BpmnValidationMessages.bind(BpmnValidationMessages.FileExistenceContraintQuickfixProvider_change_reference, getMissingFileHandle(_marker));
         }
 
         /**
@@ -190,7 +191,7 @@ public class FileExistenceContraintQuickfixProvider implements IBpmnMarkerResolu
          * @return a short label for this resolution
          */
         public String getLabel() {
-            return "remove reference to " + getMissingFileHandle(_marker);
+            return BpmnValidationMessages.bind(BpmnValidationMessages.FileExistenceContraintQuickfixProvider_remove_reference, getMissingFileHandle(_marker));
         }
 
         /**

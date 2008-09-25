@@ -30,7 +30,7 @@ public abstract class AbstractBpmnMarkerResolutionProvider implements IBpmnMarke
      * @return The id of the affected bpmn object or null.
      */
     public String getBpmnId(IMarker marker) {
-        return (String)marker.getAttribute("bpmnId", (String)null);
+        return (String)marker.getAttribute("bpmnId", (String)null); //$NON-NLS-1$
     }
     /**
      * @return The id of the affected gmf notation view object or null.

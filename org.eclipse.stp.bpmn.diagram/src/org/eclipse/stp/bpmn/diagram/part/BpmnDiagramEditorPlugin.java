@@ -387,13 +387,13 @@ public class BpmnDiagramEditorPlugin extends AbstractUIPlugin {
             .getConfigurationElementsFor(BPMN_DIAGRAM_CONTEXT_MENU_PROVIDERS);
         for (int j = configElems.length - 1; j >= 0; j--) {
             try {
-                String ids = configElems[j].getAttribute("targetedBpmnEditorIDs");
+                String ids = configElems[j].getAttribute("targetedBpmnEditorIDs"); //$NON-NLS-1$
                 String[] idColl = ids == null
                     ? new String[] {BpmnDiagramEditor.ID}
-                    : ids.split(" ,");
+                    : ids.split(" ,"); //$NON-NLS-1$
                 int priority = 0;
                 try {
-                    priority = Integer.parseInt(configElems[j].getAttribute("priority"));
+                    priority = Integer.parseInt(configElems[j].getAttribute("priority")); //$NON-NLS-1$
                 } catch (Throwable nfe) {
                     //nevermind.
                 }
