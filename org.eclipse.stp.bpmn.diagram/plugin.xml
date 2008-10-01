@@ -346,7 +346,7 @@
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.BpmnDiagramEditHelper"
                id="org.eclipse.stp.bpmn.diagram.BpmnDiagram_79"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
-               name="BPMN Diagram">
+               name="%bpmn_diagram_label">
             <param name="semanticHint" value="79"/>
          </metamodelType>
       </metamodel>
@@ -354,7 +354,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.Activity_2001"
-               name="Task"
+               name="%task_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="Activity"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.ActivityEditHelper">
@@ -365,7 +365,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.SubProcess_2002"
-               name="SubProcess"
+               name="%sub_process_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="SubProcess"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.SubProcessEditHelper">
@@ -376,7 +376,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <specializationType
                id="org.eclipse.stp.bpmn.diagram.Activity_2003"
-               name="Task"
+               name="%task_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.ActivityEditHelperAdvice">
             <specializes id="org.eclipse.stp.bpmn.diagram.Activity_2001"/>
@@ -387,7 +387,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.TextAnnotation_2004"
-               name="Text Annotation"
+               name="%text_annotation_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="TextAnnotation"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.TextAnnotationEditHelper">
@@ -398,7 +398,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.DataObject_2005"
-               name="Data Object"
+               name="%data_object_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="DataObject"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.DataObjectEditHelper">
@@ -409,7 +409,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.Group_2006"
-               name="Group"
+               name="%group_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="Group"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.GroupEditHelper">
@@ -420,7 +420,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.Lane_2007"
-               name="Lane"
+               name="%lane_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="Lane"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.LaneEditHelper">
@@ -431,7 +431,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.Pool_1001"
-               name="Pool"
+               name="%pool_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="Pool"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.PoolEditHelper">
@@ -442,7 +442,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <specializationType
                id="org.eclipse.stp.bpmn.diagram.TextAnnotation_1002"
-               name="Text Annotation"
+               name="%text_annotation_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.TextAnnotationEditHelperAdvice">
             <specializes id="org.eclipse.stp.bpmn.diagram.TextAnnotation_2004"/>
@@ -453,7 +453,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <specializationType
                id="org.eclipse.stp.bpmn.diagram.DataObject_1003"
-               name="Data Object"
+               name="%data_object_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.DataObjectEditHelperAdvice">
             <specializes id="org.eclipse.stp.bpmn.diagram.DataObject_2005"/>
@@ -464,7 +464,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <specializationType
                id="org.eclipse.stp.bpmn.diagram.Group_1004"
-               name="Group"
+               name="%group_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                edithelperadvice="org.eclipse.stp.bpmn.diagram.edit.helpers.GroupEditHelperAdvice">
             <specializes id="org.eclipse.stp.bpmn.diagram.Group_2006"/>
@@ -475,7 +475,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.SequenceEdge_3001"
-               name="Sequence Flow"
+               name="%sequence_flow_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="SequenceEdge"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.SequenceEdgeEditHelper">
@@ -486,7 +486,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.MessagingEdge_3002"
-               name="Message Flow"
+               name="%message_flow_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="MessagingEdge"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.MessagingEdgeEditHelper">
@@ -497,7 +497,7 @@
       <metamodel nsURI="http://stp.eclipse.org/bpmn">
          <metamodelType
                id="org.eclipse.stp.bpmn.diagram.Association_3003"
-               name="Association"
+               name="%association_label"
                kind="org.eclipse.gmf.runtime.emf.type.core.IHintedType"
                eclass="Association"
                edithelper="org.eclipse.stp.bpmn.diagram.edit.helpers.AssociationEditHelper">

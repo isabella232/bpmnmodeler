@@ -37,6 +37,8 @@ public class BpmnMessages extends NLS {
 
     public static String ActivityType_end_multiple;
 
+    public static String ActivityType_end_signal;
+
     public static String ActivityType_end_terminate;
 
     public static String ActivityType_intermediate_cancel;
@@ -55,6 +57,8 @@ public class BpmnMessages extends NLS {
 
     public static String ActivityType_intermediate_rule;
 
+    public static String ActivityType_intermediate_signal;
+
     public static String ActivityType_intermediate_timer;
 
     public static String ActivityType_or;
@@ -70,6 +74,8 @@ public class BpmnMessages extends NLS {
     public static String ActivityType_start_multiple;
 
     public static String ActivityType_start_rule;
+
+    public static String ActivityType_start_signal;
 
     public static String ActivityType_start_timer;
 
