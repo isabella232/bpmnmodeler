@@ -634,7 +634,7 @@
                category="Annotations"
                id="Annotations"
                indented="false"
-               label="Annotations"/>
+               label="%propertyTab_label"/>
       </propertyTabs>
    </extension>
    <extension
