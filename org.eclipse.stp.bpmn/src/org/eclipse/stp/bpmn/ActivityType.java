@@ -297,7 +297,7 @@ public enum ActivityType implements Enumerator
      * @generated not
      * @ordered
      */
-	GATEWAY_COMPLEX_LITERAL(29, BpmnMessages.ActivityType_complex, "GatewayComplex"), /** //$NON-NLS-1$
+	GATEWAY_COMPLEX_LITERAL(29, BpmnMessages.ActivityType_complex, "GatewayComplex"), /** //$NON-NLS-1$ //$NON-NLS-1$
      * The '<em><b>Event Start Signal</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -305,7 +305,7 @@ public enum ActivityType implements Enumerator
      * @generated not
      * @ordered
      */
-    EVENT_START_SIGNAL_LITERAL(30, BpmnMessages.ActivityType_start_signal, "EventStartSignal"), /** //$NON-NLS-2$
+    EVENT_START_SIGNAL_LITERAL(30, BpmnMessages.ActivityType_start_signal, "EventStartSignal"), /** //$NON-NLS-2$ //$NON-NLS-1$
      * The '<em><b>Event Intermediate Signal</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -313,7 +313,7 @@ public enum ActivityType implements Enumerator
      * @generated not
      * @ordered
      */
-    EVENT_INTERMEDIATE_SIGNAL_LITERAL(31, BpmnMessages.ActivityType_intermediate_signal, "EventIntermediateSignal"), /** //$NON-NLS-2$
+    EVENT_INTERMEDIATE_SIGNAL_LITERAL(31, BpmnMessages.ActivityType_intermediate_signal, "EventIntermediateSignal"), /** //$NON-NLS-2$ //$NON-NLS-1$
      * The '<em><b>Event End Signal</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -321,7 +321,7 @@ public enum ActivityType implements Enumerator
      * @generated not
      * @ordered
      */
-    EVENT_END_SIGNAL_LITERAL(32, BpmnMessages.ActivityType_end_signal, "EventEndSignal"); //$NON-NLS-2$
+    EVENT_END_SIGNAL_LITERAL(32, BpmnMessages.ActivityType_end_signal, "EventEndSignal"); //$NON-NLS-2$ //$NON-NLS-1$
 	/**
      * The '<em><b>Task</b></em>' literal value.
      * <!-- begin-user-doc -->

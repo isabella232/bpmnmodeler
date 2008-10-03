@@ -82,8 +82,8 @@ public class NamedBpmnObjectItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -104,8 +104,8 @@ public class NamedBpmnObjectItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -126,8 +126,8 @@ public class NamedBpmnObjectItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
                  true,
                  false,
@@ -145,7 +145,7 @@ public class NamedBpmnObjectItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/NamedBpmnObject"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/NamedBpmnObject")); //$NON-NLS-1$
     }
 
     /**
@@ -158,8 +158,8 @@ public class NamedBpmnObjectItemProvider
     public String getText(Object object) {
         String label = ((NamedBpmnObject)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_NamedBpmnObject_type") :
-            getString("_UI_NamedBpmnObject_type") + " " + label;
+            getString("_UI_NamedBpmnObject_type") : //$NON-NLS-1$
+            getString("_UI_NamedBpmnObject_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

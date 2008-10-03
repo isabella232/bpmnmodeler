@@ -370,6 +370,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnPaletteFactory_link_start_tooltip;
 
+    public static String BpmnPaletteFactory_looping_label;
+
 	public static String BpmnPaletteFactory_message_end_label;
 
 	public static String BpmnPaletteFactory_message_end_tooltip;

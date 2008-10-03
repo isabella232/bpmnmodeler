@@ -31,7 +31,7 @@ public enum SequenceFlowConditionType implements Enumerator
      * @generated
      * @ordered
      */
-	NONE_LITERAL(0, "None", "None"),  //$NON-NLS-2$
+	NONE_LITERAL(0, BpmnMessages.SequenceFlowConditionType_none_label, "None"),  //$NON-NLS-2$
 	/**
      * The '<em><b>Expression</b></em>' literal object.
      * <!-- begin-user-doc -->
@@ -40,7 +40,7 @@ public enum SequenceFlowConditionType implements Enumerator
      * @generated
      * @ordered
      */
-	EXPRESSION_LITERAL(1, "Expression", "Expression"),  //$NON-NLS-2$
+	EXPRESSION_LITERAL(1, BpmnMessages.SequenceFlowConditionType_expression_label, "Expression"),  //$NON-NLS-2$
 	/**
      * The '<em><b>Default</b></em>' literal object.
      * <!-- begin-user-doc -->
@@ -49,7 +49,7 @@ public enum SequenceFlowConditionType implements Enumerator
      * @generated
      * @ordered
      */
-	DEFAULT_LITERAL(2, "Default", "Default");  //$NON-NLS-2$
+	DEFAULT_LITERAL(2, BpmnMessages.SequenceFlowConditionType_default_label, "Default");  //$NON-NLS-2$
 	/**
      * The '<em><b>None</b></em>' literal value.
      * <!-- begin-user-doc -->

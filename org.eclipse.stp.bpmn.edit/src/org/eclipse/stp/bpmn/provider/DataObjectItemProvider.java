@@ -75,7 +75,7 @@ public class DataObjectItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/DataObject"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/DataObject")); //$NON-NLS-1$
     }
 
     /**
@@ -88,8 +88,8 @@ public class DataObjectItemProvider
     public String getText(Object object) {
         String label = ((DataObject)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_DataObject_type") :
-            getString("_UI_DataObject_type") + " " + label;
+            getString("_UI_DataObject_type") : //$NON-NLS-1$
+            getString("_UI_DataObject_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

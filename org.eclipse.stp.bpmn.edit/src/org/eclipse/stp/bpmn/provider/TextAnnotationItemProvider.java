@@ -75,7 +75,7 @@ public class TextAnnotationItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/TextAnnotation"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/TextAnnotation")); //$NON-NLS-1$
     }
 
     /**
@@ -88,8 +88,8 @@ public class TextAnnotationItemProvider
     public String getText(Object object) {
         String label = ((TextAnnotation)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_TextAnnotation_type") :
-            getString("_UI_TextAnnotation_type") + " " + label;
+            getString("_UI_TextAnnotation_type") : //$NON-NLS-1$
+            getString("_UI_TextAnnotation_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

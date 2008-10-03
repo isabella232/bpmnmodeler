@@ -89,11 +89,19 @@ public class BpmnMessages extends NLS {
 
     public static String DirectionType_Both;
 
+    public static String DirectionType_both_label;
+
     public static String DirectionType_From;
+
+    public static String DirectionType_from_label;
 
     public static String DirectionType_None;
 
+    public static String DirectionType_none_label;
+
     public static String DirectionType_To;
+
+    public static String DirectionType_to_label;
 
     public static String ActivityImpl_activityType;
 
@@ -134,6 +142,8 @@ public class BpmnMessages extends NLS {
     public static String BpmnDiagramImpl_ncname;
 
     public static String BpmnDiagramImpl_title;
+
+    public static String BPMNElementTypesActivities_looping_label;
 
     public static String BpmnFactoryImpl_datatype_invalid_classifier;
 
@@ -187,9 +197,15 @@ public class BpmnMessages extends NLS {
 
     public static String SequenceFlowConditionType_default;
 
+    public static String SequenceFlowConditionType_default_label;
+
     public static String SequenceFlowConditionType_expr;
 
+    public static String SequenceFlowConditionType_expression_label;
+
     public static String SequenceFlowConditionType_none;
+
+    public static String SequenceFlowConditionType_none_label;
 
     public static String SubProcessImpl_isTransaction;
 

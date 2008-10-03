@@ -77,8 +77,8 @@ public class IdentifiableItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Identifiable_iD_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Identifiable_iD_feature", "_UI_Identifiable_type"),
+                 getString("_UI_Identifiable_iD_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Identifiable_iD_feature", "_UI_Identifiable_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.IDENTIFIABLE__ID,
                  true,
                  false,
@@ -96,7 +96,7 @@ public class IdentifiableItemProvider
      */
     @Override
     public Object getImage(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Identifiable"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Identifiable")); //$NON-NLS-1$
     }
 
     /**
@@ -109,8 +109,8 @@ public class IdentifiableItemProvider
     public String getText(Object object) {
         String label = ((Identifiable)object).getID();
         return label == null || label.length() == 0 ?
-            getString("_UI_Identifiable_type") :
-            getString("_UI_Identifiable_type") + " " + label;
+            getString("_UI_Identifiable_type") : //$NON-NLS-1$
+            getString("_UI_Identifiable_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**

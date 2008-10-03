@@ -104,8 +104,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_incomingMessages_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"),
+                 getString("_UI_MessageVertex_incomingMessages_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_incomingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.MESSAGE_VERTEX__INCOMING_MESSAGES,
                  true,
                  false,
@@ -126,8 +126,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_MessageVertex_outgoingMessages_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"),
+                 getString("_UI_MessageVertex_outgoingMessages_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_MessageVertex_outgoingMessages_feature", "_UI_MessageVertex_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.MESSAGE_VERTEX__OUTGOING_MESSAGES,
                  true,
                  false,
@@ -148,8 +148,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_groups_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_groups_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_groups_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_groups_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__GROUPS,
                  true,
                  false,
@@ -170,8 +170,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_lanes_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_lanes_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_lanes_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_lanes_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__LANES,
                  true,
                  false,
@@ -192,8 +192,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_activityType_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_activityType_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_activityType_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_activityType_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__ACTIVITY_TYPE,
                  true,
                  false,
@@ -214,8 +214,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_documentation_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_documentation_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_documentation_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__DOCUMENTATION,
                  true,
                  false,
@@ -236,8 +236,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_Activity_looping_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_looping_feature", "_UI_Activity_type"),
+                 getString("_UI_Activity_looping_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_Activity_looping_feature", "_UI_Activity_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.ACTIVITY__LOOPING,
                  true,
                  false,
@@ -288,8 +288,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_name_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_name_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_name_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NAME,
                  true,
                  false,
@@ -310,8 +310,8 @@ public class ActivityItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_NamedBpmnObject_ncname_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"),
+                 getString("_UI_NamedBpmnObject_ncname_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_NamedBpmnObject_ncname_feature", "_UI_NamedBpmnObject_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.NAMED_BPMN_OBJECT__NCNAME,
                  true,
                  false,
@@ -460,7 +460,7 @@ public class ActivityItemProvider
      * @generated
      */
     public Object getImageGen(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/Activity")); //$NON-NLS-1$
     }
 
     /**
@@ -473,8 +473,8 @@ public class ActivityItemProvider
     public String getText(Object object) {
         String label = ((Activity)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_Activity_type") :
-            getString("_UI_Activity_type") + " " + label;
+            getString("_UI_Activity_type") : //$NON-NLS-1$
+            getString("_UI_Activity_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -552,7 +552,7 @@ public class ActivityItemProvider
 
         if (qualify) {
             return getString
-                ("_UI_CreateChild_text2",
+                ("_UI_CreateChild_text2", //$NON-NLS-1$
                  new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
         }
         return super.getCreateChildText(owner, feature, child, selection);

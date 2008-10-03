@@ -87,8 +87,8 @@ public class SubProcessItemProvider
             (createItemPropertyDescriptor
                 (((ComposeableAdapterFactory)adapterFactory).getRootAdapterFactory(),
                  getResourceLocator(),
-                 getString("_UI_SubProcess_isTransaction_feature"),
-                 getString("_UI_PropertyDescriptor_description", "_UI_SubProcess_isTransaction_feature", "_UI_SubProcess_type"),
+                 getString("_UI_SubProcess_isTransaction_feature"), //$NON-NLS-1$
+                 getString("_UI_PropertyDescriptor_description", "_UI_SubProcess_isTransaction_feature", "_UI_SubProcess_type"), //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                  BpmnPackage.Literals.SUB_PROCESS__IS_TRANSACTION,
                  true,
                  false,
@@ -138,7 +138,7 @@ public class SubProcessItemProvider
      * @generated
      */
 	public Object getImageGen(Object object) {
-        return overlayImage(object, getResourceLocator().getImage("full/obj16/SubProcess"));
+        return overlayImage(object, getResourceLocator().getImage("full/obj16/SubProcess")); //$NON-NLS-1$
     }
 
     /**
@@ -165,8 +165,8 @@ public class SubProcessItemProvider
     public String getText(Object object) {
         String label = ((SubProcess)object).getName();
         return label == null || label.length() == 0 ?
-            getString("_UI_SubProcess_type") :
-            getString("_UI_SubProcess_type") + " " + label;
+            getString("_UI_SubProcess_type") : //$NON-NLS-1$
+            getString("_UI_SubProcess_type") + " " + label; //$NON-NLS-1$ //$NON-NLS-2$
     }
 
     /**
@@ -281,7 +281,7 @@ public class SubProcessItemProvider
 
         if (qualify) {
             return getString
-                ("_UI_CreateChild_text2",
+                ("_UI_CreateChild_text2", //$NON-NLS-1$
                  new Object[] { getTypeText(childObject), getFeatureText(childFeature), getTypeText(owner) });
         }
         return super.getCreateChildText(owner, feature, child, selection);
