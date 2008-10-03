@@ -18,7 +18,6 @@ import java.util.Collections;
 
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.stp.bpmn.ActivityType;
-import org.eclipse.stp.bpmn.BpmnMessages;
 import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.commands.ElementTypeEx;
 import org.eclipse.stp.bpmn.commands.IElementTypeEx;
@@ -98,11 +97,11 @@ public class BPMNElementTypesActivities {
             TypesForPoolAndSubProcessBody.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
             TypesForPoolAndSubProcessBody.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
         }
         return TypesForPoolAndSubProcessBody;
     }
@@ -133,11 +132,11 @@ public class BPMNElementTypesActivities {
             TypesForSequenceEdgeSource.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
             TypesForSequenceEdgeSource.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
         }
         return TypesForSequenceEdgeSource;
     }
@@ -167,11 +166,11 @@ public class BPMNElementTypesActivities {
             TypesForSequenceEdgeTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
             TypesForSequenceEdgeTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
         }
         return TypesForSequenceEdgeTarget;
     }
@@ -204,7 +203,7 @@ public class BPMNElementTypesActivities {
             TypesForMessagingEdgeTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
         }
         return TypesForMessagingEdgeTarget;
     }
@@ -238,7 +237,7 @@ public class BPMNElementTypesActivities {
             TypesForMessagingEdgeSource.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
         }
         return TypesForMessagingEdgeSource;
     }
@@ -262,11 +261,11 @@ public class BPMNElementTypesActivities {
             TypesForAssociationTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
             TypesForAssociationTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnMessages.BPMNElementTypesActivities_looping_label));
+                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
         }
         return TypesForAssociationTarget;
     }
