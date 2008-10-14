@@ -63,7 +63,7 @@ import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin;
 import org.eclipse.stp.bpmn.validation.IConstraintStatusEx;
-import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin.IValidationMarkerCreationHook;
+import org.eclipse.stp.bpmn.validation.IValidationMarkerCreationHook;
 import org.eclipse.stp.bpmn.validation.builder.ValidationMarkerCustomAttributes;
 import org.eclipse.ui.IWorkbenchPart;
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
@@ -267,7 +267,7 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 	                                marker.setAttribute(IMarker.MESSAGE, name.trim());
 	                                marker.setAttribute(IMarker.PRIORITY, taskPriority);
 	                                marker.setAttribute(IMarker.USER_EDITABLE, false);
-	                                List<IValidationMarkerCreationHook> hooks =
+	                                Collection<IValidationMarkerCreationHook> hooks =
 	                                    BpmnValidationPlugin.getDefault().getCreationMarkerCallBacks();
 	                                if (hooks != null) {
 	                                    for (IValidationMarkerCreationHook hook : hooks) {
@@ -466,7 +466,7 @@ public class BpmnValidationProvider extends AbstractContributionItemProvider {
 				
 				marker.setAttributes(customAttributes);
 				
-				List<IValidationMarkerCreationHook> hooks =
+				Collection<IValidationMarkerCreationHook> hooks =
 				    BpmnValidationPlugin.getDefault().getCreationMarkerCallBacks();
 				if (hooks != null) {
 				    for (IValidationMarkerCreationHook hook : hooks) {

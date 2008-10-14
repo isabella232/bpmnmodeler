@@ -97,4 +97,8 @@ public abstract class AbstractEAnnotationDnDHandler extends AbstractDnDHandler {
 		}
 		return true;
 	}
+	
+	
+	
+	
 }

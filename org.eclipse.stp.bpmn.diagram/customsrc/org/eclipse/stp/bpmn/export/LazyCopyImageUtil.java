@@ -12,19 +12,27 @@
 package org.eclipse.stp.bpmn.export;
 
 import java.io.ByteArrayOutputStream;
+import java.io.OutputStream;
+import java.util.Collections;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
+import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * This extends the CopyImageUtil class
@@ -94,6 +102,21 @@ public class LazyCopyImageUtil extends CopyToImageUtil {
             imageLoader.save(stream, imageFormat.getOrdinal());
             setStream(stream);
         }
+    }
+    
+    /**
+     * Don't save, just stream if you can.
+     */ 
+    protected void saveToFile(IPath destination, DiagramSVGGenerator generator,
+            ImageFileFormat format, IProgressMonitor monitor)
+            throws CoreException {
+        if (destination == null) {
+            ByteArrayOutputStream stream = new ByteArrayOutputStream();
+            generator.stream(stream);
+            setStream(stream);
+            return;
+        }
+        super.saveToFile(destination, generator, format, monitor);
     }
     
     

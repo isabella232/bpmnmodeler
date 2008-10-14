@@ -23,6 +23,7 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.geometry.Rectangle;
+import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EStructuralFeature;
@@ -31,6 +32,7 @@ import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Diagram;
+import org.eclipse.gmf.runtime.notation.DrawerStyle;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.NotationFactory;
@@ -67,6 +69,7 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartme
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
+import org.eclipse.stp.bpmn.diagram.generation.impl.BPMNProcessGenerator.InternalRecordingCommand;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 
@@ -770,4 +773,34 @@ public class BPMNVisual2ProcessGenerator extends BPMNProcessGenerator {
 		};
 		_editingDomain.getCommandStack().execute(command);
 	}
+	
+	/**
+     * This method must be called after the views are generated, or it won't do a thing.
+     * Collapses a subprocess.
+     */
+    public void setSubProcessCollapsed(final SubProcess sp) {
+        InternalRecordingCommand command = new InternalRecordingCommand() {
+
+            @Override
+            protected void doExecute() {
+                View v = getSemantic2notationMap().get(sp);
+                if (v != null) {
+                    TreeIterator<EObject> iterator = v.eAllContents();
+                    while (iterator.hasNext()) {
+                        EObject child = iterator.next();
+                        if (child instanceof View) {
+                            for (Object style : ((View) child).getStyles()) {
+                                if (style instanceof DrawerStyle) {
+                                    ((DrawerStyle) style).setCollapsed(true);
+                                    //return;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        };
+        _editingDomain.getCommandStack().execute(command);
+    }
 }

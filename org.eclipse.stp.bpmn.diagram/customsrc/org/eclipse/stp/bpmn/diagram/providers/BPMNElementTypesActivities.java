@@ -97,11 +97,15 @@ public class BPMNElementTypesActivities {
             TypesForPoolAndSubProcessBody.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_activity_label)));
             TypesForPoolAndSubProcessBody.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_sub_process_label)));
         }
         return TypesForPoolAndSubProcessBody;
     }
@@ -132,11 +136,15 @@ public class BPMNElementTypesActivities {
             TypesForSequenceEdgeSource.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_activity_label)));
             TypesForSequenceEdgeSource.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_sub_process_label)));
         }
         return TypesForSequenceEdgeSource;
     }
@@ -166,11 +174,15 @@ public class BPMNElementTypesActivities {
             TypesForSequenceEdgeTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_activity_label)));
             TypesForSequenceEdgeTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_sub_process_label)));
         }
         return TypesForSequenceEdgeTarget;
     }
@@ -203,7 +215,9 @@ public class BPMNElementTypesActivities {
             TypesForMessagingEdgeTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_activity_label)));
         }
         return TypesForMessagingEdgeTarget;
     }
@@ -237,7 +251,9 @@ public class BPMNElementTypesActivities {
             TypesForMessagingEdgeSource.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_activity_label)));
         }
         return TypesForMessagingEdgeSource;
     }
@@ -261,11 +277,15 @@ public class BPMNElementTypesActivities {
             TypesForAssociationTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.SubProcess_2002,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_sub_process_label)));
             TypesForAssociationTarget.add(ElementTypeEx.wrap(
                     BpmnElementTypes.Activity_2001,
                     BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
-                    BpmnDiagramMessages.BpmnPaletteFactory_looping_label));
+                    BpmnDiagramMessages.bind(
+                            BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
+                            BpmnDiagramMessages.BPMNElementTypesActivities_activity_label)));
         }
         return TypesForAssociationTarget;
     }

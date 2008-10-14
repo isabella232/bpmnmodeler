@@ -420,6 +420,10 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnPaletteFactory_timer_start_label;
 
+    public static String BPMNElementTypesActivities_activity_label;
+
+    public static String BPMNElementTypesActivities_sub_process_label;
+
     public static String BPMNProcessGenerator_cannot_save_resource;
 
     public static String BpmnReorientRelationshipCommand_command_name;

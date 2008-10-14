@@ -20,7 +20,6 @@ import org.eclipse.core.runtime.IAdapterFactory;
  * The interface defining factories that may override the default FileDnDHandler
  * through the FileDnDHandlers extension point.
  *
- *
  * @author <a href="http://www.intalio.com">Intalio Inc.</a>
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
  */
@@ -53,4 +52,5 @@ public interface IFileDnDHandlerFactory extends IAdapterFactory {
      * and be part of the factories over which we will iterate.
      */
     public boolean registers(IResource resource);
+    
 }

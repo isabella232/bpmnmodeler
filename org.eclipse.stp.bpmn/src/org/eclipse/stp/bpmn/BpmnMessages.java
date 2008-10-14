@@ -143,8 +143,6 @@ public class BpmnMessages extends NLS {
 
     public static String BpmnDiagramImpl_title;
 
-    public static String BPMNElementTypesActivities_looping_label;
-
     public static String BpmnFactoryImpl_datatype_invalid_classifier;
 
     public static String BpmnFactoryImpl_theClass;
