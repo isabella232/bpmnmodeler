@@ -549,14 +549,12 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     	}
     }
 
-	//[hugues] the name for the clipboard is the uuid.
-//by default it will consider that the uuid is the 'name' eattribute
     @Override
     public String getName(EObject eObject) {
-    	return EMFCoreUtil.getProxyID(eObject);
-//        if (eObject instanceof Identifiable) {
-//            return ((Identifiable)eObject).getID();
-//        }
+        if (eObject instanceof Identifiable) {
+            return ((Identifiable)eObject).getID();
+        }
+        return super.getName(eObject);
     }
 
     @Override
