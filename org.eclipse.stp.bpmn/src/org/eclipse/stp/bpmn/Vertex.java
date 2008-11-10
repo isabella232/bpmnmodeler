@@ -45,7 +45,7 @@ public interface Vertex extends AssociationTarget {
      * @return the value of the '<em>Outgoing Edges</em>' reference list.
      * @see org.eclipse.stp.bpmn.BpmnPackage#getVertex_OutgoingEdges()
      * @see org.eclipse.stp.bpmn.SequenceEdge#getSource
-     * @model opposite="source"
+     * @model opposite="source" resolveProxies="false"
      *        extendedMetaData="kind='element' name='outgoingEdges'"
      * @generated
      */
@@ -64,7 +64,7 @@ public interface Vertex extends AssociationTarget {
      * @return the value of the '<em>Incoming Edges</em>' reference list.
      * @see org.eclipse.stp.bpmn.BpmnPackage#getVertex_IncomingEdges()
      * @see org.eclipse.stp.bpmn.SequenceEdge#getTarget
-     * @model opposite="target"
+     * @model opposite="target" resolveProxies="false"
      *        extendedMetaData="kind='element' name='incomingEdges'"
      * @generated
      */
@@ -83,8 +83,7 @@ public interface Vertex extends AssociationTarget {
      * @see #setGraph(Graph)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getVertex_Graph()
      * @see org.eclipse.stp.bpmn.Graph#getVertices
-     * @model opposite="vertices" transient="false"
-     *        extendedMetaData="kind='attribute' name='graph'"
+     * @model opposite="vertices"
      * @generated
      */
     Graph getGraph();

@@ -59,8 +59,7 @@ public interface Artifact extends Identifiable, NamedBpmnObject {
      * @see #setArtifactsContainer(ArtifactsContainer)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getArtifact_ArtifactsContainer()
      * @see org.eclipse.stp.bpmn.ArtifactsContainer#getArtifacts
-     * @model opposite="artifacts" transient="false"
-     *        extendedMetaData="kind='attribute' name='artifactsContainer'"
+     * @model opposite="artifacts"
      * @generated
      */
     ArtifactsContainer getArtifactsContainer();

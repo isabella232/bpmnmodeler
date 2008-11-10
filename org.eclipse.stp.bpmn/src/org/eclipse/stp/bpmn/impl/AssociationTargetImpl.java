@@ -13,8 +13,10 @@ import org.eclipse.emf.common.notify.NotificationChain;
 import org.eclipse.emf.common.util.EList;
 
 import org.eclipse.emf.ecore.EClass;
+import org.eclipse.emf.ecore.util.EObjectResolvingEList;
 import org.eclipse.emf.ecore.InternalEObject;
 
+import org.eclipse.emf.ecore.util.EObjectWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.InternalEList;
 
@@ -72,7 +74,7 @@ public class AssociationTargetImpl extends IdentifiableImpl implements Associati
      */
     public EList<Association> getAssociations() {
         if (associations == null) {
-            associations = new EObjectWithInverseResolvingEList<Association>(Association.class, this, BpmnPackage.ASSOCIATION_TARGET__ASSOCIATIONS, BpmnPackage.ASSOCIATION__TARGET);
+            associations = new EObjectWithInverseEList<Association>(Association.class, this, BpmnPackage.ASSOCIATION_TARGET__ASSOCIATIONS, BpmnPackage.ASSOCIATION__TARGET);
         }
         return associations;
     }

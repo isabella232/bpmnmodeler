@@ -76,7 +76,9 @@ public class QuickfixResolutionMenuManager implements IMenuListener {
 	 * @return The bpmn_diagram file on which the markers are indexed.
 	 */
 	private IFile getFile() {
-	    if (_diagramFile != null) {
+	    // in case the diagram file is refactored, it won't exist anymore.
+	    // we need to pick it up from the resource again.
+	    if (_diagramFile != null && _diagramFile.exists()) {
 	        return _diagramFile;
 	    }
 	    _diagramFile = WorkspaceSynchronizer.getFile(

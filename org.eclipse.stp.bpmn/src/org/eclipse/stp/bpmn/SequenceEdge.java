@@ -21,10 +21,10 @@ package org.eclipse.stp.bpmn;
  * The following features are supported:
  * <ul>
  *   <li>{@link org.eclipse.stp.bpmn.SequenceEdge#getConditionType <em>Condition Type</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.SequenceEdge#getGraph <em>Graph</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.SequenceEdge#isIsDefault <em>Is Default</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.SequenceEdge#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.SequenceEdge#getTarget <em>Target</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.SequenceEdge#getGraph <em>Graph</em>}</li>
  * </ul>
  * </p>
  *
@@ -35,7 +35,6 @@ package org.eclipse.stp.bpmn;
 public interface SequenceEdge extends AssociationTarget, NamedBpmnObject {
     /**
      * Returns the value of the '<em><b>Condition Type</b></em>' attribute.
-     * The default value is <code>"None"</code>.
      * The literals are from the enumeration {@link org.eclipse.stp.bpmn.SequenceFlowConditionType}.
      * <!-- begin-user-doc -->
      * <p>
@@ -49,7 +48,7 @@ public interface SequenceEdge extends AssociationTarget, NamedBpmnObject {
      * @see #unsetConditionType()
      * @see #setConditionType(SequenceFlowConditionType)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getSequenceEdge_ConditionType()
-     * @model default="None" unsettable="true"
+     * @model unsettable="true"
      *        extendedMetaData="kind='attribute' name='conditionType'"
      * @generated
      */
@@ -104,8 +103,7 @@ public interface SequenceEdge extends AssociationTarget, NamedBpmnObject {
      * @see #setGraph(Graph)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getSequenceEdge_Graph()
      * @see org.eclipse.stp.bpmn.Graph#getSequenceEdges
-     * @model opposite="sequenceEdges" transient="false"
-     *        extendedMetaData="kind='attribute' name='graph'"
+     * @model opposite="sequenceEdges"
      * @generated
      */
     Graph getGraph();
@@ -187,7 +185,7 @@ public interface SequenceEdge extends AssociationTarget, NamedBpmnObject {
      * @see #setSource(Vertex)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getSequenceEdge_Source()
      * @see org.eclipse.stp.bpmn.Vertex#getOutgoingEdges
-     * @model opposite="outgoingEdges"
+     * @model opposite="outgoingEdges" resolveProxies="false" transient="true"
      *        extendedMetaData="kind='attribute' name='source'"
      * @generated
      */
@@ -216,7 +214,7 @@ public interface SequenceEdge extends AssociationTarget, NamedBpmnObject {
      * @see #setTarget(Vertex)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getSequenceEdge_Target()
      * @see org.eclipse.stp.bpmn.Vertex#getIncomingEdges
-     * @model opposite="incomingEdges"
+     * @model opposite="incomingEdges" resolveProxies="false" transient="true"
      *        extendedMetaData="kind='attribute' name='target'"
      * @generated
      */

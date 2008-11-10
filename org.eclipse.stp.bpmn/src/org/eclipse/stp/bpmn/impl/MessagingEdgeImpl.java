@@ -36,9 +36,9 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getDocumentation <em>Documentation</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getNcname <em>Ncname</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getBpmnDiagram <em>Bpmn Diagram</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getTarget <em>Target</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.impl.MessagingEdgeImpl#getBpmnDiagram <em>Bpmn Diagram</em>}</li>
  * </ul>
  * </p>
  *
@@ -419,10 +419,6 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
     @Override
 				public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
-                if (eInternalContainer() != null)
-                    msgs = eBasicRemoveFromContainer(msgs);
-                return basicSetBpmnDiagram((BpmnDiagram)otherEnd, msgs);
             case BpmnPackage.MESSAGING_EDGE__SOURCE:
                 if (source != null)
                     msgs = ((InternalEObject)source).eInverseRemove(this, BpmnPackage.MESSAGE_VERTEX__OUTGOING_MESSAGES, MessageVertex.class, msgs);
@@ -431,6 +427,10 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
                 if (target != null)
                     msgs = ((InternalEObject)target).eInverseRemove(this, BpmnPackage.MESSAGE_VERTEX__INCOMING_MESSAGES, MessageVertex.class, msgs);
                 return basicSetTarget((MessageVertex)otherEnd, msgs);
+            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetBpmnDiagram((BpmnDiagram)otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -443,12 +443,12 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
     @Override
 				public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
-                return basicSetBpmnDiagram(null, msgs);
             case BpmnPackage.MESSAGING_EDGE__SOURCE:
                 return basicSetSource(null, msgs);
             case BpmnPackage.MESSAGING_EDGE__TARGET:
                 return basicSetTarget(null, msgs);
+            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
+                return basicSetBpmnDiagram(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -481,14 +481,14 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
                 return getName();
             case BpmnPackage.MESSAGING_EDGE__NCNAME:
                 return getNcname();
-            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
-                return getBpmnDiagram();
             case BpmnPackage.MESSAGING_EDGE__SOURCE:
                 if (resolve) return getSource();
                 return basicGetSource();
             case BpmnPackage.MESSAGING_EDGE__TARGET:
                 if (resolve) return getTarget();
                 return basicGetTarget();
+            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
+                return getBpmnDiagram();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -510,14 +510,14 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
             case BpmnPackage.MESSAGING_EDGE__NCNAME:
                 setNcname((String)newValue);
                 return;
-            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
-                setBpmnDiagram((BpmnDiagram)newValue);
-                return;
             case BpmnPackage.MESSAGING_EDGE__SOURCE:
                 setSource((MessageVertex)newValue);
                 return;
             case BpmnPackage.MESSAGING_EDGE__TARGET:
                 setTarget((MessageVertex)newValue);
+                return;
+            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
+                setBpmnDiagram((BpmnDiagram)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -539,14 +539,14 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
             case BpmnPackage.MESSAGING_EDGE__NCNAME:
                 setNcname(NCNAME_EDEFAULT);
                 return;
-            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
-                setBpmnDiagram((BpmnDiagram)null);
-                return;
             case BpmnPackage.MESSAGING_EDGE__SOURCE:
                 setSource((MessageVertex)null);
                 return;
             case BpmnPackage.MESSAGING_EDGE__TARGET:
                 setTarget((MessageVertex)null);
+                return;
+            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
+                setBpmnDiagram((BpmnDiagram)null);
                 return;
         }
         super.eUnset(featureID);
@@ -585,12 +585,12 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
                 return NAME_EDEFAULT == null ? name != null : !NAME_EDEFAULT.equals(name);
             case BpmnPackage.MESSAGING_EDGE__NCNAME:
                 return NCNAME_EDEFAULT == null ? ncname != null : !NCNAME_EDEFAULT.equals(ncname);
-            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
-                return getBpmnDiagram() != null;
             case BpmnPackage.MESSAGING_EDGE__SOURCE:
                 return source != null;
             case BpmnPackage.MESSAGING_EDGE__TARGET:
                 return target != null;
+            case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
+                return getBpmnDiagram() != null;
         }
         return super.eIsSet(featureID);
     }

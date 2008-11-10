@@ -19,6 +19,7 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
+import org.eclipse.emf.ecore.util.EObjectWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.InternalEList;
@@ -90,7 +91,7 @@ public class VertexImpl extends AssociationTargetImpl implements Vertex {
      */
     public EList<SequenceEdge> getOutgoingEdges() {
         if (outgoingEdges == null) {
-            outgoingEdges = new EObjectWithInverseResolvingEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__OUTGOING_EDGES, BpmnPackage.SEQUENCE_EDGE__SOURCE);
+            outgoingEdges = new EObjectWithInverseEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__OUTGOING_EDGES, BpmnPackage.SEQUENCE_EDGE__SOURCE);
         }
         return outgoingEdges;
     }
@@ -102,7 +103,7 @@ public class VertexImpl extends AssociationTargetImpl implements Vertex {
      */
     public EList<SequenceEdge> getIncomingEdges() {
         if (incomingEdges == null) {
-            incomingEdges = new EObjectWithInverseResolvingEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__INCOMING_EDGES, BpmnPackage.SEQUENCE_EDGE__TARGET);
+            incomingEdges = new EObjectWithInverseEList<SequenceEdge>(SequenceEdge.class, this, BpmnPackage.VERTEX__INCOMING_EDGES, BpmnPackage.SEQUENCE_EDGE__TARGET);
         }
         return incomingEdges;
     }

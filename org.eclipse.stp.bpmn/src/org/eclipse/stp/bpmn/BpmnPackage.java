@@ -369,22 +369,22 @@ public interface BpmnPackage extends EPackage {
     int ACTIVITY__ACTIVITY_TYPE = VERTEX_FEATURE_COUNT + 8;
 
     /**
-     * The feature id for the '<em><b>Event Handler For</b></em>' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int ACTIVITY__EVENT_HANDLER_FOR = VERTEX_FEATURE_COUNT + 9;
-
-    /**
      * The feature id for the '<em><b>Looping</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int ACTIVITY__LOOPING = VERTEX_FEATURE_COUNT + 10;
+    int ACTIVITY__LOOPING = VERTEX_FEATURE_COUNT + 9;
+
+    /**
+     * The feature id for the '<em><b>Event Handler For</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int ACTIVITY__EVENT_HANDLER_FOR = VERTEX_FEATURE_COUNT + 10;
 
     /**
      * The number of structural features of the '<em>Activity</em>' class.
@@ -678,11 +678,11 @@ public interface BpmnPackage extends EPackage {
     /**
      * The feature id for the '<em><b>Target</b></em>' reference.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-	int ASSOCIATION__TARGET = EcorePackage.EMODEL_ELEMENT_FEATURE_COUNT + 2;
+    int ASSOCIATION__TARGET = EcorePackage.EMODEL_ELEMENT_FEATURE_COUNT + 2;
 
     /**
      * The number of structural features of the '<em>Association</em>' class.
@@ -1262,22 +1262,13 @@ public interface BpmnPackage extends EPackage {
     int MESSAGING_EDGE__NCNAME = ASSOCIATION_TARGET_FEATURE_COUNT + 2;
 
     /**
-     * The feature id for the '<em><b>Bpmn Diagram</b></em>' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int MESSAGING_EDGE__BPMN_DIAGRAM = ASSOCIATION_TARGET_FEATURE_COUNT + 3;
-
-    /**
      * The feature id for the '<em><b>Source</b></em>' reference.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int MESSAGING_EDGE__SOURCE = ASSOCIATION_TARGET_FEATURE_COUNT + 4;
+    int MESSAGING_EDGE__SOURCE = ASSOCIATION_TARGET_FEATURE_COUNT + 3;
 
     /**
      * The feature id for the '<em><b>Target</b></em>' reference.
@@ -1286,7 +1277,16 @@ public interface BpmnPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int MESSAGING_EDGE__TARGET = ASSOCIATION_TARGET_FEATURE_COUNT + 5;
+    int MESSAGING_EDGE__TARGET = ASSOCIATION_TARGET_FEATURE_COUNT + 4;
+
+    /**
+     * The feature id for the '<em><b>Bpmn Diagram</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int MESSAGING_EDGE__BPMN_DIAGRAM = ASSOCIATION_TARGET_FEATURE_COUNT + 5;
 
     /**
      * The number of structural features of the '<em>Messaging Edge</em>' class.
@@ -1516,22 +1516,13 @@ public interface BpmnPackage extends EPackage {
     int SEQUENCE_EDGE__CONDITION_TYPE = ASSOCIATION_TARGET_FEATURE_COUNT + 3;
 
     /**
-     * The feature id for the '<em><b>Graph</b></em>' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int SEQUENCE_EDGE__GRAPH = ASSOCIATION_TARGET_FEATURE_COUNT + 4;
-
-    /**
      * The feature id for the '<em><b>Is Default</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      * @ordered
      */
-    int SEQUENCE_EDGE__IS_DEFAULT = ASSOCIATION_TARGET_FEATURE_COUNT + 5;
+    int SEQUENCE_EDGE__IS_DEFAULT = ASSOCIATION_TARGET_FEATURE_COUNT + 4;
 
     /**
      * The feature id for the '<em><b>Source</b></em>' reference.
@@ -1540,7 +1531,7 @@ public interface BpmnPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SEQUENCE_EDGE__SOURCE = ASSOCIATION_TARGET_FEATURE_COUNT + 6;
+    int SEQUENCE_EDGE__SOURCE = ASSOCIATION_TARGET_FEATURE_COUNT + 5;
 
     /**
      * The feature id for the '<em><b>Target</b></em>' reference.
@@ -1549,7 +1540,16 @@ public interface BpmnPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SEQUENCE_EDGE__TARGET = ASSOCIATION_TARGET_FEATURE_COUNT + 7;
+    int SEQUENCE_EDGE__TARGET = ASSOCIATION_TARGET_FEATURE_COUNT + 6;
+
+    /**
+     * The feature id for the '<em><b>Graph</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SEQUENCE_EDGE__GRAPH = ASSOCIATION_TARGET_FEATURE_COUNT + 7;
 
     /**
      * The number of structural features of the '<em>Sequence Edge</em>' class.
@@ -1706,15 +1706,6 @@ public interface BpmnPackage extends EPackage {
     int SUB_PROCESS__ACTIVITY_TYPE = ACTIVITY__ACTIVITY_TYPE;
 
     /**
-     * The feature id for the '<em><b>Event Handler For</b></em>' container reference.
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     * @ordered
-     */
-    int SUB_PROCESS__EVENT_HANDLER_FOR = ACTIVITY__EVENT_HANDLER_FOR;
-
-    /**
      * The feature id for the '<em><b>Looping</b></em>' attribute.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -1722,6 +1713,15 @@ public interface BpmnPackage extends EPackage {
      * @ordered
      */
     int SUB_PROCESS__LOOPING = ACTIVITY__LOOPING;
+
+    /**
+     * The feature id for the '<em><b>Event Handler For</b></em>' container reference.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SUB_PROCESS__EVENT_HANDLER_FOR = ACTIVITY__EVENT_HANDLER_FOR;
 
     /**
      * The feature id for the '<em><b>Artifacts</b></em>' containment reference list.
@@ -2075,13 +2075,13 @@ public interface BpmnPackage extends EPackage {
     /**
      * Returns the meta object for the reference '{@link org.eclipse.stp.bpmn.Association#getTarget <em>Target</em>}'.
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @return the meta object for the reference '<em>Target</em>'.
      * @see org.eclipse.stp.bpmn.Association#getTarget()
      * @see #getAssociation()
      * @generated
      */
-	EReference getAssociation_Target();
+    EReference getAssociation_Target();
 
     /**
      * Returns the meta object for class '{@link org.eclipse.stp.bpmn.AssociationTarget <em>Association Target</em>}'.
@@ -2796,10 +2796,10 @@ public interface BpmnPackage extends EPackage {
         /**
          * The meta object literal for the '<em><b>Target</b></em>' reference feature.
          * <!-- begin-user-doc -->
-		 * <!-- end-user-doc -->
+         * <!-- end-user-doc -->
          * @generated
          */
-		EReference ASSOCIATION__TARGET = eINSTANCE.getAssociation_Target();
+        EReference ASSOCIATION__TARGET = eINSTANCE.getAssociation_Target();
 
         /**
          * The meta object literal for the '{@link org.eclipse.stp.bpmn.impl.AssociationTargetImpl <em>Association Target</em>}' class.

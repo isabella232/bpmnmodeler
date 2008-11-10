@@ -20,9 +20,9 @@ package org.eclipse.stp.bpmn;
  * <p>
  * The following features are supported:
  * <ul>
- *   <li>{@link org.eclipse.stp.bpmn.MessagingEdge#getBpmnDiagram <em>Bpmn Diagram</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.MessagingEdge#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.MessagingEdge#getTarget <em>Target</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.MessagingEdge#getBpmnDiagram <em>Bpmn Diagram</em>}</li>
  * </ul>
  * </p>
  *
@@ -44,8 +44,7 @@ public interface MessagingEdge extends AssociationTarget, NamedBpmnObject {
      * @see #setBpmnDiagram(BpmnDiagram)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getMessagingEdge_BpmnDiagram()
      * @see org.eclipse.stp.bpmn.BpmnDiagram#getMessages
-     * @model opposite="messages" transient="false"
-     *        extendedMetaData="kind='attribute' name='bpmnDiagram'"
+     * @model opposite="messages"
      * @generated
      */
     BpmnDiagram getBpmnDiagram();

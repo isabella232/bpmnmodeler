@@ -61,8 +61,8 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/groups"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/lanes"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//Activity/activityType"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/eventHandlerFor"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//Activity/looping"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//Activity/eventHandlerFor"/>
     </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//Artifact">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//Artifact/associations"/>
@@ -106,9 +106,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//MessageVertex/outgoingMessages"/>
     </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//MessagingEdge">
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//MessagingEdge/bpmnDiagram"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//MessagingEdge/source"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//MessagingEdge/target"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//MessagingEdge/bpmnDiagram"/>
     </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//NamedBpmnObject">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//NamedBpmnObject/documentation"/>
@@ -121,10 +121,10 @@
     </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//SequenceEdge">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//SequenceEdge/conditionType"/>
-      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//SequenceEdge/graph"/>
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute bpmn.ecore#//SequenceEdge/isDefault"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//SequenceEdge/source"/>
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference bpmn.ecore#//SequenceEdge/target"/>
+      <genFeatures property="None" notify="false" createChild="false" ecoreFeature="ecore:EReference bpmn.ecore#//SequenceEdge/graph"/>
     </genClasses>
     <genClasses ecoreClass="bpmn.ecore#//SubProcess">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference bpmn.ecore#//SubProcess/eventHandlers"/>

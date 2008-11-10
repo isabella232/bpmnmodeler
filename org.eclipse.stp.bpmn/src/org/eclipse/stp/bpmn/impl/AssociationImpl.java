@@ -183,27 +183,10 @@ public class AssociationImpl extends EModelElementImpl implements Association {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
-     * @generated
-     */
-	public AssociationTarget getTarget() {
-        if (target != null && target.eIsProxy()) {
-            InternalEObject oldTarget = (InternalEObject)target;
-            target = (AssociationTarget)eResolveProxy(oldTarget);
-            if (target != oldTarget) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, BpmnPackage.ASSOCIATION__TARGET, oldTarget, target));
-            }
-        }
-        return target;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @generated
      */
-    public AssociationTarget basicGetTarget() {
+    public AssociationTarget getTarget() {
         return target;
     }
 
@@ -304,8 +287,7 @@ public class AssociationImpl extends EModelElementImpl implements Association {
             case BpmnPackage.ASSOCIATION__SOURCE:
                 return getSource();
             case BpmnPackage.ASSOCIATION__TARGET:
-                if (resolve) return getTarget();
-                return basicGetTarget();
+                return getTarget();
         }
         return super.eGet(featureID, resolve, coreType);
     }

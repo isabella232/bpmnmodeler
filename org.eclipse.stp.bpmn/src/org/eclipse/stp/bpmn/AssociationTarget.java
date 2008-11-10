@@ -45,7 +45,7 @@ public interface AssociationTarget extends Identifiable {
      * @return the value of the '<em>Associations</em>' reference list.
      * @see org.eclipse.stp.bpmn.BpmnPackage#getAssociationTarget_Associations()
      * @see org.eclipse.stp.bpmn.Association#getTarget
-     * @model opposite="target"
+     * @model opposite="target" resolveProxies="false"
      *        extendedMetaData="kind='element' name='associations'"
      * @generated
      */

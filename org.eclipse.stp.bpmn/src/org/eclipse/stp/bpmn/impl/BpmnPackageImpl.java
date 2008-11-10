@@ -339,7 +339,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getActivity_EventHandlerFor() {
-        return (EReference)activityEClass.getEStructuralFeatures().get(3);
+        return (EReference)activityEClass.getEStructuralFeatures().get(4);
     }
 
     /**
@@ -348,7 +348,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EAttribute getActivity_Looping() {
-        return (EAttribute)activityEClass.getEStructuralFeatures().get(4);
+        return (EAttribute)activityEClass.getEStructuralFeatures().get(3);
     }
 
     /**
@@ -425,10 +425,10 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 
     /**
      * <!-- begin-user-doc -->
-	 * <!-- end-user-doc -->
+     * <!-- end-user-doc -->
      * @generated
      */
-	public EReference getAssociation_Target() {
+    public EReference getAssociation_Target() {
         return (EReference)associationEClass.getEStructuralFeatures().get(2);
     }
 
@@ -645,7 +645,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getMessagingEdge_BpmnDiagram() {
-        return (EReference)messagingEdgeEClass.getEStructuralFeatures().get(0);
+        return (EReference)messagingEdgeEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -654,7 +654,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getMessagingEdge_Source() {
-        return (EReference)messagingEdgeEClass.getEStructuralFeatures().get(1);
+        return (EReference)messagingEdgeEClass.getEStructuralFeatures().get(0);
     }
 
     /**
@@ -663,7 +663,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getMessagingEdge_Target() {
-        return (EReference)messagingEdgeEClass.getEStructuralFeatures().get(2);
+        return (EReference)messagingEdgeEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -753,7 +753,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getSequenceEdge_Graph() {
-        return (EReference)sequenceEdgeEClass.getEStructuralFeatures().get(1);
+        return (EReference)sequenceEdgeEClass.getEStructuralFeatures().get(4);
     }
 
     /**
@@ -762,7 +762,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EAttribute getSequenceEdge_IsDefault() {
-        return (EAttribute)sequenceEdgeEClass.getEStructuralFeatures().get(2);
+        return (EAttribute)sequenceEdgeEClass.getEStructuralFeatures().get(1);
     }
 
     /**
@@ -771,7 +771,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getSequenceEdge_Source() {
-        return (EReference)sequenceEdgeEClass.getEStructuralFeatures().get(3);
+        return (EReference)sequenceEdgeEClass.getEStructuralFeatures().get(2);
     }
 
     /**
@@ -780,7 +780,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
      * @generated
      */
 	public EReference getSequenceEdge_Target() {
-        return (EReference)sequenceEdgeEClass.getEStructuralFeatures().get(4);
+        return (EReference)sequenceEdgeEClass.getEStructuralFeatures().get(3);
     }
 
     /**
@@ -941,8 +941,8 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         createEReference(activityEClass, ACTIVITY__GROUPS);
         createEReference(activityEClass, ACTIVITY__LANES);
         createEAttribute(activityEClass, ACTIVITY__ACTIVITY_TYPE);
-        createEReference(activityEClass, ACTIVITY__EVENT_HANDLER_FOR);
         createEAttribute(activityEClass, ACTIVITY__LOOPING);
+        createEReference(activityEClass, ACTIVITY__EVENT_HANDLER_FOR);
 
         artifactEClass = createEClass(ARTIFACT);
         createEReference(artifactEClass, ARTIFACT__ASSOCIATIONS);
@@ -987,9 +987,9 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         createEReference(messageVertexEClass, MESSAGE_VERTEX__OUTGOING_MESSAGES);
 
         messagingEdgeEClass = createEClass(MESSAGING_EDGE);
-        createEReference(messagingEdgeEClass, MESSAGING_EDGE__BPMN_DIAGRAM);
         createEReference(messagingEdgeEClass, MESSAGING_EDGE__SOURCE);
         createEReference(messagingEdgeEClass, MESSAGING_EDGE__TARGET);
+        createEReference(messagingEdgeEClass, MESSAGING_EDGE__BPMN_DIAGRAM);
 
         namedBpmnObjectEClass = createEClass(NAMED_BPMN_OBJECT);
         createEAttribute(namedBpmnObjectEClass, NAMED_BPMN_OBJECT__DOCUMENTATION);
@@ -1002,10 +1002,10 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 
         sequenceEdgeEClass = createEClass(SEQUENCE_EDGE);
         createEAttribute(sequenceEdgeEClass, SEQUENCE_EDGE__CONDITION_TYPE);
-        createEReference(sequenceEdgeEClass, SEQUENCE_EDGE__GRAPH);
         createEAttribute(sequenceEdgeEClass, SEQUENCE_EDGE__IS_DEFAULT);
         createEReference(sequenceEdgeEClass, SEQUENCE_EDGE__SOURCE);
         createEReference(sequenceEdgeEClass, SEQUENCE_EDGE__TARGET);
+        createEReference(sequenceEdgeEClass, SEQUENCE_EDGE__GRAPH);
 
         subProcessEClass = createEClass(SUB_PROCESS);
         createEReference(subProcessEClass, SUB_PROCESS__EVENT_HANDLERS);
@@ -1092,26 +1092,26 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 
         // Initialize classes and features; add operations and parameters
         initEClass(activityEClass, Activity.class, "Activity", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getActivity_Groups(), this.getGroup(), this.getGroup_Activities(), "groups", null, 0, -1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getActivity_Lanes(), this.getLane(), this.getLane_Activities(), "lanes", null, 0, -1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getActivity_Groups(), this.getGroup(), this.getGroup_Activities(), "groups", null, 0, -1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getActivity_Lanes(), this.getLane(), this.getLane_Activities(), "lanes", null, 0, -1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getActivity_ActivityType(), this.getActivityType(), "activityType", "Task", 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getActivity_EventHandlerFor(), this.getSubProcess(), this.getSubProcess_EventHandlers(), "eventHandlerFor", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getActivity_Looping(), theXMLTypePackage.getBoolean(), "looping", null, 0, 1, Activity.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getActivity_EventHandlerFor(), this.getSubProcess(), this.getSubProcess_EventHandlers(), "eventHandlerFor", null, 0, 1, Activity.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(artifactEClass, Artifact.class, "Artifact", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getArtifact_Associations(), this.getAssociation(), this.getAssociation_Source(), "associations", null, 0, -1, Artifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getArtifact_ArtifactsContainer(), this.getArtifactsContainer(), this.getArtifactsContainer_Artifacts(), "artifactsContainer", null, 0, 1, Artifact.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getArtifact_ArtifactsContainer(), this.getArtifactsContainer(), this.getArtifactsContainer_Artifacts(), "artifactsContainer", null, 0, 1, Artifact.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(artifactsContainerEClass, ArtifactsContainer.class, "ArtifactsContainer", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getArtifactsContainer_Artifacts(), this.getArtifact(), this.getArtifact_ArtifactsContainer(), "artifacts", null, 0, -1, ArtifactsContainer.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(associationEClass, Association.class, "Association", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getAssociation_Direction(), this.getDirectionType(), "direction", "None", 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getAssociation_Source(), this.getArtifact(), this.getArtifact_Associations(), "source", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getAssociation_Target(), this.getAssociationTarget(), this.getAssociationTarget_Associations(), "target", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getAssociation_Direction(), this.getDirectionType(), "direction", null, 0, 1, Association.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getAssociation_Source(), this.getArtifact(), this.getArtifact_Associations(), "source", null, 0, 1, Association.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getAssociation_Target(), this.getAssociationTarget(), this.getAssociationTarget_Associations(), "target", null, 0, 1, Association.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(associationTargetEClass, AssociationTarget.class, "AssociationTarget", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getAssociationTarget_Associations(), this.getAssociation(), this.getAssociation_Target(), "associations", null, 0, -1, AssociationTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getAssociationTarget_Associations(), this.getAssociation(), this.getAssociation_Target(), "associations", null, 0, -1, AssociationTarget.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(bpmnDiagramEClass, BpmnDiagram.class, "BpmnDiagram", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getBpmnDiagram_Pools(), this.getPool(), this.getPool_BpmnDiagram(), "pools", null, 0, -1, BpmnDiagram.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1133,7 +1133,7 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 
         initEClass(laneEClass, Lane.class, "Lane", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getLane_Activities(), this.getActivity(), this.getActivity_Lanes(), "activities", null, 0, -1, Lane.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getLane_Pool(), this.getPool(), this.getPool_Lanes(), "pool", null, 0, 1, Lane.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getLane_Pool(), this.getPool(), this.getPool_Lanes(), "pool", null, 0, 1, Lane.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(messageVertexEClass, MessageVertex.class, "MessageVertex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getMessageVertex_OrderedMessages(), ecorePackage.getEFeatureMapEntry(), "orderedMessages", null, 0, -1, MessageVertex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, !IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1141,9 +1141,9 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         initEReference(getMessageVertex_OutgoingMessages(), this.getMessagingEdge(), this.getMessagingEdge_Source(), "outgoingMessages", null, 0, -1, MessageVertex.class, IS_TRANSIENT, IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, IS_DERIVED, IS_ORDERED);
 
         initEClass(messagingEdgeEClass, MessagingEdge.class, "MessagingEdge", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getMessagingEdge_BpmnDiagram(), this.getBpmnDiagram(), this.getBpmnDiagram_Messages(), "bpmnDiagram", null, 0, 1, MessagingEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getMessagingEdge_Source(), this.getMessageVertex(), this.getMessageVertex_OutgoingMessages(), "source", null, 0, 1, MessagingEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEReference(getMessagingEdge_Target(), this.getMessageVertex(), this.getMessageVertex_IncomingMessages(), "target", null, 0, 1, MessagingEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getMessagingEdge_BpmnDiagram(), this.getBpmnDiagram(), this.getBpmnDiagram_Messages(), "bpmnDiagram", null, 0, 1, MessagingEdge.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(namedBpmnObjectEClass, NamedBpmnObject.class, "NamedBpmnObject", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEAttribute(getNamedBpmnObject_Documentation(), theXMLTypePackage.getString(), "documentation", null, 0, 1, NamedBpmnObject.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1152,14 +1152,14 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 
         initEClass(poolEClass, Pool.class, "Pool", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getPool_Lanes(), this.getLane(), this.getLane_Pool(), "lanes", null, 0, -1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getPool_BpmnDiagram(), this.getBpmnDiagram(), this.getBpmnDiagram_Pools(), "bpmnDiagram", null, 0, 1, Pool.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getPool_BpmnDiagram(), this.getBpmnDiagram(), this.getBpmnDiagram_Pools(), "bpmnDiagram", null, 0, 1, Pool.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(sequenceEdgeEClass, SequenceEdge.class, "SequenceEdge", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEAttribute(getSequenceEdge_ConditionType(), this.getSequenceFlowConditionType(), "conditionType", "None", 0, 1, SequenceEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getSequenceEdge_Graph(), this.getGraph(), this.getGraph_SequenceEdges(), "graph", null, 0, 1, SequenceEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSequenceEdge_ConditionType(), this.getSequenceFlowConditionType(), "conditionType", null, 0, 1, SequenceEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getSequenceEdge_IsDefault(), theXMLTypePackage.getBoolean(), "isDefault", null, 0, 1, SequenceEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getSequenceEdge_Source(), this.getVertex(), this.getVertex_OutgoingEdges(), "source", null, 0, 1, SequenceEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getSequenceEdge_Target(), this.getVertex(), this.getVertex_IncomingEdges(), "target", null, 0, 1, SequenceEdge.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSequenceEdge_Source(), this.getVertex(), this.getVertex_OutgoingEdges(), "source", null, 0, 1, SequenceEdge.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSequenceEdge_Target(), this.getVertex(), this.getVertex_IncomingEdges(), "target", null, 0, 1, SequenceEdge.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getSequenceEdge_Graph(), this.getGraph(), this.getGraph_SequenceEdges(), "graph", null, 0, 1, SequenceEdge.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         initEClass(subProcessEClass, SubProcess.class, "SubProcess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getSubProcess_EventHandlers(), this.getActivity(), this.getActivity_EventHandlerFor(), "eventHandlers", null, 0, -1, SubProcess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
@@ -1168,9 +1168,9 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         initEClass(textAnnotationEClass, TextAnnotation.class, "TextAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
         initEClass(vertexEClass, Vertex.class, "Vertex", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
-        initEReference(getVertex_OutgoingEdges(), this.getSequenceEdge(), this.getSequenceEdge_Source(), "outgoingEdges", null, 0, -1, Vertex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVertex_IncomingEdges(), this.getSequenceEdge(), this.getSequenceEdge_Target(), "incomingEdges", null, 0, -1, Vertex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
-        initEReference(getVertex_Graph(), this.getGraph(), this.getGraph_Vertices(), "graph", null, 0, 1, Vertex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVertex_OutgoingEdges(), this.getSequenceEdge(), this.getSequenceEdge_Source(), "outgoingEdges", null, 0, -1, Vertex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVertex_IncomingEdges(), this.getSequenceEdge(), this.getSequenceEdge_Target(), "incomingEdges", null, 0, -1, Vertex.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEReference(getVertex_Graph(), this.getGraph(), this.getGraph_Vertices(), "graph", null, 0, 1, Vertex.class, IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
 
         // Initialize enums and add enum literals
         initEEnum(activityTypeEEnum, ActivityType.class, "ActivityType");
@@ -1269,13 +1269,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
              "name", "activityType"
            });		
         addAnnotation
-          (getActivity_EventHandlerFor(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "eventHandlerFor"
-           });		
-        addAnnotation
           (getActivity_Looping(), 
            source, 
            new String[] {
@@ -1308,13 +1301,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
            new String[] {
              "kind", "element",
              "name", "associations"
-           });		
-        addAnnotation
-          (getArtifact_ArtifactsContainer(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "artifactsContainer"
            });		
         addAnnotation
           (artifactsContainerEClass, 
@@ -1491,13 +1477,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
              "name", "activities"
            });		
         addAnnotation
-          (getLane_Pool(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "pool"
-           });		
-        addAnnotation
           (messageVertexEClass, 
            source, 
            new String[] {
@@ -1533,13 +1512,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
            new String[] {
              "name", "MessagingEdge",
              "kind", "elementOnly"
-           });		
-        addAnnotation
-          (getMessagingEdge_BpmnDiagram(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "bpmnDiagram"
            });		
         addAnnotation
           (getMessagingEdge_Source(), 
@@ -1598,13 +1570,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
              "name", "lanes"
            });		
         addAnnotation
-          (getPool_BpmnDiagram(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "bpmnDiagram"
-           });		
-        addAnnotation
           (sequenceEdgeEClass, 
            source, 
            new String[] {
@@ -1617,13 +1582,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
            new String[] {
              "kind", "attribute",
              "name", "conditionType"
-           });		
-        addAnnotation
-          (getSequenceEdge_Graph(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "graph"
            });		
         addAnnotation
           (getSequenceEdge_IsDefault(), 
@@ -1707,13 +1665,6 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
            new String[] {
              "kind", "element",
              "name", "incomingEdges"
-           });		
-        addAnnotation
-          (getVertex_Graph(), 
-           source, 
-           new String[] {
-             "kind", "attribute",
-             "name", "graph"
            });
     }
 

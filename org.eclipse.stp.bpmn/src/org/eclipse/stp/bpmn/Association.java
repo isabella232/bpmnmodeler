@@ -29,7 +29,6 @@ import org.eclipse.emf.ecore.EModelElement;
 public interface Association extends EModelElement {
     /**
      * Returns the value of the '<em><b>Direction</b></em>' attribute.
-     * The default value is <code>"None"</code>.
      * The literals are from the enumeration {@link org.eclipse.stp.bpmn.DirectionType}.
      * <!-- begin-user-doc -->
 	 * <p>
@@ -43,7 +42,7 @@ public interface Association extends EModelElement {
      * @see #unsetDirection()
      * @see #setDirection(DirectionType)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getAssociation_Direction()
-     * @model default="None" unsettable="true"
+     * @model unsettable="true"
      *        extendedMetaData="kind='attribute' name='direction'"
      * @generated
      */
@@ -98,7 +97,7 @@ public interface Association extends EModelElement {
      * @see #setSource(Artifact)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getAssociation_Source()
      * @see org.eclipse.stp.bpmn.Artifact#getAssociations
-     * @model opposite="associations" transient="false"
+     * @model opposite="associations" resolveProxies="false"
      *        extendedMetaData="kind='attribute' name='source'"
      * @generated
      */
@@ -118,20 +117,20 @@ public interface Association extends EModelElement {
      * Returns the value of the '<em><b>Target</b></em>' reference.
      * It is bidirectional and its opposite is '{@link org.eclipse.stp.bpmn.AssociationTarget#getAssociations <em>Associations</em>}'.
      * <!-- begin-user-doc -->
-	 * <p>
-	 * If the meaning of the '<em>Target</em>' reference isn't clear,
-	 * there really should be more of a description here...
-	 * </p>
-	 * <!-- end-user-doc -->
+     * <p>
+     * If the meaning of the '<em>Target</em>' reference isn't clear,
+     * there really should be more of a description here...
+     * </p>
+     * <!-- end-user-doc -->
      * @return the value of the '<em>Target</em>' reference.
      * @see #setTarget(AssociationTarget)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getAssociation_Target()
      * @see org.eclipse.stp.bpmn.AssociationTarget#getAssociations
-     * @model opposite="associations"
+     * @model opposite="associations" resolveProxies="false" transient="true"
      *        extendedMetaData="kind='attribute' name='target'"
      * @generated
      */
-	AssociationTarget getTarget();
+    AssociationTarget getTarget();
 
     /**
      * Sets the value of the '{@link org.eclipse.stp.bpmn.Association#getTarget <em>Target</em>}' reference.

@@ -63,8 +63,7 @@ public interface Pool extends Graph, MessageVertex {
      * @see #setBpmnDiagram(BpmnDiagram)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getPool_BpmnDiagram()
      * @see org.eclipse.stp.bpmn.BpmnDiagram#getPools
-     * @model opposite="pools" transient="false"
-     *        extendedMetaData="kind='attribute' name='bpmnDiagram'"
+     * @model opposite="pools"
      * @generated
      */
     BpmnDiagram getBpmnDiagram();

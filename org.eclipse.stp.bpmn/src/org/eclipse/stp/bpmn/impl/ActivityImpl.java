@@ -19,6 +19,7 @@ import org.eclipse.emf.ecore.InternalEObject;
 import org.eclipse.emf.ecore.impl.ENotificationImpl;
 
 import org.eclipse.emf.ecore.util.BasicFeatureMap;
+import org.eclipse.emf.ecore.util.EObjectWithInverseEList;
 import org.eclipse.emf.ecore.util.EObjectWithInverseResolvingEList;
 import org.eclipse.emf.ecore.util.EcoreUtil;
 import org.eclipse.emf.ecore.util.FeatureMap;
@@ -52,8 +53,8 @@ import org.eclipse.stp.bpmn.SubProcess;
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getGroups <em>Groups</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getLanes <em>Lanes</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getActivityType <em>Activity Type</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getEventHandlerFor <em>Event Handler For</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#isLooping <em>Looping</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.impl.ActivityImpl#getEventHandlerFor <em>Event Handler For</em>}</li>
  * </ul>
  * </p>
  *
@@ -264,7 +265,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
      */
 	public EList<Group> getGroups() {
         if (groups == null) {
-            groups = new EObjectWithInverseResolvingEList.ManyInverse<Group>(Group.class, this, BpmnPackage.ACTIVITY__GROUPS, BpmnPackage.GROUP__ACTIVITIES);
+            groups = new EObjectWithInverseEList.ManyInverse<Group>(Group.class, this, BpmnPackage.ACTIVITY__GROUPS, BpmnPackage.GROUP__ACTIVITIES);
         }
         return groups;
     }
@@ -276,7 +277,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
      */
     public EList<Lane> getLanes() {
         if (lanes == null) {
-            lanes = new EObjectWithInverseResolvingEList.ManyInverse<Lane>(Lane.class, this, BpmnPackage.ACTIVITY__LANES, BpmnPackage.LANE__ACTIVITIES);
+            lanes = new EObjectWithInverseEList.ManyInverse<Lane>(Lane.class, this, BpmnPackage.ACTIVITY__LANES, BpmnPackage.LANE__ACTIVITIES);
         }
         return lanes;
     }
@@ -567,10 +568,10 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 return getLanes();
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 return getActivityType();
-            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
-                return getEventHandlerFor();
             case BpmnPackage.ACTIVITY__LOOPING:
                 return isLooping() ? Boolean.TRUE : Boolean.FALSE;
+            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
+                return getEventHandlerFor();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -615,11 +616,11 @@ public class ActivityImpl extends VertexImpl implements Activity {
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 setActivityType((ActivityType)newValue);
                 return;
-            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
-                setEventHandlerFor((SubProcess)newValue);
-                return;
             case BpmnPackage.ACTIVITY__LOOPING:
                 setLooping(((Boolean)newValue).booleanValue());
+                return;
+            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
+                setEventHandlerFor((SubProcess)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -660,11 +661,11 @@ public class ActivityImpl extends VertexImpl implements Activity {
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 unsetActivityType();
                 return;
-            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
-                setEventHandlerFor((SubProcess)null);
-                return;
             case BpmnPackage.ACTIVITY__LOOPING:
                 unsetLooping();
+                return;
+            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
+                setEventHandlerFor((SubProcess)null);
                 return;
         }
         super.eUnset(featureID);
@@ -696,10 +697,10 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 return lanes != null && !lanes.isEmpty();
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 return isSetActivityType();
-            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
-                return getEventHandlerFor() != null;
             case BpmnPackage.ACTIVITY__LOOPING:
                 return isSetLooping();
+            case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
+                return getEventHandlerFor() != null;
         }
         return super.eIsSet(featureID);
     }

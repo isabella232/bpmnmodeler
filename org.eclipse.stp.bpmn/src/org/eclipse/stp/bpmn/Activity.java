@@ -23,8 +23,8 @@ import org.eclipse.emf.common.util.EList;
  *   <li>{@link org.eclipse.stp.bpmn.Activity#getGroups <em>Groups</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#getLanes <em>Lanes</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#getActivityType <em>Activity Type</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.Activity#getEventHandlerFor <em>Event Handler For</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.Activity#isLooping <em>Looping</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.Activity#getEventHandlerFor <em>Event Handler For</em>}</li>
  * </ul>
  * </p>
  *
@@ -46,7 +46,7 @@ public interface Activity extends Vertex, MessageVertex {
      * @return the value of the '<em>Groups</em>' reference list.
      * @see org.eclipse.stp.bpmn.BpmnPackage#getActivity_Groups()
      * @see org.eclipse.stp.bpmn.Group#getActivities
-     * @model opposite="activities"
+     * @model opposite="activities" resolveProxies="false"
      *        extendedMetaData="kind='element' name='groups'"
      * @generated
      */
@@ -65,7 +65,7 @@ public interface Activity extends Vertex, MessageVertex {
      * @return the value of the '<em>Lanes</em>' reference list.
      * @see org.eclipse.stp.bpmn.BpmnPackage#getActivity_Lanes()
      * @see org.eclipse.stp.bpmn.Lane#getActivities
-     * @model opposite="activities"
+     * @model opposite="activities" resolveProxies="false"
      *        extendedMetaData="kind='element' name='lanes'"
      * @generated
      */
@@ -142,8 +142,7 @@ public interface Activity extends Vertex, MessageVertex {
      * @see #setEventHandlerFor(SubProcess)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getActivity_EventHandlerFor()
      * @see org.eclipse.stp.bpmn.SubProcess#getEventHandlers
-     * @model opposite="eventHandlers" transient="false"
-     *        extendedMetaData="kind='attribute' name='eventHandlerFor'"
+     * @model opposite="eventHandlers"
      * @generated
      */
     SubProcess getEventHandlerFor();

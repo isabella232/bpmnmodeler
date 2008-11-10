@@ -31,7 +31,7 @@ public enum DirectionType implements Enumerator
      * @generated
      * @ordered
      */
-	NONE_LITERAL(0, BpmnMessages.DirectionType_none_label, "None"),  //$NON-NLS-2$
+	NONE_LITERAL(0, "None", "None"),  //$NON-NLS-2$
 	/**
      * The '<em><b>To</b></em>' literal object.
      * <!-- begin-user-doc -->
@@ -40,7 +40,7 @@ public enum DirectionType implements Enumerator
      * @generated
      * @ordered
      */
-	TO_LITERAL(1, BpmnMessages.DirectionType_to_label, "To"),  //$NON-NLS-2$
+	TO_LITERAL(1, "To", "To"),  //$NON-NLS-2$
 	/**
      * The '<em><b>From</b></em>' literal object.
      * <!-- begin-user-doc -->
@@ -49,7 +49,7 @@ public enum DirectionType implements Enumerator
      * @generated
      * @ordered
      */
-	FROM_LITERAL(2, BpmnMessages.DirectionType_from_label, "From"),  //$NON-NLS-2$
+	FROM_LITERAL(2, "From", "From"),  //$NON-NLS-2$
 	/**
      * The '<em><b>Both</b></em>' literal object.
      * <!-- begin-user-doc -->
@@ -58,7 +58,7 @@ public enum DirectionType implements Enumerator
      * @generated
      * @ordered
      */
-	BOTH_LITERAL(3, BpmnMessages.DirectionType_both_label, "Both");  //$NON-NLS-2$
+	BOTH_LITERAL(3, "Both", "Both");  //$NON-NLS-2$
 	/**
      * The '<em><b>None</b></em>' literal value.
      * <!-- begin-user-doc -->

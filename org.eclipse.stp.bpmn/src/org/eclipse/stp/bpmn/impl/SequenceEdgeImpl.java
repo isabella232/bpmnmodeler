@@ -36,10 +36,10 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getName <em>Name</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getNcname <em>Ncname</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getConditionType <em>Condition Type</em>}</li>
- *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getGraph <em>Graph</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#isIsDefault <em>Is Default</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getSource <em>Source</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getTarget <em>Target</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.impl.SequenceEdgeImpl#getGraph <em>Graph</em>}</li>
  * </ul>
  * </p>
  *
@@ -405,23 +405,6 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
      * @generated
      */
     public Vertex getSource() {
-        if (source != null && source.eIsProxy()) {
-            InternalEObject oldSource = (InternalEObject)source;
-            source = (Vertex)eResolveProxy(oldSource);
-            if (source != oldSource) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, BpmnPackage.SEQUENCE_EDGE__SOURCE, oldSource, source));
-            }
-        }
-        return source;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public Vertex basicGetSource() {
         return source;
     }
 
@@ -465,23 +448,6 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
      * @generated
      */
     public Vertex getTarget() {
-        if (target != null && target.eIsProxy()) {
-            InternalEObject oldTarget = (InternalEObject)target;
-            target = (Vertex)eResolveProxy(oldTarget);
-            if (target != oldTarget) {
-                if (eNotificationRequired())
-                    eNotify(new ENotificationImpl(this, Notification.RESOLVE, BpmnPackage.SEQUENCE_EDGE__TARGET, oldTarget, target));
-            }
-        }
-        return target;
-    }
-
-    /**
-     * <!-- begin-user-doc -->
-     * <!-- end-user-doc -->
-     * @generated
-     */
-    public Vertex basicGetTarget() {
         return target;
     }
 
@@ -527,10 +493,6 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
     @Override
 				public NotificationChain eInverseAdd(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
-                if (eInternalContainer() != null)
-                    msgs = eBasicRemoveFromContainer(msgs);
-                return basicSetGraph((Graph)otherEnd, msgs);
             case BpmnPackage.SEQUENCE_EDGE__SOURCE:
                 if (source != null)
                     msgs = ((InternalEObject)source).eInverseRemove(this, BpmnPackage.VERTEX__OUTGOING_EDGES, Vertex.class, msgs);
@@ -539,6 +501,10 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
                 if (target != null)
                     msgs = ((InternalEObject)target).eInverseRemove(this, BpmnPackage.VERTEX__INCOMING_EDGES, Vertex.class, msgs);
                 return basicSetTarget((Vertex)otherEnd, msgs);
+            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
+                if (eInternalContainer() != null)
+                    msgs = eBasicRemoveFromContainer(msgs);
+                return basicSetGraph((Graph)otherEnd, msgs);
         }
         return super.eInverseAdd(otherEnd, featureID, msgs);
     }
@@ -551,12 +517,12 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
     @Override
 				public NotificationChain eInverseRemove(InternalEObject otherEnd, int featureID, NotificationChain msgs) {
         switch (featureID) {
-            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
-                return basicSetGraph(null, msgs);
             case BpmnPackage.SEQUENCE_EDGE__SOURCE:
                 return basicSetSource(null, msgs);
             case BpmnPackage.SEQUENCE_EDGE__TARGET:
                 return basicSetTarget(null, msgs);
+            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
+                return basicSetGraph(null, msgs);
         }
         return super.eInverseRemove(otherEnd, featureID, msgs);
     }
@@ -591,16 +557,14 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
                 return getNcname();
             case BpmnPackage.SEQUENCE_EDGE__CONDITION_TYPE:
                 return getConditionType();
-            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
-                return getGraph();
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
                 return isIsDefault() ? Boolean.TRUE : Boolean.FALSE;
             case BpmnPackage.SEQUENCE_EDGE__SOURCE:
-                if (resolve) return getSource();
-                return basicGetSource();
+                return getSource();
             case BpmnPackage.SEQUENCE_EDGE__TARGET:
-                if (resolve) return getTarget();
-                return basicGetTarget();
+                return getTarget();
+            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
+                return getGraph();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -625,9 +589,6 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
             case BpmnPackage.SEQUENCE_EDGE__CONDITION_TYPE:
                 setConditionType((SequenceFlowConditionType)newValue);
                 return;
-            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
-                setGraph((Graph)newValue);
-                return;
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
                 setIsDefault(((Boolean)newValue).booleanValue());
                 return;
@@ -636,6 +597,9 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
                 return;
             case BpmnPackage.SEQUENCE_EDGE__TARGET:
                 setTarget((Vertex)newValue);
+                return;
+            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
+                setGraph((Graph)newValue);
                 return;
         }
         super.eSet(featureID, newValue);
@@ -660,9 +624,6 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
             case BpmnPackage.SEQUENCE_EDGE__CONDITION_TYPE:
                 unsetConditionType();
                 return;
-            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
-                setGraph((Graph)null);
-                return;
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
                 unsetIsDefault();
                 return;
@@ -671,6 +632,9 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
                 return;
             case BpmnPackage.SEQUENCE_EDGE__TARGET:
                 setTarget((Vertex)null);
+                return;
+            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
+                setGraph((Graph)null);
                 return;
         }
         super.eUnset(featureID);
@@ -711,14 +675,14 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
                 return NCNAME_EDEFAULT == null ? ncname != null : !NCNAME_EDEFAULT.equals(ncname);
             case BpmnPackage.SEQUENCE_EDGE__CONDITION_TYPE:
                 return isSetConditionType();
-            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
-                return getGraph() != null;
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
                 return isSetIsDefault();
             case BpmnPackage.SEQUENCE_EDGE__SOURCE:
                 return source != null;
             case BpmnPackage.SEQUENCE_EDGE__TARGET:
                 return target != null;
+            case BpmnPackage.SEQUENCE_EDGE__GRAPH:
+                return getGraph() != null;
         }
         return super.eIsSet(featureID);
     }

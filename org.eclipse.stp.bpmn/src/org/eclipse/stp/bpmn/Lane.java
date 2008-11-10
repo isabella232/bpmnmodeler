@@ -63,8 +63,7 @@ public interface Lane extends AssociationTarget, NamedBpmnObject {
      * @see #setPool(Pool)
      * @see org.eclipse.stp.bpmn.BpmnPackage#getLane_Pool()
      * @see org.eclipse.stp.bpmn.Pool#getLanes
-     * @model opposite="lanes" transient="false"
-     *        extendedMetaData="kind='attribute' name='pool'"
+     * @model opposite="lanes"
      * @generated
      */
     Pool getPool();

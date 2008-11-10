@@ -35,7 +35,7 @@
 	        	<xsd:sequence>
 	            	<xsd:element ecore:opposite="target" 
 	            		maxOccurs="unbounded" minOccurs="0" name="associations" 
-	            		ecore:reference="bpmn:Association" type="xsd:anyURI"/>
+	            		ecore:reference="bpmn:Association" type="xsd:IDREF"/>
 	       		</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
@@ -65,10 +65,9 @@ also contains artifacts -->
 		<xsd:complexContent>
 			<xsd:extension base="bpmn:AssociationTarget">
 				<xsd:sequence>
-		            <xsd:element ecore:opposite="source" ecore:reference="bpmn:SequenceEdge" maxOccurs="unbounded" minOccurs="0" name="outgoingEdges" type="xsd:anyURI"/>
-		            <xsd:element ecore:opposite="target" ecore:reference="bpmn:SequenceEdge" maxOccurs="unbounded" minOccurs="0" name="incomingEdges" type="xsd:anyURI"/>
+		            <xsd:element ecore:opposite="source" ecore:reference="bpmn:SequenceEdge" maxOccurs="unbounded" minOccurs="0" name="outgoingEdges" type="xsd:IDREF"/>
+		            <xsd:element ecore:opposite="target" ecore:reference="bpmn:SequenceEdge" maxOccurs="unbounded" minOccurs="0" name="incomingEdges" type="xsd:IDREF"/>
 	       		</xsd:sequence>
-		    	<xsd:attribute ecore:opposite="vertices" ecore:reference="bpmn:Graph" name="graph" type="xsd:anyURI"/>
 	    	</xsd:extension>
 	    </xsd:complexContent>
 	</xsd:complexType>
@@ -88,9 +87,8 @@ also contains artifacts -->
     <xsd:complexType name="SequenceEdge" ecore:implements="bpmn:NamedBpmnObject">
 		<xsd:complexContent>
 			<xsd:extension base="bpmn:AssociationTarget">
-		    	<xsd:attribute ecore:opposite="sequenceEdges" ecore:reference="bpmn:Graph" name="graph" type="xsd:anyURI"/>
-		    	<xsd:attribute ecore:opposite="outgoingSequenceEdges" ecore:reference="bpmn:Vertex" name="source" type="xsd:anyURI"/>
-		    	<xsd:attribute ecore:opposite="incomingSequenceEdges" ecore:reference="bpmn:Vertex" name="target" type="xsd:anyURI"/>
+		    	<xsd:attribute ecore:opposite="outgoingSequenceEdges" ecore:reference="bpmn:Vertex" name="source" type="xsd:IDREF" ecore:transient="true"/>
+		    	<xsd:attribute ecore:opposite="incomingSequenceEdges" ecore:reference="bpmn:Vertex" name="target" type="xsd:IDREF" ecore:transient="true"/>
 				<xsd:attribute name="isDefault" type="xsd:boolean"/>
 				<xsd:attribute name="conditionType" type="bpmn:SequenceFlowConditionType"/>
 				<!--xsd:attributeGroup ref="bpmn:base"/-->
@@ -122,7 +120,6 @@ also contains artifacts -->
 		        <xsd:sequence>
 		            <xsd:element ecore:opposite="pool" maxOccurs="unbounded" minOccurs="0" name="lanes" type="bpmn:Lane"/>
 		        </xsd:sequence>
-		        <xsd:attribute ecore:opposite="pools" ecore:reference="bpmn:BpmnDiagram" name="bpmnDiagram"/>
 		    </xsd:extension>
 		</xsd:complexContent>
     </xsd:complexType>
@@ -141,10 +138,10 @@ also contains artifacts -->
 	    		<xsd:sequence>
 	    		<!-- the groups reference -->
             		<xsd:element ecore:opposite="groups" ecore:reference="bpmn:Group"
-            			 maxOccurs="unbounded" minOccurs="0" name="groups" type="xsd:anyURI"/>
+            			 maxOccurs="unbounded" minOccurs="0" name="groups" type="xsd:IDREF"/>
             			 <!-- the lanes reference -->
             			 <xsd:element ecore:opposite="activities" ecore:reference="bpmn:Lane"
-	    				 maxOccurs="unbounded" minOccurs="0" name="lanes" type="xsd:anyURI"/>
+	    				 maxOccurs="unbounded" minOccurs="0" name="lanes" type="xsd:IDREF"/>
  	    		</xsd:sequence>
 	    		<!-- the type of activity -->
 	    		<xsd:attribute default="Task" name="activityType" type="bpmn:ActivityType"/>
@@ -153,8 +150,6 @@ also contains artifacts -->
 	    			Note: we do _not_ define the type of loop here.
 	    			That belongs to the data-editor that is specific to the target language -->
 	    		<xsd:attribute name="looping" type="xsd:boolean"/>
-	    		<!-- points to the sub-process that this intermediary event is defined for. In all other cases it is null. -->
-	    		<xsd:attribute ecore:opposite="eventHandlers" ecore:reference="bpmn:SubProcess" name="eventHandlerFor" type="xsd:anyURI"/>
 		    </xsd:extension>
 		</xsd:complexContent>
     </xsd:complexType>
@@ -184,7 +179,6 @@ also contains artifacts -->
 		<xsd:complexContent>
 			<xsd:extension base="bpmn:AssociationTarget">
 		    	<!-- the messaging edges in this diagram -->
-		    	<xsd:attribute ecore:opposite="messages" ecore:reference="bpmn:BpmnDiagram" name="bpmnDiagram" type="xsd:anyURI"/>
 		    	<xsd:attribute ecore:opposite="outgoingMessages" ecore:reference="bpmn:MessageVertex" name="source" type="xsd:anyURI"/>
 		    	<xsd:attribute ecore:opposite="incomingMessages" ecore:reference="bpmn:MessageVertex" name="target" type="xsd:anyURI"/>
 	    	</xsd:extension>
@@ -198,7 +192,6 @@ also contains artifacts -->
 	        	<xsd:sequence>
 					<xsd:element ecore:reference="bpmn:Activity" maxOccurs="unbounded" minOccurs="0" name="activities" type="bpmn:Activity"/>
 				</xsd:sequence>
-		    	<xsd:attribute ecore:opposite="lanes" ecore:reference="bpmn:Pool" name="pool" type="xsd:anyURI"/>
 	    	</xsd:extension>
 	    </xsd:complexContent>
     </xsd:complexType>
@@ -268,8 +261,8 @@ also contains artifacts -->
 			<xsd:extension base="ecore:EModelElement">
 			<!-- we only support association from an 
 					identifiable-node (pool, activity, sub-process) to an artifact -->
-		    	<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:AssociationTarget" name="target" type="xsd:anyURI"/>
-	    		<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:Artifact" name="source" type="xsd:anyURI"/>
+	    		<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:AssociationTarget" name="target" type="xsd:IDREF" ecore:transient="true"/>
+	    		<xsd:attribute ecore:opposite="associations" ecore:reference="bpmn:Artifact" name="source" type="xsd:IDREF" ecore:transient="true"/>
 				<xsd:attribute name="direction">
 				    <xsd:simpleType>
 				    	<xsd:restriction base="xsd:string">
@@ -311,8 +304,6 @@ also contains artifacts -->
 	            		maxOccurs="unbounded" minOccurs="0" 
 	            		name="associations" type="bpmn:Association"/>
 				</xsd:sequence>
-		    	<xsd:attribute ecore:opposite="artifacts" 
-		    		ecore:reference="bpmn:ArtifactsContainer" name="artifactsContainer" type="xsd:anyURI"/>
 	    	</xsd:extension>
 	    </xsd:complexContent>
   	</xsd:complexType>
