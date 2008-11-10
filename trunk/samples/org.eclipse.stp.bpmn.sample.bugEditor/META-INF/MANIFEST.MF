@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: BugEditor Plug-in
+Bundle-SymbolicName: org.eclipse.stp.bpmn.sample.bugEditor;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.stp.bpmn.sample.bugeditor.BugEditorPlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.stp.bpmn.diagram,
+ org.eclipse.ui.ide,
+ org.eclipse.stp.bpmn.sample.bugDnD
+Eclipse-LazyStart: true
