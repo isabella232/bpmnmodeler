@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="Common Buckminster Setup" basedir=".">
+
+  <property file="project.properties" />
+
+  <macrodef name="buckminster">
+    <attribute name="command" default="--help"/>
+    <element name="args" optional="true"/>
+    <sequential>
+      <!-- makeurl transforms a file path to a URL for the RMAP searchPaths -->
+      <makeurl file="${project.source}" property="project.source.url" validate="false"/>
+      <makeurl file="${project.build}" property="project.build.url" validate="false"/>
+      <java fork="true" jar="${buckminster.launcher.jar}" failonerror="true">
+        <arg value="-data"/>
+        <arg value="${buckminster.workspace}"/>
+        <arg value="--displaystacktrace"/>
+        <arg value="--loglevel"/>
+        <arg value="${buckminster.log.level}"/>
+        <jvmarg value="-Dproject.source=${project.source.url}"/>
+        <jvmarg value="-Dproject.build=${project.build.url}"/>
+        <jvmarg value="-Dproject.repo=${project.repo}"/>
+        <jvmarg value="-Dproject.component=${project.component}"/>
+        <jvmarg value="-Dproject.tag=${project.tag}"/>
+        <arg value="@{command}"/>
+        <args/>
+      </java>
+    </sequential>
+  </macrodef>
+
+
+  <target name="buckminster.headless.setup" depends="buckminster.init,buckminster.unzip, buckminster.core.headless, buckminster.pde.headless, buckminster.svn.headless" />
+
+  <target name="buckminster.init" depends="buckminster.establish.shortcuts">
+    <mkdir dir="${buckminster.working.dir}" />
+    <mkdir dir="${buckminster.build.dir}" />
+    <mkdir dir="${buckminster.download.dir}" />
+  </target>
+
+  <target name="buckminster.establish.shortcuts">        
+    <available file="${buckminster.file.fullname}" property="buckminster.download.unnecessary" />
+		<uptodate targetfile="${buckminster.build.dir}/buckminster" srcfile="${buckminster.file.fullname}" property="buckminster.unzip.unnecessary"/>
+		<available file="${buckminster.build.dir}/ant-buckminster-core-installed" property="buckminster.core.unnecessary"/>
+		<available file="${buckminster.build.dir}/ant-buckminster-pde-installed" property="buckminster.pde.unnecessary"/>
+		<available file="${buckminster.build.dir}/ant-buckminster-svn-installed" property="buckminster.svn.unnecessary"/>
+	</target>
+
+  <target name="buckminster.download" unless="buckminster.download.unnecessary" >
+    <echo message="Downloading Buckminster headless package to bootstrap build sequence"/>
+    <get src="${buckminster.download.url}" dest="${buckminster.file.fullname}" verbose="true" usetimestamp="true"/>
+  </target>
+
+  <target name="buckminster.unzip" depends="buckminster.download" unless="buckminster.unzip.unnecessary" >
+    <echo message="Unzipping Buckminster headless package"/>
+    <unzip src="${buckminster.file.fullname}" dest="${buckminster.build.dir}"/>
+	</target>
+
+	<target name="buckminster.core.headless" unless="buckminster.core.unnecessary">
+		<echo message=".... setting up Core headless feature"/>
+		<buckminster command="org.eclipse.buckminster.installer.install">
+			<args>
+				<arg value="${buckminster.headless.site}"/>
+				<arg value="org.eclipse.buckminster.core.headless.feature"/>
+			</args>
+		</buckminster>
+		<touch file="${buckminster.build.dir}/ant-buckminster-core-installed" />
+	</target>
+
+	<target name="buckminster.pde.headless" unless="buckminster.pde.unnecessary">
+	  <echo message=".... setting up PDE headless feature"/>
+		<buckminster command="org.eclipse.buckminster.installer.install">
+			<args>
+				<arg value="${buckminster.headless.site}"/>
+				<arg value="org.eclipse.buckminster.pde.headless.feature"/>
+			</args>
+		</buckminster>
+		<touch file="${buckminster.build.dir}/ant-buckminster-pde-installed" />
+	</target>
+
+	<target name="buckminster.svn.headless" unless="buckminster.svn.unnecessary">
+		<echo message=".... setting up subversion headless feature"/>
+		<buckminster command="org.eclipse.buckminster.installer.install">
+			<args>
+				<arg value="${buckminster.cloudsmith.site}"/>
+				<arg value="org.eclipse.buckminster.subversive.headless.feature"/>
+			</args>
+		</buckminster>
+		<touch file="${buckminster.build.dir}/ant-buckminster-svn-installed" />
+	</target>
+
+	<!--
+		CAVEAT: the buckminster preferences must *always* be set on a run
+		otherwise buckminster will not be able to resolve plugins from the
+		target platform and build will fail.
+	-->
+	<target name="buckminster.setup.preferences">
+		<echo message=".... set preferences for Buckminster "/>
+		<buckminster command="org.eclipse.buckminster.core.prefs.setpreference">
+			<args>
+				<arg value="org.eclipse.buckminster.jdt.complianceLevel=${jdt.compliance.level}"/>
+				<arg value="org.eclipse.buckminster.pde.targetArch=${pde.target.arch}"/>
+				<arg value="org.eclipse.buckminster.pde.targetOS=${pde.target.os}"/>
+				<arg value="org.eclipse.buckminster.pde.targetWS=${pde.target.ws}"/>
+				<arg value="org.eclipse.buckminster.pde.targetNL=${pde.target.nl}"/>
+				<arg value="org.eclipse.buckminster.pde.targetPlatformPath=${pde.target.platform.path}"/>
+				<arg value="org.eclipse.buckminster.core.maxParallelMaterializations=${buckminster.maxParallelMaterializations}" />
+				<arg value="org.eclipse.buckminster.core.maxParallelResolutions=${buckminster.maxParallelResolutions}" />
+			</args>
+		</buckminster>
+
+		<!-- Uncomment this line if you want Buckminster to print the preferences
+				 it is using for this run. -->
+				 <buckminster command="org.eclipse.buckminster.core.prefs.listpreferences"/>
+	</target>
+</project>

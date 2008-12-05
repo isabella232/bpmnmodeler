@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site pack200="true">
+   <category-def label="SOA Development" name="soa.category">        
+        <description>
+        A platform and tools for developing Service-Oriented Component-based  Applications.
+        </description>
+    </category-def>
+</site>

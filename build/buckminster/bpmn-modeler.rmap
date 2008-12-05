@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rmap
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.eclipse.org/buckminster/RMap-1.0"
+    xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0">
+
+    <!-- Where to find the build system. Look for artifacts in the local 
+         directory specified by the Java property "project.build" and
+         if not found there, then check it out from the SVN trunk.
+      
+         Required Properties:
+            project.build    =  Local directory where the build system 
+                                     has been checked out. Defined in the 
+                                     build.properties file
+            buckminster.component =  Name of actual build component, defined
+                                     as an 'internal' property by Buckminster
+    -->
+
+    <searchPath name="project.build">
+       <provider readerType="local" componentTypes="buckminster" mutable="true" source="false">
+          <uri format="{0}/{1}">
+              <bc:propertyRef key="project.build" />
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+       <provider readerType="svn" componentTypes="buckminster" mutable="true" source="false">
+          <uri format="http://dev.eclipse.org/svnroot/stp/{0}/{1}/build/buckminster/{2}">
+              <bc:propertyRef key="project.repo" />
+              <bc:propertyRef key="project.component" />
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+    </searchPath>
+
+    <!-- Where to find the project features. Look for artifacts in the local
+         directory specified by the Java property "project.source" and
+         if not found there, then check it out from the SVN trunk.
+
+         Required Properties:
+            project.source   =  Local directory where the source
+                                     has been checked out. Defined in the
+                                     build.properties file
+            buckminster.component =  Name of actual build component, defined
+                                     as an 'internal' property by Buckminster
+    -->
+
+    <searchPath name="bpmn.features">
+       <provider readerType="local" componentTypes="buckminster" mutable="true" source="false">
+          <uri format="{0}/features/{1}">
+              <bc:propertyRef key="project.source" />
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+       <provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true" source="true">
+          <uri format="http://dev.eclipse.org/svnroot/stp/{0}/{1}/{2}/features/{3}">
+              <bc:propertyRef key="project.repo" />
+              <bc:propertyRef key="project.component" />
+              <bc:propertyRef key="project.tag" />
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+    </searchPath>
+
+    <!-- Where to find the project plugins. Look for artifacts in the local
+         directory specified by the Java property "project.source" and
+         if not found there, then check it out from the SVN trunk.
+
+         Required Properties:
+            project.source   =  Local directory where the source
+                                     has been checked out. Defined in the
+                                     build.properties file            
+            buckminster.component =  Name of actual build component, defined
+                                     as an 'internal' property by Buckminster    
+    -->
+
+    <searchPath name="bpmn.plugins">
+       <provider readerType="local" componentTypes="buckminster" mutable="true" source="false">
+          <uri format="{0}/{1}">
+              <bc:propertyRef key="project.source" />
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+       <provider readerType="svn" componentTypes="osgi.bundle,buckminster" mutable="true" source="true">
+          <uri format="http://dev.eclipse.org/svnroot/stp/{0}/{1}/{2}/{3}">
+              <bc:propertyRef key="project.repo" />
+              <bc:propertyRef key="project.component" />
+              <bc:propertyRef key="project.tag" />
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+    </searchPath>
+
+    <searchPath name="orbit">
+	  <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="false" source="false">
+  	    <uri format="http://download.eclipse.org/tools/orbit/downloads/drops/S20081025033911/orbitBundles-S20081025033911.map" />
+	  </provider>
+    </searchPath>
+
+     <!-- Project specific search paths -->
+     <!-- ordering is important here -->
+     <locator searchPathRef="project.build" pattern="^bpmn-modeler.builder?" />
+
+     <locator searchPathRef="bpmn.features" pattern="^org\.eclipse\.stp\.bpmn(\..*)?feature" />
+     <locator searchPathRef="bpmn.plugins" pattern="^org\.eclipse\.stp\.bpmn(\..*)?" />
+
+     <locator searchPathRef="orbit" pattern=".*" /> 
+ 
+</rmap>
