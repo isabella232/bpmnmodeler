@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+if ($*[0] == "-h" || $*[0] == "--help") 
+   puts <<-HELP
+USAGE #{$0} build-type target
+  
+  built-type: the type of build to run.
+  To see the available build types, type #{$0} --build-types, or #{$0} -b
+  
+  target: the target directory for the build
+HELP
+   exit 0
+end
+
+require('yaml')
+builds = YAML::load_file("#{File.dirname(__FILE__)}/builds.yaml")
+if ($*[0] == "-b" || $*[0] == "--build-types")
+  puts "Available configurations:"
+  builds.keys.each do |build|
+	puts "  #{build}: #{builds[build]["description"]}"
+  end
+  puts "You can run those configurations like this: $0 build-type target, where build-type is the name of the build"
+  exit 0
+end
+if (builds[$*[0]].nil?)
+  puts "Unknown configuration #{$*[0]}\nTry #{$0} -b to see the build configurations available"
+  exit 1
+end
+build = builds[$*[0]]
+puts build["path"]
+pwd = %x['pwd']
+puts pwd
+system("cd #{File.dirname(__FILE__)}/buckminster ; ant -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build #{$*[1]}; cd #{pwd}")

@@ -1,0 +1,8 @@
+trunk:
+  path: trunk
+  platform: 3.5M3
+  description: The current trunk
+1_0_x:
+  path: branches/1.0.x
+  platform: 3.4.1
+  description: Branch for 1.0.x. Compatible with Ganymede.

@@ -1,9 +1,0 @@
-#!/usr/bin/env ruby
-
-if ($*[0] == "-h" || $*[0] == "--help") 
-   puts "USAGE $0 target\n  target: the target directory for the build"
-   exit 0
-end
-
-pwd = %x['pwd']
-system("cd #{File.dirname(__FILE__)}/buckminster ; ant -Dpde.target.platform.path=/shared/stp/platforms/3.5M3/eclipse -Dproject.tag=trunk #{$*[0]}; cd #{pwd}")
