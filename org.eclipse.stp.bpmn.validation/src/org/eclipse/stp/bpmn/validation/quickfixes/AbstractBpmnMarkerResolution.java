@@ -20,6 +20,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.stp.bpmn.Identifiable;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditor;
+import org.eclipse.stp.bpmn.validation.providers.HeadlessBpmnValidationProvider;
 import org.eclipse.stp.bpmn.validation.quickfixes.internal.BpmnQuickfixes;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.IEditorPart;
@@ -82,7 +83,7 @@ public abstract class AbstractBpmnMarkerResolution extends WorkbenchMarkerResolu
      */
     protected String getElementId(IMarker marker) {
         return (String)marker.getAttribute(
-                org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
+        		HeadlessBpmnValidationProvider.ELEMENT_ID,
                 (String)null);
     }
     

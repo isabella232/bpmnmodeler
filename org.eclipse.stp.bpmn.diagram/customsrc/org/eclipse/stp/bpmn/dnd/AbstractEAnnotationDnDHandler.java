@@ -55,7 +55,6 @@ public abstract class AbstractEAnnotationDnDHandler extends AbstractDnDHandler {
 	}
 	
 	/**
-	 * 
 	 * @param ea the annotation that this handler drops.
 	 * @param element the element on which the annotation should be dropped.
 	 * @return a command representing the drop of an EAnnotation

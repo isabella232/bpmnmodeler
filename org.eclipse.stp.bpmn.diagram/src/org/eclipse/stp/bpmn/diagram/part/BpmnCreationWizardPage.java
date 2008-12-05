@@ -82,7 +82,7 @@ public class BpmnCreationWizardPage extends EditorWizardPage {
     }
     
     /**
-     * @return The builder id to added on the project containing the new diagram
+     * @return The builder id to be added on the project containing the new diagram
      * or null if it should not be done. By default the nature and builder
      * defined in the plugin org.eclipse.stp.bpmn.validation
      */

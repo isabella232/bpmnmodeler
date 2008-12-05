@@ -1,6 +1,5 @@
-/*
- *******************************************************************************
- ** Copyright (c) 2006, Intalio Inc.
+/********************************************************************************
+ ** Copyright (c) 2008, Intalio Inc.
  ** All rights reserved. This program and the accompanying materials
  ** are made available under the terms of the Eclipse Public License v1.0
  ** which accompanies this distribution, and is available at
@@ -33,6 +32,7 @@ import org.eclipse.stp.bpmn.diagram.actions.FilterDecorationsMenuManager;
 import org.eclipse.stp.bpmn.diagram.actions.GroupAction;
 import org.eclipse.stp.bpmn.diagram.actions.GroupActionManager;
 import org.eclipse.stp.bpmn.diagram.actions.ResetBendpointsAction;
+import org.eclipse.stp.bpmn.diagram.actions.SequenceFlowConditionTypeAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetAsThrowingOrCatchingAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetDefaultAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetLoopAction;
@@ -120,6 +120,8 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
             return ChangeEdgeOrderMenuManager.createSubmenu(BpmnDiagramMessages.BpmnDiagramActionProvider_change_edge_order_source_sub_menu, menuId);
         } else if (ChangeEdgeOrderMenuManager.SUB_MENU_TARGET.equals(menuId)) {
             return ChangeEdgeOrderMenuManager.createSubmenu(BpmnDiagramMessages.BpmnDiagramActionProvider_change_edge_order_target_sub_menu, menuId);
+        } else if (SequenceFlowConditionTypeAction.MENU_ID.equals(menuId)) {
+            return SequenceFlowConditionTypeAction.createConditionTypeMenu();
         }
         return super.createMenuManager(menuId, partDescriptor);
     }
@@ -172,6 +174,9 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
             return new SetAsThrowingOrCatchingAction(workbenchPage);
         } else if (SetTransactionalAction.ID.equals(actionId)) {
             return new SetTransactionalAction(workbenchPage);
+        } else if (actionId.startsWith(SequenceFlowConditionTypeAction.MENU_ID)) {
+            String id = new String(actionId.substring(SequenceFlowConditionTypeAction.MENU_ID.length()));
+            return new SequenceFlowConditionTypeAction(workbenchPage, id);
         } else {
         }
         return super.createAction(actionId, partDescriptor);

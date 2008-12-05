@@ -265,7 +265,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
                 g.fillPolygon(head);
                 g.popState();
             }
-            if (isDefault && isConditional()) {
+            if (isDefault) {
                 Point res = new Point();
                 PointList points = smoothPoints;
                 final int DISTANCE = MapModeUtil.getMapMode(this)
@@ -423,10 +423,15 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
      */
     protected void handleNotificationEvent(Notification notification) {
         if (notification.getEventType() == Notification.SET) {
-            if (BpmnPackage.eINSTANCE.getSequenceEdge_IsDefault().equals(
-                    notification.getFeature())) {
+            if (BpmnPackage.eINSTANCE.getSequenceEdge_IsDefault().
+                    equals(notification.getFeature())) {
                 ((EdgeFigure) getFigure()).isDefault = notification
-                        .getNewBooleanValue();
+                .getNewBooleanValue();
+                getFigure().repaint();
+            } else if (BpmnPackage.eINSTANCE.getSequenceEdge_ConditionType().
+                        equals(notification.getFeature())) {
+                ((EdgeFigure) getFigure()).isDefault = notification
+                .getNewValue() == SequenceFlowConditionType.DEFAULT_LITERAL;
                 getFigure().repaint();
             }
         }
@@ -548,13 +553,7 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
 		if (object instanceof SequenceEdge) {
 			Vertex src = ((SequenceEdge) object).getSource();
 			if (src != null && (src instanceof Activity)) {
-				ActivityType type = ((Activity) src).getActivityType();
-				if (type.getValue() == 
-					ActivityType.GATEWAY_DATA_BASED_INCLUSIVE||
-					type.getValue() == 
-						ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE) {
-					return true;
-				}
+			    return src.getOutgoingEdges().size() > 1;
 			}
 		}
 		return false;

@@ -268,47 +268,57 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
+     * @generated not
      */
     public boolean isIsDefault() {
-        return isDefault;
+        return isDefault || SequenceFlowConditionType.DEFAULT_LITERAL.equals(getConditionType());
     }
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
+     * @generated not
+     * @deprecated kept for backward compatibility. Equivalent to setConditionType(SequenceFlowConditionType.DEFAULT_LITERAL).
      */
     public void setIsDefault(boolean newIsDefault) {
-        boolean oldIsDefault = isDefault;
-        isDefault = newIsDefault;
-        boolean oldIsDefaultESet = isDefaultESet;
-        isDefaultESet = true;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT, oldIsDefault, isDefault, !oldIsDefaultESet));
+        if (newIsDefault) {
+        setConditionType(SequenceFlowConditionType.DEFAULT_LITERAL);
+        } else if (getConditionType() == SequenceFlowConditionType.DEFAULT_LITERAL) {
+            setConditionType(SequenceFlowConditionType.NONE_LITERAL);
+        }
+//        boolean oldIsDefault = isDefault;
+//        isDefault = newIsDefault;
+//        boolean oldIsDefaultESet = isDefaultESet;
+//        isDefaultESet = true;
+//        if (eNotificationRequired())
+//            eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT, oldIsDefault, isDefault, !oldIsDefaultESet));
     }
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
+     * @generated not
+     * @deprecated kept for backward compatibility.
      */
     public void unsetIsDefault() {
-        boolean oldIsDefault = isDefault;
-        boolean oldIsDefaultESet = isDefaultESet;
-        isDefault = IS_DEFAULT_EDEFAULT;
-        isDefaultESet = false;
-        if (eNotificationRequired())
-            eNotify(new ENotificationImpl(this, Notification.UNSET, BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT, oldIsDefault, IS_DEFAULT_EDEFAULT, oldIsDefaultESet));
+//        boolean oldIsDefault = isDefault;
+//        boolean oldIsDefaultESet = isDefaultESet;
+//        isDefault = IS_DEFAULT_EDEFAULT;
+//        isDefaultESet = false;
+//        if (eNotificationRequired())
+//            eNotify(new ENotificationImpl(this, Notification.UNSET, BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT, oldIsDefault, IS_DEFAULT_EDEFAULT, oldIsDefaultESet));
+        unsetConditionType();
     }
 
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
-     * @generated
+     * @generated not
+     * @deprecated kept for backward compatibility.
      */
     public boolean isSetIsDefault() {
-        return isDefaultESet;
+//        return isDefaultESet;
+        return isSetConditionType();
     }
 
     /**

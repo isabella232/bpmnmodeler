@@ -33,12 +33,12 @@ import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.validation.IValidationContext;
 import org.eclipse.emf.validation.model.IConstraintStatus;
-import org.eclipse.gmf.runtime.common.ui.util.UIModificationValidator;
 import org.eclipse.stp.bpmn.validation.builder.BatchValidationBuildAbleNature;
 import org.eclipse.stp.bpmn.validation.builder.BatchValidationBuilder;
 import org.eclipse.stp.bpmn.validation.builder.ResourceImportersRegistry;
 import org.eclipse.stp.bpmn.validation.builder.ValidationMarkerCustomAttributes;
 import org.eclipse.stp.bpmn.validation.quickfixes.IBpmnMarkerResolutionProvider;
+import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -125,7 +125,7 @@ public class BpmnValidationPlugin extends AbstractUIPlugin {
     private static WeakHashMap<IProject, Map<String,IResourceImportersRegistry>> CACHE = null;
         
     
-    //in cahrge of saving the resource importers index
+    //in charge of saving the resource importers index
     private ISaveParticipant _saveParticipant;
     private Set<IValidationMarkerCreationHook> _creationMarkerCallBacks;
     
@@ -149,34 +149,37 @@ public class BpmnValidationPlugin extends AbstractUIPlugin {
         //not sure this is working.
         //it is saved at the end of each build when it is modified anyways.
         _saveParticipant = new ISaveParticipant() {
-                    public void doneSaving(ISaveContext context) {
-                    }
+            public void doneSaving(ISaveContext context) {
+            }
 
-                    public void prepareToSave(ISaveContext context) throws CoreException {
-                    }
+            public void prepareToSave(ISaveContext context) throws CoreException {
+            }
 
-                    public void rollback(ISaveContext context) {
-                    }
+            public void rollback(ISaveContext context) {
+            }
 
-                    public void saving(ISaveContext context) throws CoreException {
-                        Map<String,IResourceImportersRegistry> importIndexes =
-                            CACHE.get(context.getProject());
-                        
-                        if (importIndexes != null) {
-                            for (Entry<String,IResourceImportersRegistry> entry : 
-                                        importIndexes.entrySet()) {
-                                entry.getValue().save(
-                                        context.getProject(), entry.getKey(),
-                                        new NullProgressMonitor());
-                            }
-                        }
+            public void saving(ISaveContext context) throws CoreException {
+                Map<String,IResourceImportersRegistry> importIndexes =
+                    CACHE.get(context.getProject());
+                
+                if (importIndexes != null) {
+                    for (Entry<String,IResourceImportersRegistry> entry : 
+                                importIndexes.entrySet()) {
+                        entry.getValue().save(
+                                context.getProject(), entry.getKey(),
+                                new NullProgressMonitor());
                     }
+                }
+            }
         };
         ResourcesPlugin.getWorkspace().addSaveParticipant(this, _saveParticipant);
         
-        
+        if (PlatformUI.isWorkbenchRunning()) {
         //this is a workaround for the stack trace documented below:
-        new UIModificationValidator().dispose();
+        //we are careful to do the work outside of this class so that the loading
+        //of this class does not provoke the loading of the gmf.common.ui plugin
+        //that would crash in headless mode.
+        org.eclipse.stp.bpmn.validation.internal.InternalHelper.loadAndDisposeUIModificationValidator();
         //here is the stack trace when we notice the first validation via the builder takes a verylong time:
         /*
 !ENTRY org.eclipse.osgi 4 0 2006-12-18 14:29:22.810
@@ -195,6 +198,8 @@ java.lang.Exception: Generated exception.
     at org.eclipse.gmf.runtime.common.ui.util.UIModificationValidator$1.run(UIModificationValidator.java:115)
 
 	    */
+        
+        }
     }
 
 	/*

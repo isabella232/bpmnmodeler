@@ -40,6 +40,8 @@ import org.eclipse.ui.IWorkbenchPart;
  * if the sequence edge is located after a XOR gateway.
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
+ * @deprecated we don't set the isDefault attribute, we now
+ * provide the user with the possibility to choose between the different condition types.
  */
 public class SetDefaultAction extends AbstractActionHandler {
 	
@@ -118,11 +120,7 @@ public class SetDefaultAction extends AbstractActionHandler {
 			if (object instanceof SequenceEdge) {
 				Vertex src = ((SequenceEdge) object).getSource();
 				if (src != null && (src instanceof Activity)) {
-					ActivityType type = ((Activity) src).getActivityType();
-					if (type.getValue() == 
-						ActivityType.GATEWAY_DATA_BASED_INCLUSIVE||
-						type.getValue() == 
-							ActivityType.GATEWAY_DATA_BASED_EXCLUSIVE) {
+					if (src.getOutgoingEdges().size() > 1) {
 						if (((Activity) src).getIncomingEdges().size() <= 1) {
 							if (((SequenceEdge) object).isIsDefault()) {
 								setText(BpmnDiagramMessages.SetDefaultAction_label_non_default);

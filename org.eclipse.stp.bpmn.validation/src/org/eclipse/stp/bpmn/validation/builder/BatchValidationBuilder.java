@@ -17,7 +17,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IProject;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
@@ -30,25 +29,19 @@ import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.Status;
-import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.resource.Resource;
 import org.eclipse.emf.ecore.resource.ResourceSet;
 import org.eclipse.emf.ecore.resource.impl.ResourceSetImpl;
-import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
 import org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory;
-import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.BpmnPackage;
-import org.eclipse.stp.bpmn.TextAnnotation;
-import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 import org.eclipse.stp.bpmn.validation.BpmnValidationPlugin;
 import org.eclipse.stp.bpmn.validation.IResourceImportersRegistry;
-import org.eclipse.stp.bpmn.validation.providers.BpmnValidationProvider;
+import org.eclipse.stp.bpmn.validation.providers.HeadlessBpmnValidationProvider;
 
 /**
  * Builder that calls the validation constraints.
@@ -193,7 +186,7 @@ public class BatchValidationBuilder extends IncrementalProjectBuilder {
                 BpmnValidationPlugin.getResourceImportersRegistry(getProject(),
                         GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID, monitor)
                             .clearImports(file);
-                file.deleteMarkers(BpmnValidationProvider.MARKER_TYPE, 
+                file.deleteMarkers(HeadlessBpmnValidationProvider.MARKER_TYPE, 
                     false, IResource.DEPTH_ZERO);
                 
             } catch (CoreException ce) {
@@ -260,7 +253,7 @@ public class BatchValidationBuilder extends IncrementalProjectBuilder {
         }
         BpmnValidationPlugin.getResourceImportersRegistry(getProject(),
                 GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID, monitor).clearAll();
-        getProject().deleteMarkers(BpmnValidationProvider.MARKER_TYPE, 
+        getProject().deleteMarkers(HeadlessBpmnValidationProvider.MARKER_TYPE, 
                 false, IResource.DEPTH_INFINITE);
     }
 
@@ -333,7 +326,7 @@ public class BatchValidationBuilder extends IncrementalProjectBuilder {
             if (eobj instanceof Diagram) {
                 final Diagram diagram = (Diagram)eobj;
                 try {
-                    BpmnValidationProvider.ValidateAction.runValidation(diagram);
+                    HeadlessBpmnValidationProvider.runValidation(diagram);
                 } catch (Exception e) {
                     if (BpmnValidationPlugin.getDefault() != null) {
                     BpmnValidationPlugin.getDefault().getLog().log(

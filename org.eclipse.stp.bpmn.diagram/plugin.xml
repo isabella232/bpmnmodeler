@@ -737,10 +737,10 @@
          </popupContribution>
          <popupContribution
                class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
-            <popupAction
+            <!-- deprecated, we set a condition type now popupAction
                   id="setDefaultEdgeAction"
                   path="/additionsGroup">
-            </popupAction>
+            </popupAction -->
             <popupStructuredContributionCriteria
                   objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeEditPart"
                   objectCount="1">
@@ -749,6 +749,27 @@
                      value="true">
                </method>
             </popupStructuredContributionCriteria>
+            <popupMenu
+                  id="conditionType"
+                  path="/additionsGroup">
+            </popupMenu>
+            <popupMenuGroup
+                  id="group1"
+                  path="/conditionType/"
+                  separator="true">
+            </popupMenuGroup>
+            <popupAction
+                  id="conditionTypeNone"
+                  path="/conditionType/group1">
+            </popupAction>
+            <popupAction
+                  id="conditionTypeExpression"
+                  path="/conditionType/group1">
+            </popupAction>
+            <popupAction
+                  id="conditionTypeDefault"
+                  path="/conditionType/group1">
+            </popupAction>
          </popupContribution>
          <popupContribution
                class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">

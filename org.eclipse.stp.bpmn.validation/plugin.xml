@@ -141,6 +141,24 @@
                <message>%constraint.message.7</message>
                <target class="Activity"/>
             </constraint>
+            <constraint
+                  class="org.eclipse.stp.bpmn.validation.specification.ControlledFlowsConstraint"
+                  id="org.eclipse.stp.bpmn.validation.controlledFlows"
+                  lang="java"
+                  mode="Batch"
+                  name="Controlled flows"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  {0}
+               </message>
+               <target
+                     class="SequenceEdge">
+               </target>
+               <description>
+                  This constraint applies to default and conditional flows. Default flows only may be used when conditional flows are present, and conditional flows may only be shown when their source isn't a gateway and that there is more than one flow going out of their source.
+               </description>
+            </constraint>
          </constraints>
          <description>%constraintProvider.description.0</description>
          

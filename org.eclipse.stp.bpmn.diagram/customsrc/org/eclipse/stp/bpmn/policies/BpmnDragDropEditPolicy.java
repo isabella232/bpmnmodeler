@@ -415,7 +415,7 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
                                 //plugin is already loaded.
                                 try {
                                     ((IAdapterFactoryExt)f).loadFactory(true);
-                                } catch(Exception e) {
+                                } catch(Throwable e) {
                                     System.err.println("Unable to load a BPMNAdapter factory: " + e.getMessage() //$NON-NLS-1$
                                             + " for " + c.getName()); //$NON-NLS-1$
                                     //e.printStackTrace(); // loading the factories must happen.

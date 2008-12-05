@@ -11,6 +11,7 @@
 package org.eclipse.stp.bpmn.validation.quickfixes;
 
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.stp.bpmn.validation.providers.HeadlessBpmnValidationProvider;
 
 
 /**
@@ -37,7 +38,7 @@ public abstract class AbstractBpmnMarkerResolutionProvider implements IBpmnMarke
      */
     public String getElementId(IMarker marker) {
         return (String)marker.getAttribute(
-                org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
+        		HeadlessBpmnValidationProvider.ELEMENT_ID,
                 (String)null);
     }
     

@@ -34,7 +34,7 @@ public class BpmnMarkerNavigationProvider extends
 	 */
 	protected void doGotoMarker(IMarker marker) {
 		String elementId = marker.getAttribute(
-				org.eclipse.gmf.runtime.common.ui.resources.IMarker.ELEMENT_ID,
+				HeadlessBpmnValidationProvider.ELEMENT_ID,
 				null);
         String bpmnId = null;
         if (elementId == null) {
