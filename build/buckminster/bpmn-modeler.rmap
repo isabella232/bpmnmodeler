@@ -25,9 +25,10 @@
           </uri>
        </provider>
        <provider readerType="svn" componentTypes="buckminster" mutable="true" source="false">
-          <uri format="http://dev.eclipse.org/svnroot/stp/{0}/{1}/build/buckminster/{2}">
+          <uri format="http://dev.eclipse.org/svnroot/stp/{0}/{1}/{2}/build/buckminster/{3}">
               <bc:propertyRef key="project.repo" />
               <bc:propertyRef key="project.component" />
+	      <bc:propertyRef key="project.tag" />
               <bc:propertyRef key="buckminster.component" />
           </uri>
        </provider>
