@@ -30,4 +30,4 @@ build = builds[$*[0]]
 puts build["path"]
 pwd = %x['pwd']
 puts pwd
-system("cd #{File.dirname(__FILE__)}/buckminster ; ant -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build #{$*[1]}; cd #{pwd}")
+system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build #{$*[1]}; cd #{pwd}")
