@@ -2,9 +2,12 @@
 
 if ($*[0] == "-h" || $*[0] == "--help") 
    puts <<-HELP
-USAGE #{$0} build-type 
+USAGE #{$0} build-type [goal=build] 
   
   built-type: the type of build to run.
+
+  goal: the goal of the build. Currently you can choose between build and build.site. build is the default option.
+ 
   To see the available build types, type #{$0} --build-types, or #{$0} -b
 HELP
    exit 0
@@ -34,5 +37,8 @@ if Dir[build["basedir"]] != nil
 end
 
 temp_path = Time.now.to_i
-system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build");
-system("mv #{File.dirname(__FILE__)}/buckminster/#{temp_path} #{build["basedir"]}")
+goal = $*[1] || "build"
+system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path}/#{goal} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} #{goal}");
+system("mkdir -p #{build["basedir"]}")
+system("mv #{File.dirname(__FILE__)}/buckminster/#{temp_path}/#{goal} #{build["basedir"]}/#{goal}")
+system("rm -Rf #{File.dirname(__FILE__)}/buckminster/#{temp_path}")

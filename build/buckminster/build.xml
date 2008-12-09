@@ -13,7 +13,7 @@
 
 	  </target>
 
-	  <target name="build.site">
+	  <target name="build.site" depends="build">
 	    <echo message=".... building ${project.name} update site"/>
 	    <buckminster command="org.eclipse.buckminster.core.perform">
 	      <args>
