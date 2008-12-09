@@ -20,11 +20,18 @@ if ($*[0] == "-b" || $*[0] == "--build-types")
   puts "You can run those configurations like this: $0 build-type target, where build-type is the name of the build"
   exit 0
 end
+
 if (builds[$*[0]].nil?)
   puts "Unknown configuration #{$*[0]}\nTry #{$0} -b to see the build configurations available"
   exit 1
 end
 build = builds[$*[0]]
+
+
+if Dir[build["basedir"]] != nil
+  puts "The target directory already exists! Removing. We might need a better strategy for this case."
+  system("rm -Rf #{build["basedir"]}");
+end
 
 temp_path = Time.now.to_i
 system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build");
