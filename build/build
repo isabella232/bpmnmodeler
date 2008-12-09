@@ -36,9 +36,9 @@ if Dir[build["basedir"]] != nil
   system("rm -Rf #{build["basedir"]}");
 end
 
-temp_path = Time.now.to_i
+temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{Time.now.strftime("%Y%m%d_%H-%M")}"
 goal = $*[1] || "build"
-system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path}/#{goal} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} #{goal}");
+system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path}/#{goal} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
 system("mkdir -p #{build["basedir"]}")
-system("mv #{File.dirname(__FILE__)}/buckminster/#{temp_path}/#{goal} #{build["basedir"]}/#{goal}")
-system("rm -Rf #{File.dirname(__FILE__)}/buckminster/#{temp_path}")
+system("mv #{temp_path}/#{goal} #{build["basedir"]}/#{goal}")
+system("rm -Rf #{temp_path}")
