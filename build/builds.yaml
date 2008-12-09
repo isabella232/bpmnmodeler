@@ -7,4 +7,4 @@ trunk:
   path: branches/1.0.x
   platform: 3.4.1
   description: Branch for 1.0.x. Compatible with Ganymede.
-  basedir: build_1.0.x
+  basedir: ~/build_1.0.x
