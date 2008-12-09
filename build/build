@@ -2,12 +2,10 @@
 
 if ($*[0] == "-h" || $*[0] == "--help") 
    puts <<-HELP
-USAGE #{$0} build-type target
+USAGE #{$0} build-type 
   
   built-type: the type of build to run.
   To see the available build types, type #{$0} --build-types, or #{$0} -b
-  
-  target: the target directory for the build
 HELP
    exit 0
 end
@@ -30,4 +28,4 @@ build = builds[$*[0]]
 puts build["path"]
 pwd = %x['pwd']
 puts pwd
-system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build #{$*[1]}; cd #{pwd}")
+system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{build["basedir"]} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.dirname(__FILE__)} build ; cd #{pwd}")
