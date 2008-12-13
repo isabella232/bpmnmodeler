@@ -1,54 +1,66 @@
+COMMITTER_UPDATE_SITE = "/home/data/httpd/download.eclipse.org/stp/committers/updates/"
+SIGN_STAGING="/home/data/httpd/download-staging.priv/stp"
+
+def debug(msg)
+  puts $terminal.color(msg, :blue) if verbose
+end
 # Signs an update site, using a script that may only be found on the Eclipse Foundation build machine.
 # This method may take a long time as signing works as a queue.
 def sign(artifact, output = artifact)
-  
-  staging="/home/data/httpd/download-staging.priv/stp"
-  system("cp #{artifact} #{staging}")
-  system("/usr/bin/sign #{staging}/#{artifact} nomail ${staging}/signed")
+  debug "Start signing of #{artifact}"
+  File.makedirs SIGN_STAGING + "/signed"
+  system("cp #{artifact} #{SIGN_STAGING}")
+  system("/usr/bin/sign #{SIGN_STAGING}/#{File.basename artifact} nomail #{SIGN_STAGING}/signed")
 
-  while (!File.exist?"#{staging}/signed/#{artifact}") 
+  while (!File.exist?"#{SIGN_STAGING}/signed/#{File.basename artifact}") 
     puts "Signing not complete. Waiting for 2 more minutes..."
     sleep 120
   end
-  system("cp ${staging}/signed/#{artifact} #{output}")
-  system "rm -rf #{staging}/#{artifact} #{staging}/signed"
-
+  system("cp ${SIGN_STAGING}/signed/#{File.basename artifact} #{output}")
+  system "rm -rf #{SIGN_STAGING}/#{File.basename artifact} #{SIGN_STAGING}/signed"
+  debug "Done signing, copied final file here: #{output}" 
 end
 
 # Packs an update site (artifact). artifact is the path to a zipped update site
 def pack(artifact, output = artifact)
+ debug("Start packing #{artifact}") 
  system("java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -Mmx768m -Dorg.eclipse.update.jarprocessor.pack200=/shared/stp/scripts/pack200 -consolelog -application org.eclipse.update.core.siteOptimizer -jarProcessor -verbose -pack -outputDir /tmp -processAll #{artifact}")
-  system("mv /tmp/#{artifact} #{output}")
+  system("mv /tmp/#{File.basename artifact} #{output}")
+  debug("Done packing, copied to #{output}") 
 end
 
 #Digest an update site. The artifact is a zip of an update site.
 def digest(artifact, output = artifact)
-  temp = Dir.tmpdir + "/" + Time.now.to_i
+  debug("Start digest #{artifact}")
+  temp = Dir.tmpdir + "/" + Time.now.to_i.to_s
   File.makedirs temp
   system("unzip -oq #{artifact} -d #{temp}")
   system("java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -application org.eclipse.update.core.siteOptimizer -digestBuilder -digestOutputDir=#{temp} -siteXML=#{temp}/site.xml")
-  system("zip -r #{output} #{temp}/*")
+  system("rm -Rf #{temp}/tmp")
+  system("cd #{temp} ; zip -r #{output}.tmp * ; mv #{output}.tmp #{output}")
   system("rm -Rf #{temp}")
+  debug("Done digesting, copied to #{output}") 
 end
 
 # Copies a file for the release "tag" at the right place. The file name is found from the tag by default, but you can override.
-def upload(tag, artifact_path = "/shared/stp/#{tag}/digested-packed-signed-site-candidate-#{tag}.zip")
-  File.makedirs "~/downloads/stp/committers/updates/#{tag}"
-  system("unzip #{artifact_path} -d ~/downloads/stp/committers/updates/#{tag}")
-  system("cp #{artifact_path} ~/downloads/stp/committers/updates/")
+def move_to_downloads(build, artifact_path)
+  debug("Starting moving the build to the downloads #{build}")
+  File.makedirs "#{COMMITTER_UPDATE_SITE}#{build["id"]}/#{build["version"]}"
+  system("unzip #{artifact_path} -d #{COMMITTER_UPDATE_SITE}#{build["id"]}/#{build["version"]}")
+  system("cp #{artifact_path} #{COMMITTER_UPDATE_SITE}#{build["id"]}")
+  debug("Done moving to downloads area")
 end
 
-def build(build = {:basedir => "", :platform => "3.5M3", :path => "trunk"}, goal = "build.site")
+def do_build(build = {:basedir => "", :platform => "3.5M3", :path => "trunk"}, goal = "build.site")
 
-  if Dir[build[:basedir]] != nil
-    puts "The target directory already exists! Removing. We might need a better strategy for this case."
-    system("rm -Rf #{build[:basedir]}");
+  if Dir[build["basedir"]] != nil
+    system("rm -Rf #{build["basedir"]}");
   end
 
   temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{Time.now.strftime("%Y%m%d_%H-%M")}"
-  system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path}/#{goal} -Dpde.target.platform.path=/shared/stp/platforms/#{build[:platform]}/eclipse -Dproject.tag=#{build[:path]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
-  system("mkdir -p #{build[:basedir]}")
-  system("mv #{temp_path}/#{goal} #{build[:basedir]}/#{goal}")
+  system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path}/#{goal} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
+  system("mkdir -p #{build["basedir"]}")
+  system("mv #{temp_path}/#{goal} #{build["basedir"]}/#{goal}")
   system("rm -Rf #{temp_path}")
 
 end
@@ -60,15 +72,15 @@ def find_build(name)
 end
 
 desc "Update site build"
-define "build.site" do |profile|
-  build = find_build[profile]
-  build(build)
-  Dir.glob("#{build[:basedir]}/#{goal}/*.zip").each |zip| do
-    zip = File.expand_path "#{build[:basedir]}/#{goal}/" + zip
+task :build_site, :profile, :goal do |t, args|
+  build = find_build args.profile
+  goal = args.goal || "build.site"
+  do_build(build, goal)
+  Dir.glob(File.expand_path "#{build["basedir"]}/#{goal}/*.zip").each {|zip|
     sign(zip)
     pack(zip)
     digest(zip)
-    upload(build[:version], zip)
-  end
-  
+    move_to_downloads(build, zip)
+ }
+ 
 end
