@@ -18,7 +18,7 @@ def debug(msg)
 end
 
 #Annotates an update site with p2 metadata
-def p2metadata(artifact, args = {:output => artifact, :site_name = "STP update site"})
+def p2metadata(artifact, args = {:output => artifact, :site_name => "STP update site"})
   debug("Starting annotating the update site with p2 metadata")
   temp = Dir.tmpdir + "/" + Time.now.to_i.to_s
   File.makedirs temp
