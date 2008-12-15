@@ -18,17 +18,22 @@ def debug(msg)
 end
 
 #Annotates an update site with p2 metadata
-def p2metadata(update_site_path, site_name = "STP update site")
+def p2metadata(artifact, args = {:output => artifact, :site_name = "STP update site"})
   debug("Starting annotating the update site with p2 metadata")
+  temp = Dir.tmpdir + "/" + Time.now.to_i.to_s
+  File.makedirs temp
+  system("unzip -oq #{artifact} -d #{temp}")
+  
   cmd_args = []
   cmd_args << "-updateSite #{update_site_path}" << "-site #{update_site_path}/site.xml"
   cmd_args << '-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator'
   cmd_args << '-vmargs -Xmx256m' << '-reusePack200Files' << '-compress' << '-append'
-  cmd_args << "-metadataRepositoryName \"#{site_name}\"" << "-artifactRepositoryName \"#{site_name}\""
+  cmd_args << "-metadataRepositoryName \"#{args[:site_name]}\"" << "-artifactRepositoryName \"#{args[:site_name]}\""
 
   trace((["#{JAVAC}"] + cmd_args).join(' '))
   system((["#{JAVAC}"] + cmd_args).join(' ')) or fail 'Failed to compile, see errors above'
-  debug("Done setting the metadata on the update site #{update_site_path}")
+  system("cd #{temp} ; zip -r #{args[:output]}.tmp * ; mv #{args[:output]}.tmp #{args[:output]}")
+  debug("Done setting the metadata on the update site #{artifact}")
 end
 
 # Signs an update site, using a script that may only be found on the Eclipse Foundation build machine.
@@ -110,7 +115,7 @@ task :build_site, :profile, :goal do |t, args|
     sign(zip)
     pack(zip)
     digest(zip)
-    p2metadata(zip)
+    p2metadata(zip, {:site_name => build["site_name"]})
     move_to_downloads(build, zip)
   }
  
