@@ -25,7 +25,7 @@ def p2metadata(artifact, args = {:output => artifact, :site_name => "STP update 
   system("unzip -oq #{artifact} -d #{temp}")
   
   cmd_args = []
-  cmd_args << "-updateSite #{update_site_path}" << "-site #{update_site_path}/site.xml"
+  cmd_args << "-updateSite #{temp}" << "-site #{temp}/site.xml"
   cmd_args << '-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator'
   cmd_args << '-vmargs -Xmx256m' << '-reusePack200Files' << '-compress' << '-append'
   cmd_args << "-metadataRepositoryName \"#{args[:site_name]}\"" << "-artifactRepositoryName \"#{args[:site_name]}\""
