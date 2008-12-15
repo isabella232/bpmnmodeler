@@ -19,6 +19,7 @@ end
 
 #Annotates an update site with p2 metadata
 def p2metadata(artifact, args = {:output => artifact, :site_name => "STP update site"})
+  args[:output] |= artifact
   debug("Starting annotating the update site with p2 metadata")
   temp = Dir.tmpdir + "/" + Time.now.to_i.to_s
   File.makedirs temp
@@ -80,7 +81,7 @@ def move_to_downloads(build, artifact_path)
   debug("Starting moving the build to the downloads #{build}")
   File.makedirs "#{COMMITTER_UPDATE_SITE}#{build["id"]}/#{build["version"]}"
   timestamp = File.basename artifact_path
-  timestamp = /(.*)-(.*)\.zip/.match(timestamp)[1] 
+  timestamp = /(.*)-(.*)\.zip/.match(timestamp)[2] 
   system("unzip #{artifact_path} -d #{COMMITTER_UPDATE_SITE}#{build["id"]}/#{timestamp}")
   system("cp #{artifact_path} #{COMMITTER_UPDATE_SITE}#{build["id"]}")
   debug("Done moving to downloads area")
