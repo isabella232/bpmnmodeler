@@ -11,10 +11,26 @@
 
 COMMITTER_UPDATE_SITE = "/home/data/httpd/download.eclipse.org/stp/committers/updates/"
 SIGN_STAGING="/home/data/httpd/download-staging.priv/stp"
+JAVAC="java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar"
 
 def debug(msg)
   puts $terminal.color(msg, :blue) if verbose
 end
+
+#Annotates an update site with p2 metadata
+def p2metadata(update_site_path, site_name = "STP update site")
+  debug("Starting annotating the update site with p2 metadata")
+  cmd_args = []
+  cmd_args << "-updateSite #{update_site_path}" << "-site #{update_site_path}/site.xml"
+  cmd_args << '-application org.eclipse.equinox.p2.metadata.generator.EclipseGenerator'
+  cmd_args << '-vmargs -Xmx256m' << '-reusePack200Files' << '-compress' << '-append'
+  cmd_args << "-metadataRepositoryName \"#{site_name}\"" << "-artifactRepositoryName \"#{site_name}\""
+
+  trace((["#{JAVAC}"] + cmd_args).join(' '))
+  system((["#{JAVAC}"] + cmd_args).join(' ')) or fail 'Failed to compile, see errors above'
+  debug("Done setting the metadata on the update site #{update_site_path}")
+end
+
 # Signs an update site, using a script that may only be found on the Eclipse Foundation build machine.
 # This method may take a long time as signing works as a queue.
 def sign(artifact, output = artifact, send_email = true)
@@ -36,7 +52,7 @@ end
 # Packs an update site (artifact). artifact is the path to a zipped update site
 def pack(artifact, output = artifact)
  debug("Start packing #{artifact}") 
- system("java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -Mmx768m -Dorg.eclipse.update.jarprocessor.pack200=/shared/stp/scripts/pack200 -consolelog -application org.eclipse.update.core.siteOptimizer -jarProcessor -verbose -pack -outputDir /tmp -processAll #{artifact}")
+ system("#{JAVAC} -Mmx768m -Dorg.eclipse.update.jarprocessor.pack200=/shared/stp/scripts/pack200 -consolelog -application org.eclipse.update.core.siteOptimizer -jarProcessor -verbose -pack -outputDir /tmp -processAll #{artifact}")
   system("mv /tmp/#{File.basename artifact} #{output}")
   debug("Done packing, copied to #{output}") 
 end
@@ -47,7 +63,7 @@ def digest(artifact, output = artifact)
   temp = Dir.tmpdir + "/" + Time.now.to_i.to_s
   File.makedirs temp
   system("unzip -oq #{artifact} -d #{temp}")
-  system("java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebuilder/plugins/org.eclipse.equinox.launcher.jar -application org.eclipse.update.core.siteOptimizer -digestBuilder -digestOutputDir=#{temp} -siteXML=#{temp}/site.xml")
+  system("#{JAVAC} -application org.eclipse.update.core.siteOptimizer -digestBuilder -digestOutputDir=#{temp} -siteXML=#{temp}/site.xml")
   system("rm -Rf #{temp}/tmp")
   system("cd #{temp} ; zip -r #{output}.tmp * ; mv #{output}.tmp #{output}")
   system("rm -Rf #{temp}")
@@ -94,6 +110,7 @@ task :build_site, :profile, :goal do |t, args|
     sign(zip)
     pack(zip)
     digest(zip)
+    p2metadata(zip)
     move_to_downloads(build, zip)
   }
  
