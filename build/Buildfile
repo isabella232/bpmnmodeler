@@ -91,7 +91,7 @@ def do_build(build = {"basedir" => "", "platform" => "3.5M3", "path" => "trunk"}
   temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{build["path"]}/#{goal}"
   system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
   system("mkdir -p #{build["basedir"]}/#{build["path"]}/#{goal}")
-  created_artifact_name = `#{build["basedir"]}/#{build["path"]}/#{goal}" ls *.zip`
+  created_artifact_name = `#{build["basedir"]}/#{build["path"]}/#{goal} ls *.zip`
   system("mv #{temp_path}/#{created_artifact_name} #{build["basedir"]}/#{build["path"]}/#{goal}")
   return "#{build["basedir"]}/#{build["path"]}/#{goal}/#{created_artifact_name}"
   
