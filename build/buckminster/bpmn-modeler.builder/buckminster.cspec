@@ -33,7 +33,7 @@
                 <cs:property key="site.name" value="bpmn-modeler.archivedsite"/>
             </cs:properties>
             <cs:prerequisites>
-                <cs:attribute name="bundle.jars" alias="plugins" includePattern="org\.eclipse\.stp\.bpmn\.(.*)"/>
+                <cs:attribute name="bundle.jars" alias="plugins" includePattern="org\.eclipse\.stp\.bpmn(\..*)?"/>
                 <cs:attribute name="feature.jars" alias="features"/>
                 <cs:attribute name="site.rootFiles" alias="rootFiles"/>
                 <cs:attribute name="site.template" alias="template"/>
