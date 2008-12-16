@@ -91,7 +91,10 @@ def do_build(build = {"basedir" => "", "platform" => "3.5M3", "path" => "trunk"}
   temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{build["path"]}/#{goal}"
   system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
   system("mkdir -p #{build["basedir"]}/#{build["path"]}/#{goal}")
-  system("mv #{temp_path}/*.zip #{build["basedir"]}/#{build["path"]}/#{goal}")
+  created_artifact_name = `#{build["basedir"]}/#{build["path"]}/#{goal}" ls *.zip`
+  system("mv #{temp_path}/#{created_artifact_name} #{build["basedir"]}/#{build["path"]}/#{goal}")
+  return "#{build["basedir"]}/#{build["path"]}/#{goal}/#{created_artifact_name}"
+  
 end
 
 def find_build(name)
@@ -104,15 +107,13 @@ desc "Update site build"
 task :build_site, :profile, :goal do |t, args|
   build = find_build args.profile
   goal = args.goal || "build.site"
-  do_build(build, goal)
-  Dir.glob(File.expand_path "#{build["basedir"]}/#{goal}/*.zip").each {|zip|
-    sign(zip)
-    pack(zip)
-    digest(zip)
-    p2metadata(zip, {:site_name => build["site_name"]})
-    move_to_downloads(build, zip)
-  }
- 
+  zip = do_build(build, goal)
+  sign(zip)
+  pack(zip)
+  digest(zip)
+  p2metadata(zip, {:site_name => build["site_name"]})
+  move_to_downloads(build, zip)
+  
 end
 
 desc "Dummy site build"
