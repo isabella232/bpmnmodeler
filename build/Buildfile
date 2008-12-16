@@ -87,11 +87,11 @@ def move_to_downloads(build, artifact_path)
   debug("Done moving to downloads area")
 end
 
-def do_build(build = {:basedir => "", :platform => "3.5M3", :path => "trunk"}, goal = "build.site")
-  temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{build[:path]}/#{goal}"
+def do_build(build = {"basedir" => "", "platform" => "3.5M3", "path" => "trunk"}, goal = "build.site")
+  temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{build["path"]}/#{goal}"
   system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
-  system("mkdir -p #{build["basedir"]}/#{build[:path]}/#{goal}")
-  system("mv #{temp_path}/*.zip #{build["basedir"]}/#{build[:path]}/#{goal}")
+  system("mkdir -p #{build["basedir"]}/#{build["path"]}/#{goal}")
+  system("mv #{temp_path}/*.zip #{build["basedir"]}/#{build["path"]}/#{goal}")
 end
 
 def find_build(name)
