@@ -103,7 +103,7 @@
      <locator searchPathRef="project.build" pattern="^bpmn-modeler.builder?" />
 
      <locator searchPathRef="bpmn.features" pattern="^org\.eclipse\.stp\.bpmn(\..*)?feature" />
-     <locator searchPathRef="bpmn.plugins" pattern="^org\.eclipse\.stp\.bpmn(\..*)?" />
+     <locator searchPathRef="bpmn.plugins" pattern="^org\.eclipse\.stp\.bpmn.*" />
 
      <locator searchPathRef="orbit" pattern=".*" /> 
  
