@@ -88,17 +88,10 @@ def move_to_downloads(build, artifact_path)
 end
 
 def do_build(build = {:basedir => "", :platform => "3.5M3", :path => "trunk"}, goal = "build.site")
-
-  if Dir[build["basedir"]] != nil
-    system("rm -Rf #{build["basedir"]}");
-  end
-
-  temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{Time.now.strftime("%Y%m%d_%H-%M")}"
-  system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path}/#{goal} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
-  system("mkdir -p #{build["basedir"]}")
-  system("mv #{temp_path}/#{goal} #{build["basedir"]}/#{goal}")
-  system("rm -Rf #{temp_path}")
-
+  temp_path = File.expand_path "#{File.dirname(__FILE__)}/buckminster/#{build[:path]}/#{goal}"
+  system("cd #{File.dirname(__FILE__)}/buckminster ; $ANT_HOME/bin/ant -Dbase.directory=#{temp_path} -Dpde.target.platform.path=/shared/stp/platforms/#{build["platform"]}/eclipse -Dproject.tag=#{build["path"]} -Dproject.build=#{File.expand_path File.dirname(__FILE__)} #{goal}");
+  system("mkdir -p #{build["basedir"]}/#{build[:path]}/#{goal}")
+  system("mv #{temp_path}/*.zip #{build["basedir"]}/#{build[:path]}/#{goal}")
 end
 
 def find_build(name)
@@ -125,6 +118,6 @@ end
 desc "Dummy site build"
 task :build_dummy_site, :profile, :goal do |t, args|
   build = find_build args.profile
-  goal = args.goal || "build.site"
+  goal = args.goal || "build.dummy.site"
   do_build(build, goal)
 end
