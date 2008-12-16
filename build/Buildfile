@@ -118,6 +118,6 @@ end
 desc "Dummy site build"
 task :build_dummy_site, :profile, :goal do |t, args|
   build = find_build args.profile
-  goal = args.goal || "build.dummy.site"
+  goal = args.goal || "build.site"
   do_build(build, goal)
 end
