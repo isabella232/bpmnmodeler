@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<project name="BPMN Build" basedir="." default="help">
+
+  <property file="build.properties"/>
+
+  <macrodef name="buckminster">
+    <attribute name="command" default="--help"/>
+    <element name="args" optional="true"/>
+    <sequential>
+      <java fork="true" jar="${buckminster.launcher.jar}" failonerror="true">
+        <arg value="-data"/>
+        <arg value="${buckminster.workspace}"/>
+        <arg value="--displaystacktrace"/>
+        <arg value="--loglevel"/>
+        <arg value="${buckminster.log.level}"/>
+        <arg value="@{command}"/>
+        <args/>
+      </java>
+    </sequential>
+  </macrodef>
+
+  <target name="init">
+    <mkdir dir="${working.directory}"/>
+    <mkdir dir="${build.directory}"/>
+    <mkdir dir="${downloads.directory}"/>
+    <available file="${buckminster.file.fullname}" property="download.unnecessary" />
+    <uptodate targetfile="${build.directory}/buckminster" srcfile="${buckminster.file.fullname}" property="unzip.unnecessary"/>
+    <available file="${build.directory}/buckminster/features/org.eclipse.buckminster.core.headless.feature_${buckminster.version}"
+               property="core.headless.unnecessary" />
+    <available file="${build.directory}/buckminster/features/org.eclipse.buckminster.pde.headless.feature_${buckminster.version}"
+               property="pde.headless.unnecessary" />
+    <available file="${build.directory}/buckminster/features/org.eclipse.buckminster.subclipse.headless.feature_${buckminster.version}"
+               property="subclipse.headless.unnecessary" />
+  </target>
+
+
+  <target name="buckminster.download" unless="download.unnecessary" >
+    <echo message="Downloading Buckminster headless package to bootstrap build sequence"/>
+    <get src="${buckminster.download.url}" dest="${buckminster.file.fullname}" verbose="true" usetimestamp="true"/> 
+  </target>
+
+	  <target name="buckminster.unzip" depends="buckminster.download" unless="unzip.unnecessary" >
+	    <echo message="Unzipping Buckminster headless package"/>
+	    <unzip src="${buckminster.file.fullname}" dest="${build.directory}"/>
+	  </target>
+
+	  <target name="buckminster.core.headless" unless="core.headless.unnecessary">
+	    <echo message=".... setting up Core headless feature"/>
+	    <buckminster command="org.eclipse.buckminster.installer.install">
+	      <args>
+	        <arg value="${buckminster.headless.site}"/>
+	        <arg value="org.eclipse.buckminster.core.headless.feature"/>
+	      </args>
+	    </buckminster>
+	  </target>
+
+	  <target name="buckminster.pde.headless" unless="pde.headless.unnecessary">
+	    <echo message=".... setting up PDE headless feature"/>
+	    <buckminster command="org.eclipse.buckminster.installer.install">
+	      <args>
+	        <arg value="${buckminster.headless.site}"/>
+	        <arg value="org.eclipse.buckminster.pde.headless.feature"/>
+	      </args>
+	    </buckminster>
+	  </target>
+
+	  <target name="buckminster.subclipse.headless" unless="subclipse.headless.unnecessary">
+	    <echo message=".... setting up Subclipse headless feature"/>
+	    <buckminster command="org.eclipse.buckminster.installer.install">
+	      <args>
+	        <arg value="${buckminster.headless.site}"/>
+	        <arg value="org.eclipse.buckminster.subclipse.headless.feature"/>
+	      </args>
+	    </buckminster>
+	  </target>
+
+	  <target name="buckminster.headless.setup" depends="buckminster.unzip, buckminster.core.headless, buckminster.pde.headless, buckminster.subclipse.headless" />
+
+	  <target name="buckminster.setup.preference">
+	    <echo message=".... setup preference for target platform"/>
+	    <buckminster command="org.eclipse.buckminster.core.prefs.setpreference">
+	      <args>
+	        <arg value="org.eclipse.buckminster.jdt.complianceLevel=${jdt.compliance.level}"/>
+	        <arg value="org.eclipse.buckminster.pde.targetArch=${pde.target.arch}"/>
+	        <arg value="org.eclipse.buckminster.pde.targetNL=${pde.target.nl}"/>
+	        <arg value="org.eclipse.buckminster.pde.targetOS=${pde.target.os}"/>
+	        <arg value="org.eclipse.buckminster.pde.targetPlatformPath=${pde.target.platform.path}"/>
+	        <arg value="org.eclipse.buckminster.pde.targetWS=${pde.target.ws}"/>
+	      </args>
+	    </buckminster>
+
+	    <echo message=".... list preferences of target platform"/>
+	    <buckminster command="org.eclipse.buckminster.core.prefs.listpreferences"/>
+	  </target>
+
+	  <target name="build" depends="clean.workspace, init, buckminster.headless.setup, buckminster.setup.preference, bpmn.resolve, bpmn.build">
+
+	  </target>
+
+	  <target name="bpmn.build.site">
+	    <echo message=".... building bpmn update site"/>
+	    <buckminster command="org.eclipse.buckminster.core.perform">
+	      <args>
+	        <arg value="-Dbuckminster.output.root=${bpmn.build.update.site.directory}"/>
+	        <arg value="${bpmn.build.update.site.action}"/>
+	      </args>
+	    </buckminster>
+	    <echo>
+	      BPMN update site has been generated in directory ${bpmn.build.update.site.directory}
+	    </echo>
+	  </target>
+
+	  <target name="bpmn.build">
+	    <echo message=".... building bpmn"/>
+	    <buckminster command="org.eclipse.buckminster.core.build"/>
+	  </target>
+
+	  <target name="bpmn.resolve">
+	    <echo message=".... resolve for bpmn components"/>
+	    <buckminster command="org.eclipse.buckminster.core.resolve">
+	      <args>
+	        <arg value="${bpmn.cquery.file}"/>
+	      </args>
+	    </buckminster>
+	  </target>
+
+	  <target name="bpmn.clean">
+	    <echo message=".... clean bpmn components"/>
+	    <buckminster command="org.eclipse.buckminster.core.clean"/>
+	  </target>
+
+	  <target name="clean.workspace">
+	    <delete dir="${working.directory}/build/workspace"/>
+	  </target>
+
+	  <target name="clean">
+	    <delete dir="${working.directory}"/>
+	  </target>
+
+	  <target name="help">
+	    <echo>
+	      Before running build target, you must setup a target Eclipse platform which include all dependencies of BPMN,
+	      this need by Buckminster for materialization, refer bpmn.rmap for details.
+
+	      Basicly, you can configure some arguments for building like:
+
+	      $ant -Dbase.directory=/local/playground -Dbuckminster.log.level=DEBUG -Dpde.target.arch=x86 -Dpde.target.os=linux -Dpde.target.ws=gtk build
+	    </echo>
+	  </target>
+
+	</project>

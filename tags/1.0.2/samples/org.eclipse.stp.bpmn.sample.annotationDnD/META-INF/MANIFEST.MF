@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: AnnotationDnD Plug-in
+Bundle-SymbolicName: org.eclipse.stp.bpmn.sample.annotationDnD;singleton:=true
+Bundle-Version: 1.0.0
+Bundle-Activator: org.eclipse.stp.bpmn.sample.annotationdnd.AnnotationDnDActivator
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.stp.bpmn.diagram
+Eclipse-LazyStart: true

@@ -1,0 +1,11 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: NoTextAnnotationInPalette Plug-in
+Bundle-SymbolicName: org.eclipse.stp.bpmn.sample.noTextAnnotationInPalette;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.eclipse.stp.bpmn.sample.SamplePlugin
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.stp.bpmn.diagram,
+ org.eclipse.ui.ide
+Eclipse-LazyStart: true
