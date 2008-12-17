@@ -17,3 +17,11 @@ trunk:
   version: 1.0.2
   site_name: BPMN modeler 1.0 Ganymede update site
   <<: *common
+3.5M4:
+  path: tags/3.5M4
+  platform: 3.5M4
+  description: The tag for 3.5M4
+  basedir: ~/build_3.5M4
+  version: 1.1.0
+  site_name: BPMN modeler 1.1.0 Galileo 3.5M4 update site
+  <<: *common
