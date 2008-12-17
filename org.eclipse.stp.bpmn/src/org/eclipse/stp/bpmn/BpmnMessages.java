@@ -89,17 +89,25 @@ public class BpmnMessages extends NLS {
 
     public static String DirectionType_Both;
 
+    public static String DirectionType_both;
+
     public static String DirectionType_both_label;
 
     public static String DirectionType_From;
+
+    public static String DirectionType_from;
 
     public static String DirectionType_from_label;
 
     public static String DirectionType_None;
 
+    public static String DirectionType_none;
+
     public static String DirectionType_none_label;
 
     public static String DirectionType_To;
+
+    public static String DirectionType_to;
 
     public static String DirectionType_to_label;
 
@@ -198,6 +206,8 @@ public class BpmnMessages extends NLS {
     public static String SequenceFlowConditionType_default_label;
 
     public static String SequenceFlowConditionType_expr;
+
+    public static String SequenceFlowConditionType_expression;
 
     public static String SequenceFlowConditionType_expression_label;
 

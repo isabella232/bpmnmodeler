@@ -31,7 +31,7 @@ import org.eclipse.ui.IWorkbenchPage;
  */
 public class SequenceFlowConditionTypeAction extends DiagramAction {
 
-    public static final String MENU_ID = "conditionType";
+    public static final String MENU_ID = "conditionType"; //$NON-NLS-1$
     
     public SequenceFlowConditionTypeAction(IWorkbenchPage workbenchpage, String id) {
         super(workbenchpage);
@@ -56,7 +56,7 @@ public class SequenceFlowConditionTypeAction extends DiagramAction {
      * @return a simple menu to contain the activities
      */
     public static IMenuManager createConditionTypeMenu() {
-        IAction handler = new Action() { public String getText() {return "Condition type";}};
+        IAction handler = new Action() { public String getText() {return "Condition type";}}; //$NON-NLS-1$
         return new ActionMenuManager(MENU_ID, handler, false);
     }
 }

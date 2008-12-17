@@ -214,6 +214,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnNewDiagramFileWizard_page_title;
 
+    public static String BpmnPaletteFactory_activity_label;
+
     public static String BpmnPaletteFactory_artifacts_description;
 
     public static String BpmnPaletteFactory_artifacts_label;
@@ -412,6 +414,8 @@ public class BpmnDiagramMessages extends NLS {
 
     public static String BpmnPaletteFactory_start_events_label;
 
+    public static String BpmnPaletteFactory_sub_process_label;
+
 	public static String BpmnPaletteFactory_timer_intermediate_label;
 
 	public static String BpmnPaletteFactory_timer_intermediate_tooltip;
@@ -567,6 +571,8 @@ public class BpmnDiagramMessages extends NLS {
     public static String ResizableGroupEditPolicy_command_name;
 
     public static String SecondarySemanticHintProcessorForAssociationDirection_createAssociation;
+
+    public static String SequenceEdgeItemSemanticEditPolicy_flow_condition_type_command;
     
     public static String AbstractViewDnDHandler_droppingView;
     

@@ -349,6 +349,7 @@ public class BpmnDiagramPreferenceInitializer extends
         return fontDataArray;
     }
     
+   
     private static String getDefaultFontNameAccordingToNL() {
         String res = "Arial"; //$NON-NLS-1$
         try {
@@ -370,7 +371,9 @@ public class BpmnDiagramPreferenceInitializer extends
                 } else {
                     return "MS Gothic"; //$NON-NLS-1$
                 }
-            }
+            }/* else if (OS.equals(Platform.OS_MACOSX)) {
+            	return "Lucida Sans"; //$NON-NLS-1$
+        	}*/
         } catch (Exception e) {
             System.err.println("Unable to get the default font name according" + //$NON-NLS-1$
                     " to the locale: " + e); //$NON-NLS-1$

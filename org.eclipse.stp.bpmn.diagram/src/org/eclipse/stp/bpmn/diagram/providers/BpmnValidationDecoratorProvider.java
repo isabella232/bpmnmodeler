@@ -66,6 +66,7 @@ import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.ide.IDE;
 import org.eclipse.ui.ide.IDE.SharedImages;
+import org.eclipse.ui.internal.WorkbenchPlugin;
 
 /** 
  * @generated
@@ -113,11 +114,15 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                getBundledImage("icons/obj16/error.png"); //$NON-NLS-1$
             break;
         case IMarker.SEVERITY_WARNING:
-            image = PlatformUI.getWorkbench().getSharedImages().getImage(
+        	//we use the direct access to the workbench plugin
+        	//to avoid crashing when there is no PlatformUI started
+            image = WorkbenchPlugin.getDefault().getSharedImages().getImage(
                     ISharedImages.IMG_OBJS_WARN_TSK);
             break;
         default:
-            image = PlatformUI.getWorkbench().getSharedImages().getImage(
+        	//we use the direct access to the workbench plugin
+        	//to avoid crashing when there is no PlatformUI started
+            image = WorkbenchPlugin.getDefault().getSharedImages().getImage(
                     ISharedImages.IMG_OBJS_INFO_TSK);
         }
         if (hasQuickFix) {
@@ -678,6 +683,9 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
          */
         private void refreshDecorators(List decorators) {
             final List decoratorsToRefresh = decorators;
+            if (!PlatformUI.isWorkbenchRunning()) {
+            	return;
+            }
             PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
                 public void run() {
                     try {
@@ -855,7 +863,11 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                     foundMarker = marker;
                     toolTip = new Label(marker.getAttribute(
                             IMarker.MESSAGE, ""),  //$NON-NLS-1$
-                            PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK)); //$NON-NLS-1$
+                            //use the direct access to shared images
+                            //to avoid calling PlatformUI when the workbench
+                            //is not started
+                            WorkbenchPlugin.getDefault().getSharedImages()
+                            	.getImage(SharedImages.IMG_OBJS_TASK_TSK)); //$NON-NLS-1$
                 } else {
                     if (toolTip.getChildren().isEmpty()) {
                         Label comositeLabel = new Label();
@@ -866,7 +878,12 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                         toolTip = comositeLabel;
                     }
                     toolTip.add(new Label(marker.getAttribute(
-                            IMarker.MESSAGE, ""), PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK))); //$NON-NLS-1$
+                            IMarker.MESSAGE, ""),
+                            //use the direct access to shared images
+                            //to avoid calling PlatformUI when the workbench
+                            //is not started
+                            WorkbenchPlugin.getDefault().getSharedImages()
+                            	.getImage(SharedImages.IMG_OBJS_TASK_TSK))); //$NON-NLS-1$
                 }
             }
             if (foundMarker == null) {
@@ -875,7 +892,12 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
 
             // add decoration
             if (editPart instanceof IGraphicalEditPart) {
-                Image img = PlatformUI.getWorkbench().getSharedImages().getImage(SharedImages.IMG_OBJS_TASK_TSK);
+                Image img =
+                	//use the direct access to shared images
+                    //to avoid calling PlatformUI when the workbench
+                    //is not started
+                    WorkbenchPlugin.getDefault().getSharedImages()
+                    		.getImage(SharedImages.IMG_OBJS_TASK_TSK);
                 if (view instanceof Edge) {
                     setDecoration(getDecoratorTarget().addConnectionDecoration(
                             img, 50, true));
@@ -892,9 +914,11 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                     }
                     
                     if (editPart instanceof TextAnnotationEditPart) {
-                        ((TextAnnotationEditPart) editPart).setLabelImage(img, PositionConstants.NORTH_WEST, toolTip);
+                        ((TextAnnotationEditPart) editPart).setLabelImage(img,
+                        		PositionConstants.NORTH_WEST, toolTip);
                     } else if (editPart instanceof TextAnnotation2EditPart) {
-                        ((TextAnnotation2EditPart) editPart).setLabelImage(img, PositionConstants.NORTH_WEST, toolTip);
+                        ((TextAnnotation2EditPart) editPart).setLabelImage(img,
+                        		PositionConstants.NORTH_WEST, toolTip);
                     } else {
                         // default case, should not happen since we only do task markers on text annotations right now.
                         setDecoration(getDecoratorTarget()

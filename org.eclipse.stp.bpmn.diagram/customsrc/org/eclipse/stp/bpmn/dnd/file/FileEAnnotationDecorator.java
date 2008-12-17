@@ -63,8 +63,12 @@ public class FileEAnnotationDecorator implements IEAnnotationDecorator {
 	public ImageDescriptor getImageDescriptor(EditPart part, EModelElement element,
 			EAnnotation annotation) {
 		if (element == null) {
-			return PlatformUI.getWorkbench().
-				getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FILE);
+			if (PlatformUI.isWorkbenchRunning()) {
+				return PlatformUI.getWorkbench().
+					getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FILE);
+			} else {
+				return null;
+			}
 		}
 		String filePath = (String) annotation.getDetails().
 		    get(FileDnDConstants.PROJECT_RELATIVE_PATH);
@@ -131,8 +135,8 @@ public class FileEAnnotationDecorator implements IEAnnotationDecorator {
                     	String[] adapterNames = ((IAdapterFactoryExt)f).getAdapterNames();
                         if (adapterNames != null) {
                     		for (String adapterName : adapterNames) {
-                    			if ("org.eclipse.jface.resource.ImageRegistry".equals(adapterName)
-                    					|| "org.eclipse.ui.model.IWorkbenchAdapter".equals(adapterName)) {
+                    			if ("org.eclipse.jface.resource.ImageRegistry".equals(adapterName) //$NON-NLS-1$
+                    					|| "org.eclipse.ui.model.IWorkbenchAdapter".equals(adapterName)) { //$NON-NLS-1$
                                     try {
                                         ((IAdapterFactoryExt)f).loadFactory(true);
                                     } catch(Exception e) {

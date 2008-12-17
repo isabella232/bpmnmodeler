@@ -21,6 +21,7 @@ import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SequenceFlowConditionType;
 import org.eclipse.stp.bpmn.Vertex;
+import org.eclipse.stp.bpmn.validation.BpmnValidationMessages;
 
 /**
  * This constraint applies to default and conditional flows. 
@@ -60,24 +61,24 @@ public class ControlledFlowsConstraint extends AbstractModelConstraint {
         switch (edge.getConditionType().getValue()) {
         case SequenceFlowConditionType.DEFAULT:
             if (!moreThanOneEdgeOut) {
-                return ctx.createFailureStatus("This flow is marked as default while there are no other edges going out of the activity.");
+                return ctx.createFailureStatus(BpmnValidationMessages.ControlledFlowsConstraint_default_and_no_other_edges);
             }
             if (!atLeastOneConditional) {
-                return ctx.createFailureStatus("There is no need for a default flow since there are no controlled flows out of the activity.");
+                return ctx.createFailureStatus(BpmnValidationMessages.ControlledFlowsConstraint_default_and_no_controlled_flows);
             }
             if (atLeastOneParallel) {
-                return ctx.createFailureStatus("The default path will never be executed since there are uncontrolled flows going out of the activity.");
+                return ctx.createFailureStatus(BpmnValidationMessages.ControlledFlowsConstraint_default_never_executed);
             }
             break;
         case SequenceFlowConditionType.EXPRESSION:
             if (!moreThanOneEdgeOut) {
-                return ctx.createFailureStatus("This sequence edge is marked as conditional while there are no other edges going out of the activity.");
+                return ctx.createFailureStatus(BpmnValidationMessages.ControlledFlowsConstraint_unique_conditional_edge);
             }
             Vertex src = edge.getSource();
             if (src != null && (src instanceof Activity)) {
                 ActivityType type = ((Activity) src).getActivityType();
                 if (ActivityType.VALUES_GATEWAYS.contains(type)) {
-                    return ctx.createFailureStatus("Conditional flows should not be preceded by gateways");
+                    return ctx.createFailureStatus(BpmnValidationMessages.ControlledFlowsConstraint_unique_conditional_flow);
                 }
             }
         }

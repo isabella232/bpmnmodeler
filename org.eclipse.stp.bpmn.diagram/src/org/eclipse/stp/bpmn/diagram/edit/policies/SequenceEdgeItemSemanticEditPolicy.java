@@ -35,6 +35,7 @@ import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SequenceFlowConditionType;
 import org.eclipse.stp.bpmn.commands.CreateRelationshipCommandEx;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**
@@ -48,12 +49,12 @@ public class SequenceEdgeItemSemanticEditPolicy extends
     /**
      * The type of the requests that sets the flow condition type
      */
-    public static final String SEQUENCE_EDGE_FLOW_CONDITION_TYPE = "SEQUENCE_EDGE_FLOW_CONDITION_TYPE";
+    public static final String SEQUENCE_EDGE_FLOW_CONDITION_TYPE = "SEQUENCE_EDGE_FLOW_CONDITION_TYPE"; //$NON-NLS-1$
     
     /**
      * The type of the extended data parameter that sets the type of flow condition type.
      */
-    public static final String FLOW_CONDITION_TYPE = "flow_condition_type_key";
+    public static final String FLOW_CONDITION_TYPE = "flow_condition_type_key"; //$NON-NLS-1$
     /**
      * @generated
      */
@@ -191,7 +192,7 @@ public class SequenceEdgeItemSemanticEditPolicy extends
         public SetFlowConditionType(SequenceEdge sequenceEdge, int fct) {
             super((TransactionalEditingDomain) AdapterFactoryEditingDomain.
                     getEditingDomainFor(sequenceEdge),
-                    "Setting the sequence edge flow condition type",
+                    BpmnDiagramMessages.SequenceEdgeItemSemanticEditPolicy_flow_condition_type_command,
                     getWorkspaceFiles(sequenceEdge));
             _flowConditionType = fct;
             _sequenceEdge = sequenceEdge;

@@ -468,7 +468,7 @@ public class BpmnPaletteFactory {
                 BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
                 BpmnDiagramMessages.bind(
                         BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
-                        "activity"));
+                        BpmnDiagramMessages.BpmnPaletteFactory_activity_label));
         elementTypes.add(activity1);
         ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_create_looping_task_label, 
         		BpmnDiagramMessages.BpmnPaletteFactory_create_looping_task_description,
@@ -537,7 +537,7 @@ public class BpmnPaletteFactory {
                 BpmnPackage.Literals.ACTIVITY__LOOPING.getName(),
                 BpmnDiagramMessages.bind(
                         BpmnDiagramMessages.BpmnPaletteFactory_looping_label, 
-                        "sub-process"));
+                        BpmnDiagramMessages.BpmnPaletteFactory_sub_process_label));
         elementTypes.add(activity);
         ToolEntry result = new NodeToolEntry(BpmnDiagramMessages.BpmnPaletteFactory_create_looping_sp_label,
                 BpmnDiagramMessages.BpmnPaletteFactory_create_looping_sp_description, smallImage, largeImage, elementTypes);

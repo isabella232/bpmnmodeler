@@ -1079,10 +1079,11 @@ public class ActivityPainter {
                 (int)Math.round(widthOfArrow), (int)Math.round(rect.preciseY + rect.preciseHeight*4/5),
                 (int)Math.round(shrinkX+rect.preciseX), (int)Math.round(rect.preciseY + rect.preciseHeight*4/5)
         };
-       // graphics.drawPolygon(points);
-        graphics.fillPolygon(points);
-       // graphics.drawRectangle(rect);
-
+        if (fig.isCatching()) {
+            graphics.drawPolygon(points);
+        } else {
+            graphics.fillPolygon(points);
+        }
         graphics.popState();
     }
 

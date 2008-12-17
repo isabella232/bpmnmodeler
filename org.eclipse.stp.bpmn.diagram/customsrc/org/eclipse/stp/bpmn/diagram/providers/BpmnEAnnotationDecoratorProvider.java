@@ -100,22 +100,23 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 		    }
             final TransactionalEditingDomain domain = 
                 TransactionUtil.getEditingDomain(decorator.getView().getDiagram());
-		    PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
-		        public void run() {
-		                try {
-                            if (domain != null) {
-                                domain.runExclusive(new Runnable() {
-                                    public void run() {
-                                        
-                                        decorator.refresh();
-                                    }
-                                } );
-                            }
-                        } catch (InterruptedException e) {
-                            // only thrown when cancelled by user.
-                        }
-		        }
-		    });
+            if (PlatformUI.isWorkbenchRunning()) {
+			    PlatformUI.getWorkbench().getDisplay().asyncExec(new Runnable() {
+			        public void run() {
+			                try {
+	                            if (domain != null) {
+	                                domain.runExclusive(new Runnable() {
+	                                    public void run() {
+	                                        decorator.refresh();
+	                                    }
+	                                } );
+	                            }
+	                        } catch (InterruptedException e) {
+	                            // only thrown when cancelled by user.
+	                        }
+			        }
+			    });
+            }
 		}
 	}
 	/**

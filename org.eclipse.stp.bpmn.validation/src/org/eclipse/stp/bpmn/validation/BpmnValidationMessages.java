@@ -39,6 +39,16 @@ public class BpmnValidationMessages extends NLS {
 
     public static String BpmnValidationProvider_ValidationActionFailed;
 
+    public static String ControlledFlowsConstraint_default_and_no_controlled_flows;
+
+    public static String ControlledFlowsConstraint_default_and_no_other_edges;
+
+    public static String ControlledFlowsConstraint_default_never_executed;
+
+    public static String ControlledFlowsConstraint_unique_conditional_edge;
+
+    public static String ControlledFlowsConstraint_unique_conditional_flow;
+
     public static String FileExistenceContraintQuickfixProvider_change_reference;
 
     public static String FileExistenceContraintQuickfixProvider_remove_reference;

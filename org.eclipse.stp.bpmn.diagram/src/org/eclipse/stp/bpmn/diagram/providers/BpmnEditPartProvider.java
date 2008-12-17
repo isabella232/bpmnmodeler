@@ -15,6 +15,7 @@ import java.lang.ref.WeakReference;
 import org.eclipse.draw2d.DefaultRangeModel;
 import org.eclipse.draw2d.FreeformViewport;
 import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.Viewport;
 import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
@@ -38,6 +39,7 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnEditPartFactory;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.figures.splitviewsupport.FreeFormViewPortWithSplitters;
+import org.eclipse.ui.PlatformUI;
 
 /**
  * @generated
@@ -214,6 +216,21 @@ public class BpmnEditPartProvider extends AbstractEditPartProvider {
                 viewport.setContents(superRes.getContents());
                 return viewport;
             }
+
+            /**
+             * Overrides so that it does not crash when executed outside of the
+             * PlatformUI's workbench.
+             */
+			@Override
+			protected ScalableFreeformLayeredPane createScalableFreeformLayeredPane() {
+				if (PlatformUI.isWorkbenchRunning()) {
+					return super.createScalableFreeformLayeredPane();
+				} else {
+					return new ScalableFreeformLayeredPane();
+				}
+			}
+            
+            
             
         };
         //Something probably goes wrong with our usage of GEF-draw2d.
