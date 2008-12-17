@@ -10,7 +10,7 @@ trunk:
   site_name: BPMN modeler 1.1.0 update site
   <<: *common
 1_0_x:
-  path: branches/1.0.x
+  path: branches/1.0.x/trunk
   platform: 3.4.1
   description: Branch for 1.0.x. Compatible with Ganymede.
   basedir: ~/build_1.0.x
@@ -25,3 +25,10 @@ trunk:
   version: 1.1.0
   site_name: BPMN modeler 1.1.0 Galileo 3.5M4 update site
   <<: *common
+1.0.2:
+  path: branches/1.0.x/tags/1.0.2
+  platform: 3.4.1
+  description: SR2 release for Ganymede.
+  basedir: ~/build_1.0.2
+  version: 1.0.2
+  site_name: BPMN mdoeler 1.0.2 Ganymede update site
