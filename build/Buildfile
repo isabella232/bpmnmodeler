@@ -95,7 +95,7 @@ def do_build(build = {"basedir" => "", "platform" => "3.5M3", "path" => "trunk"}
   debug "####\nArtifact moved here: #{created_artifact_name}\n####"
   trace "mv #{created_artifact_name} #{build["basedir"]}/#{build["path"]}/#{goal}"
   system("mv #{created_artifact_name} #{build["basedir"]}/#{build["path"]}/#{goal}")
-  return created_artifact_name
+  return "#{build["basedir"]}/#{build["path"]}/#{goal}/#{File.basename created_artifact_name}"
   
 end
 
