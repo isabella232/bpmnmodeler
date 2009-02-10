@@ -11,14 +11,11 @@
 package org.eclipse.stp.bpmn.diagram.part;
 
 import org.eclipse.core.runtime.Platform;
-
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
-
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Association;
 import org.eclipse.stp.bpmn.BpmnDiagram;
@@ -31,7 +28,6 @@ import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SubProcess;
 import org.eclipse.stp.bpmn.TextAnnotation;
-
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityName2EditPart;

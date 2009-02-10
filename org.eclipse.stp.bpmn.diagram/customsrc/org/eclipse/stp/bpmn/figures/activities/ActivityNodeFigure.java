@@ -17,7 +17,6 @@
 package org.eclipse.stp.bpmn.figures.activities;
 
 import org.eclipse.draw2d.IFigure;
-import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.PointList;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.IPolygonAnchorableFigure;

@@ -12,6 +12,7 @@ package org.eclipse.stp.bpmn.diagram.edit.policies;
 
 import java.util.Collections;
 import java.util.List;
+
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.Graphics;
@@ -24,7 +25,7 @@ import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.handles.MoveHandle;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.NonResizableEditPolicyEx;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
-import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * @generated

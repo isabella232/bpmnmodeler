@@ -38,7 +38,6 @@ import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator2;
 import org.eclipse.stp.bpmn.dnd.ISecondarySemanticHintProcessor;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator2.IEAnnotationDecoratorData;
 import org.eclipse.stp.bpmn.dnd.file.IFileDnDHandlerFactory;
-import org.eclipse.stp.bpmn.menu.IBpmnDiagramContextMenuListener;
 import org.eclipse.stp.bpmn.menu.internal.ProxiedBpmnDiagramContextMenuListener;
 import org.eclipse.stp.bpmn.provider.BpmnItemProviderAdapterFactory;
 import org.eclipse.swt.graphics.Image;

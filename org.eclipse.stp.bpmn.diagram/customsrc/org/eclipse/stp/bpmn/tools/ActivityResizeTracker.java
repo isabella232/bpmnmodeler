@@ -44,7 +44,6 @@ import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Cursor;
 

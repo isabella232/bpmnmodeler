@@ -15,9 +15,6 @@
  **/
 package org.eclipse.stp.bpmn.figures.router;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.eclipse.draw2d.Connection;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Point;
@@ -156,15 +153,24 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
         
        
         // in case both constraints are applied, we will need to add bend points to help
-        Point midSourceYPoint = new Point(ptOrig.x, (ptTerm.y + ptOrig.y)/2);
         Point midTargetYPoint = new Point(ptTerm.x, (ptTerm.y + ptOrig.y)/2);
         // we compute the best bend point we can find around:
         PointList oldLine = routeFromConstraint(conn);
         int bestBendPointX = oldLine.getMidpoint().x;
+        int bestBendPointY = oldLine.getMidpoint().y;
         if (ptOrig.x + extra > bestBendPointX 
                 || ptTerm.x < bestBendPointX) {
             bestBendPointX = ptOrig.x + src.width + extra > ptTerm.x ? 
                     (ptOrig.x + ptTerm.x)/2 : ptOrig.x + src.width + extra;
+        }
+        if (ptOrig.y > ptTerm.y) {
+            if (ptOrig.y < bestBendPointY || ptTerm.y > bestBendPointY) {
+                bestBendPointY = (ptOrig.y + ptTerm.y)/2;
+            }
+        } else {
+            if (ptOrig.y > bestBendPointY || ptTerm.y < bestBendPointY) {
+                bestBendPointY = (ptOrig.y + ptTerm.y)/2;
+            }
         }
         if (gatewaySourceConstraint != NO_CONSTRAINT && gatewaySourceConstraint != CONSTRAINT_MIDDLE 
                 && ptOrig.x + extra < ptTerm.x) {
@@ -189,9 +195,8 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
                 newLine.addPoint(new Point(bestBendPointX, ptTerm.y));
             } else {
                 if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
-                    Point pointToConsider = gatewayTargetConstraint != NO_CONSTRAINT && 
-                        gatewayTargetConstraint != CONSTRAINT_MIDDLE ? midTargetYPoint : ptTerm; 
-                    newLine.addPoint(new Point(ptOrig.x, pointToConsider.y));
+                    newLine.addPoint(ptOrig.x, 
+                            gatewayTargetConstraint != NO_CONSTRAINT ? bestBendPointY : ptTerm.y);
                 }
             }
             
@@ -225,8 +230,8 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
                 }
             } else {
                 if (!areAlmostEqual(ptOrig.y, ptTerm.y)) {
-                    Point pointToConsider = gatewaySourceConstraint != NO_CONSTRAINT ? midSourceYPoint : ptOrig; 
-                    newLine.addPoint(ptTerm.x, pointToConsider.y);
+                    newLine.addPoint(ptTerm.x, 
+                            gatewaySourceConstraint != NO_CONSTRAINT ? bestBendPointY : ptOrig.y);
                 }
             }
         }
@@ -282,16 +287,22 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
                 int bottomLeftTargetY = target.y + target.height;
 
                 //now compute where we draw the line: above or below the 2 shapes.
-                int aboveY = -1;
+                PointList oldLine = routeFromConstraint(conn);
+                int middleY = oldLine.getMidpoint().y;
+                int aboveY = middleY;
                 int farRightX = -1;
                 //see if we should go in between the 2 shapes:
                 if (topRightSrcY > bottomLeftTargetY + extra && sourceGatewayConstraint != CONSTRAINT_BOTTOM) {
                     //src is below the target go in between:
-                    aboveY = (topRightSrcY + bottomLeftTargetY) /2;
+                    if (aboveY > topRightSrcY || aboveY < (bottomLeftTargetY +extra)) {
+                        aboveY = (topRightSrcY + bottomLeftTargetY) /2;
+                    }
                     farRightX = ptOrig.x + extra;
                 } else if (topLeftTargetY > bottomRightSrcY + extra) {
                     //target is below the src go in between:
-                    aboveY = (topLeftTargetY + bottomRightSrcY) /2;
+                    if (aboveY > topLeftTargetY || aboveY < (bottomRightSrcY + extra)) { 
+                        aboveY = (topLeftTargetY + bottomRightSrcY) /2;
+                    }
                     farRightX = ptOrig.x + extra;
                 } else {
                     int extraY = //extra;
@@ -322,6 +333,13 @@ public class EdgeRectilinearRouter extends RectilinearRouterEx {
                 } else {
                     if (ptOrig.x + extra >= ptTerm.x) {
                         if (sourceGatewayConstraint == CONSTRAINT_ON_TOP) {
+                            if (targetGatewayConstraint == CONSTRAINT_BOTTOM) {
+                                newLine.addPoint(new Point(ptOrig.x, aboveY));
+                                newLine.addPoint(new Point(ptTerm.x, aboveY));
+                                newLine.addPoint(ptTerm);
+                                return;
+                            }
+                            
                             newLine.addPoint(new Point(ptOrig.x, ptOrig.y - extra));
                             int minx = Math.min(ptOrig.x, ptTerm.x);
                             newLine.addPoint(new Point(minx - extra, ptOrig.y - extra));

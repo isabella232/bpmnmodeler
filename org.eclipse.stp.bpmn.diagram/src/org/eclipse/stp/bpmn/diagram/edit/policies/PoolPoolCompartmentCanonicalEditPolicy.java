@@ -10,25 +10,22 @@
  */
 package org.eclipse.stp.bpmn.diagram.edit.policies;
 
-import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
-import org.eclipse.gmf.runtime.notation.View;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.ArtifactsContainer;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Pool;
-
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 
 /**

@@ -12,15 +12,11 @@
  */
 package org.eclipse.stp.bpmn.diagram.providers;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Vector;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.Platform;
-import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalActionManager;
 import org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalPrintAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalAction;
 import org.eclipse.gmf.runtime.common.ui.action.global.GlobalActionId;
@@ -41,7 +37,6 @@ import org.eclipse.gmf.runtime.diagram.ui.printing.render.actions.RenderedPrintP
 import org.eclipse.gmf.runtime.diagram.ui.printing.render.providers.DiagramWithPrintGlobalActionHandler;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.jface.text.ITextSelection;
 import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.jface.viewers.StructuredSelection;

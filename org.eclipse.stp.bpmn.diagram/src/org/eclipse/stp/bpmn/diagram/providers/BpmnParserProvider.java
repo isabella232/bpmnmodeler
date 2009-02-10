@@ -18,7 +18,6 @@ import org.eclipse.gmf.runtime.common.ui.services.parser.IParser;
 import org.eclipse.gmf.runtime.common.ui.services.parser.IParserProvider;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.BpmnPackage;
-
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityName2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectName2EditPart;
@@ -32,7 +31,6 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.SequenceEdgeNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationName2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationNameEditPart;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 
 /**

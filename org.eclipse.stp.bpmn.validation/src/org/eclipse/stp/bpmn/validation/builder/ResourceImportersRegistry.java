@@ -15,9 +15,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
@@ -73,7 +75,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
      * The importer file always exist.
      */
     private Map<IResource,Set<IResource>> _importsIndexedByImporters =
-        new HashMap<IResource, Set<IResource>>();
+        new LinkedHashMap<IResource, Set<IResource>>();
     
     /**
      * the files that are imported by other files.
@@ -83,7 +85,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
      * the reverse of _importsIndexedByImporters.
      */
     private Map<IResource,Set<IResource>> _importersIndexedByImports =
-        new HashMap<IResource, Set<IResource>>();
+        new LinkedHashMap<IResource, Set<IResource>>();
     
     /**
      * @param importer The resource for which dependencies are registered.
@@ -111,7 +113,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
     public void addImport(IResource importer, IResource imported) {
         Set<IResource> imports = _importsIndexedByImporters.get(importer);
         if (imports == null) {
-            imports = new HashSet<IResource>();
+            imports = new LinkedHashSet<IResource>();
             _importsIndexedByImporters.put(importer, imports);
         }
         imports.add(imported);
@@ -119,7 +121,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
         //and the other index:
         Set<IResource> importers = _importersIndexedByImports.get(imported);
         if (importers == null) {
-            importers = new HashSet<IResource>();
+            importers = new LinkedHashSet<IResource>();
             _importersIndexedByImports.put(imported, importers);
         }
         importers.add(importer);
@@ -168,7 +170,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
             Properties props = new Properties();
             props.load(contents);
             for (Entry<Object,Object> kvp : props.entrySet()) {
-                Set<IResource> imports = new HashSet<IResource>();
+                Set<IResource> imports = new LinkedHashSet<IResource>();
                 String simporter = (String)kvp.getKey();
                 String simports = (String)kvp.getValue();
                 IResource importer = project.findMember(new Path(simporter));
@@ -186,7 +188,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
                     //and the mirror index:
                     Set<IResource> importers = _importersIndexedByImports.get(imported);
                     if (importers == null) {
-                        importers = new HashSet<IResource>();
+                        importers = new LinkedHashSet<IResource>();
                         _importersIndexedByImports.put(imported, importers);
                     }
                     importers.add(importer);
@@ -215,7 +217,28 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
     */
    public void save(IProject project, String importsCategory,
                IProgressMonitor monitor) throws CoreException {
-        Properties props = new Properties();
+	   //keep things in the same order.
+        Properties props = new Properties() {
+        	private static final long serialVersionUID = 1L;
+        	private LinkedHashMap<Object, Object> _orderedKeys = new LinkedHashMap<Object, Object>();
+        	@Override
+        	public Object put(Object key, Object value) {
+        		return _orderedKeys.put(key, value);
+        	}
+        	@Override
+        	public Object get(Object key) {
+        		return _orderedKeys.get(key);
+        	}
+        	@SuppressWarnings("unchecked")
+        	@Override
+        	public Enumeration<Object> keys() {
+        		return new IteratorWrapper(_orderedKeys.keySet().iterator());
+        	}
+        	@Override
+        	public Set<Entry<Object,Object>> entrySet() {
+        		return (Set<Entry<Object,Object>>) _orderedKeys.entrySet();
+        	}
+        };
         for (Entry<IResource, Set<IResource>> entry :
                     _importsIndexedByImporters.entrySet()) {
             Set<IResource> imports = entry.getValue();
@@ -248,11 +271,26 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
         try {
             //StringWriter writer = new StringWriter();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            props.store(out, "# index of importer -> set(imports)"); //$NON-NLS-1$
+            String topComment = "# index of importer -> set(imports)";
+            props.store(out, null); //$NON-NLS-1$
+            
+            //now remove the timestampt that java inserted at the top:
+            //latin1 is the encoding for properties.
+            String content = out.toString("ISO-8859-1"); //$NON-NLS-1$
+            int index = content.indexOf('\n');
+            int index2 = content.indexOf('\r');
+            if (index2 != -1 && index2 < index) {
+            	index = index2;
+            }
+            if (content.charAt(0) == '#' && index != -1) {
+            	content = topComment + content.substring(index+1);
+            } else {
+            	content = topComment + content.substring(index+1);
+            }
             
             IFile fileHandle = project.getFile(getStorageLocation(importsCategory));
             
-            closeMe = new ByteArrayInputStream(out.toByteArray());
+            closeMe = new ByteArrayInputStream(/*out.toByteArray()*/content.getBytes("ISO-8859-1")); //$NON-NLS-1$
             if (!fileHandle.exists()) {
                 if (!fileHandle.getParent().exists() &&
                         fileHandle.getParent() instanceof IFolder) {
@@ -407,3 +445,20 @@ class TransitiveImporters implements ITransitiveImporters {
     }
     
 }
+@SuppressWarnings("unchecked")
+class IteratorWrapper implements Enumeration {
+	Iterator iterator;
+
+	public IteratorWrapper(Iterator iterator) {
+		this.iterator = iterator;
+	}
+
+	public boolean hasMoreElements() {
+		return iterator.hasNext();
+	}
+
+	public Object nextElement() {
+		return iterator.next();
+	}
+}
+

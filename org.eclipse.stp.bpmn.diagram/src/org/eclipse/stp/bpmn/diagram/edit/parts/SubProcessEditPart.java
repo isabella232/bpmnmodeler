@@ -23,7 +23,6 @@ import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.StackLayout;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.draw2d.geometry.Insets;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.PrecisionPoint;
 import org.eclipse.draw2d.geometry.PrecisionRectangle;
 import org.eclipse.draw2d.geometry.Rectangle;
@@ -32,7 +31,6 @@ import org.eclipse.emf.common.util.EList;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.transaction.impl.TransactionalEditingDomainImpl;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
@@ -45,10 +43,7 @@ import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
 import org.eclipse.gef.requests.CreateConnectionRequest;
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gmf.runtime.common.core.command.CompositeCommand;
 import org.eclipse.gmf.runtime.diagram.core.edithelpers.CreateElementRequestAdapter;
-import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
-import org.eclipse.gmf.runtime.diagram.ui.commands.SetBoundsCommand;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
@@ -59,6 +54,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateUnspecifiedTypeConnecti
 import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
 import org.eclipse.gmf.runtime.emf.type.core.MetamodelType;
@@ -74,7 +70,6 @@ import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SubProcess;
-import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.actions.SetTransactionalAction;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SubProcessGraphicalNodeEditPolicy;
@@ -493,7 +488,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             setLayoutManager(new SubProcessLayout());
             // this is necessary as the g gets cut out currently.
             // FIXME remove when bug 194944 is fixed.
-            org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel spLabel = new org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel() {
+            WrappingLabel spLabel = new WrappingLabel() {
                 @Override
                 public void setBounds(Rectangle rect) {
                     rect.height += MapModeUtil.getMapMode(this).DPtoLP(1);
@@ -545,12 +540,12 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         /**
          * @generated
          */
-        private org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fSubProcessNameFigure;
+        private WrappingLabel fSubProcessNameFigure;
 
         /**
          * @generated
          */
-        public org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureSubProcessNameFigure() {
+        public WrappingLabel getFigureSubProcessNameFigure() {
             return fSubProcessNameFigure;
         }
 
@@ -558,7 +553,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
          * @generated
          */
         private void setFigureSubProcessNameFigure(
-                org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig) {
+                WrappingLabel fig) {
             fSubProcessNameFigure = fig;
         }
 

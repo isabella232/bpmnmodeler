@@ -53,7 +53,6 @@ import org.eclipse.stp.bpmn.Pool;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.commands.CreateRelationshipCommandEx;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
-import org.eclipse.stp.bpmn.diagram.edit.policies.ActivityItemSemanticEditPolicy.CreateIncomingMessagingEdge3002Command;
 import org.eclipse.stp.bpmn.diagram.providers.BpmnElementTypes;
 
 /**

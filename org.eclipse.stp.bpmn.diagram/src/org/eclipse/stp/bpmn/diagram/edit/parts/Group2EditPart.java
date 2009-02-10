@@ -25,6 +25,7 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
 import org.eclipse.gmf.runtime.notation.View;
@@ -266,7 +267,7 @@ public class Group2EditPart extends ShapeNodeEditPart {
          * @generated NOT wrappingLabel, set as wrapped and centered
          */
         private void createContents() {
-            org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig_0 = new org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel();
+            WrappingLabel fig_0 = new WrappingLabel();
             fig_0.setText(""); //$NON-NLS-1$
             fig_0.setTextWrap(true);
             fig_0.setAlignment(PositionConstants.TOP);
@@ -278,22 +279,21 @@ public class Group2EditPart extends ShapeNodeEditPart {
         }
 
         /**
-         * @generated
+         * @generated NOT WrappingLabel use
          */
-        private org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fGroupNameFigure;
+        private WrappingLabel fGroupNameFigure;
 
         /**
          * @generated
          */
-        public org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureGroupNameFigure() {
+        public WrappingLabel getFigureGroupNameFigure() {
             return fGroupNameFigure;
         }
 
         /**
          * @generated
          */
-        private void setFigureGroupNameFigure(
-                org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig) {
+        private void setFigureGroupNameFigure(WrappingLabel fig) {
             fGroupNameFigure = fig;
         }
 

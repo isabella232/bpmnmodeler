@@ -14,8 +14,8 @@ import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.emf.ecore.EClass;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gmf.runtime.diagram.core.providers.AbstractViewProvider;
-import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;
+import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityName2EditPart;
@@ -47,9 +47,7 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationName2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationNameEditPart;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
-
 import org.eclipse.stp.bpmn.diagram.view.factories.Activity2ViewFactory;
 import org.eclipse.stp.bpmn.diagram.view.factories.ActivityName2ViewFactory;
 import org.eclipse.stp.bpmn.diagram.view.factories.ActivityNameViewFactory;

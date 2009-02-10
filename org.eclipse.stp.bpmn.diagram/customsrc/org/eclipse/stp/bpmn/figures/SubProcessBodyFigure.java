@@ -15,10 +15,8 @@
  **/
 package org.eclipse.stp.bpmn.figures;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 
 /**
  * More to come.

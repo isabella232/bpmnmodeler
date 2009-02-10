@@ -42,7 +42,6 @@ import org.eclipse.gmf.runtime.notation.RoutingStyle;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.jface.preference.PreferenceConverter;
 import org.eclipse.stp.bpmn.Activity;
-import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.MessageVertex;
 import org.eclipse.stp.bpmn.MessagingEdge;

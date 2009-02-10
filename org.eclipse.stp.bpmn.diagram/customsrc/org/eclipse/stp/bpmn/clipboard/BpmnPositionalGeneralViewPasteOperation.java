@@ -18,15 +18,9 @@ package org.eclipse.stp.bpmn.clipboard;
 
 import java.util.List;
 
-import org.eclipse.emf.common.command.Command;
-import org.eclipse.emf.common.command.CompoundCommand;
 import org.eclipse.emf.common.util.TreeIterator;
 import org.eclipse.emf.ecore.EObject;
-import org.eclipse.emf.ecore.EReference;
 import org.eclipse.emf.ecore.util.EcoreUtil;
-import org.eclipse.emf.edit.domain.AdapterFactoryEditingDomain;
-import org.eclipse.emf.transaction.RecordingCommand;
-import org.eclipse.emf.transaction.TransactionalEditingDomain;
 import org.eclipse.gmf.runtime.emf.clipboard.core.ObjectInfo;
 import org.eclipse.gmf.runtime.emf.clipboard.core.OverridePasteChildOperation;
 import org.eclipse.gmf.runtime.emf.clipboard.core.PasteChildOperation;
@@ -34,8 +28,6 @@ import org.eclipse.gmf.runtime.emf.clipboard.core.PostPasteChildOperation;
 import org.eclipse.gmf.runtime.notation.Node;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Identifiable;
-import org.eclipse.stp.bpmn.Vertex;
-import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 
 /**
  * [hmalphettes] as advised in GMF Q&amp;answers regarding copy/paste support.

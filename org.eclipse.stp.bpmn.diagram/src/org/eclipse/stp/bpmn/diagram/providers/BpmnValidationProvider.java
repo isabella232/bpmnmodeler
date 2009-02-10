@@ -11,7 +11,6 @@
 package org.eclipse.stp.bpmn.diagram.providers;
 
 import java.lang.reflect.InvocationTargetException;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -24,57 +23,36 @@ import java.util.Set;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.resources.IResource;
-
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Status;
-
 import org.eclipse.emf.common.util.Diagnostic;
-
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.emf.ecore.util.Diagnostician;
-
 import org.eclipse.emf.transaction.TransactionalEditingDomain;
-
 import org.eclipse.emf.transaction.util.TransactionUtil;
-
 import org.eclipse.emf.validation.model.EvaluationMode;
 import org.eclipse.emf.validation.model.IConstraintStatus;
-
 import org.eclipse.emf.validation.service.IBatchValidator;
 import org.eclipse.emf.validation.service.ModelValidationService;
-
 import org.eclipse.emf.workspace.util.WorkspaceSynchronizer;
-
 import org.eclipse.gmf.runtime.common.ui.services.action.contributionitem.AbstractContributionItemProvider;
-
 import org.eclipse.gmf.runtime.common.ui.util.IWorkbenchPartDescriptor;
-
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-
 import org.eclipse.gmf.runtime.diagram.ui.parts.IDiagramWorkbenchPart;
-
 import org.eclipse.gmf.runtime.emf.core.util.EMFCoreUtil;
-
 import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.gmf.runtime.notation.View;
-
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
-
 import org.eclipse.jface.operation.IRunnableWithProgress;
-
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
-
 import org.eclipse.ui.IWorkbenchPart;
-
 import org.eclipse.ui.actions.WorkspaceModifyDelegatingOperation;
 
 /**

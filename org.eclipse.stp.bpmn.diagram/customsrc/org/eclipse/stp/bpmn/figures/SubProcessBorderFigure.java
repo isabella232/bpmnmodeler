@@ -19,16 +19,14 @@ import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Label;
 import org.eclipse.draw2d.RectangleFigure;
-import org.eclipse.draw2d.SchemeBorder;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.IMapMode;
 import org.eclipse.gmf.runtime.draw2d.ui.mapmode.MapModeUtil;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Activity2EditPart.ActivityFigure;
 import org.eclipse.stp.bpmn.diagram.ui.OvalSchemeBorder;
-import org.eclipse.stp.bpmn.diagram.ui.RoundedSchemeBorder;
-import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * Have a fixed height, the 

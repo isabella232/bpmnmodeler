@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.draw2d.ConnectionLocator;
+import org.eclipse.emf.ecore.EObject;
 import org.eclipse.gef.ConnectionEditPart;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
@@ -200,14 +201,17 @@ public class ConnectionEndPointEditPolicyEx extends ConnectionEndpointEditPolicy
                     }
                 }
 
-                if (editPart instanceof IGraphicalEditPart && 
-                        ((IGraphicalEditPart) editPart).resolveSemanticElement() instanceof Vertex) {
-                    Vertex target = (Vertex) ((IGraphicalEditPart) editPart).resolveSemanticElement();
-                    if (!target.getGraph().equals(g)) {
-                        IGraphicalEditPart newT = findParentTarget(super.getTargetEditPart(), g);
-                        if (newT != null) {
-                            editPart = newT;
-                        }
+                if (editPart instanceof IGraphicalEditPart) {
+                	EObject eobj = ((IGraphicalEditPart) editPart).resolveSemanticElement();
+                    if (eobj instanceof Vertex) {
+	                    Vertex target = (Vertex) eobj;
+	                    if (g != null && !g.equals(target.getGraph())) {
+	                        IGraphicalEditPart newT =
+	                        	findParentTarget(super.getTargetEditPart(), g);
+	                        if (newT != null) {
+	                            editPart = newT;
+	                        }
+	                    }
                     }
                 }
             }

@@ -11,13 +11,14 @@
 package org.eclipse.stp.bpmn.diagram.providers;
 
 import java.util.Map;
+
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.gef.palette.PaletteRoot;
 import org.eclipse.gmf.runtime.common.core.service.AbstractProvider;
 import org.eclipse.gmf.runtime.common.core.service.IOperation;
 import org.eclipse.gmf.runtime.diagram.ui.services.palette.IPaletteProvider;
-import org.eclipse.ui.IEditorPart;
 import org.eclipse.stp.bpmn.diagram.part.BpmnPaletteFactory;
+import org.eclipse.ui.IEditorPart;
 
 /**
  * @generated

@@ -14,20 +14,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.eclipse.core.runtime.IAdaptable;
-
 import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EcoreFactory;
-
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-
 import org.eclipse.gmf.runtime.diagram.ui.view.factories.AbstractShapeViewFactory;
-
 import org.eclipse.gmf.runtime.notation.NotationFactory;
 import org.eclipse.gmf.runtime.notation.View;
-
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.DataObjectNameEditPart;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 
 /**

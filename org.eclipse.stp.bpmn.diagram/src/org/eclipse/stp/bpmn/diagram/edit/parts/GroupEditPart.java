@@ -13,43 +13,29 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.StackLayout;
-import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.DragTracker;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
-import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.Request;
-
 import org.eclipse.gef.commands.Command;
-
 import org.eclipse.gef.editpolicies.LayoutEditPolicy;
 import org.eclipse.gef.editpolicies.NonResizableEditPolicy;
-
 import org.eclipse.gef.requests.CreateRequest;
-import org.eclipse.gef.requests.SelectionRequest;
-
 import org.eclipse.gmf.runtime.diagram.ui.editparts.ShapeNodeEditPart;
-
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.DiagramAssistantEditPolicy;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
-import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
-
 import org.eclipse.gmf.runtime.draw2d.ui.figures.ConstrainedToolbarLayout;
-
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.gmf.runtime.gef.ui.figures.DefaultSizeNodeFigure;
 import org.eclipse.gmf.runtime.gef.ui.figures.NodeFigure;
-
 import org.eclipse.gmf.runtime.notation.View;
-
 import org.eclipse.stp.bpmn.diagram.edit.policies.GroupCanonicalEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.GroupGraphicalNodeEditPolicy;
 import org.eclipse.stp.bpmn.diagram.edit.policies.GroupItemSemanticEditPolicy;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 import org.eclipse.stp.bpmn.policies.BpmnDragDropEditPolicy;
 import org.eclipse.stp.bpmn.policies.ConnectionHandleEditPolicyEx;
 import org.eclipse.stp.bpmn.policies.OpenFileEditPolicy;
-import org.eclipse.stp.bpmn.policies.ResizableArtifactEditPolicy;
 import org.eclipse.stp.bpmn.policies.ResizableGroupEditPolicy;
 import org.eclipse.stp.bpmn.tools.GroupDragTracker;
 
@@ -281,7 +267,7 @@ public class GroupEditPart extends ShapeNodeEditPart {
          * @generated NOT wrappingLabel, set as wrapped and centered
          */
         private void createContents() {
-            org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig_0 = new org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel();
+            WrappingLabel fig_0 = new WrappingLabel();
             fig_0.setText(""); //$NON-NLS-1$
             fig_0.setTextWrap(true);
             fig_0.setAlignment(PositionConstants.TOP);
@@ -295,20 +281,19 @@ public class GroupEditPart extends ShapeNodeEditPart {
         /**
          * @generated
          */
-        private org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fGroupNameFigure;
+        private WrappingLabel fGroupNameFigure;
 
         /**
          * @generated
          */
-        public org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel getFigureGroupNameFigure() {
+        public WrappingLabel getFigureGroupNameFigure() {
             return fGroupNameFigure;
         }
 
         /**
          * @generated
          */
-        private void setFigureGroupNameFigure(
-                org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel fig) {
+        private void setFigureGroupNameFigure(WrappingLabel fig) {
             fGroupNameFigure = fig;
         }
 

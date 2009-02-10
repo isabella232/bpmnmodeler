@@ -940,8 +940,6 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                     getDecoration().setToolTip(toolTip);
                 }
             }
-            
         }
-        
     }
 }

@@ -15,15 +15,10 @@ import java.util.Map;
 
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.emf.ecore.EObject;
-
 import org.eclipse.gef.EditPart;
-
 import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
-
 import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
-
 import org.eclipse.gmf.runtime.emf.ui.providers.marker.AbstractModelMarkerNavigationProvider;
-
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Identifiable;
 

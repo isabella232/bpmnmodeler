@@ -6,9 +6,7 @@ Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin
 Bundle-Vendor: %providerName
 Bundle-Localization: plugin
-Export-Package: org.eclipse.draw2d,
- org.eclipse.draw2d.text,
- org.eclipse.stp.bpmn.commands,
+Export-Package: org.eclipse.stp.bpmn.commands,
  org.eclipse.stp.bpmn.diagram,
  org.eclipse.stp.bpmn.diagram.actions,
  org.eclipse.stp.bpmn.diagram.actions.associationdirectiontypes,
@@ -33,8 +31,7 @@ Export-Package: org.eclipse.draw2d,
  org.eclipse.stp.bpmn.properties,
  org.eclipse.stp.bpmn.properties.section,
  org.eclipse.stp.bpmn.tools,
- org.eclipse.stp.gmf.runtime.draw2d.ui.figures,
- org.eclipse.stp.gmf.runtime.draw2d.ui.text
+ org.eclipse.stp.gmf.runtime.draw2d.ui.figures
 Bundle-ActivationPolicy: lazy
 Bundle-RequiredExecutionEnvironment: J2SE-1.5
 Require-Bundle: com.ibm.icu,

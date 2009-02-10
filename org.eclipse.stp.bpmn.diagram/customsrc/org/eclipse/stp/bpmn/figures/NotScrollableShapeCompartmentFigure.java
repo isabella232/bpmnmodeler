@@ -17,7 +17,6 @@ package org.eclipse.stp.bpmn.figures;
 
 import java.util.Iterator;
 
-import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FreeformLayout;
 import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.IFigure;

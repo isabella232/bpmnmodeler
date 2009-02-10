@@ -19,7 +19,6 @@ import org.eclipse.gmf.runtime.common.ui.services.properties.IPropertiesProvider
 import org.eclipse.gmf.runtime.emf.ui.properties.providers.GenericEMFPropertiesProvider;
 import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.diagram.edit.parts.BpmnDiagramEditPart;
-
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 
 /**

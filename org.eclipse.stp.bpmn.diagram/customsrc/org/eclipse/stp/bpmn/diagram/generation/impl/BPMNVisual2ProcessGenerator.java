@@ -69,7 +69,6 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartme
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBorderCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotation2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.TextAnnotationEditPart;
-import org.eclipse.stp.bpmn.diagram.generation.impl.BPMNProcessGenerator.InternalRecordingCommand;
 import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.diagram.part.BpmnVisualIDRegistry;
 

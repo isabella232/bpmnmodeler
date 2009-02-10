@@ -24,7 +24,6 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gef.LayerConstants;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.editparts.LayerManager;
-import org.eclipse.gmf.runtime.common.core.command.ICommand;
 import org.eclipse.gmf.runtime.common.ui.services.icon.IconService;
 import org.eclipse.gmf.runtime.diagram.ui.tools.PopupBarTool;
 import org.eclipse.gmf.runtime.emf.type.core.IElementType;

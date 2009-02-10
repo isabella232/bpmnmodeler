@@ -10,11 +10,9 @@
  *******************************************************************************/
 package org.eclipse.stp.bpmn.figures;
 
-import org.eclipse.draw2d.ColorConstants;
-import org.eclipse.draw2d.Graphics;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 import org.eclipse.stp.bpmn.figures.activities.ActivityPainter;
-import org.eclipse.stp.gmf.runtime.draw2d.ui.figures.WrappingLabel;
 
 /**
  * Wrap label that maintains its tooltip.
