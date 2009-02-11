@@ -103,18 +103,13 @@ public class RectilinearRouterEx extends ObliqueRouter implements OrthogonalRout
      * Route the connection accordingly to the router paradigm.
      */
     public void routeBendpoints(Connection conn) {
-        if ((conn.getSourceAnchor() == null)
-            || (conn.getTargetAnchor() == null))
-            return;
-
-        PointList points = new PointList();
-        
-        //get rid of the connection to self:
-        if (conn.getSourceAnchor().getOwner() ==
-            conn.getTargetAnchor().getOwner()) {
-            conn.setPoints(points);
+        if (conn.getSourceAnchor() == null || conn.getTargetAnchor() == null
+        		|| conn.getSourceAnchor().getOwner() == conn.getTargetAnchor().getOwner()) {
+        	//connection not ready or connection to self.
             return;
         }
+
+        PointList points = new PointList();
         
         /*if (isAvoidingObstructions(conn)) {
 //            points = RouterHelper.getInstance().routeAroundObstructions(conn); 
