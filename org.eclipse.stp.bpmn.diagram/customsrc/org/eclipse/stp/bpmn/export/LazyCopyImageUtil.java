@@ -12,19 +12,34 @@
 package org.eclipse.stp.bpmn.export;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.gmf.runtime.common.core.util.Trace;
+import org.eclipse.gmf.runtime.common.ui.services.editor.EditorService;
+import org.eclipse.gmf.runtime.diagram.core.preferences.PreferencesHint;
+import org.eclipse.gmf.runtime.diagram.core.util.ViewUtil;
+import org.eclipse.gmf.runtime.diagram.ui.editparts.DiagramEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.image.ImageFileFormat;
+import org.eclipse.gmf.runtime.diagram.ui.image.PartPositionInfo;
+import org.eclipse.gmf.runtime.diagram.ui.parts.DiagramEditor;
+import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramGenerator;
 import org.eclipse.gmf.runtime.diagram.ui.render.clipboard.DiagramSVGGenerator;
+import org.eclipse.gmf.runtime.diagram.ui.render.internal.DiagramUIRenderPlugin;
 import org.eclipse.gmf.runtime.diagram.ui.render.util.CopyToImageUtil;
+import org.eclipse.gmf.runtime.diagram.ui.util.DiagramEditorUtil;
+import org.eclipse.gmf.runtime.notation.Diagram;
 import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.graphics.ImageData;
 import org.eclipse.swt.graphics.ImageLoader;
 import org.eclipse.swt.graphics.PaletteData;
 import org.eclipse.swt.graphics.RGB;
+import org.eclipse.swt.widgets.Shell;
 
 /**
  * This extends the CopyImageUtil class
@@ -282,5 +297,93 @@ public class LazyCopyImageUtil extends CopyToImageUtil {
         int green = Math.round((colour.green + 25) / 51) * 51;
         int blue = Math.round((colour.blue + 25) / 51) * 51;
         return new RGB(red, green, blue);
+    }
+    
+    /**
+     * Copied here to work around 264483.
+     * Copies the diagram to an image file in the specified format.
+     * 
+     * @param diagram
+     *            the diagram to be copied
+     * @param destination
+     *            the destination file, including path and file name
+     * @param format
+     *            the image file format
+     * @param monitor
+     *            progress monitor.
+     * @param preferencesHint
+     *            The preference hint that is to be used to find the appropriate
+     *            preference store from which to retrieve diagram preference
+     *            values. The preference hint is mapped to a preference store in
+     *            the preference registry <@link DiagramPreferencesRegistry>.
+     * @return A list of {@link PartPositionInfo} objects with details regarding
+     *         each top-level editpart on the diagram represented in the image.
+     * @exception CoreException
+     *                if this method fails
+     */
+    public List copyToImage(Diagram diagram, IPath destination,
+            ImageFileFormat format, IProgressMonitor monitor,
+            PreferencesHint preferencesHint)
+        throws CoreException {
+
+        Trace.trace(DiagramUIRenderPlugin.getInstance(),
+            "Copy diagram to Image " + destination + " as " + format); //$NON-NLS-1$ //$NON-NLS-2$
+        
+        List partInfo = Collections.EMPTY_LIST;
+        
+        DiagramEditor openedDiagramEditor = findOpenedDiagramEditorForID(ViewUtil.getIdStr(diagram));
+        if (openedDiagramEditor != null) {
+            DiagramGenerator generator = copyToImage(openedDiagramEditor.getDiagramEditPart(),
+                    destination, format, monitor);
+                partInfo = generator.getDiagramPartInfo(openedDiagramEditor.getDiagramEditPart());
+        } else {
+    
+            Shell shell = new Shell();
+            try {
+                DiagramEditPart diagramEditPart = createDiagramEditPart(diagram,
+                    shell, preferencesHint);
+                Assert.isNotNull(diagramEditPart);
+                DiagramGenerator generator = copyToImage(diagramEditPart,
+                    destination, format, monitor);
+                partInfo = generator.getDiagramPartInfo(diagramEditPart);
+            } finally {
+                shell.dispose();
+            }
+        }
+
+        return partInfo;
+    }
+    
+    /**
+     * Copied here to work around 264483
+     * Finds the <code>DiagramEditor</code> that is opened for the diagram
+     * with the given diagram view id.
+     * 
+     * @param id
+     *            diagram view's id
+     * @return an opened editor that displays the diagram with the given diagram
+     *         view id
+     */
+    public DiagramEditor findOpenedDiagramEditorForID(String id) {
+        if (id != null) {
+            List diagramEditors = EditorService.getInstance()
+                    .getRegisteredEditorParts();
+            Iterator it = diagramEditors.iterator();
+            while (it.hasNext()) {
+                Object obj = it.next();
+                if (obj instanceof DiagramEditor) {
+                    DiagramEditor diagramEditor = (DiagramEditor) obj;
+                    if (diagramEditor.getDiagramEditPart() == null) {
+                        continue;
+                    }
+                    if (id.equals(ViewUtil.getIdStr(diagramEditor
+                            .getDiagramEditPart().getDiagramView()))) {
+                        return diagramEditor;
+                    }
+                }
+            }
+        }
+        // no matching guid found
+        return null;
     }
 }
