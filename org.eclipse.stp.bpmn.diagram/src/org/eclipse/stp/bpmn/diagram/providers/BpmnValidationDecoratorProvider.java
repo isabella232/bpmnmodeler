@@ -878,7 +878,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
                         toolTip = comositeLabel;
                     }
                     toolTip.add(new Label(marker.getAttribute(
-                            IMarker.MESSAGE, ""),
+                            IMarker.MESSAGE, ""), //$NON-NLS-1$
                             //use the direct access to shared images
                             //to avoid calling PlatformUI when the workbench
                             //is not started
