@@ -290,7 +290,7 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
             case BpmnPackage.SUB_PROCESS__EVENT_HANDLERS:
                 return getEventHandlers();
             case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
-                return isIsTransaction() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsTransaction();
         }
         return super.eGet(featureID, resolve, coreType);
     }
@@ -321,7 +321,7 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
                 getEventHandlers().addAll((Collection<? extends Activity>)newValue);
                 return;
             case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
-                setIsTransaction(((Boolean)newValue).booleanValue());
+                setIsTransaction((Boolean)newValue);
                 return;
         }
         super.eSet(featureID, newValue);

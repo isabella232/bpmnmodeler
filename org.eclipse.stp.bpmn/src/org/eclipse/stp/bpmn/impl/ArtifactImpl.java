@@ -157,7 +157,7 @@ public class ArtifactImpl extends IdentifiableImpl implements Artifact {
      * @generated
      */
     public ArtifactsContainer getArtifactsContainer() {
-        if (eContainerFeatureID != BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER) return null;
+        if (eContainerFeatureID() != BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER) return null;
         return (ArtifactsContainer)eContainer();
     }
 
@@ -177,7 +177,7 @@ public class ArtifactImpl extends IdentifiableImpl implements Artifact {
      * @generated
      */
     public void setArtifactsContainer(ArtifactsContainer newArtifactsContainer) {
-        if (newArtifactsContainer != eInternalContainer() || (eContainerFeatureID != BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER && newArtifactsContainer != null)) {
+        if (newArtifactsContainer != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER && newArtifactsContainer != null)) {
             if (EcoreUtil.isAncestor(this, newArtifactsContainer))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -297,7 +297,7 @@ public class ArtifactImpl extends IdentifiableImpl implements Artifact {
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.ARTIFACT__ARTIFACTS_CONTAINER:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.ARTIFACTS_CONTAINER__ARTIFACTS, ArtifactsContainer.class, msgs);
         }

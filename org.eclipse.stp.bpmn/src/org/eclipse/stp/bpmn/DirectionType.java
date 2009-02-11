@@ -28,37 +28,37 @@ public enum DirectionType implements Enumerator
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @see #NONE
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	NONE_LITERAL(0, BpmnMessages.DirectionType_none, "None"),  //$NON-NLS-2$
+	NONE_LITERAL(0, BpmnMessages.DirectionType_none, "None"),  //$NON-NLS-1$
 	/**
      * The '<em><b>To</b></em>' literal object.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @see #TO
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	TO_LITERAL(1, BpmnMessages.DirectionType_to, "To"),  //$NON-NLS-2$
+	TO_LITERAL(1, BpmnMessages.DirectionType_to, "To"),  //$NON-NLS-1$
 	/**
      * The '<em><b>From</b></em>' literal object.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @see #FROM
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	FROM_LITERAL(2, BpmnMessages.DirectionType_from, "From"),  //$NON-NLS-2$
+	FROM_LITERAL(2, BpmnMessages.DirectionType_from, "From"),  //$NON-NLS-1$
 	/**
      * The '<em><b>Both</b></em>' literal object.
      * <!-- begin-user-doc -->
 	 * <!-- end-user-doc -->
      * @see #BOTH
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	BOTH_LITERAL(3, BpmnMessages.DirectionType_both, "Both");  //$NON-NLS-2$
+	BOTH_LITERAL(3, BpmnMessages.DirectionType_both, "Both");  //$NON-NLS-1$
 	/**
      * The '<em><b>None</b></em>' literal value.
      * <!-- begin-user-doc -->

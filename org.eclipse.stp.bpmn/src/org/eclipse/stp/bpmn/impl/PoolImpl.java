@@ -136,7 +136,7 @@ public class PoolImpl extends GraphImpl implements Pool {
      * @generated
      */
     public BpmnDiagram getBpmnDiagram() {
-        if (eContainerFeatureID != BpmnPackage.POOL__BPMN_DIAGRAM) return null;
+        if (eContainerFeatureID() != BpmnPackage.POOL__BPMN_DIAGRAM) return null;
         return (BpmnDiagram)eContainer();
     }
 
@@ -156,7 +156,7 @@ public class PoolImpl extends GraphImpl implements Pool {
      * @generated
      */
     public void setBpmnDiagram(BpmnDiagram newBpmnDiagram) {
-        if (newBpmnDiagram != eInternalContainer() || (eContainerFeatureID != BpmnPackage.POOL__BPMN_DIAGRAM && newBpmnDiagram != null)) {
+        if (newBpmnDiagram != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.POOL__BPMN_DIAGRAM && newBpmnDiagram != null)) {
             if (EcoreUtil.isAncestor(this, newBpmnDiagram))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -223,7 +223,7 @@ public class PoolImpl extends GraphImpl implements Pool {
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.POOL__BPMN_DIAGRAM:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.BPMN_DIAGRAM__POOLS, BpmnDiagram.class, msgs);
         }

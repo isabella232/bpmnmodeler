@@ -150,7 +150,7 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
      * @generated
      */
     public BpmnDiagram getBpmnDiagram() {
-        if (eContainerFeatureID != BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM) return null;
+        if (eContainerFeatureID() != BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM) return null;
         return (BpmnDiagram)eContainer();
     }
 
@@ -170,7 +170,7 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
      * @generated
      */
     public void setBpmnDiagram(BpmnDiagram newBpmnDiagram) {
-        if (newBpmnDiagram != eInternalContainer() || (eContainerFeatureID != BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM && newBpmnDiagram != null)) {
+        if (newBpmnDiagram != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM && newBpmnDiagram != null)) {
             if (EcoreUtil.isAncestor(this, newBpmnDiagram))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -460,7 +460,7 @@ public class MessagingEdgeImpl extends AssociationTargetImpl implements Messagin
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.MESSAGING_EDGE__BPMN_DIAGRAM:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.BPMN_DIAGRAM__MESSAGES, BpmnDiagram.class, msgs);
         }

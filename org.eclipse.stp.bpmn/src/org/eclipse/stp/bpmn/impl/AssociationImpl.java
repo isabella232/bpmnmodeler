@@ -146,7 +146,7 @@ public class AssociationImpl extends EModelElementImpl implements Association {
      * @generated
      */
 	public Artifact getSource() {
-        if (eContainerFeatureID != BpmnPackage.ASSOCIATION__SOURCE) return null;
+        if (eContainerFeatureID() != BpmnPackage.ASSOCIATION__SOURCE) return null;
         return (Artifact)eContainer();
     }
 
@@ -166,7 +166,7 @@ public class AssociationImpl extends EModelElementImpl implements Association {
      * @generated
      */
     public void setSource(Artifact newSource) {
-        if (newSource != eInternalContainer() || (eContainerFeatureID != BpmnPackage.ASSOCIATION__SOURCE && newSource != null)) {
+        if (newSource != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.ASSOCIATION__SOURCE && newSource != null)) {
             if (EcoreUtil.isAncestor(this, newSource))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -267,7 +267,7 @@ public class AssociationImpl extends EModelElementImpl implements Association {
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.ASSOCIATION__SOURCE:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.ARTIFACT__ASSOCIATIONS, Artifact.class, msgs);
         }

@@ -355,7 +355,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
      * @generated
      */
 	public SubProcess getEventHandlerFor() {
-        if (eContainerFeatureID != BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR) return null;
+        if (eContainerFeatureID() != BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR) return null;
         return (SubProcess)eContainer();
     }
 
@@ -375,7 +375,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
      * @generated
      */
 	public void setEventHandlerFor(SubProcess newEventHandlerFor) {
-        if (newEventHandlerFor != eInternalContainer() || (eContainerFeatureID != BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR && newEventHandlerFor != null)) {
+        if (newEventHandlerFor != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR && newEventHandlerFor != null)) {
             if (EcoreUtil.isAncestor(this, newEventHandlerFor))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -534,7 +534,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
      */
 	@Override
 	public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.SUB_PROCESS__EVENT_HANDLERS, SubProcess.class, msgs);
         }
@@ -569,7 +569,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
             case BpmnPackage.ACTIVITY__ACTIVITY_TYPE:
                 return getActivityType();
             case BpmnPackage.ACTIVITY__LOOPING:
-                return isLooping() ? Boolean.TRUE : Boolean.FALSE;
+                return isLooping();
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 return getEventHandlerFor();
         }
@@ -617,7 +617,7 @@ public class ActivityImpl extends VertexImpl implements Activity {
                 setActivityType((ActivityType)newValue);
                 return;
             case BpmnPackage.ACTIVITY__LOOPING:
-                setLooping(((Boolean)newValue).booleanValue());
+                setLooping((Boolean)newValue);
                 return;
             case BpmnPackage.ACTIVITY__EVENT_HANDLER_FOR:
                 setEventHandlerFor((SubProcess)newValue);

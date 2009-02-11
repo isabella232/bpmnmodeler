@@ -28,28 +28,28 @@ public enum SequenceFlowConditionType implements Enumerator
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #NONE
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	NONE_LITERAL(0, BpmnMessages.SequenceFlowConditionType_none, "None"),  //$NON-NLS-2$
+	NONE_LITERAL(0, BpmnMessages.SequenceFlowConditionType_none, "None"),  //$NON-NLS-1$
 	/**
      * The '<em><b>Expression</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #EXPRESSION
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	EXPRESSION_LITERAL(1, BpmnMessages.SequenceFlowConditionType_expression, "Expression"),  //$NON-NLS-2$
+	EXPRESSION_LITERAL(1, BpmnMessages.SequenceFlowConditionType_expression, "Expression"),  //$NON-NLS-1$
 	/**
      * The '<em><b>Default</b></em>' literal object.
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
      * @see #DEFAULT
-     * @generated
+     * @generated NOT i18n
      * @ordered
      */
-	DEFAULT_LITERAL(2, BpmnMessages.SequenceFlowConditionType_default, "Default");  //$NON-NLS-2$
+	DEFAULT_LITERAL(2, BpmnMessages.SequenceFlowConditionType_default, "Default");  //$NON-NLS-1$
 	/**
      * The '<em><b>None</b></em>' literal value.
      * <!-- begin-user-doc -->

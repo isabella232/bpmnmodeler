@@ -217,7 +217,7 @@ public class LaneImpl extends AssociationTargetImpl implements Lane {
      * @generated
      */
     public Pool getPool() {
-        if (eContainerFeatureID != BpmnPackage.LANE__POOL) return null;
+        if (eContainerFeatureID() != BpmnPackage.LANE__POOL) return null;
         return (Pool)eContainer();
     }
 
@@ -237,7 +237,7 @@ public class LaneImpl extends AssociationTargetImpl implements Lane {
      * @generated
      */
     public void setPool(Pool newPool) {
-        if (newPool != eInternalContainer() || (eContainerFeatureID != BpmnPackage.LANE__POOL && newPool != null)) {
+        if (newPool != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.LANE__POOL && newPool != null)) {
             if (EcoreUtil.isAncestor(this, newPool))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -294,7 +294,7 @@ public class LaneImpl extends AssociationTargetImpl implements Lane {
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.LANE__POOL:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.POOL__LANES, Pool.class, msgs);
         }

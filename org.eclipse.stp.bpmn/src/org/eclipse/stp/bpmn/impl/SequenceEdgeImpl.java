@@ -230,7 +230,7 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
      * @generated
      */
     public Graph getGraph() {
-        if (eContainerFeatureID != BpmnPackage.SEQUENCE_EDGE__GRAPH) return null;
+        if (eContainerFeatureID() != BpmnPackage.SEQUENCE_EDGE__GRAPH) return null;
         return (Graph)eContainer();
     }
 
@@ -250,7 +250,7 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
      * @generated
      */
     public void setGraph(Graph newGraph) {
-        if (newGraph != eInternalContainer() || (eContainerFeatureID != BpmnPackage.SEQUENCE_EDGE__GRAPH && newGraph != null)) {
+        if (newGraph != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.SEQUENCE_EDGE__GRAPH && newGraph != null)) {
             if (EcoreUtil.isAncestor(this, newGraph))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -544,7 +544,7 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.SEQUENCE_EDGE__GRAPH:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.GRAPH__SEQUENCE_EDGES, Graph.class, msgs);
         }
@@ -568,7 +568,7 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
             case BpmnPackage.SEQUENCE_EDGE__CONDITION_TYPE:
                 return getConditionType();
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
-                return isIsDefault() ? Boolean.TRUE : Boolean.FALSE;
+                return isIsDefault();
             case BpmnPackage.SEQUENCE_EDGE__SOURCE:
                 return getSource();
             case BpmnPackage.SEQUENCE_EDGE__TARGET:
@@ -600,7 +600,7 @@ public class SequenceEdgeImpl extends AssociationTargetImpl implements SequenceE
                 setConditionType((SequenceFlowConditionType)newValue);
                 return;
             case BpmnPackage.SEQUENCE_EDGE__IS_DEFAULT:
-                setIsDefault(((Boolean)newValue).booleanValue());
+                setIsDefault((Boolean)newValue);
                 return;
             case BpmnPackage.SEQUENCE_EDGE__SOURCE:
                 setSource((Vertex)newValue);

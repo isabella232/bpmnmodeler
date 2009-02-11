@@ -114,7 +114,7 @@ public class VertexImpl extends AssociationTargetImpl implements Vertex {
      * @generated
      */
     public Graph getGraph() {
-        if (eContainerFeatureID != BpmnPackage.VERTEX__GRAPH) return null;
+        if (eContainerFeatureID() != BpmnPackage.VERTEX__GRAPH) return null;
         return (Graph)eContainer();
     }
 
@@ -134,7 +134,7 @@ public class VertexImpl extends AssociationTargetImpl implements Vertex {
      * @generated
      */
     public void setGraph(Graph newGraph) {
-        if (newGraph != eInternalContainer() || (eContainerFeatureID != BpmnPackage.VERTEX__GRAPH && newGraph != null)) {
+        if (newGraph != eInternalContainer() || (eContainerFeatureID() != BpmnPackage.VERTEX__GRAPH && newGraph != null)) {
             if (EcoreUtil.isAncestor(this, newGraph))
                 throw new IllegalArgumentException("Recursive containment not allowed for " + toString());
             NotificationChain msgs = null;
@@ -195,7 +195,7 @@ public class VertexImpl extends AssociationTargetImpl implements Vertex {
      */
     @Override
 				public NotificationChain eBasicRemoveFromContainerFeature(NotificationChain msgs) {
-        switch (eContainerFeatureID) {
+        switch (eContainerFeatureID()) {
             case BpmnPackage.VERTEX__GRAPH:
                 return eInternalContainer().eInverseRemove(this, BpmnPackage.GRAPH__VERTICES, Graph.class, msgs);
         }
