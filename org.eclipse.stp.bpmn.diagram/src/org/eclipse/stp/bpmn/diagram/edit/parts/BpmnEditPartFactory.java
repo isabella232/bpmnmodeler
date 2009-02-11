@@ -10,6 +10,7 @@
  */
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
+import org.eclipse.core.runtime.Platform;
 import org.eclipse.draw2d.DelegatingLayout;
 import org.eclipse.draw2d.Figure;
 import org.eclipse.draw2d.FigureUtilities;
@@ -208,6 +209,8 @@ public class BpmnEditPartFactory implements EditPartFactory {
             return new LabelCellEditorLocator((Label) figure);
         }
     }
+    
+    static boolean IS_CARBON = SWT.getPlatform().equals("carbon"); //$NON-NLS-1$
     /**
      * @param source the <code>GraphicalEditPart</code> that is used to determine which
      * <code>CellEditor</code> class to use.
@@ -216,6 +219,9 @@ public class BpmnEditPartFactory implements EditPartFactory {
     public static final Class getTextCellEditorClass(GraphicalEditPart source){
         IFigure figure = source.getFigure();
                 
+        if (IS_CARBON) {
+            return TextCellEditorEx.class;
+        }
         if (figure instanceof WrappingLabel && ((WrappingLabel) figure).isTextWrapOn())
             return WrapTextCellEditorEx.class;
         
