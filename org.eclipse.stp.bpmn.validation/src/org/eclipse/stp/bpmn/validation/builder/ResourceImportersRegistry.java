@@ -271,10 +271,10 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
         try {
             //StringWriter writer = new StringWriter();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            String topComment = "# index of importer -> set(imports)";
+            String topComment = "# index of importer -> set(imports)"; //$NON-NLS-1$
             props.store(out, null); //$NON-NLS-1$
             
-            //now remove the timestampt that java inserted at the top:
+            //now remove the timestamp that java inserted at the top:
             //latin1 is the encoding for properties.
             String content = out.toString("ISO-8859-1"); //$NON-NLS-1$
             int index = content.indexOf('\n');
