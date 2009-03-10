@@ -15,7 +15,7 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Interface used in the extension point associated with a key (String)
@@ -40,7 +40,7 @@ public interface IEAnnotationDecorator {
 	 * @return an image descriptor according to the element 
 	 * and the annotation associated with it.
 	 */
-	public ImageDescriptor getImageDescriptor(EditPart part, EModelElement element,
+	public Image getImage(EditPart part, EModelElement element,
 			EAnnotation annotation);
 	
 	/**

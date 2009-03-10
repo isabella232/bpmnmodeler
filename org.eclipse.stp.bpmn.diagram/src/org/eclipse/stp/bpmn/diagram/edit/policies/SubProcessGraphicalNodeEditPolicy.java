@@ -35,6 +35,7 @@ import org.eclipse.gmf.runtime.common.core.command.CommandResult;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.MessagingEdge;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.SubProcess;
@@ -123,7 +124,7 @@ public class SubProcessGraphicalNodeEditPolicy extends
 			}};
 		Collections.sort(points, comparator);
 		// now applies the command that will do the job.
-		final SubProcess target = ((SubProcess) ((IGraphicalEditPart) moving.getTarget()).resolveSemanticElement());
+		final Activity target = ((Activity) ((IGraphicalEditPart) moving.getTarget()).resolveSemanticElement());
 		CompoundCommand compound = new CompoundCommand();
 		
 		AbstractTransactionalCommand command = 

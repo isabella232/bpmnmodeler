@@ -19,10 +19,10 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator;
 import org.eclipse.stp.bpmn.sample.bugDnD.BugDnDPlugin;
 import org.eclipse.stp.bpmn.sample.bugDnD.dnd.BugDnDHandler;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * The bug annotation decorator.
@@ -42,9 +42,12 @@ public class BugAnnotationDecorator implements IEAnnotationDecorator {
         return Direction.SOUTH_WEST;
     }
 
-    public ImageDescriptor getImageDescriptor(EditPart part,
+    public Image getImage(EditPart part,
             EModelElement element, EAnnotation annotation) {
-        return BugDnDPlugin.imageDescriptorFromPlugin(BugDnDPlugin.PLUGIN_ID, "icons/bug_decorator.gif");
+        
+        //leaky! don't do this at home!
+        return BugDnDPlugin.imageDescriptorFromPlugin(BugDnDPlugin.PLUGIN_ID, 
+                "icons/bug_decorator.gif").createImage();
     }
 
     public IFigure getToolTip(EditPart part, EModelElement element,

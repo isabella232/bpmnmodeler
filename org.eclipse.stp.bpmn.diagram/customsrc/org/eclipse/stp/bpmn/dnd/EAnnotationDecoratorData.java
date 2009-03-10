@@ -15,8 +15,8 @@ package org.eclipse.stp.bpmn.dnd;
 
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator2.IEAnnotationDecoratorData;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * @see IEAnnotationDecoratorData
@@ -28,7 +28,7 @@ import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator2.IEAnnotationDecoratorData
 public class EAnnotationDecoratorData implements IEAnnotationDecoratorData {
 
     private Direction _direction;
-    private ImageDescriptor _imageDescriptor;
+    private Image _image;
     private IFigure _tooltip;
 
     public void setDirection(Direction dir) {
@@ -43,15 +43,15 @@ public class EAnnotationDecoratorData implements IEAnnotationDecoratorData {
         return _direction;
     }
 
-    public void setImageDescriptor(ImageDescriptor desc) {
-        _imageDescriptor = desc;
+    public void setImage(Image desc) {
+        _image = desc;
     }
     
     /**
      * @return the image
      */
-    public ImageDescriptor getImageDescriptor() {
-        return _imageDescriptor;
+    public Image getImage() {
+        return _image;
     }
 
     public void setTooltip(IFigure fig) {

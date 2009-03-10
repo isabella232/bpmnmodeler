@@ -13,12 +13,15 @@
  */
 package org.eclipse.stp.bpmn.diagram.ui;
 
+import org.eclipse.jface.window.ToolTip;
+import org.eclipse.swt.widgets.Control;
+
 /**
- * @author atoulme
  * an interface used by the PopupMenuWithDisableSupport.
  * If an item of the popup menu implements this interface,
  * it enables it to be shown as disabled when the popup menu 
  * is created.
+ * @author atoulme
  */
 public interface IMenuItemWithDisableSupport {
 
@@ -28,4 +31,10 @@ public interface IMenuItemWithDisableSupport {
 	 * on the popup menu.
 	 */
 	public boolean isEnabled();
+	
+	/**
+	 * @param parent The control where the tooltip is displayed
+	 * @return The tooltip to use for this menu item
+	 */
+	public ToolTip getToolTip(Control parent);
 }

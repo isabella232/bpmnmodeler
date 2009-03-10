@@ -370,6 +370,9 @@ public class MultipleShapesMoveTool extends SimpleDragTracker {
      * the right or the left.
      */
     protected void showSourceFeedback() {
+        if (_container == null) {
+            return;
+        }
         if (guideline.getParent() == null) {
             addFeedback(guideline);
         }

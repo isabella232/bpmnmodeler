@@ -19,8 +19,8 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
-import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 
@@ -50,10 +50,10 @@ public class AnnotationDecorator implements IEAnnotationDecorator {
     /* (non-Javadoc)
      * @see org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator#getImageDescriptor(org.eclipse.gef.EditPart, org.eclipse.emf.ecore.EModelElement, org.eclipse.emf.ecore.EAnnotation)
      */
-    public ImageDescriptor getImageDescriptor(EditPart part,
+    public Image getImage(EditPart part,
             EModelElement element, EAnnotation annotation) {
         return PlatformUI.getWorkbench().getSharedImages().
-            getImageDescriptor(ISharedImages.IMG_OBJ_FILE);
+            getImage(ISharedImages.IMG_OBJ_FILE);
     }
 
     /* (non-Javadoc)

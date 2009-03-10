@@ -32,8 +32,8 @@ import org.eclipse.gmf.runtime.diagram.ui.editparts.ConnectionNodeEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.editpolicies.EditPolicyRoles;
+import org.eclipse.gmf.runtime.diagram.ui.l10n.DiagramColorRegistry;
 import org.eclipse.gmf.runtime.draw2d.ui.figures.BaseSlidableAnchor;
-import org.eclipse.gmf.runtime.draw2d.ui.figures.FigureUtilities;
 import org.eclipse.gmf.runtime.notation.Edge;
 import org.eclipse.gmf.runtime.notation.IdentityAnchor;
 import org.eclipse.gmf.runtime.notation.NotationPackage;
@@ -167,10 +167,10 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
         public ConnectionMessageFigure() {
             this.setLineStyle(org.eclipse.draw2d.Graphics.LINE_CUSTOM);
             this.setLineDash(DASHES);
-            this.setForegroundColor(FigureUtilities.integerToColor(
-                    FigureUtilities.RGBToInteger(
+            this.setForegroundColor(
+            		DiagramColorRegistry.getInstance().getColor(
                             PreferenceConverter.getColor(BpmnDiagramEditorPlugin.PREF_STORE,
-                                    BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_COLOR))));
+                                    BpmnDiagramPreferenceInitializer.PREF_MSG_LINE_COLOR)));
             setSourceDecoration(createSourceDecoration());
             setTargetDecoration(createTargetDecoration());
         }

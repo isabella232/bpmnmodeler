@@ -146,7 +146,7 @@
                   id="org.eclipse.stp.bpmn.validation.controlledFlows"
                   lang="java"
                   mode="Batch"
-                  name="Controlled flows"
+                  name="%constraint.name.8"
                   severity="ERROR"
                   statusCode="1">
                <message>
@@ -156,7 +156,7 @@
                      class="SequenceEdge">
                </target>
                <description>
-                  This constraint applies to default and conditional flows. Default flows only may be used when conditional flows are present, and conditional flows may only be shown when their source isn't a gateway and that there is more than one flow going out of their source.
+                  %constraint.description.8
                </description>
             </constraint>
          </constraints>
@@ -223,7 +223,7 @@
          point="org.eclipse.stp.bpmn.diagram.DecorationFilter">
       <filter
             id="org.eclipse.stp.bpmn.validation.filter.bpmnvalidationfilter"
-            name="BPMN validation"
+            name="%filter.name.0"
             onByDefault="false">
          <marker
                code="1"

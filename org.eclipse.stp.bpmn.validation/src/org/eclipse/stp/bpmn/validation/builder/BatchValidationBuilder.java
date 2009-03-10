@@ -157,12 +157,13 @@ public class BatchValidationBuilder extends IncrementalProjectBuilder {
 				incrementalBuild(delta, monitor);
 			}
 		}
-        IResourceImportersRegistry rep = BpmnValidationPlugin
-            .getResourceImportersRegistry(getProject(),
-                    GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID, monitor);
-        if (rep.isDirty()) {
-            rep.save(getProject(), GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID, monitor);
-        }
+		//no need the save participant is working now finally.
+//        IResourceImportersRegistry rep = BpmnValidationPlugin
+//            .getResourceImportersRegistry(getProject(),
+//                    GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID, monitor);
+//        if (rep.isDirty()) {
+//            rep.save(getProject(), GENERIC_FILE_IMPORT_INDEX_CATEGORY_ID, monitor);
+//        }
 		return null;
 	}
     
