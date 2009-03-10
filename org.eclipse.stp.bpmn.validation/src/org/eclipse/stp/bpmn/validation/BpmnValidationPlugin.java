@@ -28,6 +28,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.NullProgressMonitor;
 import org.eclipse.core.runtime.Platform;
+import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 import org.eclipse.emf.common.util.Diagnostic;
 import org.eclipse.emf.ecore.EObject;
@@ -39,13 +40,12 @@ import org.eclipse.stp.bpmn.validation.builder.ResourceImportersRegistry;
 import org.eclipse.stp.bpmn.validation.builder.ValidationMarkerCustomAttributes;
 import org.eclipse.stp.bpmn.validation.quickfixes.IBpmnMarkerResolutionProvider;
 import org.eclipse.ui.PlatformUI;
-import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 /**
  * The Bpmn Diagram Editor activator.
  */
-public class BpmnValidationPlugin extends AbstractUIPlugin {
+public class BpmnValidationPlugin extends Plugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "org.eclipse.stp.bpmn.validation"; //$NON-NLS-1$
@@ -159,17 +159,13 @@ public class BpmnValidationPlugin extends AbstractUIPlugin {
             }
 
             public void saving(ISaveContext context) throws CoreException {
-                Map<String,IResourceImportersRegistry> importIndexes =
-                    CACHE.get(context.getProject());
-                
-                if (importIndexes != null) {
-                    for (Entry<String,IResourceImportersRegistry> entry : 
-                                importIndexes.entrySet()) {
-                        entry.getValue().save(
-                                context.getProject(), entry.getKey(),
-                                new NullProgressMonitor());
-                    }
-                }
+            	IProject[] projects = context.getProject() == null
+            			? ResourcesPlugin.getWorkspace().getRoot().getProjects()
+            			: new IProject[] {context.getProject()};
+            	
+            	for (IProject proj : projects) {
+            		saveImportersRegistries(proj);
+            	}
             }
         };
         ResourcesPlugin.getWorkspace().addSaveParticipant(this, _saveParticipant);
@@ -211,6 +207,32 @@ java.lang.Exception: Generated exception.
         CACHE = null;
         ResourcesPlugin.getWorkspace().removeSaveParticipant(this);
 		super.stop(context);
+	}
+	
+	/**
+	 * @param proj Save the importers registries for a given project.
+	 */
+	public void saveImportersRegistries(IProject proj) {
+		if (!proj.isAccessible()) {
+			return;
+		}
+        Map<String,IResourceImportersRegistry> importIndexes =
+            CACHE.get(proj);
+        
+        if (importIndexes != null) {
+            for (Entry<String,IResourceImportersRegistry> entry : 
+                        importIndexes.entrySet()) {
+            	if (entry.getValue().isDirty()) {
+            		try {
+						entry.getValue().save(
+						    proj, entry.getKey(),
+						    new NullProgressMonitor());
+					} catch (CoreException e) {
+						getLog().log(e.getStatus());
+					}
+            	}
+            }
+        }
 	}
 
 	/**

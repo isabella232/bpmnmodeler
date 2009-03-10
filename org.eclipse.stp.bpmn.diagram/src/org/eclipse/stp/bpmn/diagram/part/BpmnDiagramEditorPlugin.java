@@ -314,18 +314,18 @@ public class BpmnDiagramEditorPlugin extends AbstractUIPlugin {
     /**
      * Finds the image for a particular annotation source.
      */
-    public ImageDescriptor findAnnotationImage(EModelElement elt, String annotationSource) {
+    public Image findAnnotationImage(EModelElement elt, String annotationSource) {
         Object deco = BpmnDiagramEditorPlugin.getInstance().
             getEAnnotationDecorator(annotationSource);
         if (deco instanceof IEAnnotationDecorator) {
-            return ((IEAnnotationDecorator) deco).getImageDescriptor(null, elt,
+            return ((IEAnnotationDecorator) deco).getImage(null, elt,
                     elt.getEAnnotation(annotationSource));
         } else if (deco instanceof IEAnnotationDecorator2) {
             Collection<IEAnnotationDecoratorData> decorators = 
                 ((IEAnnotationDecorator2) deco).getDecorators(null,elt,
                     elt.getEAnnotation(annotationSource));
             if (!decorators.isEmpty()) {
-                return decorators.iterator().next().getImageDescriptor();
+                return decorators.iterator().next().getImage();
             }
         }
         return null;

@@ -65,6 +65,7 @@ import org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.jface.viewers.ILabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.AssociationEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeEditPart;
@@ -117,62 +118,6 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
     private EditPolicy previousEditPolicy;
     
     /**
-     * Dummy class used to store the handler and associate it
-     * an index.
-     * @author atoulme
-     *
-     */
-    private class DnDHandlerMenuItemData 
-    	implements IMenuItemWithDisableSupport {
-    	
-    	public IDnDHandler handler;
-    	
-    	public int index;
-
-    	/**
-    	 * simple implementation of the isEnabled() method
-    	 * that delegates to the handler.
-    	 */
-		public boolean isEnabled() {
-			return handler.isEnabled(
-					(IGraphicalEditPart) getHost(), 
-					index);
-		}
-    }
-    
-    /**
-     * Label provider that provides a label and an image to
-     * the popup menu items of the popup menu that the user
-     * chooses from.
-     * It delegates its calls to the IDnDHandler.
-     * @author atoulme
-     *
-     */
-    private class DnDHandlerDelegateLabelProvider extends LabelProvider {
-
-        public Image getImage(Object element) {
-        	if (element instanceof DnDHandlerMenuItemData) {
-        		DnDHandlerMenuItemData data = 
-        				(DnDHandlerMenuItemData) element;
-        		return data.handler.getMenuItemImage(
-        				(IGraphicalEditPart) getHost(), data.index);
-        	}
-            return null;
-        }
-
-        public String getText(Object element) {
-        	if (element instanceof DnDHandlerMenuItemData) {
-        		DnDHandlerMenuItemData data = 
-        				(DnDHandlerMenuItemData) element;
-        		return data.handler.getMenuItemLabel(
-        				(IGraphicalEditPart) getHost(), data.index);
-        	}
-            return null;
-        }
-    }
-    
-
-    /**
      * @return true if the request is of the type 
      * {@link RequestConstants#REQ_DROP_OBJECTS}
      * and that the request's objects' collection isn't empty.
@@ -196,6 +141,7 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
         }
         
         final DropObjectsRequest dropRequest = (DropObjectsRequest) request;
+        
         // cache the eobjects produced on this part
         List<IDnDHandler> dndHandlers = null;
 //        final List<IStatus> messages = null;
@@ -270,59 +216,29 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
             protected CommandResult doExecuteWithResult(IProgressMonitor monitor, IAdaptable info) 
             throws ExecutionException {
             	try {
-            		// we ain't need no balloon no more.
-//          		List<IStatus> messages = accept(handlers, dropRequest);
-
-//          		if (!messages.isEmpty()) {
-//          		if (_balloon == null) {
-//          		_balloon = new PopupBalloon((IGraphicalEditPart) getHost());
-//          		_balloon.setDisappearanceDelay(3000);
-//          		// showing the balloon longer as it is shown
-//          		// only once per edit part.
-//          		} 
-//          		if (_balloon.isShowing() && !_balloon.showsOnThisEditPart(getHost())) {
-//          		_balloon.hide();
-//          		}
-////        		the message has already been shown once
-//          		// on this edit part and this edit part was the last
-//          		// one on which it was shown.
-//          		// do nothing.
-//          		if (!_balloon.isShowing() && !_balloon.showsOnThisEditPart(getHost())) {
-//          		for (IStatus descriptor : messages){
-//          		_balloon.addPopupBarDescriptor(descriptor.getMessage(),
-//          		descriptor.getSeverity());
-//          		}
-
-//          		_balloon.showBalloon(
-//          		getBalloonPosition(dropRequest.getLocation().getCopy()), 
-//          		getHost());
-//          		}
-//          		}
-
-//          		if (descriptors.size() == 1) {
-//          		drop(descriptors.get(0), dropRequest);
-//          		} else {
             		// we create a popup command to get one view
-            		ILabelProvider provider = 
-            			new DnDHandlerDelegateLabelProvider();
+            		IGraphicalEditPart gHost = (IGraphicalEditPart)getHost();
+            		ILabelProvider provider = new DnDHandlerDelegateLabelProvider(gHost);
 
             		// build the menu items
             		List<DnDHandlerMenuItemData> items = 
             			new ArrayList<DnDHandlerMenuItemData>();
             		for (IDnDHandler handler : handlers) {
             		    int itemCount = handler instanceof IDnDHandler2 ?
-            		            ((IDnDHandler2) handler).getItemCount((IGraphicalEditPart) getHost())
+            		            ((IDnDHandler2) handler).getItemCount(gHost)
             		            : handler.getItemCount();
             			for (int i = 0 ; i < itemCount; i++) {
-            				DnDHandlerMenuItemData data = new DnDHandlerMenuItemData();
+            				DnDHandlerMenuItemData data = new DnDHandlerMenuItemData(handler, i, gHost);
             				data.handler = handler;
             				data.index = i;
             				items.add(data);
             			}
             		}
+//            		System.err.println("dropLoc.x = " + dropLocation.x);
+            		
             		PopupMenuWithDisableSupport popupMenu = 
-            			new PopupMenuWithDisableSupport(items, 
-            					provider);
+            			new PopupMenuWithDisableSupport(items, provider,
+            					dropRequest.getLocation(), getHost().getViewer());
             		PopupMenuCommand popupCmd = new PopupMenuCommand("",  //$NON-NLS-1$
             				new Shell(), popupMenu);
             		popupCmd.execute(monitor, info);
@@ -592,3 +508,75 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
     }
     
 }
+/**
+ * Dummy class used to store the handler and associate it
+ * an index.
+ */
+class DnDHandlerMenuItemData implements IMenuItemWithDisableSupport {
+	
+	public IDnDHandler handler;
+	public int index;
+	private final IGraphicalEditPart _host;
+	
+	DnDHandlerMenuItemData(IDnDHandler handler, int index, IGraphicalEditPart host) {
+		this.handler = handler;
+		this.index = index;
+		_host = host;
+	}
+
+	/**
+	 * simple implementation of the isEnabled() method
+	 * that delegates to the handler.
+	 */
+	public boolean isEnabled() {
+		return handler.isEnabled(_host,	index);
+	}
+	
+	/**
+	 * @return The tooltip to use for this menu item
+	 */
+	public ToolTip getToolTip(Control parent) {
+		if (handler instanceof IDnDHandler.IToolTipProvider) {
+    		return ((IDnDHandler.IToolTipProvider) handler)
+    			.getMenuItemToolTip(parent, _host, index);
+    	}
+		return null;
+
+	}
+}
+
+/**
+ * Label provider that provides a label and an image to
+ * the popup menu items of the popup menu that the user
+ * chooses from.
+ * It delegates its calls to the IDnDHandler.
+ */
+class DnDHandlerDelegateLabelProvider extends LabelProvider {
+	
+	private final IGraphicalEditPart _host;
+	
+	DnDHandlerDelegateLabelProvider(IGraphicalEditPart host) {
+		_host = host;
+	}
+
+    public Image getImage(Object element) {
+    	if (element instanceof DnDHandlerMenuItemData) {
+    		DnDHandlerMenuItemData data = 
+    				(DnDHandlerMenuItemData) element;
+    		return data.handler.getMenuItemImage(_host, data.index);
+    	}
+        return null;
+    }
+
+    public String getText(Object element) {
+    	if (element instanceof DnDHandlerMenuItemData) {
+    		DnDHandlerMenuItemData data = 
+    				(DnDHandlerMenuItemData) element;
+    		return data.handler.getMenuItemLabel(_host, data.index);
+    	}
+        return null;
+    }
+    
+
+}
+

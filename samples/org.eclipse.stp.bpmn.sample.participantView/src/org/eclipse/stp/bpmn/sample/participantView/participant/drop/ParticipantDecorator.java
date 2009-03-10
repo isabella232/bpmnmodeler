@@ -20,6 +20,7 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator;
 import org.eclipse.stp.bpmn.sample.participantView.ParticipantViewPlugin;
 import org.eclipse.stp.bpmn.sample.participantView.participant.ParticipantConstants;
+import org.eclipse.swt.graphics.Image;
 
 /**
  * Decorator for participants.
@@ -56,11 +57,12 @@ public class ParticipantDecorator implements IEAnnotationDecorator {
 		return new Label("Performed by " + name + " (" + role + ")");
 	}
 
-    public ImageDescriptor getImageDescriptor(EditPart part,
+    public Image getImage(EditPart part,
             EModelElement element, EAnnotation annotation) {
+        //it's leaky! Don't do this at home!
         ImageDescriptor desc = ParticipantViewPlugin.imageDescriptorFromPlugin(
                 ParticipantViewPlugin.PLUGIN_ID, "icons/participant.gif");
-        return desc;
+        return desc.createImage();
     }
 
 }

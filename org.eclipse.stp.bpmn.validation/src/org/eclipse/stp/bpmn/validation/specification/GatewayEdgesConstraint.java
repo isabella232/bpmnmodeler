@@ -39,7 +39,7 @@ public class GatewayEdgesConstraint extends AbstractModelConstraint {
                 String named = gateway.getName() == null ? "" : //$NON-NLS-1$
                 	BpmnValidationMessages.bind(BpmnValidationMessages.GatewayEdgesConstraint_named,
                         gateway.getName());
-                return ctx.createFailureStatus(new String[] {named});
+                return ctx.createFailureStatus(new Object[] {named});
             }
         }
         return ctx.createSuccessStatus();

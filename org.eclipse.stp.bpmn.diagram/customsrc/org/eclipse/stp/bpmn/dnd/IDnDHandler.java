@@ -16,7 +16,9 @@ package org.eclipse.stp.bpmn.dnd;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.gef.commands.Command;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
+import org.eclipse.jface.window.ToolTip;
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.widgets.Control;
 
 /**
  * The IDnDHandler interface specifies how the modeler handles the 
@@ -102,4 +104,19 @@ public interface IDnDHandler {
 	 *
 	 */
 	public void dispose();
+	
+	/**
+	 * IDnDHandler that also implement this interface can provide tooltips when
+	 * the user interacts with the drop-down menu.
+	 */
+	public interface IToolTipProvider {
+		/**
+		 * @param parent The control where the tooltip is displayed
+		 * @param hoverPart The current edit part
+		 * @param index The index in the menu items
+		 * @return The tooltip to use for this menu item. It is recreated every time.
+		 */
+		public ToolTip getMenuItemToolTip(Control parent, IGraphicalEditPart hoverPart, int index);
+	}
+	
 }

@@ -1233,7 +1233,7 @@
       <filter
             icon="icons/obj16/file_obj.gif"
             id="org.eclipse.stp.bpmn.diagram.filter.genericFileFilter"
-            name="File Attachment"
+            name="%filter.name.0"
             onByDefault="false">
          <source value="genericFile"/>
       </filter>

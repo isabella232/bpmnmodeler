@@ -91,7 +91,9 @@ public class BPMNVisual2ProcessGenerator extends BPMNProcessGenerator {
 	}
 	/**
 	 * Will create a new diagram on the new file.
-	 * @param path the path - it'd better be ending with bpmn_diagram.
+	 * @param path. The full path in the workspace where the diagram is generated.
+	 * recommended to end with bpmn_diagram to be opened by default
+	 * by the bpmn editor later.
 	 */
 	public BPMNVisual2ProcessGenerator(IPath path) {
 		super(path);

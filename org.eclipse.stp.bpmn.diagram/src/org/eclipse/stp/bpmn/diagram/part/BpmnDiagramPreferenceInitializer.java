@@ -204,6 +204,7 @@ public class BpmnDiagramPreferenceInitializer extends
         internalSetDefaultFontPref(getPreferenceStore());
         internalSetFillColorPref(getPreferenceStore());
         
+        getPreferenceStore().setDefault(IPreferenceConstants.PREF_SNAP_TO_GRID, false);
         getPreferenceStore().setDefault(IPreferenceConstants.PREF_SNAP_TO_GEOMETRY, true);
         getPreferenceStore().setDefault(PREF_SNAP_TO_GEOMETRY, true);
         getPreferenceStore().setDefault(PREF_CONN_DIAG_ASSISTANT_DELAY_MS, 0);

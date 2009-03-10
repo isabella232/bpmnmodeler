@@ -20,7 +20,7 @@ import org.eclipse.emf.ecore.EAnnotation;
 import org.eclipse.emf.ecore.EModelElement;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget;
-import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.swt.graphics.Image;
 
 /**
 * Interface used in the extension point associated with a key (String)
@@ -64,7 +64,7 @@ public interface IEAnnotationDecorator2 {
         /**
          * @return the image
          */
-        public ImageDescriptor getImageDescriptor();
+        public Image getImage();
         
         /**
          * @return the tooltip.

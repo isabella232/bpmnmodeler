@@ -96,7 +96,7 @@ public class BPMNProcessGenerator implements IProcessGenerator {
 	}
 	/**
 	 * @see BPMNProcessGenerator#BPMNProcessGenerator(IPath, boolean)
-	 * @param path
+	 * @param path. The full path in the workspace where the diagram is generated.
 	 */
 	public BPMNProcessGenerator(IPath path) {
 		this(path, false);

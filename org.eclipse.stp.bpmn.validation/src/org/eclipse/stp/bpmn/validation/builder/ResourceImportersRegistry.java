@@ -198,6 +198,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
             
         } catch (Throwable t) {
             //mark this object as a clean build required?
+        	t.printStackTrace();
         } finally {
             if (contents != null) {
                 try {
@@ -271,7 +272,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
         try {
             //StringWriter writer = new StringWriter();
             ByteArrayOutputStream out = new ByteArrayOutputStream();
-            String topComment = "# index of importer -> set(imports)"; //$NON-NLS-1$
+            String topComment = "# index of importer -> set(imports)\n"; //$NON-NLS-1$
             props.store(out, null); //$NON-NLS-1$
             
             //now remove the timestamp that java inserted at the top:

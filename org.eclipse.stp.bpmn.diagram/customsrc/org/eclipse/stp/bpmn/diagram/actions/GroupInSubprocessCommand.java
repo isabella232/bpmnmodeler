@@ -222,6 +222,18 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         final Node spview = (Node) ((IAdaptable) 
                 ((List) req.getNewObject()).get(0)).getAdapter(Node.class);
         _createdSubprocessProxyId = EMFCoreUtil.getProxyID(spview.getElement());
+        
+        // collecting semantic elements:
+        final List<EObject> semantic = new LinkedList<EObject>(); 
+        for (GraphicalEditPart part : editParts) {
+            semantic.add(part.resolveSemanticElement());
+            if (part.resolveSemanticElement() instanceof Activity) {
+                Graph graph = ((Activity) part.resolveSemanticElement()).getGraph();
+                graph.getVertices().remove(part.resolveSemanticElement());
+                ((Activity) part.resolveSemanticElement()).setGraph(null);
+            }
+        }
+        
 //       retargeting connections.
 
         for (SequenceEdgeEditPart part : externalSrcConnections) {
@@ -260,12 +272,11 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         }
 
 
-        final List<EObject> semantic = new LinkedList<EObject>(); 
+        
         Location sploc = (Location) spview.getLayoutConstraint();
         
         for (GraphicalEditPart part : editParts) {
             View v = (View) part.getModel();
-            semantic.add(part.resolveSemanticElement());
             compartmentView.insertChild(v);
             
             if (v instanceof Node) {
@@ -326,9 +337,6 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         //second move the activities:               
         for (EObject obj : semantic) {
             if (obj instanceof Activity) {
-                Graph graph = ((Activity) obj).getGraph();
-                graph.getVertices().remove(obj);
-                ((Activity) obj).setGraph(null);
                 ((Activity) obj).setGraph((Graph) spview.getElement());
             }
         }

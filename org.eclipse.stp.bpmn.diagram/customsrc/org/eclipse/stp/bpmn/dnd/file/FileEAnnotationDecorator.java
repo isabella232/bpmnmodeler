@@ -27,7 +27,9 @@ import org.eclipse.gef.EditPart;
 import org.eclipse.gmf.runtime.diagram.ui.services.decorator.IDecoratorTarget.Direction;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.jface.resource.ImageRegistry;
+import org.eclipse.stp.bpmn.diagram.part.BpmnDiagramEditorPlugin;
 import org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.ui.ISharedImages;
 import org.eclipse.ui.PlatformUI;
 import org.eclipse.ui.model.IWorkbenchAdapter;
@@ -60,12 +62,12 @@ public class FileEAnnotationDecorator implements IEAnnotationDecorator {
 	/* (non-Javadoc)
 	 * @see org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator#getImage(org.eclipse.gef.EditPart, org.eclipse.emf.ecore.EModelElement, org.eclipse.emf.ecore.EAnnotation)
 	 */
-	public ImageDescriptor getImageDescriptor(EditPart part, EModelElement element,
+	public Image getImage(EditPart part, EModelElement element,
 			EAnnotation annotation) {
 		if (element == null) {
 			if (PlatformUI.isWorkbenchRunning()) {
 				return PlatformUI.getWorkbench().
-					getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FILE);
+					getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 			} else {
 				return null;
 			}
@@ -93,16 +95,30 @@ public class FileEAnnotationDecorator implements IEAnnotationDecorator {
 			Platform.getAdapterManager()
                     .getAdapter(ourResource, ImageRegistry.class);
 		if (customizer != null) {
-			return customizer.getDescriptor(ourResource.getFileExtension());
+			return customizer.get(ourResource.getFileExtension());
 		}
 		IWorkbenchAdapter adapter = (IWorkbenchAdapter) 
 		    Platform.getAdapterManager()
                     .getAdapter(ourResource, IWorkbenchAdapter.class);
 		if (adapter == null) {
 			return PlatformUI.getWorkbench().
-				getSharedImages().getImageDescriptor(ISharedImages.IMG_OBJ_FILE);
+				getSharedImages().getImage(ISharedImages.IMG_OBJ_FILE);
 		} else {
-			return adapter.getImageDescriptor(ourResource);
+		    ImageDescriptor desc = adapter.getImageDescriptor(ourResource);
+		    if (desc != null) {
+		        // an attempt at avoiding recreating the image every time.
+		        // this certainly will prove leaky.
+		        Image img = BpmnDiagramEditorPlugin.getInstance().getImageRegistry().
+		            get(desc.toString());
+		        if (img == null) {
+		            BpmnDiagramEditorPlugin.getInstance().getImageRegistry().put(
+		                    desc.toString(), desc);
+		            img = BpmnDiagramEditorPlugin.getInstance().getImageRegistry().
+                        get(desc.toString());
+		        }
+		        return img;
+		    }
+			return null;
 		}
 	}
 

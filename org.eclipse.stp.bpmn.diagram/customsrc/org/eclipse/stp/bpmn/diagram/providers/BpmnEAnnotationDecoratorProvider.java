@@ -274,12 +274,12 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 					// there might be no decorator for the annotation
 					if (decorator != null) {
 					    if (decorator instanceof IEAnnotationDecorator) {
-					        ImageDescriptor descriptor = ((IEAnnotationDecorator) decorator)
-                                .getImageDescriptor(editPart, elt, ann);
+					        Image image = ((IEAnnotationDecorator) decorator)
+                                .getImage(editPart, elt, ann);
 					        Direction direction = 
                                 ((IEAnnotationDecorator) decorator).getDirection(editPart, elt, ann);
 					        IFigure tooltip = ((IEAnnotationDecorator) decorator).getToolTip(editPart, elt, ann);
-					        decorate(descriptor, tooltip, direction, editPart, elt, ann, view);
+					        decorate(image, tooltip, direction, editPart, elt, ann, view);
 					    } else if (decorator instanceof IEAnnotationDecorator2) {
 					        Collection<IEAnnotationDecoratorData> decs = ((IEAnnotationDecorator2) decorator).getDecorators(editPart, elt, ann);
 					        if (decs == null) {
@@ -289,10 +289,10 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 					            if (data == null) { 
 					                continue; 
 					            }
-					            ImageDescriptor descriptor = data.getImageDescriptor();
+					            Image image = data.getImage();
 					            Direction direction = data.getDirection();
 					            IFigure tooltip = data.getToolTip();
-					            decorate(descriptor, tooltip, direction, editPart, elt, ann, view);
+					            decorate(image, tooltip, direction, editPart, elt, ann, view);
 					        }
 					    }
 						if (editPart instanceof GraphicalEditPart) {
@@ -303,16 +303,11 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 			}
 		}
 
-		private void decorate(ImageDescriptor descriptor, IFigure tooltip, 
+		private void decorate(Image image, IFigure tooltip, 
 		        Direction direction, EditPart editPart, EModelElement elt, 
 		        EAnnotation ann, View view) {
 	        // there might be no descriptor for the decoration as well.
-	        if (descriptor != null) {
-	            Image image = images.get(descriptor);
-	            if (image == null) {
-	                image = descriptor.createImage();
-	                images.put(descriptor, image);
-	            }
+	        if (image != null) {
 	            IFigure parentFigure = ((GraphicalEditPart)
 	                    decoratorTarget.
 	                    getAdapter(GraphicalEditPart.class))
