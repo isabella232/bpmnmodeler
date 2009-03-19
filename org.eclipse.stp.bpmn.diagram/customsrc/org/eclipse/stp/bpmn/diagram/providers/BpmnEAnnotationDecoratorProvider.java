@@ -14,6 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.eclipse.core.runtime.IStatus;
+import org.eclipse.core.runtime.Status;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.Locator;
 import org.eclipse.draw2d.PositionConstants;
@@ -274,8 +276,21 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 					// there might be no decorator for the annotation
 					if (decorator != null) {
 					    if (decorator instanceof IEAnnotationDecorator) {
-					        Image image = ((IEAnnotationDecorator) decorator)
-                                .getImage(editPart, elt, ann);
+					    	Image image = null;
+					    	try {
+						        image = ((IEAnnotationDecorator) decorator)
+	                                .getImage(editPart, elt, ann);
+					    	} catch (AbstractMethodError t) {
+					    		BpmnDiagramEditorPlugin.getInstance()
+					    			.getLog().log(new Status(IStatus.ERROR,
+					    					BpmnDiagramEditorPlugin.ID,
+					    					"The IEAnnotationDecorator " + decorator.getClass().getName() + //$NON-NLS-1$
+					    					" is obsolete. It must impleemnt the method getImage(...)." + //$NON-NLS-1$
+					    					" it used to be getImageDescriptor but that was leaking SWT " + //$NON-NLS-1$
+					    					"images during the SVG generation.")); //$NON-NLS-1$
+//					    		image = PlatformUI.getWorkbench().getSharedImages().getImage(
+//					    				ISharedImages.IMG_OBJ_FILE);
+					    	}
 					        Direction direction = 
                                 ((IEAnnotationDecorator) decorator).getDirection(editPart, elt, ann);
 					        IFigure tooltip = ((IEAnnotationDecorator) decorator).getToolTip(editPart, elt, ann);
@@ -295,9 +310,6 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 					            decorate(image, tooltip, direction, editPart, elt, ann, view);
 					        }
 					    }
-						if (editPart instanceof GraphicalEditPart) {
-							
-						}
 					}
 				}
 			}
@@ -308,10 +320,8 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 		        EAnnotation ann, View view) {
 	        // there might be no descriptor for the decoration as well.
 	        if (image != null) {
-	            IFigure parentFigure = ((GraphicalEditPart)
-	                    decoratorTarget.
-	                    getAdapter(GraphicalEditPart.class))
-	                    .getFigure();
+	            IFigure parentFigure = ((GraphicalEditPart)decoratorTarget
+	                .getAdapter(GraphicalEditPart.class)).getFigure();
 	            if (parentFigure == null) {
 	                parentFigure = ((GraphicalEditPart)
 	                        ((GraphicalEditPart)decoratorTarget
@@ -337,8 +347,7 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 	                parentFigure.add(figure);
 	                figure.setSize(image.getBounds().width,
 	                        image.getBounds().height);
-	                IDecoration deco = decoratorTarget
-	                .addDecoration(figure,
+	                IDecoration deco = decoratorTarget.addDecoration(figure,
 	                        new StickyToBorderLocator(
 	                                parentFigure,
 	                                getPositionConstant(direction),

@@ -14,9 +14,12 @@
  */
 package org.eclipse.stp.bpmn.policies;
 
+import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
@@ -301,6 +304,7 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
         });
         return co;
     }
+    
     /**
      * 
      * @param objects the list of objects that need to be adapted 
@@ -309,7 +313,7 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
      * objects that will be dropped on the diagram.
      */
     @SuppressWarnings("unchecked") //$NON-NLS-1$
-    private List<IDnDHandler> retrieveDnDHandlers(List objects) {
+    static List<IDnDHandler> retrieveDnDHandlers(List objects) {
         List<IDnDHandler> dndHandlers = new ArrayList<IDnDHandler>();
         for (Object dropped : objects) {
             if (dropped instanceof IDnDHandler) {
@@ -318,19 +322,29 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
                 // we take all the adapter factories outputs
                 Map factories = ((AdapterManager)
                         Platform.getAdapterManager()).getFactories();
-                Class[] cl = ((AdapterManager) Platform.getAdapterManager()).
-                	computeClassOrder(dropped.getClass());
-                for (Class c : cl) {
+                Iterable<Class> cls = computeClassOrder(dropped.getClass());
+                for (Class c : cls) {
                     List clfactories = (List) factories.get(c.getName());
                     if (clfactories != null) {
                         for (Object f : clfactories) {
                             IAdapterFactory factory = (IAdapterFactory) f;
                             if (f instanceof IAdapterFactoryExt) {
+                            	IAdapterFactoryExt fext = (IAdapterFactoryExt)f;
+                                boolean foundIt = false;
+                                for (String adapter : fext.getAdapterNames()) {
+                                	if (adapter.equals(IDnDHandler.class.getName())) {
+                                		foundIt = true;
+                                		break;
+                                	}
+                                }
+                                if (!foundIt) {
+                                	continue;
+                                }
                                 //if we don't call this method
                                 //the adapter factory is not returned unless the
                                 //plugin is already loaded.
                                 try {
-                                    ((IAdapterFactoryExt)f).loadFactory(true);
+                                	fext.loadFactory(true);
                                 } catch(Throwable e) {
                                     System.err.println("Unable to load a BPMNAdapter factory: " + e.getMessage() //$NON-NLS-1$
                                             + " for " + c.getName()); //$NON-NLS-1$
@@ -359,6 +373,27 @@ public class BpmnDragDropEditPolicy extends GraphicalEditPolicy {
         return dndHandlers;
     }
     
+    /**
+     * Wrapper around the adapter manager that computes the class order.
+     * We don't want java.lang.Object, java.lang.Cloneable and others to be there.
+     * Otherwise we end up loading every adapter there is.
+     * @param droppedClass
+     * @return
+     */
+    private static Iterable<Class> computeClassOrder(Class droppedClass) {
+    	Class[] cls = ((AdapterManager) Platform.getAdapterManager()).
+    		computeClassOrder(droppedClass);
+    	LinkedList<Class> res = new LinkedList<Class>();
+    	for (Class c : cls) {
+    		if (c.getPackage() == Object.class.getPackage()
+    				|| c.getPackage() == Serializable.class.getPackage()
+    				|| c.getPackage() == Field.class.getPackage()) { //$NON-NLS-1$
+    			continue;
+    		}
+    		res.add(c);
+    	}
+    	return res;
+    }    
     
     /**
      * For editparts that consume the entire viewport, statechart, structure,
