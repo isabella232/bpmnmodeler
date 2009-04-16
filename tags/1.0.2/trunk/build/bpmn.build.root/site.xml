@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<site>
+  <description url="http://download.eclipse.org/stp/updates/">
+    A platform and tools for developing Service-Oriented Component-based applications.
+  </description>
+  
+  <category-def name="soa.development.category" label="%soa.development.category.label"/>
+</site>

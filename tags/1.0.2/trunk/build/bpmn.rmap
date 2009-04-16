@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<rmap
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.eclipse.org/buckminster/RMap-1.0"
+    xmlns:bc="http://www.eclipse.org/buckminster/Common-1.0">
+
+    <searchPath name="bpmn.build.root">
+       <provider readerType="svn" componentTypes="buckminster" mutable="true" source="false">
+          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/trunk/build/{0}">
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+    </searchPath>
+
+    <searchPath name="bpmn.features">
+       <provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true" source="true">
+          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/trunk/features/{0}">
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+    </searchPath>
+
+    <searchPath name="bpmn.plugins">
+       <provider readerType="svn" componentTypes="osgi.bundle,buckminster" mutable="true" source="true">
+          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/trunk/{0}">
+              <bc:propertyRef key="buckminster.component" />
+          </uri>
+       </provider>
+    </searchPath>
+
+    <searchPath name="ganymede">
+      <!-- Search will look at M5 provider first, then fall back to M4 provider -->
+      <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="true" source="false">
+           <uri format="file:///shared/stp/platforms/3.4M5/eclipse"/>
+      </provider>
+      <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="true" source="false">
+           <uri format="file:///shared/stp/platforms/3.4M4/eclipse"/>
+      </provider>
+    </searchPath>
+     
+     
+     <!-- Project specific search paths -->
+     <locator searchPathRef="bpmn.build.root" pattern="^bpmn\.build\.root" />
+     <locator searchPathRef="bpmn.features" pattern="^org\.eclipse\.stp\.bpmn(\..*)?feature" />
+     <locator searchPathRef="bpmn.plugins" pattern="^org\.eclipse\.stp\.bpmn(\..*)?" />
+     <locator searchPathRef="ganymede" pattern="^org\.eclipse(\..*)?" />   
+</rmap>

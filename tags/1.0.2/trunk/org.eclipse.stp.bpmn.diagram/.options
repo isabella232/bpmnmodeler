@@ -1,0 +1,7 @@
+# Debugging options for the org.eclipse.stp.bpmn.diagram plug-in
+
+# Turn on general debugging for the org.eclipse.stp.bpmn.diagram plug-in
+org.eclipse.stp.bpmn.diagram/debug=false
+
+# Turn on debugging of visualID processing
+org.eclipse.stp.bpmn.diagram/debug/visualID=true
