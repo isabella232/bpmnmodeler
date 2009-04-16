@@ -71,8 +71,8 @@ public class ModelAwareAnchor extends SlidableAnchor implements IModelAwareAncho
      */
     public ModelAwareAnchor(INodeFigureAnchorTerminalUpdatable fig,
             IModelAwareAnchorSupport support) {
-        super(fig);
-        _support = support;
+    	 super(fig, new PrecisionPoint(0, 0));
+    	 _support = support;
     }
     
     /**
