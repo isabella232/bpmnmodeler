@@ -373,6 +373,9 @@ public class LazyCopyImageUtil extends CopyToImageUtil {
                 Object obj = it.next();
                 if (obj instanceof DiagramEditor) {
                     DiagramEditor diagramEditor = (DiagramEditor) obj;
+                    if (diagramEditor.getDiagramGraphicalViewer() == null) {
+                        continue;
+                    }
                     if (diagramEditor.getDiagramEditPart() == null) {
                         continue;
                     }
