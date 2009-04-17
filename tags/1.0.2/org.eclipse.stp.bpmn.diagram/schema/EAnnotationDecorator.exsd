@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!-- Schema file written by PDE -->
+<schema targetNamespace="org.eclipse.stp.bpmn.diagram">
+<annotation>
+      <appInfo>
+         <meta.schema plugin="org.eclipse.stp.bpmn.diagram" id="EAnnotationDecorator" name="EAnnotationDecorator"/>
+      </appInfo>
+      <documentation>
+         This extension point allows client to decorate edit parts with images when their model contain an annotation. The client should declare which source of annotation would interest him.
+      </documentation>
+   </annotation>
+
+   <element name="extension">
+      <complexType>
+         <sequence minOccurs="1" maxOccurs="unbounded">
+            <element ref="decorator"/>
+         </sequence>
+         <attribute name="point" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="id" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+         <attribute name="name" type="string">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute translatable="true"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <element name="decorator">
+      <complexType>
+         <attribute name="class" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+               <appInfo>
+                  <meta.attribute kind="java" basedOn="org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator"/>
+               </appInfo>
+            </annotation>
+         </attribute>
+         <attribute name="source" type="string" use="required">
+            <annotation>
+               <documentation>
+                  
+               </documentation>
+            </annotation>
+         </attribute>
+      </complexType>
+   </element>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="since"/>
+      </appInfo>
+      <documentation>
+         1.0.0
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="examples"/>
+      </appInfo>
+      <documentation>
+         &lt;pre&gt;
+&lt;extension
+      point=&quot;org.eclipse.stp.bpmn.diagram.EAnnotationDecorator&quot;&gt;
+   &lt;decorator
+         class=&quot;com.intalio.bpms.designer.bpmn.part.dnd.DataObjectEAnnotationDecorator&quot;
+         source=&quot;attachedDataobject&quot;&gt;
+   &lt;/decorator&gt;
+&lt;/extension&gt;
+&lt;/pre&gt;
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="apiInfo"/>
+      </appInfo>
+      <documentation>
+         The class declared in the extension point should implement org.eclipse.stp.bpmn.dnd.IEAnnotationDecorator.
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="implementation"/>
+      </appInfo>
+      <documentation>
+         
+      </documentation>
+   </annotation>
+
+   <annotation>
+      <appInfo>
+         <meta.section type="copyright"/>
+      </appInfo>
+      <documentation>
+         Licensed under the EPL for the Eclipse Foundation, 2006
+      </documentation>
+   </annotation>
+
+</schema>
