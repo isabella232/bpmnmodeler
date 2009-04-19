@@ -7,7 +7,7 @@
 
     <searchPath name="bpmn.build.root">
        <provider readerType="svn" componentTypes="buckminster" mutable="true" source="false">
-          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/trunk/build/{0}">
+          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/branches/1.0.x/tags/1.0.2/build/{0}">
               <bc:propertyRef key="buckminster.component" />
           </uri>
        </provider>
@@ -15,7 +15,7 @@
 
     <searchPath name="bpmn.features">
        <provider readerType="svn" componentTypes="osgi.bundle,eclipse.feature,buckminster" mutable="true" source="true">
-          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/trunk/features/{0}">
+          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/branches/1.0.x/tags/1.0.2/features/{0}">
               <bc:propertyRef key="buckminster.component" />
           </uri>
        </provider>
@@ -23,19 +23,15 @@
 
     <searchPath name="bpmn.plugins">
        <provider readerType="svn" componentTypes="osgi.bundle,buckminster" mutable="true" source="true">
-          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/trunk/{0}">
+          <uri format="http://dev.eclipse.org/svnroot/stp/org.eclipse.stp.bpmn/branches/1.0.x/tags/1.0.2/{0}">
               <bc:propertyRef key="buckminster.component" />
           </uri>
        </provider>
     </searchPath>
 
     <searchPath name="ganymede">
-      <!-- Search will look at M5 provider first, then fall back to M4 provider -->
       <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="true" source="false">
-           <uri format="file:///shared/stp/platforms/3.4M5/eclipse"/>
-      </provider>
-      <provider readerType="eclipse.import" componentTypes="osgi.bundle" mutable="true" source="false">
-           <uri format="file:///shared/stp/platforms/3.4M4/eclipse"/>
+           <uri format="file:///shared/stp/platforms/3.4.2/eclipse"/>
       </provider>
     </searchPath>
      
