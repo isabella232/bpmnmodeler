@@ -75,7 +75,8 @@ public class PoolPoolCompartmentFigure extends ShapeCompartmentFigure {
                 } else {
                     graphics.setForegroundColor(ColorConstants.black);
                 }
-                graphics.setLineWidth((int) (4 * ActivityPainter.getAbsoluteScale(graphics)));
+                graphics.setLineWidth((int) (ActivityPainter.getAbsoluteScale(graphics)));
+                graphics.setAlpha(150);
                 graphics.setBackgroundColor(fig.getBackgroundColor());
                 Rectangle rectangle = new Rectangle();
                 rectangle.width = getBounds().width;
