@@ -32,7 +32,6 @@ import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.tools.ToolUtilities;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
-import org.eclipse.gmf.runtime.diagram.ui.internal.editparts.IEditableEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.preferences.IPreferenceConstants;
 import org.eclipse.gmf.runtime.diagram.ui.requests.ArrangeRequest;
 import org.eclipse.jface.preference.IPreferenceStore;
@@ -160,15 +159,15 @@ public class ArrangeSelectionAction extends DiagramAction {
 
         // bugzilla 156733: disable this action if the parent or selected edit
         // parts are not editable
-        if ((parentEP instanceof IEditableEditPart)
-                && !((IEditableEditPart) parentEP).isEditModeEnabled()) {
+        if ((parentEP instanceof IGraphicalEditPart)
+                && !((IGraphicalEditPart) parentEP).isEditModeEnabled()) {
             return false;
         }
 
         for (Iterator i = operationSet.iterator(); i.hasNext();) {
             Object next = i.next();
-            if ((next instanceof IEditableEditPart)
-                    && !((IEditableEditPart) next).isEditModeEnabled()) {
+            if ((next instanceof IGraphicalEditPart)
+                    && !((IGraphicalEditPart) next).isEditModeEnabled()) {
                 return false;
             }
         }
