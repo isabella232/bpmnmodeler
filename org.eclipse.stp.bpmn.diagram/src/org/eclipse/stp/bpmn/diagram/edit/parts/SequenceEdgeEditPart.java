@@ -206,19 +206,29 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         }
 
         /**
-         * @generated NOT
-         * 
-         * @see org.eclipse.gmf.runtime.draw2d.ui.figures.PolylineConnectionEx#getSmoothPoints()
+         * @generated NOT compatible for 3.5 and 3.4.
+         */
+        //@Override it overrides the method for gmf-eclipse-3.5 not for 3.4
+        public PointList getSmoothPoints(boolean calculateAppox) {
+        	return internalGetSmoothPoints(calculateAppox);
+        }
+        /**
+         * @generated NOT compatible for 3.5 and 3.4.
          */
         @Override
         public PointList getSmoothPoints() {
+        	return internalGetSmoothPoints(true);
+        }
+        /**
+         * @generated NOT compatible with 3.5 and 3.4.
+         */
+        private PointList internalGetSmoothPoints(boolean calculateAppox) {
             if (!routerIsRectilinear) {
                 smoothPoints = super.getSmoothPoints();
             } else {
                 smoothPoints =
                   ConnectionUtils.getRoundedRectilinearSmoothPoints(
-                          true,
-                          getPoints(), super.getSmoothness());
+                          true, getPoints(), super.getSmoothness());
             }
             return smoothPoints;
         }
