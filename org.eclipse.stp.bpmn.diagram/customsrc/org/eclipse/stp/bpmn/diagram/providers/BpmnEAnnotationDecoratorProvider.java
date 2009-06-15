@@ -305,9 +305,11 @@ public class BpmnEAnnotationDecoratorProvider extends AbstractProvider
 					                continue; 
 					            }
 					            Image image = data.getImage();
-					            Direction direction = data.getDirection();
-					            IFigure tooltip = data.getToolTip();
-					            decorate(image, tooltip, direction, editPart, elt, ann, view);
+					            if (image != null) {
+						            Direction direction = data.getDirection();
+						            IFigure tooltip = data.getToolTip();
+						            decorate(image, tooltip, direction, editPart, elt, ann, view);
+					            }
 					        }
 					    }
 					}
