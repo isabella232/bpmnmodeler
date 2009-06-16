@@ -124,6 +124,11 @@ public class BpmnBaseItemSemanticEditPolicy extends SemanticEditPolicy {
                 ehCommand = ehCommand == null ? deleteViewCommand : ehCommand
                         .chain(deleteViewCommand);
             }
+            if (ehCommand == null) {
+                // try to return epCommand instead in that case to avoid issues
+                // with GMF 2.2 ~ fix for bug 280348
+                ehCommand = epCommand;
+            }
             return ehCommand;
         }
         return null;
