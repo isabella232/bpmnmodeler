@@ -2,7 +2,7 @@
 <feature
       id="org.eclipse.stp.bpmn.feature"
       label="BPMN Project Feature"
-      version="1.1.0.qualifier"
+      version="1.2.0.qualifier"
       provider-name="eclipse.org">
 
    <description>
