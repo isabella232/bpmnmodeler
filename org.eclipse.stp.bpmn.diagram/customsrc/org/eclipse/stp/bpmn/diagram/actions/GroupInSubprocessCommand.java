@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -90,7 +90,7 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
     //and their associated edit part classes.
     //used during redo to be able to update the editpart
     //as they changed during the execution and unexecution of things.
-    private Map<String,Class> selectedEps = new HashMap<String, Class>();
+    private Map<String,Class<?>> selectedEps = new HashMap<String, Class<?>>();
     
     /** The edit parts to be grouped */
     private Set<GraphicalEditPart> editParts;
@@ -143,7 +143,7 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
     public GroupInSubprocessCommand(
             TransactionalEditingDomain domain,
             IDiagramGraphicalViewer viewer,
-            Map<String,Class> contentToGroup,
+            Map<String,Class<?>> contentToGroup,
             String originalContainerProxyId) {
         super(domain, BpmnDiagramMessages.GroupInSubprocessCommand_label, null);
         this.editParts = new HashSet<GraphicalEditPart>();
@@ -182,7 +182,7 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
             }
             tmpContainerEditPart = eps.get(0);
             List<EditPart> newSel = new ArrayList<EditPart>();
-            for (Entry<String,Class> entry : selectedEps.entrySet()) {
+            for (Entry<String,Class<?>> entry : selectedEps.entrySet()) {
                 eps = viewer.findEditPartsForElement(entry.getKey(),
                             entry.getValue());
                 if (!eps.isEmpty()) {
@@ -193,6 +193,7 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
                     editParts, almostSelectedBoundaryEvents,
                     externalSrcConnections, externalTgtConnections,
                     internalConnections);
+
         }
         
         // common parent of selected edit part now will become a parent
@@ -215,22 +216,39 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
                     Boolean.FALSE);
         }
 
-
         Rectangle rect = getSizeAndLocation(req);
         Command create = containerEditPart.getCommand(req);
         create.execute();
         final Node spview = (Node) ((IAdaptable) 
                 ((List) req.getNewObject()).get(0)).getAdapter(Node.class);
         _createdSubprocessProxyId = EMFCoreUtil.getProxyID(spview.getElement());
-        
         // collecting semantic elements:
-        final List<EObject> semantic = new LinkedList<EObject>(); 
+      //  final List<EObject> semantic = new LinkedList<EObject>(); 
+        LinkedHashMap<GraphicalEditPart, EObject> semanticMapped = new LinkedHashMap<GraphicalEditPart, EObject>();
         for (GraphicalEditPart part : editParts) {
-            semantic.add(part.resolveSemanticElement());
-            if (part.resolveSemanticElement() instanceof Activity) {
-                Graph graph = ((Activity) part.resolveSemanticElement()).getGraph();
-                graph.getVertices().remove(part.resolveSemanticElement());
-                ((Activity) part.resolveSemanticElement()).setGraph(null);
+        	EObject eo = part.resolveSemanticElement();
+           // semantic.add(eo);
+            semanticMapped.put(part, eo);
+        }
+        for (EObject eo : semanticMapped.values()) {
+            //first change the scope of dataobjects.
+            //it is important to remove the scope of the dataobject
+            //as dataobject are sometimes managed by the activities they are
+            //associated with
+            //the fact that they don't have a container during this part of the
+            //operation will make sure that they don't get removed.
+        	if (eo instanceof Artifact) {
+        		Artifact artifact = (Artifact)eo;
+        		artifact.setArtifactsContainer(null);
+        	}
+        }
+        
+        for (EObject eo : semanticMapped.values()) {
+            if (eo instanceof Activity) {
+            	Activity act = (Activity) eo;
+            	Graph graph = act.getGraph();
+                act.setGraph(null);
+                graph.getVertices().remove(eo);
             }
         }
         
@@ -305,7 +323,7 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         // to a new container
         Map<Activity, List<SequenceEdge>> incoming = new HashMap<Activity, List<SequenceEdge>>();
         Map<Activity, List<SequenceEdge>> outgoing = new HashMap<Activity, List<SequenceEdge>>();
-        for (EObject obj : semantic) {
+        for (EObject obj : semanticMapped.values()) {
             if (obj instanceof Activity) {
                 Activity act = (Activity) obj;
                 incoming.put(act, new ArrayList<SequenceEdge>(act.getIncomingEdges()));
@@ -322,27 +340,31 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         }
         
         // moving the nodes now
+        SubProcess newSubProcess = (SubProcess)spview.getElement();
         
         //first move the artifacts because they are containers of associations
-        for (EObject obj : semantic) {
+        for (EObject obj : semanticMapped.values()) {
             if (obj instanceof Activity) {
                 //later
             } else if (obj instanceof Artifact) {
-                ((SubProcess)spview.getElement()).getArtifacts().add((Artifact)obj);
+            	Artifact artifact = (Artifact)obj;
+            	newSubProcess.getArtifacts().add(artifact);
+                artifact.setArtifactsContainer(newSubProcess);
             } else {
               //this looks very bad to me: ie unlikely to do any good.
-                spview.getElement().eContents().add(obj);
+            	EObject elem = spview.getElement();
+            	elem.eContents().add(obj);
             }
         }
         //second move the activities:               
-        for (EObject obj : semantic) {
+        for (EObject obj : semanticMapped.values()) {
             if (obj instanceof Activity) {
                 ((Activity) obj).setGraph((Graph) spview.getElement());
             }
         }
 
         // retargeting the edges now
-        for (EObject obj : semantic) {
+        for (EObject obj : semanticMapped.values()) {
             if (obj instanceof Activity) {
                 Activity act = (Activity) obj;
                 act.getIncomingEdges().addAll(incoming.get(act));
@@ -431,6 +453,17 @@ public class GroupInSubprocessCommand extends AbstractTransactionalCommand {
         return Status.OK_STATUS;
     }
     
+    private void __checkEditPartSanity() {
+        for (GraphicalEditPart part : editParts) {
+        	EObject eo = part.resolveSemanticElement();
+        	if (eo == null) {
+        		System.err.println("We have a problem here: " + part + " is not associated to a semantic element.");
+        		Thread.dumpStack();
+        		throw new IllegalArgumentException("We have a problem: " + part + " is not associated to a semantic element.");
+        	}
+        }
+
+    }
     
     
     

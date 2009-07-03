@@ -357,7 +357,9 @@ public class GroupAction extends AbstractGroupUngroupAction {
             }
             
         }
-        if (action != null)  action.setEnabled(!editParts.isEmpty());
+        if (action != null) {
+        	action.setEnabled(!editParts.isEmpty());
+        }
     }
 
     /**

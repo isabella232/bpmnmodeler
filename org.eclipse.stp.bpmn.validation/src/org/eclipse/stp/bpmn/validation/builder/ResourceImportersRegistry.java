@@ -64,7 +64,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
 	 */
 	public ListenerList changeListeners = new ListenerList();
 	
-    /** separator character between 2 project relative pathes. */
+    /** separator character between 2 projects relative paths. */
     private static String SEPARATOR = ":"; //$NON-NLS-1$
     
     private boolean _isDirty;
@@ -180,9 +180,11 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
                 StringTokenizer tokenizer =
                     new StringTokenizer(simports, String.valueOf(SEPARATOR), false);
                 while (tokenizer.hasMoreTokens()) {
-                    Path path = new Path(tokenizer.nextToken());
+                	String spath = tokenizer.nextToken();
+                    Path path = new Path(spath);
                     //it does not matter if the resource imported exists or not:
-                    IResource imported = project.getFile(path);//assume a file
+                    IResource imported = spath.endsWith("/") //$NON-NLS-1$
+                    		? project.getFolder(spath) : project.getFile(path);
                     imports.add(imported);
                     
                     //and the mirror index:
@@ -240,8 +242,7 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
         		return (Set<Entry<Object,Object>>) _orderedKeys.entrySet();
         	}
         };
-        for (Entry<IResource, Set<IResource>> entry :
-                    _importsIndexedByImporters.entrySet()) {
+        for (Entry<IResource, Set<IResource>> entry : _importsIndexedByImporters.entrySet()) {
             Set<IResource> imports = entry.getValue();
             if (!imports.isEmpty()) {
                 Iterator<IResource> it = imports.iterator();
@@ -253,6 +254,11 @@ public class ResourceImportersRegistry implements IResourceImportersRegistry {
                     if (rPath != null) {
                         buf = new StringBuilder();
                         buf.append(r.getProjectRelativePath().toString());
+                        if (r.getType() == IResource.FOLDER) {
+                        	//EDGE-3097: make sure we can make the difference
+                        	//between folders and files.
+                        	buf.append(IPath.SEPARATOR);
+                        }
                         break;
                     }
                 }

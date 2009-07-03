@@ -497,8 +497,8 @@ public class ActivityItemSemanticEditPolicy extends
              */
             for (Iterator iter = tOutMessages.iterator(); iter.hasNext();) {
                 MessagingEdge element = (MessagingEdge) iter.next();
-                Activity task = (Activity) element.getTarget();
-                Identifiable container = (Identifiable) task.eContainer();
+                MessageVertex vertex = element.getTarget();
+                Identifiable container = (Identifiable) vertex;
                 while (!(container instanceof Pool)) {
                     container = (Identifiable) container.eContainer();
                 }
@@ -509,8 +509,8 @@ public class ActivityItemSemanticEditPolicy extends
 
             for (Iterator iter = tInMessages.iterator(); iter.hasNext();) {
                 MessagingEdge element = (MessagingEdge) iter.next();
-                Activity task = (Activity) element.getSource();
-                Identifiable container = (Identifiable) task.eContainer();
+                MessageVertex vertex = element.getSource();
+                Identifiable container = (Identifiable) vertex;
                 while (!(container instanceof Pool)) {
                     container = (Identifiable) container.eContainer();
                 }
@@ -521,8 +521,8 @@ public class ActivityItemSemanticEditPolicy extends
 
             for (Iterator iter = sOutMessages.iterator(); iter.hasNext();) {
                 MessagingEdge element = (MessagingEdge) iter.next();
-                Activity task = (Activity) element.getTarget();
-                Identifiable container = (Identifiable) task.eContainer();
+                MessageVertex vertex = element.getTarget();
+                Identifiable container = (Identifiable) vertex;
                 while (!(container instanceof Pool)) {
                     container = (Identifiable) container.eContainer();
                 }
@@ -533,8 +533,8 @@ public class ActivityItemSemanticEditPolicy extends
 
             for (Iterator iter = sInMessages.iterator(); iter.hasNext();) {
                 MessagingEdge element = (MessagingEdge) iter.next();
-                Activity task = (Activity) element.getSource();
-                Identifiable container = (Identifiable) task.eContainer();
+                MessageVertex vertex = element.getSource();
+                Identifiable container = (Identifiable) vertex;
                 while (!(container instanceof Pool)) {
                     container = (Identifiable) container.eContainer();
                 }
