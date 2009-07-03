@@ -18,6 +18,7 @@ package org.eclipse.stp.bpmn.diagram.actions;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -139,10 +140,10 @@ public class UngroupAction extends AbstractGroupUngroupAction {
             //and their associated edit part classes.
             //used during redo to be able to update the editpart
             //as they changed during the execution and unexecution of things.
-            private Map<String,Class> selectedEps = new HashMap<String, Class>();
+            private Map<String,Class<?>> selectedEps = new HashMap<String, Class<?>>();
 
-            private Map<String,Map<String,Class>> selectedContentForUndo =
-                new HashMap<String, Map<String,Class>>();
+            private Map<String,Map<String,Class<?>>> selectedContentForUndo =
+                new HashMap<String, Map<String,Class<?>>>();
                 //new HashMap<String, Class>();
             
             private Map<String,String> indexOfContainersOfSubProcessUngrouped =
@@ -163,7 +164,7 @@ public class UngroupAction extends AbstractGroupUngroupAction {
                         String spContainerId = EMFCoreUtil.getProxyID(sp.resolveSemanticElement().eContainer());
                         indexOfContainersOfSubProcessUngrouped.put(spId, spContainerId);
     		            selectedEps.put(spId, sp.getClass());
-    		            Map<String,Class> selectedContentForUndoOne = new HashMap<String,Class>();
+    		            Map<String,Class<?>> selectedContentForUndoOne = new HashMap<String,Class<?>>();
     		            selectedContentForUndo.put(spId, selectedContentForUndoOne);
     		            
     		            for (Object cpt : sp.getChildren()) {
@@ -183,7 +184,7 @@ public class UngroupAction extends AbstractGroupUngroupAction {
     		        //the edit parts are new.
     		        //let's locate them.
     		        subProcesses.clear();
-                    for (Entry<String,Class> entry : selectedEps.entrySet()) {
+                    for (Entry<String,Class<?>> entry : selectedEps.entrySet()) {
                         List eps = viewer.findEditPartsForElement(entry.getKey(),
                                     entry.getValue());
                         if (!eps.isEmpty()) {
@@ -226,7 +227,7 @@ public class UngroupAction extends AbstractGroupUngroupAction {
                 selectedEps.clear();
                 TransactionalEditingDomain domain =
                     ((GraphicalEditPart)viewer.getRootEditPart().getContents()).getEditingDomain();
-                for (Entry<String,Map<String,Class>> entry : selectedContentForUndo.entrySet()) {
+                for (Entry<String,Map<String,Class<?>>> entry : selectedContentForUndo.entrySet()) {
                     GroupInSubprocessCommand cmd = new GroupInSubprocessCommand(domain,
                         viewer, entry.getValue(),
                         indexOfContainersOfSubProcessUngrouped.get(entry.getKey()));
@@ -265,6 +266,7 @@ public class UngroupAction extends AbstractGroupUngroupAction {
 
     	// get the children views.
     	Set<EObject> semantic = new HashSet<EObject>();
+    	//LinkedHashMap<EditPart,EObject> eps = 
     	Set<View> views = new HashSet<View>();
         Set<EObject> edges = new HashSet<EObject>();
         
@@ -454,6 +456,12 @@ try {
     	for (Object r : removed) {
     		((EditPart) r).refresh();
     		((EditPart) r).activate();
+    	}
+    	
+    	for (View v : views) {
+    		if (v.getElement() == null) {
+    			System.err.println("We have a problem " + v + " is not pointing to a semantic model");
+    		}
     	}
     	    	
     }
