@@ -161,7 +161,7 @@ public class BpmnValidationDecoratorProvider extends AbstractProvider implements
     
     
     /**
-     * @generated
+     * @generated not
      */
     public void createDecorators(IDecoratorTarget decoratorTarget) {
         EditPart editPart = (EditPart) decoratorTarget

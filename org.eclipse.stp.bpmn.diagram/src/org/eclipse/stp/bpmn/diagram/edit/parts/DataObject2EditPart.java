@@ -259,7 +259,7 @@ public class DataObject2EditPart extends ShapeNodeEditPart {
             org.eclipse.stp.bpmn.figures.DataObjectFigure {
 
         /**
-         * @generated
+         * @generated NOT
          */
         public DataObjectFigure() {
             super(16);

@@ -77,7 +77,7 @@ public class LaneEditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @notgenerated
+     * @generated not
      */
     protected void createDefaultEditPolicies() {
         createDefaultEditPoliciesGen();
@@ -135,7 +135,7 @@ public class LaneEditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @notgenerated
+     * @generated not
      */
     protected NodeFigure createNodePlate() {
         NodeFigure nodePlateFigure = new LaneFigure(-1, -1);
@@ -199,7 +199,7 @@ public class LaneEditPart extends ShapeNodeEditPart {
     }
 
     /**
-     * @notgenerated
+     * @generated not
      */
     public EditPart getTargetEditPart(Request request) {
         EditPart targetEditPart;
