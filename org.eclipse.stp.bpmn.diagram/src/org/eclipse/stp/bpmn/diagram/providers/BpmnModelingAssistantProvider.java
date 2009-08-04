@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, Intalio Inc.
+ * Copyright (c) 2007-2009, Intalio Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Intalio Inc. - initial API and implementation
+ *     Denis Dallaire, Techsolcom: Bug 273345: Support sub-process message flows
  */
 package org.eclipse.stp.bpmn.diagram.providers;
 
@@ -215,6 +216,7 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
         if (sourceEditPart instanceof SubProcessEditPart) {
             List types = new ArrayList();
             types.add(BpmnElementTypes.SequenceEdge_3001);
+            types.add(BpmnElementTypes.MessagingEdge_3002);
             types = filterElementTypes(source, types);
             return types;
         }
@@ -298,6 +300,7 @@ public class BpmnModelingAssistantProvider extends ModelingAssistantProvider {
             List types = new ArrayList();
 			types.add(BpmnElementTypes.Association_3003);
             types.add(BpmnElementTypes.SequenceEdge_3001);
+            types.add(BpmnElementTypes.MessagingEdge_3002);
             types = filterElementTypes(target, types);
             return types;
         }

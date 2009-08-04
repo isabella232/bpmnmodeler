@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, Intalio Inc.
+ * Copyright (c) 2007-2009, Intalio Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Intalio Inc. - initial API and implementation
+ *     Denis Dallaire, Techsolcom: Bug 273345: Support sub-process message flows
  */
 package org.eclipse.stp.bpmn.diagram.edit.parts;
 
@@ -1175,10 +1176,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
                     }
                 }
 
-                if (connType == BpmnElementTypes.MessagingEdge_3002) {
-                    // message connections for subprocess are not allowed.
-                    return null;
-                } else if (connType == BpmnElementTypes.SequenceEdge_3001) {
+                if (connType == BpmnElementTypes.SequenceEdge_3001) {
                     
                     if (_request instanceof CreateUnspecifiedTypeConnectionRequest) {
                         CreateUnspecifiedTypeConnectionRequest request = 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2007, Intalio Inc.
+ * Copyright (c) 2007-2009, Intalio Inc.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -7,6 +7,7 @@
  * 
  * Contributors:
  *     Intalio Inc. - initial API and implementation
+ *     Denis Dallaire, Techsolcom: Bug 273345: Support sub-process message flows
  */
 package org.eclipse.stp.bpmn.diagram.edit.policies;
 
@@ -468,7 +469,6 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
                 case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
                 case ActivityType.GATEWAY_PARALLEL:
                 case ActivityType.GATEWAY_COMPLEX:
-                case ActivityType.SUB_PROCESS:
                     return false;
                     
                 case ActivityType.EVENT_START_EMPTY:
@@ -491,7 +491,8 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
                 case ActivityType.EVENT_INTERMEDIATE_MESSAGE:
                 case ActivityType.EVENT_INTERMEDIATE_SIGNAL:
 //                  all the intermediates can receive a message.
-                    
+
+                case ActivityType.SUB_PROCESS:
                 case ActivityType.TASK:
                     break;
                     
@@ -524,8 +525,8 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
                 case ActivityType.GATEWAY_EVENT_BASED_EXCLUSIVE:
                 case ActivityType.GATEWAY_PARALLEL:
                 case ActivityType.GATEWAY_COMPLEX:
-                case ActivityType.SUB_PROCESS:
                     return false;
+                    
                 case ActivityType.EVENT_END_EMPTY:
                 case ActivityType.EVENT_END_COMPENSATION:
                 case ActivityType.EVENT_END_ERROR:
@@ -536,7 +537,8 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
                 case ActivityType.EVENT_END_MESSAGE:
                 case ActivityType.EVENT_END_SIGNAL:
                     //all the end can send a message
-                    
+                	
+                case ActivityType.SUB_PROCESS:                    
                 case ActivityType.TASK:
                     break;
                     
