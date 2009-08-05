@@ -669,6 +669,14 @@ public class BpmnDiagramMessages extends NLS {
     public static String SetTransactionalAction_non_transactional_tooltip;
 
     public static String SetTransactionalAction_transactional_tooltip;
+    
+    public static String SetAdhocAction_label_non_adhoc;
+
+    public static String SetAdhocAction_label_adhoc;
+
+    public static String SetAdhocAction_non_adhoc_tooltip;
+
+    public static String SetAdhocAction_adhoc_tooltip;
 
     public static String SubProcessCollapseStyleToolbarAction_label;
 

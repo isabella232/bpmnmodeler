@@ -44,6 +44,7 @@ import org.eclipse.stp.bpmn.BpmnMessages;
  *   <li>{@link org.eclipse.stp.bpmn.impl.SubProcessImpl#getSequenceEdges <em>Sequence Edges</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SubProcessImpl#getEventHandlers <em>Event Handlers</em>}</li>
  *   <li>{@link org.eclipse.stp.bpmn.impl.SubProcessImpl#isIsTransaction <em>Is Transaction</em>}</li>
+ *   <li>{@link org.eclipse.stp.bpmn.impl.SubProcessImpl#isAdhoc <em>Adhoc</em>}</li>
  * </ul>
  * </p>
  *
@@ -118,7 +119,27 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
      * @ordered
      */
     protected boolean isTransactionESet;
+    
+    /**
+     * The default value of the '{@link #isAdhoc() <em>Adhoc</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isAdhoc()
+     * @generated
+     * @ordered
+     */
+    protected static final boolean ADHOC_EDEFAULT = false;
 
+    /**
+     * The cached value of the '{@link #isAdhoc() <em>Adhoc</em>}' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @see #isAdhoc()
+     * @generated
+     * @ordered
+     */
+    protected boolean adhoc = ADHOC_EDEFAULT;
+    
     /**
      * <!-- begin-user-doc -->
      * <!-- end-user-doc -->
@@ -291,7 +312,9 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
                 return getEventHandlers();
             case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
                 return isIsTransaction();
-        }
+            case BpmnPackage.SUB_PROCESS__ADHOC:
+                return isAdhoc();
+       }
         return super.eGet(featureID, resolve, coreType);
     }
 
@@ -323,6 +346,9 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
             case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
                 setIsTransaction((Boolean)newValue);
                 return;
+			case BpmnPackage.SUB_PROCESS__ADHOC:
+				setAdhoc(((Boolean)newValue).booleanValue());
+				return;
         }
         super.eSet(featureID, newValue);
     }
@@ -350,6 +376,9 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
             case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
                 unsetIsTransaction();
                 return;
+            case BpmnPackage.SUB_PROCESS__ADHOC:
+            	setAdhoc(ADHOC_EDEFAULT);
+            	return;
         }
         super.eUnset(featureID);
     }
@@ -372,6 +401,9 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
                 return eventHandlers != null && !eventHandlers.isEmpty();
             case BpmnPackage.SUB_PROCESS__IS_TRANSACTION:
                 return isSetIsTransaction();
+            case BpmnPackage.SUB_PROCESS__ADHOC:
+            	return adhoc != ADHOC_EDEFAULT;
+
         }
         return super.eIsSet(featureID);
     }
@@ -434,6 +466,8 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
         StringBuffer result = new StringBuffer(super.toString());
         result.append(" (isTransaction: ");
         if (isTransactionESet) result.append(isTransaction); else result.append("<unset>");
+        result.append(", adhoc: ");
+        result.append(adhoc);
         result.append(')');
         return result.toString();
     }
@@ -445,5 +479,18 @@ public class SubProcessImpl extends ActivityImpl implements SubProcess {
     public ActivityType getActivityType() {
         return ActivityType.SUB_PROCESS_LITERAL;
     }
-
+   
+    
+    public boolean isAdhoc() {
+    	return adhoc;
+    }
+    
+    
+    public void setAdhoc(boolean newAdhoc) {
+    	boolean oldAdhoc = adhoc;
+    	adhoc = newAdhoc;
+    	if (eNotificationRequired())
+    		eNotify(new ENotificationImpl(this, Notification.SET, BpmnPackage.SUB_PROCESS__ADHOC, oldAdhoc, adhoc));
+    }
+    
 } //SubProcessImpl

@@ -1767,6 +1767,18 @@ public interface BpmnPackage extends EPackage {
      * @ordered
      */
     int SUB_PROCESS__IS_TRANSACTION = ACTIVITY_FEATURE_COUNT + 4;
+    
+    /**
+     * The number of structural features of the '<em>Sub Process</em>' class.
+     * <!-- begin-user-doc -->
+     * The feature id for the '<em><b>Adhoc</b></em>' attribute.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @generated
+     * @ordered
+     */
+    int SUB_PROCESS__ADHOC = ACTIVITY_FEATURE_COUNT + 5;
+    
 
     /**
      * The number of structural features of the '<em>Sub Process</em>' class.
@@ -1775,7 +1787,7 @@ public interface BpmnPackage extends EPackage {
      * @generated
      * @ordered
      */
-    int SUB_PROCESS_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 5;
+    int SUB_PROCESS_FEATURE_COUNT = ACTIVITY_FEATURE_COUNT + 6;
 
     /**
      * The meta object id for the '{@link org.eclipse.stp.bpmn.impl.TextAnnotationImpl <em>Text Annotation</em>}' class.
@@ -2531,6 +2543,18 @@ public interface BpmnPackage extends EPackage {
      * @generated
      */
     EAttribute getSubProcess_IsTransaction();
+    
+    /**
+     * Returns the meta object for the attribute '{@link org.eclipse.stp.bpmn.SubProcess#isAdhoc <em>Adhoc</em>}'.
+     * <!-- begin-user-doc -->
+     * <!-- end-user-doc -->
+     * @return the meta object for the attribute '<em>Adhoc</em>'.
+     * @see org.eclipse.stp.bpmn.SubProcess#isAdhoc()
+     * @see #getSubProcess()
+     * @generated
+     */
+    EAttribute getSubProcess_Adhoc();
+
 
     /**
      * Returns the meta object for class '{@link org.eclipse.stp.bpmn.TextAnnotation <em>Text Annotation</em>}'.
@@ -3163,6 +3187,14 @@ public interface BpmnPackage extends EPackage {
          */
         EAttribute SUB_PROCESS__IS_TRANSACTION = eINSTANCE.getSubProcess_IsTransaction();
 
+        /**
+         * The meta object literal for the '<em><b>Adhoc</b></em>' attribute feature.
+         * <!-- begin-user-doc -->
+         * <!-- end-user-doc -->
+         * @generated
+         */
+        EAttribute SUB_PROCESS__ADHOC = eINSTANCE.getSubProcess_Adhoc();
+        
         /**
          * The meta object literal for the '{@link org.eclipse.stp.bpmn.impl.TextAnnotationImpl <em>Text Annotation</em>}' class.
          * <!-- begin-user-doc -->

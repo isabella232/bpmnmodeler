@@ -37,6 +37,7 @@ import org.eclipse.stp.bpmn.diagram.actions.SetAsThrowingOrCatchingAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetDefaultAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetLoopAction;
 import org.eclipse.stp.bpmn.diagram.actions.SetTransactionalAction;
+import org.eclipse.stp.bpmn.diagram.actions.SetAdhocAction;
 import org.eclipse.stp.bpmn.diagram.actions.SubProcessCollapseStyleToolbarAction;
 import org.eclipse.stp.bpmn.diagram.actions.UngroupAction;
 import org.eclipse.stp.bpmn.diagram.actions.activitytypes.ActivityTypesManager;
@@ -177,6 +178,8 @@ public class BpmnDiagramActionProvider extends AbstractContributionItemProvider 
         } else if (actionId.startsWith(SequenceFlowConditionTypeAction.MENU_ID)) {
             String id = new String(actionId.substring(SequenceFlowConditionTypeAction.MENU_ID.length()));
             return new SequenceFlowConditionTypeAction(workbenchPage, id);
+        } else if (SetAdhocAction.ID.equals(actionId)) {
+            return new SetAdhocAction(workbenchPage);
         } else {
         }
         return super.createAction(actionId, partDescriptor);

@@ -630,6 +630,7 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
             } else {
                 SubProcessEditPart.this.paintLoopMarker(graphics);
                 SubProcessEditPart.this.paintCompensationMarker(graphics);
+                SubProcessEditPart.this.paintTildeMarker(graphics);
             }
         }
 
@@ -1389,6 +1390,32 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
         }
     }
 
-    
-    
+    /**
+     * Called during the painting of the sub-process figure.
+     * Checks if the sub-process is adhoc and paint the standard tilde
+     * marker.
+     * <p>
+     * Editors that extend the stp bpmn modeler can override this method
+     * to handle other types of markers.
+     * </p>
+     * @notgenerated
+     */
+    protected void paintTildeMarker(Graphics graphics) {
+        SubProcess zmodel = (SubProcess) ((View) getModel()).getElement();
+        if (zmodel.isAdhoc()) {
+            int size = COLLAPSE_HANDLE_HEIGHT;
+            Rectangle bounds = getAbsBoundsWithoutBorder();
+            getPrimaryShape().translateToRelative(bounds);
+            Rectangle tildeRect = new Rectangle();
+            tildeRect.x = bounds.x + bounds.width/2 + size/2 + 12;
+            tildeRect.y = bounds.y + bounds.height - size;
+            if (getPrimaryShape().getFigureSubProcessBorderFigure().hasChildren()) {
+            	tildeRect.y = (int) (tildeRect.y - (ActivityEditPart.EVENT_FIGURE_SIZE*getZoom())/2);
+            }
+            tildeRect.height = size;
+            tildeRect.width = size;
+
+            ActivityPainter.paintTilde(graphics, tildeRect, getFigure());
+        }						
+    }
 }

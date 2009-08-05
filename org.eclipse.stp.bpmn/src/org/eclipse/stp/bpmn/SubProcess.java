@@ -103,5 +103,31 @@ public interface SubProcess extends Activity, Graph {
      * @generated
      */
     boolean isSetIsTransaction();
+    
+	/**
+	 * Returns the value of the '<em><b>Adhoc</b></em>' attribute.
+	 * <!-- begin-user-doc -->
+	 * <p>
+	 * If the meaning of the '<em>Adhoc</em>' attribute isn't clear,
+	 * there really should be more of a description here...
+	 * </p>
+	 * <!-- end-user-doc -->
+	 * @return the value of the '<em>Adhoc</em>' attribute.
+	 * @see #setAdhoc(boolean)
+	 * @see org.eclipse.stp.bpmn.BpmnPackage#getSubProcess_Adhoc()
+	 * @model dataType="org.eclipse.emf.ecore.xml.type.Boolean"
+	 * @generated
+	 */
+	boolean isAdhoc();
+
+	/**
+	 * Sets the value of the '{@link org.eclipse.stp.bpmn.SubProcess#isAdhoc <em>Adhoc</em>}' attribute.
+	 * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+	 * @param value the new value of the '<em>Adhoc</em>' attribute.
+	 * @see #isAdhoc()
+	 * @generated
+	 */
+	void setAdhoc(boolean value);
 
 } // SubProcess

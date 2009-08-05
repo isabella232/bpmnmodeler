@@ -171,6 +171,7 @@ also contains artifacts -->
 	    		<!-- defaults the type of activity -->
 	    		<xsd:attribute fixed="SubProcess" name="activityType" type="bpmn:ActivityType"/>
 	    		<!-- the state: collapsed, expanded or maximized is in the notation model -->
+	    		<xsd:attribute name="adhoc" type="xsd:boolean"></xsd:attribute>
 	    	</xsd:extension>
 	    </xsd:complexContent>
 	</xsd:complexType>

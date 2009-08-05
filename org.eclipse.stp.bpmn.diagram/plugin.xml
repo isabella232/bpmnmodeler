@@ -1181,6 +1181,17 @@
                  objectCount="1">
            </popupStructuredContributionCriteria>
         </popupContribution>
+         <popupContribution
+              class="org.eclipse.gmf.runtime.diagram.ui.providers.DiagramContextMenuProvider">
+           <popupAction
+                 id="SetAdhocAction"
+                 path="/additionsGroup">
+           </popupAction>
+           <popupStructuredContributionCriteria
+                 objectClass="org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart"
+                 objectCount="1">
+           </popupStructuredContributionCriteria>
+        </popupContribution>
       </contributionItemProvider>
    </extension>
    <extension

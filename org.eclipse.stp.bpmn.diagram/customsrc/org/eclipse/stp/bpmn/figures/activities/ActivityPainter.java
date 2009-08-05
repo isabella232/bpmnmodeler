@@ -1417,5 +1417,42 @@ public class ActivityPainter {
     	_graphicsPrintingObjectsToZoom.put(graphics, Double.NEGATIVE_INFINITY);
     	return scale;
     }
-    
+
+	/**
+     * Paints tilde marker with the specified bounds.
+     * 
+     * @param graphics
+     *            The Graphics object used for painting
+     * @param tildeRect
+     *            tilde marker bounds.
+     */
+      public static void paintTilde(Graphics graphics, Rectangle tildeRect,
+            IFigure fig) {
+        graphics.pushState();
+        graphics.setLineWidth(MapModeUtil.getMapMode(fig).LPtoDP(2));
+        
+        // Draw tilde
+        PointList pointList = new PointList();
+        pointList.addPoint(tildeRect.x + 1, tildeRect.y + 10);
+        pointList.addPoint(tildeRect.x + 2, tildeRect.y + 9);
+        pointList.addPoint(tildeRect.x + 3, tildeRect.y + 8);
+        pointList.addPoint(tildeRect.x + 4, tildeRect.y + 7);
+        pointList.addPoint(tildeRect.x + 5, tildeRect.y + 6);
+        pointList.addPoint(tildeRect.x + 6, tildeRect.y + 6);
+        pointList.addPoint(tildeRect.x + 7, tildeRect.y + 6);
+        pointList.addPoint(tildeRect.x + 8, tildeRect.y + 7);
+        pointList.addPoint(tildeRect.x + 9, tildeRect.y + 8);
+        pointList.addPoint(tildeRect.x + 10, tildeRect.y + 9);
+        pointList.addPoint(tildeRect.x + 11, tildeRect.y + 10);
+        pointList.addPoint(tildeRect.x + 12, tildeRect.y + 11);
+        pointList.addPoint(tildeRect.x + 13, tildeRect.y + 11);
+        pointList.addPoint(tildeRect.x + 14, tildeRect.y + 11);
+        pointList.addPoint(tildeRect.x + 15, tildeRect.y + 10);
+        pointList.addPoint(tildeRect.x + 16, tildeRect.y + 9);
+        pointList.addPoint(tildeRect.x + 17, tildeRect.y + 8);
+        pointList.addPoint(tildeRect.x + 18, tildeRect.y + 7);
+        
+        graphics.drawPolyline(pointList);
+        graphics.popState();
+    }	 
 }

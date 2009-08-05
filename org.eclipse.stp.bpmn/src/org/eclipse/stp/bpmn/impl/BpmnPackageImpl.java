@@ -1,9 +1,13 @@
-/**
- * <copyright>
- * </copyright>
- *
- * $Id$
- */
+/******************************************************************************
+* Copyright (c) 2006, Intalio Inc.
+* All rights reserved. This program and the accompanying materials
+* are made available under the terms of the Eclipse Public License v1.0
+* which accompanies this distribution, and is available at
+* http://www.eclipse.org/legal/epl-v10.html
+* 
+* Contributors:
+*     Intalio Inc. - initial API and implementation
+*******************************************************************************/
 package org.eclipse.stp.bpmn.impl;
 
 import org.eclipse.emf.ecore.EAttribute;
@@ -815,6 +819,16 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
 	 * <!-- end-user-doc -->
      * @generated
      */
+	public EAttribute getSubProcess_Adhoc() {
+		return (EAttribute)subProcessEClass.getEStructuralFeatures().get(2);
+	}
+
+	
+    /**
+     * <!-- begin-user-doc -->
+	 * <!-- end-user-doc -->
+     * @generated
+     */
 	public EClass getTextAnnotation() {
         return textAnnotationEClass;
     }
@@ -1010,6 +1024,8 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         subProcessEClass = createEClass(SUB_PROCESS);
         createEReference(subProcessEClass, SUB_PROCESS__EVENT_HANDLERS);
         createEAttribute(subProcessEClass, SUB_PROCESS__IS_TRANSACTION);
+        createEAttribute(subProcessEClass, SUB_PROCESS__ADHOC);
+
 
         textAnnotationEClass = createEClass(TEXT_ANNOTATION);
 
@@ -1164,6 +1180,8 @@ public class BpmnPackageImpl extends EPackageImpl implements BpmnPackage {
         initEClass(subProcessEClass, SubProcess.class, "SubProcess", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
         initEReference(getSubProcess_EventHandlers(), this.getActivity(), this.getActivity_EventHandlerFor(), "eventHandlers", null, 0, -1, SubProcess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_COMPOSITE, !IS_RESOLVE_PROXIES, !IS_UNSETTABLE, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
         initEAttribute(getSubProcess_IsTransaction(), theXMLTypePackage.getBoolean(), "isTransaction", null, 0, 1, SubProcess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+        initEAttribute(getSubProcess_Adhoc(), theXMLTypePackage.getBoolean(), "adhoc", null, 0, 1, SubProcess.class, !IS_TRANSIENT, !IS_VOLATILE, IS_CHANGEABLE, !IS_UNSETTABLE, !IS_ID, IS_UNIQUE, !IS_DERIVED, IS_ORDERED);
+
 
         initEClass(textAnnotationEClass, TextAnnotation.class, "TextAnnotation", !IS_ABSTRACT, !IS_INTERFACE, IS_GENERATED_INSTANCE_CLASS);
 
