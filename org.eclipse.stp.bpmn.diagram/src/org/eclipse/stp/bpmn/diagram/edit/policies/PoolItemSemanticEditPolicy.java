@@ -298,8 +298,7 @@ public class PoolItemSemanticEditPolicy extends BpmnBaseItemSemanticEditPolicy {
     }
 
     /**
-     * Almost generated: the private is now protected
-     * @generated
+     * The class to create the messaging edge.
      */
     protected static class CreateIncomingMessagingEdge3002Command extends
             CreateRelationshipCommandEx {
