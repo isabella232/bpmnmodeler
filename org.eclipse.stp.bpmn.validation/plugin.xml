@@ -159,6 +159,24 @@
                   %constraint.description.8
                </description>
             </constraint>
+            <constraint
+                  class="org.eclipse.stp.bpmn.validation.specification.AdhocSubprocessConstraint"
+                  id="org.eclipse.stp.bpmn.validation.adhocsp"
+                  lang="java"
+                  mode="Batch"
+                  name="%constraint.name"
+                  severity="ERROR"
+                  statusCode="1">
+               <message>
+                  %constraint.message.8 
+               </message>
+               <target
+                     class="SubProcess">
+               </target>
+               <description>
+                  %constraint.description
+               </description>
+            </constraint>
          </constraints>
          <description>%constraintProvider.description.0</description>
          
@@ -181,7 +199,7 @@
 		the nature is installed when a process file is created -->
    <extension
          id="BatchValidationBuilder"
-         name="BPMN Validation Builder"
+         name="%extension.name"
          point="org.eclipse.core.resources.builders">
       <builder hasNature="true">
          <run class="org.eclipse.stp.bpmn.validation.builder.BatchValidationBuilder"/>
@@ -189,7 +207,7 @@
    </extension>
    <extension
          id="BatchValidationBuildAbleNature"
-         name="BPMN Diagram Validation"
+         name="%extension.name.0"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run class="org.eclipse.stp.bpmn.validation.builder.BatchValidationBuildAbleNature"/>
@@ -202,7 +220,7 @@
          <Priority name="Low"/>
       </MarkerNavigationProvider>
    </extension>
-   <extension id="diagnostic" name="BPMN Specification" point="org.eclipse.core.resources.markers">
+   <extension id="diagnostic" name="%extension.name.1" point="org.eclipse.core.resources.markers">
       <super type="org.eclipse.core.resources.problemmarker"/>
       <super type="org.eclipse.gmf.runtime.common.ui.services.marker"/>
       <persistent value="true"/>
