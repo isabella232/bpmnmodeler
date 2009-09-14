@@ -18,13 +18,13 @@
     -->
 
     <searchPath name="project.build">
-       <provider readerType="local" componentTypes="buckminster" mutable="true" source="false">
+       <provider readerType="local" componentTypes="eclipse.feature" mutable="true" source="false">
           <uri format="{0}/{1}">
               <bc:propertyRef key="project.build" />
               <bc:propertyRef key="buckminster.component" />
           </uri>
        </provider>
-       <provider readerType="svn" componentTypes="buckminster" mutable="true" source="false">
+       <provider readerType="svn" componentTypes="eclipse.feature" mutable="true" source="false">
           <uri format="http://dev.eclipse.org/svnroot/stp/{0}/{1}/{2}/build/buckminster/{3}">
               <bc:propertyRef key="project.repo" />
               <bc:propertyRef key="project.component" />
@@ -100,7 +100,7 @@
 
      <!-- Project specific search paths -->
      <!-- ordering is important here -->
-     <locator searchPathRef="project.build" pattern="^bpmn-modeler.builder?" />
+     <locator searchPathRef="project.build" pattern="^org.eclipse.stp.build.bpmn_modeler" />
 
      <locator searchPathRef="bpmn.features" pattern="^org\.eclipse\.stp\.bpmn(\..*)?feature" />
      <locator searchPathRef="bpmn.plugins" pattern="^org\.eclipse\.stp\.bpmn.*" />
