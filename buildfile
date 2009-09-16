@@ -15,22 +15,22 @@ define "bpmn-modeler", :layout => layout do
   
   define 'org.eclipse.stp.bpmn'  do
     compile.with project.dependencies
-    package :jar
+    package(:plugin)
   end
 
   define 'org.eclipse.stp.bpmn.diagram' do
-    compile.from(_('customsrc')).with [project('org.eclipse.stp.bpmn'), project('org.eclipse.stp.bpmn.edit')] + project.dependencies
-    package :jar
+    compile.from(_('customsrc')).with dependencies
+    package(:plugin)
   end
 
   define 'org.eclipse.stp.bpmn.edit'  do
-    compile.with [project('org.eclipse.stp.bpmn')] + project.dependencies
-    package :jar
+    compile.with dependencies
+    package(:plugin)
   end
 
   define 'org.eclipse.stp.bpmn.validation'  do
-    compile.with [project('org.eclipse.stp.bpmn'), project('org.eclipse.stp.bpmn.diagram')] + project.dependencies + project('org.eclipse.stp.bpmn.diagram').dependencies
-    package :jar
+    compile.with dependencies
+    package(:plugin)
   end
   
   define 'org.eclipse.stp.bpmn.feature' do
