@@ -215,7 +215,7 @@ public class MessagingEdgeEditPart extends ConnectionNodeEditPart {
         private PointList internalGetSmoothPoints(boolean calculateAppox) {
         	PointList smoothPoints;
             if (!routerIsRectilinear) {
-                smoothPoints = super.getSmoothPoints();
+                smoothPoints = super.getSmoothPoints(calculateApprox);
             } else {
                 smoothPoints =
                   ConnectionUtils.getRoundedRectilinearSmoothPoints(
