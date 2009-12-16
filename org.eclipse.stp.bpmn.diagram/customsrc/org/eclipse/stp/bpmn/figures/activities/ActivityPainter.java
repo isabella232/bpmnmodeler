@@ -433,7 +433,7 @@ public class ActivityPainter {
         //don't set the background color! EDGE-1119
 //        graphics.setBackgroundColor(ColorConstants.white);
 
-        double lineWidth = fig.getBounds().width * getAbsoluteScale(graphics)/10;
+        double lineWidth = fig.getBounds().width/10;
         graphics.setLineWidth((int)Math.floor(lineWidth));
         
         PrecisionRectangle outerCircle = new PrecisionRectangle(fig.getBounds());
@@ -911,7 +911,7 @@ public class ActivityPainter {
 
         graphics.setForegroundColor(ColorConstants.darkGray);
 
-        double lineWidth = rect.preciseWidth * getAbsoluteScale(graphics)/6;
+        double lineWidth = rect.preciseWidth/6;
         shrink(rect, 3.0* rect.preciseWidth / 8,
                      3.0* rect.preciseHeight / 8);
         try {
@@ -939,7 +939,7 @@ public class ActivityPainter {
 
         graphics.setForegroundColor(ColorConstants.darkGray);
 
-        double lineWidth = rect.preciseWidth * getAbsoluteScale(graphics)/6;
+        double lineWidth = rect.preciseWidth/6;
         shrink(rect, 3.0* rect.preciseWidth / 9.5,
                      3.0* rect.preciseHeight / 9.5);
         try {
@@ -1027,7 +1027,7 @@ public class ActivityPainter {
         graphics.pushState();
         graphics.setForegroundColor(ColorConstants.darkGray);
 
-        double lineWidth = rect.preciseWidth * getAbsoluteScale(graphics)/6;
+        double lineWidth = rect.preciseWidth/6;
         shrink(rect, 5*rect.preciseWidth / 16,
                      5*rect.preciseHeight / 16);
         try {
@@ -1107,7 +1107,7 @@ public class ActivityPainter {
         int oriw = rect.width;
 
         Rectangle rr = rect.getCopy().shrink(11 * oriw / 44, 11 * orih / 44);
-        graphics.setLineWidth((int)Math.round(getAbsoluteScale(graphics)*rr.width/8));
+        graphics.setLineWidth((int)Math.round(rr.width/8));
         graphics.drawOval(rr);
 
         graphics.popState();

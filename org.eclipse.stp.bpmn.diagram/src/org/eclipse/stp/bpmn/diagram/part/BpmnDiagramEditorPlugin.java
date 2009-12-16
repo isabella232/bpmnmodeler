@@ -325,7 +325,7 @@ public class BpmnDiagramEditorPlugin extends AbstractUIPlugin {
                 ((IEAnnotationDecorator2) deco).getDecorators(null,elt,
                     elt.getEAnnotation(annotationSource));
             if (!decorators.isEmpty()) {
-                return decorators.iterator().next().getImage();
+            	return decorators.iterator().next().getImage();
             }
         }
         return null;

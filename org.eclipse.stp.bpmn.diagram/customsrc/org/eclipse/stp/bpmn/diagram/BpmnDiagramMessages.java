@@ -573,6 +573,8 @@ public class BpmnDiagramMessages extends NLS {
     public static String SecondarySemanticHintProcessorForAssociationDirection_createAssociation;
 
     public static String SequenceEdgeItemSemanticEditPolicy_flow_condition_type_command;
+
+    public static String SequenceFlowConditionTypeAction_menu_text;
     
     public static String AbstractViewDnDHandler_droppingView;
     

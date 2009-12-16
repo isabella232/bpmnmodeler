@@ -49,11 +49,6 @@ public class SubProcessBorderFigure extends RectangleFigure {
     }
 
     
-    public SubProcessBorderFigure(IMapMode mapmode, boolean hasChildren) {
-//        setOpaque(true);
-//        
-    }
-
     @Override
     public Dimension getMaximumSize() {
         return new Dimension(super.getMaximumSize().width,

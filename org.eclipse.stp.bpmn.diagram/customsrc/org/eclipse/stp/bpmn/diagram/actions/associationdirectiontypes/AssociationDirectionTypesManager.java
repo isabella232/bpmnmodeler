@@ -13,8 +13,8 @@
  */
 package org.eclipse.stp.bpmn.diagram.actions.associationdirectiontypes;
 
-import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -24,7 +24,7 @@ import org.eclipse.ui.IWorkbenchPage;
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
-public class AssociationDirectionTypesManager extends ActionMenuManager {
+public class AssociationDirectionTypesManager extends MenuManager {
 	/**
 	 * The edit menu action containing the UI for the edit menu manager
 	 */
@@ -48,7 +48,7 @@ public class AssociationDirectionTypesManager extends ActionMenuManager {
 	 * @menuText The label of the menu.
 	 */
 	protected AssociationDirectionTypesManager(String menuText) {
-		super(ID, new AssociationDirectionTypesAction(menuText), true);
+		super(menuText, ID);
 	}
 	
     /**

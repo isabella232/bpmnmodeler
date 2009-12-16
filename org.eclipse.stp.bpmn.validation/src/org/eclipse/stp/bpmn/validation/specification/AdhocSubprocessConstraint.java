@@ -33,7 +33,7 @@ public class AdhocSubprocessConstraint extends AbstractModelConstraint {
         if (ctx.getTarget() instanceof SubProcess && ((SubProcess) ctx.getTarget()).isAdhoc()) {
             SubProcess sp = (SubProcess) ctx.getTarget();
             if (!sp.getSequenceEdges().isEmpty()) {
-                return ctx.createFailureStatus(new Object[] {sp.getName() == null ? "" : sp.getName()});
+                return ctx.createFailureStatus(new Object[] {sp.getName() == null ? "" : sp.getName()}); //$NON-NLS-1$
             }
         }
         return ctx.createSuccessStatus();

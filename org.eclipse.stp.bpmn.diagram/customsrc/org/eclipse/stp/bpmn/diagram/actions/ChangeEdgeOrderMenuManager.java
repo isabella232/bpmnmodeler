@@ -23,13 +23,12 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
-import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.gmf.runtime.diagram.ui.commands.ICommandProxy;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
-import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.stp.bpmn.SequenceEdge;
 import org.eclipse.stp.bpmn.Vertex;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
@@ -46,7 +45,7 @@ import org.eclipse.ui.IWorkbenchPart;
  * @author <a href="http://www.intalio.com">Intalio Inc.</a>
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
  */
-public class ChangeEdgeOrderMenuManager extends ActionMenuManager {
+public class ChangeEdgeOrderMenuManager extends MenuManager {
 
     /**
      * menu ID.
@@ -73,31 +72,8 @@ public class ChangeEdgeOrderMenuManager extends ActionMenuManager {
     
     public static final String EDGE_ORDER_SOURCE_DOWN = "changeEdgeOrderMenu_source_down"; //$NON-NLS-1$
     
-    /**
-     * dummy action used to give a text and an ID to the menu manager.
-     * 
-     * @author <a href="http://www.intalio.com">Intalio Inc.</a>
-     * @author <a href="mailto:atoulme@intalio.com">Antoine Toulme</a>
-     */
-    private static class DummyMenuAction extends Action {
-        public DummyMenuAction() {
-            setText(BpmnDiagramMessages.ChangeEdgeOrderMenuManager_menu_label);
-            setId(ID);
-        }
-        
-        /**
-         * Open constructor for creating submenus.
-         * @param text
-         * @param id
-         */
-        public DummyMenuAction(String text, String id) {
-            setText(text);
-            setId(id);
-        }
-    }
-   
     public ChangeEdgeOrderMenuManager() {
-        super(ID, new DummyMenuAction());
+        super(BpmnDiagramMessages.ChangeEdgeOrderMenuManager_menu_label, ID);
     }
 
     /**
@@ -106,8 +82,8 @@ public class ChangeEdgeOrderMenuManager extends ActionMenuManager {
      * @param id the ID of the action
      * @return the submenu
      */
-    public static ActionMenuManager createSubmenu(String text, String id) {
-        return new ActionMenuManager(id, new DummyMenuAction(text, id));
+    public static MenuManager createSubmenu(String text, String id) {
+        return new MenuManager(text, id);
     }
     
     /**

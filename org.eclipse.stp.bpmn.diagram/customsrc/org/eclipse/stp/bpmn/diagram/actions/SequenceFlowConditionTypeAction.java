@@ -15,12 +15,13 @@
 package org.eclipse.stp.bpmn.diagram.actions;
 
 import org.eclipse.gef.Request;
-import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.gmf.runtime.diagram.ui.actions.DiagramAction;
 import org.eclipse.jface.action.Action;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.action.IMenuManager;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.stp.bpmn.SequenceFlowConditionType;
+import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.policies.SequenceEdgeItemSemanticEditPolicy;
 import org.eclipse.ui.IWorkbenchPage;
 
@@ -56,7 +57,8 @@ public class SequenceFlowConditionTypeAction extends DiagramAction {
      * @return a simple menu to contain the activities
      */
     public static IMenuManager createConditionTypeMenu() {
-        IAction handler = new Action() { public String getText() {return "Condition type";}}; //$NON-NLS-1$
-        return new ActionMenuManager(MENU_ID, handler, false);
+        IAction handler = new Action() { public String getText() {return BpmnDiagramMessages.SequenceFlowConditionTypeAction_menu_text;}};
+        return new MenuManager(BpmnDiagramMessages.SequenceFlowConditionTypeAction_menu_text, MENU_ID);
+//        return new ActionMenuManager(MENU_ID, handler, false);
     }
 }

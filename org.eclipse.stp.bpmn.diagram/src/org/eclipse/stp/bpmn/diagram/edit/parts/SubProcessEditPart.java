@@ -525,8 +525,8 @@ public class SubProcessEditPart extends ShapeNodeEditPart {
 
             Object layData1 = SubProcessLayout.BODY;
 
-            org.eclipse.stp.bpmn.figures.SubProcessBorderFigure spBorder = new org.eclipse.stp.bpmn.figures.SubProcessBorderFigure(
-                    SubProcessEditPart.this.getMapMode(), !((SubProcess) resolveSemanticElement()).getEventHandlers().isEmpty());
+            org.eclipse.stp.bpmn.figures.SubProcessBorderFigure spBorder = 
+                new org.eclipse.stp.bpmn.figures.SubProcessBorderFigure();
 
             setFigureSubProcessBorderFigure(spBorder);
 

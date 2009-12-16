@@ -222,9 +222,9 @@ public class SequenceEdgeEditPart extends ConnectionNodeEditPart {
         /**
          * @generated NOT compatible with 3.5 and 3.4.
          */
-        private PointList internalGetSmoothPoints(boolean calculateApprox) {
+        private PointList internalGetSmoothPoints(boolean calculateAppox) {
             if (!routerIsRectilinear) {
-                smoothPoints = super.getSmoothPoints(calculateApprox);
+                smoothPoints = super.getSmoothPoints();
             } else {
                 smoothPoints =
                   ConnectionUtils.getRoundedRectilinearSmoothPoints(

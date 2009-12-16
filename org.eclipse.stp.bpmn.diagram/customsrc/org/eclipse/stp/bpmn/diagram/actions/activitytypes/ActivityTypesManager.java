@@ -15,6 +15,7 @@ package org.eclipse.stp.bpmn.diagram.actions.activitytypes;
 
 import org.eclipse.gmf.runtime.common.ui.action.ActionMenuManager;
 import org.eclipse.jface.action.Action;
+import org.eclipse.jface.action.MenuManager;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 
 /**
@@ -22,7 +23,7 @@ import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
  * @author <a href="mailto:atoulme@intalio.com">Antoine Toulm&eacute;</a>
  * @author <a href="http://www.intalio.com">&copy; Intalio, Inc.</a>
  */
-public class ActivityTypesManager extends ActionMenuManager {
+public class ActivityTypesManager extends MenuManager {
 	/**
 	 * The edit menu action containing the UI for the edit menu manager
 	 */
@@ -41,12 +42,14 @@ public class ActivityTypesManager extends ActionMenuManager {
             setText(text);
             setId(id);
         }
+		
 	}
 
 	public static final String ID = "ActivityTypes"; //$NON-NLS-1$
 	
 	public ActivityTypesManager() {
-		super(ID, new ActivityTypesManagerAction(), false);
+//		super(ID, new ActivityTypesManagerAction(), false);
+	    super(BpmnDiagramMessages.ActivityTypesManager_menuTitle, ID);
 	}
 	
 	/**
@@ -56,8 +59,9 @@ public class ActivityTypesManager extends ActionMenuManager {
 	 * @param text the text of the submenu.
 	 * @return the menu
 	 */
-	public static ActionMenuManager createSubMenu(String id, String text) {
-	    return new ActionMenuManager(id, new ActivityTypesManagerAction(id, text), true);
+	public static MenuManager createSubMenu(String id, String text) {
+	    return new MenuManager(text, id);
+//	    return new ActionMenuManager(id, new ActivityTypesManagerAction(id, text), true);
 	}
 	
 	/**
