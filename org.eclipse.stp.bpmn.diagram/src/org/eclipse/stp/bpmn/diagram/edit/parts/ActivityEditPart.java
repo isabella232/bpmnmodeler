@@ -253,9 +253,11 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      */
     protected IFigure createNodeShape() {
         ActivityFigure figure = (ActivityFigure) createNodeShapeGen();
-        Activity activity = (Activity) getPrimaryView().getElement();
-        setActivityTypeAndLabelAndLayout(figure, activity);
-        figure.setLooping(activity.isLooping());
+        EObject activity = resolveSemanticElement();
+        if (activity instanceof Activity) {
+            setActivityTypeAndLabelAndLayout(figure, (Activity) activity);
+            figure.setLooping(((Activity) activity).isLooping());
+        }
         return figure;
     }
 
@@ -377,8 +379,11 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      */
     protected NodeFigure createNodePlate() {
         //this used to be the createWrappedFigure() method:
-        Activity activity = (Activity) getPrimaryView().getElement();
-        final int activityType = activity.getActivityType().getValue();
+        int activityType = ActivityType.TASK;
+        if (resolveSemanticElement() instanceof Activity) {
+            Activity activity = (Activity) resolveSemanticElement();
+            activityType = activity.getActivityType().getValue();
+        }
 
         int shapeType = getShapeType(activityType);
         if (shapeType == SHAPE_RECTANGLE) {
@@ -464,8 +469,11 @@ public class ActivityEditPart extends ShapeNodeEditPart {
         NodeFigure figure = createNodePlate();//the wrapper figure just there to hold the connections and the handlebound
         IFigure shape = createNodeShape();//the activityFigure
 
-        ActivityType activityType = ((Activity) getPrimaryView().getElement())
+        ActivityType activityType = ActivityType.TASK_LITERAL;
+        if (resolveSemanticElement() instanceof Activity) {
+            activityType = ((Activity) getPrimaryView().getElement())
                 .getActivityType();
+        }
         boolean gateway = ActivityType.VALUES_GATEWAYS.contains(activityType);
         boolean event = ActivityType.VALUES_EVENTS.contains(activityType)
                 || ActivityType.VALUES_EVENTS_INTERMEDIATE
@@ -511,9 +519,13 @@ public class ActivityEditPart extends ShapeNodeEditPart {
      */
     protected IFigure setupContentPane(IFigure nodeShape) {
         if (nodeShape.getLayoutManager() == null) {
-            EObject element = ((Node) getModel()).getElement();
-            int activityType = ((Activity) element).getActivityType()
-                    .getValue();
+            EObject element = resolveSemanticElement();
+            
+            int activityType = ActivityType.TASK;
+            if (element instanceof Activity) {
+                activityType = ((Activity) element).getActivityType().getValue();
+            }
+                    
             if (activityType == ActivityType.TASK) {
                 StackLayout layout = new StackLayout();
                 nodeShape.setLayoutManager(layout);
@@ -679,7 +691,11 @@ public class ActivityEditPart extends ShapeNodeEditPart {
             View model = (View) connEditPart.getModel();
             connIndex.put(model.getElement(), connEditPart);
         }
-        Activity act = (Activity) (((Node) getModel()).getElement());
+        EObject element = resolveSemanticElement();
+        if (!(element instanceof Activity)) {
+            return;
+        }
+        Activity act = (Activity) element;
         FeatureMap messages = act.getOrderedMessages();
         int totalLength = messages.size();
         int i = 0;
@@ -811,10 +827,11 @@ public class ActivityEditPart extends ShapeNodeEditPart {
          * @generated
          */
         public ActivityFigure() {
-            Activity a = (Activity) resolveSemanticElement();
-            if (a != null) {//not sure why but I have seen stack traces
+            
+            EObject a = resolveSemanticElement();
+            if (a instanceof Activity) {//not sure why but I have seen stack traces
                 //that might be fixed by this.
-                this.setActivityType(a.getActivityType().getLiteral());
+                this.setActivityType(((Activity) a).getActivityType().getLiteral());
             } else {
                 this.setActivityType(ActivityType.TASK_LITERAL.getLiteral());
             }
@@ -828,9 +845,9 @@ public class ActivityEditPart extends ShapeNodeEditPart {
          * @notgenerated
          */
         private void createContents() {
-            ActivityType activityType = ((Activity) getPrimaryView()
-                    .getElement()).getActivityType();
-            if (activityType.equals(ActivityType.TASK_LITERAL)) {
+            if (!(resolveSemanticElement() instanceof Activity) || 
+                    ((Activity) resolveSemanticElement()).getActivityType().
+                            equals(ActivityType.TASK_LITERAL)) {
                 createContentsGen();
             }
         }
