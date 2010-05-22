@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.44.1"
+   sodipodi:docname="sub_process_looping.svg"
+   sodipodi:docbase="C:\apps\eclipse-workspace-gmf\trunk\org.eclipse.stp.bpmn.edit\icons\full\objsvg"
+   inkscape:export-filename="C:\apps\eclipse-workspace-gmf\trunk\org.eclipse.stp.bpmn.edit\icons\full\obj16\activities\sub_process_looping.png"
+   inkscape:export-xdpi="60"
+   inkscape:export-ydpi="60">
+  <metadata
+     id="metadata6">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="576"
+     inkscape:window-width="853"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="15.625"
+     inkscape:cx="12.102812"
+     inkscape:cy="11.8208"
+     inkscape:window-x="44"
+     inkscape:window-y="66"
+     inkscape:current-layer="svg2"
+     showguides="true"
+     inkscape:guide-bbox="true" />
+  <defs
+     id="defs13" />
+  <rect
+     width="21.879652"
+     height="15.089416"
+     x="1.060174"
+     y="4.4552922"
+     rx="3"
+     ry="3"
+     style="opacity:1;fill:white;fill-opacity:1;stroke:black;stroke-width:0.5;stroke-linecap:square;stroke-linejoin:round;stroke-miterlimit:0;stroke-dasharray:none;stroke-opacity:1"
+     id="rect5423" />
+  <rect
+     style="fill:none;fill-opacity:1;stroke:black;stroke-width:0.3;stroke-linecap:square;stroke-linejoin:miter;stroke-miterlimit:3;stroke-dasharray:none;stroke-opacity:1"
+     id="rect1890"
+     width="4.1787243"
+     height="4.1787233"
+     x="12.699097"
+     y="13.407706" />
+  <g
+     id="Layer_0"
+     transform="matrix(0.107143,0,0,0.107143,2.574157,6.28277)">
+    <g
+       id="g3666">
+      <path
+         id="path3668"
+         style="fill:none;stroke:black;stroke-width:4;stroke-miterlimit:3.7320509"
+         d="M 114,74 L 114,98" />
+      <path
+         id="path3670"
+         style="fill:none;stroke:black;stroke-width:4;stroke-miterlimit:3.7320509"
+         d="M 126,86 L 102,86" />
+    </g>
+  </g>
+  <g
+     id="g3694"
+     transform="matrix(0.342612,0,0,0.342612,3.446059,12.69725)">
+    <path
+       id="path3685"
+       d="M 20,14 C 22.755093,13.025927 24.407744,10.208668 23.913591,7.3285339 C 23.419439,4.4484002 20.922218,2.3431458 18,2.3431458 C 15.077782,2.3431458 12.580561,4.4484002 12.086409,7.3285339 C 11.592256,10.208668 13.244907,13.025927 16,14"
+       style="fill:none;stroke:black;stroke-width:2" />
+    <path
+       id="path3687"
+       d="M 11,14 L 16,14 L 16,9"
+       style="fill:none;stroke:black;stroke-width:2" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:3px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:start;line-height:100%;writing-mode:lr-tb;text-anchor:start;fill:#666;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;font-family:Arial"
+     x="3.6467285"
+     y="9.4720001"
+     id="text2764"
+     sodipodi:linespacing="100%"><tspan
+       sodipodi:role="line"
+       id="tspan2766"
+       x="3.6467285"
+       y="9.4720001">Sub process</tspan></text>
+</svg>

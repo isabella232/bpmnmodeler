@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   version="1.0"
+   width="24"
+   height="24"
+   viewBox="0 0 24 24"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.44.1"
+   sodipodi:docname="start_timer.svg"
+   sodipodi:docbase="C:\apps\eclipse-workspace-gmf\trunk\org.eclipse.stp.bpmn.edit\icons\full\objsvg"
+   inkscape:export-filename="C:\apps\eclipse-workspace-gmf\trunk\org.eclipse.stp.bpmn.edit\icons\full\obj16\activities\start_timer.png"
+   inkscape:export-xdpi="60"
+   inkscape:export-ydpi="60">
+  <metadata
+     id="metadata25">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     inkscape:window-height="576"
+     inkscape:window-width="853"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     guidetolerance="10.0"
+     gridtolerance="10.0"
+     objecttolerance="10.0"
+     borderopacity="1.0"
+     bordercolor="#666666"
+     pagecolor="#ffffff"
+     id="base"
+     inkscape:zoom="15.625"
+     inkscape:cx="12"
+     inkscape:cy="12"
+     inkscape:window-x="176"
+     inkscape:window-y="264"
+     inkscape:current-layer="svg2" />
+  <defs
+     id="defs13" />
+  <circle
+     cx="12"
+     cy="12"
+     r="11"
+     style="fill:white;stroke:black;stroke-width:0.5;stroke-miterlimit:4;stroke-dasharray:none"
+     id="circle4" />
+  <g
+     transform="matrix(0.450692,0,0,0.450693,-16.34911,-27.35092)"
+     id="Layer_0">
+    <g
+       id="g4287">
+      <path
+         d="M 63.309517,87.380875 L 67.44083,87.380875"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4289" />
+      <path
+         d="M 63.309517,87.380875 L 64.96204,79.11825"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4291" />
+      <path
+         d="M 74.88211,87.31202 C 74.88211,93.928841 69.518127,99.292824 62.901298,99.292824 C 56.284469,99.292824 50.920497,93.928841 50.920497,87.31202 C 50.920497,80.695191 56.284469,75.331216 62.901298,75.331216 C 69.518127,75.331216 74.88211,80.695191 74.88211,87.31202 z "
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4293" />
+      <path
+         d="M 63.309517,87.380875 L 68.26709,87.380875"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4295" />
+      <path
+         d="M 63.309517,87.380875 L 65.78829,79.11825"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4297" />
+      <path
+         d="M 57.10279,77.36863 L 58.80196,80.3724"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4299" />
+      <path
+         d="M 62.859497,95.27463 L 62.89638,98.94855"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4301" />
+      <path
+         d="M 58.80196,94.16803 L 57.005375,97.33608"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4303" />
+      <path
+         d="M 55.99857,91.36463 L 52.840485,93.09835"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4305" />
+      <path
+         d="M 74.53783,87.380875 L 70.97458,87.380875"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4307" />
+      <path
+         d="M 52.758995,81.80917 L 55.851025,83.54465"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4309" />
+      <path
+         d="M 69.94174,91.29086 L 73.03377,92.95256"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4311" />
+      <path
+         d="M 66.843254,94.2418 L 68.68992,97.393105"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4313" />
+      <path
+         d="M 62.89638,75.813194 L 62.93327,79.2658"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4315" />
+      <path
+         d="M 68.78739,77.42565 L 66.990814,80.44617"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4317" />
+      <path
+         d="M 72.952255,81.66339 L 69.94174,83.32334"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4319" />
+      <path
+         d="M 54.891964,87.380875 L 51.32871,87.380875"
+         style="fill:none;stroke:black;stroke-linecap:square;stroke-miterlimit:10"
+         id="path4321" />
+    </g>
+  </g>
+</svg>
