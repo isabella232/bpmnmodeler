@@ -23,11 +23,32 @@
        genModel = "model/bpmn.genmodel" /> 
   </extension>
 
-  <extension point="org.eclipse.emf.ecore.extension_parser">
-    <parser 
-       type="bpmn" 
-       class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory" />
-  </extension>
-
+<extension
+         point="org.eclipse.core.contenttype.contentTypes">
+      <content-type
+            base-type="org.eclipse.core.runtime.xml"
+            default-charset="UTF-8"
+            file-extensions="bpmn"
+            id="org.eclipse.stp.bpmn.content-type"
+            name="BPMN 1.2 Content type"
+            priority="normal">
+         <describer
+               class="org.eclipse.core.runtime.content.XMLRootElementContentDescriber2"
+               plugin="org.eclipse.emf.ecore.xmi">
+            <parameter
+                  name="element"
+                  value="{http://stp.eclipse.org/bpmn}*">
+            </parameter>
+         </describer>
+      </content-type>
+   </extension>
+   
+   <extension
+         point="org.eclipse.emf.ecore.content_parser">
+      <parser
+            class="org.eclipse.gmf.runtime.emf.core.resources.GMFResourceFactory"
+            contentTypeIdentifier="org.eclipse.stp.bpmn.content-type">
+      </parser>
+   </extension>
 </plugin>
 

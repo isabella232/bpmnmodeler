@@ -42,6 +42,7 @@ import org.eclipse.gmf.runtime.diagram.ui.resources.editor.ide.util.IDEEditorUti
 import org.eclipse.gmf.runtime.diagram.ui.resources.editor.util.DiagramFileCreator;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
 import org.eclipse.gmf.runtime.emf.core.GMFEditingDomainFactory;
+import org.eclipse.gmf.runtime.emf.core.resources.GMFResource;
 import org.eclipse.gmf.runtime.emf.core.util.EObjectAdapter;
 import org.eclipse.gmf.runtime.notation.Bounds;
 import org.eclipse.gmf.runtime.notation.Diagram;
@@ -124,7 +125,7 @@ public class BpmnDiagramEditorUtil extends IDEEditorUtil {
                 .removeFileExtension().addFileExtension("bpmn"); //$NON-NLS-1$
         IFile modelFile = diagramFile.getParent().getFile(
                 new Path(modelFileRelativePath.lastSegment()));
-        final Resource modelResource = resourceSet.createResource(URI
+        final Resource modelResource = new GMFResource(URI
                 .createPlatformResourceURI(modelFile.getFullPath().toString()));
         affectedFiles.add(modelFile);
 
