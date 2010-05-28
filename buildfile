@@ -35,19 +35,31 @@ define "bpmn-modeler", :layout => layout do
     package(:plugin)
   end
   
-#  define 'org.eclipse.stp.bpmn.feature' do
-#    package(:feature).tap {|f|
-#      f.label = "BPMN modeler feature"
-#      f.provider = "Eclipse.org"
-#      f.description = "The BPMN Modeler is a business process diagram editor for business analysts."
-#      f.changesURL = "http://www.eclipse.org/bpmn/"
-#      f.license = File.read("epl-v10.html")
-#      f.licenseURL = "http://www.eclipse.org/legal/epl-v10.html"
-#      #f.update_sites << {:url => "http://example.com/update", :name => "My update site"}
-#      #f.discovery_sites = [{:url => "http://example.com/update2", :name => "My update site2"}, 
-#      #  {:url => "http://example.com/upup", :name => "My update site in case"}]
-#      f.plugins = [project('org.eclipse.stp.bpmn'), project('org.eclipse.stp.bpmn.diagram'), 
-#        project('org.eclipse.stp.bpmn.edit'), project('org.eclipse.stp.bpmn.validation')]
-#    }
-#  end
+  define 'org.eclipse.stp.bpmn.feature' do
+    package(:feature).feature_xml = _("feature.xml")
+    package(:feature).feature_xml = _("feature.properties")
+    package(:feature).plugins = [project('org.eclipse.stp.bpmn'), 
+                                 project('org.eclipse.stp.bpmn.diagram'), 
+                                 project('org.eclipse.stp.bpmn.edit'), 
+                                 project('org.eclipse.stp.bpmn.validation')]
+    package(:feature).include(_("epl-v10.html"))
+    package(:feature).include(_("license.html"))
+    package(:feature).include(_("eclipse_update_120.jpg"))
+    # Also do a SDK feature
+    package(:sources).include(_("epl-v10.html"))
+    package(:sources).include(_("license.html"))
+    package(:sources).include(_("eclipse_update_120.jpg"))
+  end
+  
+  define "org.eclipse.stp.bpmn.site" do
+    package(:site).tap do |site|
+      category = Buildr4OSGi::Category.new
+      category.name = "org.eclipse.stp" #probably incorrect ?
+      category.label = "STP" #TODO
+      category.description = "" #TODO
+      category.features<< project("bpmn-modeler:org.eclipse.stp.bpmn.feature")
+      site.categories << category
+    end
+    package(:p2_site)
+  end
 end
