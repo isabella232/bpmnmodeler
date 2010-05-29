@@ -37,11 +37,12 @@ define "bpmn-modeler", :layout => layout do
   
   define 'org.eclipse.stp.bpmn.feature' do
     package(:feature).feature_xml = _("feature.xml")
-    package(:feature).feature_xml = _("feature.properties")
+    package(:feature).feature_properties = _("feature.properties")
     package(:feature).plugins = [project('org.eclipse.stp.bpmn'), 
                                  project('org.eclipse.stp.bpmn.diagram'), 
                                  project('org.eclipse.stp.bpmn.edit'), 
                                  project('org.eclipse.stp.bpmn.validation')]
+    package(:feature).include(_("feature.xml"))                             
     package(:feature).include(_("epl-v10.html"))
     package(:feature).include(_("license.html"))
     package(:feature).include(_("eclipse_update_120.jpg"))
@@ -50,6 +51,7 @@ define "bpmn-modeler", :layout => layout do
     package(:sources).label = "BPMN Project SDK Feature"
     package(:sources).description = "Development environment for BPMN business processes"
     package(:sources).feature_xml = _("feature_sdk.xml")
+    package(:sources).feature_properties = _("feature.properties")
     package(:sources).include(_("epl-v10.html"))
     package(:sources).include(_("license.html"))
     package(:sources).include(_("eclipse_update_120.jpg"))
