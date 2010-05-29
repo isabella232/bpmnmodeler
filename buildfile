@@ -60,6 +60,6 @@ define "bpmn-modeler", :layout => layout do
       category.features<< project("bpmn-modeler:org.eclipse.stp.bpmn.feature")
       site.categories << category
     end
-    package(:p2_site)
+    package(:p2_from_site)
   end
 end
