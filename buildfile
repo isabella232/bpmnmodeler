@@ -46,6 +46,9 @@ define "bpmn-modeler", :layout => layout do
     package(:feature).include(_("license.html"))
     package(:feature).include(_("eclipse_update_120.jpg"))
     # Also do a SDK feature
+    package(:sources).feature_id = "org.eclipse.stp.bpmn.sdk.feature"
+    package(:sources).label = "BPMN Project SDK Feature"
+    package(:sources).description = "Development environment for BPMN business processes"
     package(:sources).feature_xml = _("feature_sdk.xml")
     package(:sources).include(_("epl-v10.html"))
     package(:sources).include(_("license.html"))
