@@ -36,16 +36,35 @@ define "bpmn-modeler", :layout => layout do
   end
   
   define 'org.eclipse.stp.bpmn.feature' do
-    package(:feature).feature_xml = _("feature.xml")
-    package(:feature).feature_properties = _("feature.properties")
-    package(:feature).plugins = [project('org.eclipse.stp.bpmn'), 
+    package(:feature).tap do |f|
+      f.feature_id = "org.eclipse.stp.bpmn.feature"
+      f.label = "BPMN Project Feature"
+      f.provider = "eclipse.org"
+      f.copyright = <<-COPYRIGHT
+Copyright (c) 2006-2010, Intalio Inc.
+All rights reserved. This program and the accompanying materials
+are made available under the terms of the Eclipse Public License v1.0
+which accompanies this distribution, and is available at
+http://www.eclipse.org/legal/epl-v10.html
+
+Contributors:
+    Intalio Inc. - initial API and implementation
+COPYRIGHT
+      f.description = "Development environment for BPMN business processes"
+      f.changesURL = ""
+      f.license = File.read(_("license"))
+      f.licenseURL = "license.html"
+      f.update_sites << {:url => "http://download.eclipse.org/stp/updates/", :name => "The Eclipse SOA Tools Platform (STP) Project update site"}
+      f.plugins = [project('org.eclipse.stp.bpmn'), 
                                  project('org.eclipse.stp.bpmn.diagram'), 
                                  project('org.eclipse.stp.bpmn.edit'), 
                                  project('org.eclipse.stp.bpmn.validation')]
-    package(:feature).include(_("feature.xml"))                             
-    package(:feature).include(_("epl-v10.html"))
-    package(:feature).include(_("license.html"))
-    package(:feature).include(_("eclipse_update_120.jpg"))
+                                 
+      f.include(_("epl-v10.html"))
+      f.include(_("license.html"))
+      f.include(_("eclipse_update_120.jpg"))
+    end
+    
     # Also do a SDK feature
     package(:sources).feature_id = "org.eclipse.stp.bpmn.sdk.feature"
     package(:sources).label = "BPMN Project SDK Feature"
