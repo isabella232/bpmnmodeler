@@ -52,7 +52,7 @@ Contributors:
 COPYRIGHT
       f.description = "Development environment for BPMN business processes"
       f.changesURL = ""
-      f.license = File.read(_("license"))
+      f.license = File.read(_("license.txt"))
       f.licenseURL = "license.html"
       f.update_sites << {:url => "http://download.eclipse.org/stp/updates/", :name => "The Eclipse SOA Tools Platform (STP) Project update site"}
       f.plugins = [project('org.eclipse.stp.bpmn'), 
