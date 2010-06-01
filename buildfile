@@ -138,7 +138,6 @@ COPYRIGHT
     package(:sources).feature_id = "org.eclipse.stp.bpmn.sdk.feature"
     package(:sources).label = "BPMN Project SDK Feature"
     package(:sources).description = "Development environment for BPMN business processes"
-    package(:sources).feature_properties = _("feature.properties")
     package(:sources).include(_("epl-v10.html"))
     package(:sources).include(_("license.html"))
     package(:sources).include(_("eclipse_update_120.jpg"))
@@ -153,9 +152,9 @@ COPYRIGHT
       category.features<< project("bpmn-modeler:org.eclipse.stp.bpmn.feature")
       site.categories << category
     end
-    package(:site).enhance do
-      zip = package(:site).to_s
-      sign(zip)
+    site = package(:site).to_s
+    package(:p2_from_site).enhance do 
+      sign(site)
       pack(zip)
       digest(zip)
     end
