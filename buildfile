@@ -38,7 +38,7 @@ LAUNCHER="java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebu
 # Signs an update site, using a script that may only be found on the Eclipse Foundation build machine.
 # This method may take a long time as signing works as a queue.
 def sign(artifact, output = artifact, send_email = true)
-  debug "Start signing of #{artifact}"
+  puts "Start signing of #{artifact}"
   File.makedirs SIGN_STAGING + "/signed"
   system("cp #{artifact} #{SIGN_STAGING}")
   mail = send_email ? "mail" : "nomail"
@@ -50,20 +50,20 @@ def sign(artifact, output = artifact, send_email = true)
   end
   system("cp #{SIGN_STAGING}/signed/#{File.basename artifact} #{output}")
   system "rm -rf #{SIGN_STAGING}/#{File.basename artifact} #{SIGN_STAGING}/signed"
-  debug "Done signing, copied final file here: #{output}" 
+  puts "Done signing, copied final file here: #{output}" 
 end
 
 # Packs an update site (artifact). artifact is the path to a zipped update site
 def pack(artifact, output = artifact)
- debug("Start packing #{artifact}") 
+ puts("Start packing #{artifact}") 
  system("#{LAUNCHER} -Xmx768m -Dorg.eclipse.update.jarprocessor.pack200=/shared/stp/scripts/pack200 -consolelog -application org.eclipse.update.core.siteOptimizer -jarProcessor -verbose -pack -outputDir /tmp -processAll #{artifact}")
   system("mv /tmp/#{File.basename artifact} #{output}")
-  debug("Done packing, copied to #{output}") 
+  puts("Done packing, copied to #{output}") 
 end
 
 #Digest an update site. The artifact is a zip of an update site.
 def digest(artifact, output = artifact)
-  debug("Start digest #{artifact}")
+  puts("Start digest #{artifact}")
   temp = Dir.tmpdir + "/" + Time.now.to_i.to_s
   begin
     File.makedirs temp
@@ -71,7 +71,7 @@ def digest(artifact, output = artifact)
     system("#{LAUNCHER} -application org.eclipse.update.core.siteOptimizer -digestBuilder -digestOutputDir=#{temp} -siteXML=#{temp}/site.xml")
     system("rm -Rf #{temp}/tmp")
     system("cd #{temp} ; zip -r #{output}.tmp * ; mv #{output}.tmp #{output}")
-    debug("Done digesting, copied to #{output}")
+    puts("Done digesting, copied to #{output}")
   end
   system("rm -Rf #{temp}") 
 end
@@ -153,11 +153,12 @@ COPYRIGHT
       category.features<< project("bpmn-modeler:org.eclipse.stp.bpmn.feature")
       site.categories << category
     end
-    package(:p2_from_site).enhance do
+    package(:site).enhance do
       zip = package(:site).to_s
       sign(zip)
       pack(zip)
       digest(zip)
     end
+    package(:p2_from_site)
   end
 end
