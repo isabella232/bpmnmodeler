@@ -151,12 +151,11 @@ COPYRIGHT
       category.description = "" #TODO
       category.features<< project("bpmn-modeler:org.eclipse.stp.bpmn.feature")
       site.categories << category
-    end
-    site = package(:site).to_s
-    package(:p2_from_site).enhance do 
-      sign(site)
-      pack(zip)
-      digest(zip)
+      site.enhance do 
+        sign(site.to_s)
+        pack(site.to_s)
+        digest(site.to_s)
+      end
     end
     package(:p2_from_site)
   end
