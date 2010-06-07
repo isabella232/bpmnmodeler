@@ -42,7 +42,7 @@ def sign(artifact, output = artifact, send_email = true)
   File.makedirs SIGN_STAGING + "/signed"
   system("cp #{artifact} #{SIGN_STAGING}")
   mail = send_email ? "mail" : "nomail"
-  system("/usr/bin/sign #{SIGN_STAGING}/#{File.basename artifact} #{mail} #{SIGN_STAGING}/signed")
+  puts %x[/usr/bin/sign #{SIGN_STAGING}/#{File.basename artifact} #{mail} #{SIGN_STAGING}/signed]
 
   while (!File.exist?"#{SIGN_STAGING}/signed/#{File.basename artifact}") 
     puts "Signing not complete. Waiting for 2 more minutes..."
@@ -153,9 +153,7 @@ COPYRIGHT
       site.categories << category
     end
     ec = task :eclipse_specific do
-      site = package(:site)
-      site.invoke
-      sign(site.to_s)
+      sign(site.to_s, site.to_s, false)
       pack(site.to_s)
       digest(site.to_s)
     end
