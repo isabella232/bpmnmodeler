@@ -153,6 +153,7 @@ COPYRIGHT
       site.categories << category
     end
     ec = task :eclipse_specific do
+      site = package(:site)
       sign(site.to_s, site.to_s, false)
       pack(site.to_s)
       digest(site.to_s)
