@@ -40,16 +40,16 @@ LAUNCHER="java -jar /shared/stp/platforms/releng/M7_34/org.eclipse.releng.basebu
 def sign(artifact, output = artifact, send_email = true)
   puts "Start signing of #{artifact}"
   signed_folder = File.basename(artifact).gsub(/\./, "_")
-  File.makedirs SIGN_STAGING + "/signed_folder"
+  File.makedirs "#{SIGN_STAGING}/#{signed_folder}"
   system("cp #{artifact} #{SIGN_STAGING}")
   mail = send_email ? "mail" : "nomail"
   puts %x[/usr/bin/sign #{SIGN_STAGING}/#{File.basename artifact} #{mail} #{SIGN_STAGING}/#{signed_folder}]
-
+  fail "Signing failed " if $? != 0
   while (!File.exist?"#{SIGN_STAGING}/#{signed_folder}/#{File.basename artifact}") 
     puts "Signing not complete. Waiting for 2 more minutes..."
     sleep 120
   end
-  system("cp #{SIGN_STAGING}/signed/#{File.basename artifact} #{output}")
+  system("cp #{SIGN_STAGING}/#{signed_folder}/#{File.basename artifact} #{output}")
   system "rm -rf #{SIGN_STAGING}/#{File.basename artifact} #{SIGN_STAGING}/#{signed_folder}"
   puts "Done signing, copied final file here: #{output}" 
 end
