@@ -52,6 +52,7 @@ import org.eclipse.gmf.runtime.notation.View;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Artifact;
 import org.eclipse.stp.bpmn.Association;
+import org.eclipse.stp.bpmn.BpmnPackage;
 import org.eclipse.stp.bpmn.Graph;
 import org.eclipse.stp.bpmn.Identifiable;
 import org.eclipse.stp.bpmn.Lane;
@@ -131,19 +132,23 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
             Object value) {
         if ((eReference.isTransient()) || (eReference.isDerived())) {
             return false;
-        } else if (eReference.equals(NotationPackage.eINSTANCE
-                        .getView_Element())) {
-            return true;
-        } else if (context instanceof Identifiable) {
-            if (eReference.isContainment()) {
-                return true;
-            }
-            //probably some special things to do for
-            //messaging edges and sequence edges
-            return false;
-        } else {
-            return eReference.isContainment();
         }
+        if (canContain(context, eReference, ((EObject) value).eClass())) {
+            if (eReference.equals(NotationPackage.eINSTANCE
+                    .getView_Element())) {
+                return true;
+            } else if (context instanceof Identifiable) {
+                if (eReference.isContainment()) {
+                    return true;
+                }
+                //probably some special things to do for
+                //messaging edges and sequence edges
+                return false;
+            } else {
+                return eReference.isContainment();
+            }
+        }
+        return false;
     }
 
     /**
@@ -163,6 +168,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 
     private boolean shouldAllowPaste(
             PasteChildOperation overriddenChildPasteOperation) {
+
         EObject eObject = overriddenChildPasteOperation.getEObject();
         EObject parentEObject = overriddenChildPasteOperation
             .getParentEObject();
@@ -176,10 +182,10 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
             //TODO: somehing better if possible using pure EMF concepts (?):
             //in theory the BPMN schema describes well enough the containments constraints
             //so it should be possible.
-            if (semanticChildElement instanceof Pool) {
+            /*if (semanticChildElement instanceof Pool) {
                 //a pool can only be pasted inside a Diagram
                 return false;
-            }
+            }*/
             
             // forbidden for now as the parent references get messy.
             if (semanticChildElement instanceof Activity && 
@@ -268,23 +274,21 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
      */
     public OverridePasteChildOperation getOverrideChildPasteOperation(
             PasteChildOperation overriddenChildPasteOperation) {
-        if (shouldAllowPaste(overriddenChildPasteOperation)) {
-            EObject eObject = overriddenChildPasteOperation.getEObject();
-            if (eObject instanceof Node) {
-                Node node = (Node) eObject;
-                EObject element = node.getElement();
-                if ((element != null)) {
-                    return new BpmnPositionalGeneralViewPasteOperation(
+        EObject eObject = overriddenChildPasteOperation.getEObject();
+        if (eObject instanceof Node) {
+            Node node = (Node) eObject;
+            EObject element = node.getElement();
+            if ((element != null)) {
+                return new BpmnPositionalGeneralViewPasteOperation(
                         overriddenChildPasteOperation, true);
-                } else {
-                    return new BpmnPositionalGeneralViewPasteOperation(
+            } else {
+                return new BpmnPositionalGeneralViewPasteOperation(
                         overriddenChildPasteOperation, false);
-                }
-                
-            } else if (eObject instanceof Edge) {
-                return new BpmnConnectorViewPasteOperation(
-                    overriddenChildPasteOperation);
             }
+
+        } else if (eObject instanceof Edge) {
+            return new BpmnConnectorViewPasteOperation(
+                    overriddenChildPasteOperation);
         }
         return null;
     }
@@ -405,7 +409,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     	TransactionalEditingDomain domain = 
     		(TransactionalEditingDomain) AdapterFactoryEditingDomain.
     		getEditingDomainFor(pastedEObjects.iterator().next());
-
+    	
     	for (Object o : pastedEObjects) {
     		EObject elt = null;
     		if (o instanceof View) {
@@ -420,7 +424,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     				final SequenceEdge se = (SequenceEdge) edge;
     				boolean delete = false;
     				boolean disconnect = false;
-    				if (!vertex.equals(se.getSource())) {
+    				if (!vertex.equals(se.getSource()) || vertex.eResource() != se.eResource()) {
     					// the pasted activity kept an invalid reference
     					disconnect = true;
     				}
@@ -444,7 +448,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     				final SequenceEdge se = (SequenceEdge) edge;
     				boolean delete = false;
     				boolean disconnect = false;
-    				if (!vertex.equals(se.getTarget())) {
+    				if (!vertex.equals(se.getTarget()) || vertex.eResource() != se.eResource()) {
     					// the pasted activity kept an invalid reference
     					disconnect = true;
     				}
@@ -467,7 +471,7 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     			
                 for (final Association association : new ArrayList<Association>(vertex.getAssociations())) {
                     boolean delete = false;
-                    if (association.getSource() == null) {
+                    if (association.getSource() == null || vertex.eResource() != association.eResource()) {
                         // the association doesn't refer to anything
                         delete = true;
                     }
@@ -514,7 +518,10 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
     				    source.getOutgoingMessages().remove(me);
     				    me.setSource(source);
     				        
-    				}
+    				} else if (act.eResource() != me.eResource()) {
+                                    //we don't allow for links to external diagrams.
+                                    act.getOutgoingMessages().remove(me);
+                                }
     			}
     		}
     		for (Object edge : new ArrayList(act.getIncomingMessages())) {
@@ -532,6 +539,9 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
 //  				    ordered);
     				    target.getIncomingMessages().remove(me);
     				    me.setTarget(target);
+    				} else if (act.eResource() != me.eResource()) {
+    				    //we don't allow for links to external diagrams.
+    				    act.getIncomingMessages().remove(me);
     				}
     			}
     		}
@@ -636,6 +646,4 @@ public class BpmnClipboardSupport extends AbstractClipboardSupport {
             return nodes.contains(edge.getSource()) && nodes.contains(edge.getTarget());
         }
     }
-    
-    
 }
