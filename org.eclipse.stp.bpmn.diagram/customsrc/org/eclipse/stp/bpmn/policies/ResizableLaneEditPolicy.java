@@ -304,10 +304,6 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
      */
     private class LaneResizeHandleBorder extends LineBorder {
         
-        public LaneResizeHandleBorder() {
-            super(1);
-            setStyle(SWT.LINE_SOLID);
-        }
         /**
          * @see org.eclipse.draw2d.Border#paint(IFigure, Graphics, Insets)
          */
