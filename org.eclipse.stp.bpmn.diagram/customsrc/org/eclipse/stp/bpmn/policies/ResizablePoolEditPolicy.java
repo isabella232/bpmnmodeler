@@ -34,6 +34,8 @@ import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.tools.PoolResizeTracker;
@@ -194,8 +196,17 @@ public class ResizablePoolEditPolicy extends ResizableShapeEditPolicyEx {
                 
                 // now take in account the shapes in the pool
                 Dimension maxRoomOfChildren = new Dimension(0, 0);
+                Dimension minRoomOfLanes = new Dimension(0, 0);
                 for (Object ep : poolCompartment.getChildren()) {
                 	if (ep instanceof IGraphicalEditPart) {
+                	    if (ep instanceof LaneEditPart) {
+                	        IGraphicalEditPart part = (IGraphicalEditPart) ep;
+                	        LaneNameEditPart namePart = (LaneNameEditPart) part.getChildBySemanticHint(Integer.toString(LaneNameEditPart.VISUAL_ID));
+                	        if (namePart != null) {
+                	            minRoomOfLanes.width += namePart.getFigure().getSize().width;
+                	            minRoomOfLanes.height += namePart.getFigure().getSize().height +10;//+10 as 10 pixels are gobbled up by the delimitation
+                	        }
+                	    } else {
                 		// we use the figure as width and lengths may be 
                 		// not initialized on the views objects
                 		IFigure figure = ((IGraphicalEditPart) ep).getFigure();
@@ -204,8 +215,11 @@ public class ResizablePoolEditPolicy extends ResizableShapeEditPolicyEx {
                 				bounds.height, maxRoomOfChildren.height);
                 		maxRoomOfChildren.width = Math.max(bounds.x + 
                 				bounds.width, maxRoomOfChildren.width);
+                	    }
                 	}
                 }
+                maxRoomOfChildren.width = Math.max(minRoomOfLanes.width, maxRoomOfChildren.width);
+                maxRoomOfChildren.height = Math.max(minRoomOfLanes.height, maxRoomOfChildren.height);
                 maxRoomOfChildren.expand(PoolPoolCompartmentEditPart.INSETS.
                 		getWidth(), PoolPoolCompartmentEditPart.INSETS.getHeight() + 2);
                 
@@ -216,7 +230,6 @@ public class ResizablePoolEditPolicy extends ResizableShapeEditPolicyEx {
                 
             }
         }
-
         return result;
     }
 }

@@ -22,8 +22,12 @@ import java.util.List;
 import org.eclipse.core.commands.ExecutionException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.draw2d.Graphics;
+import org.eclipse.draw2d.IFigure;
+import org.eclipse.draw2d.LineBorder;
 import org.eclipse.draw2d.PositionConstants;
 import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.draw2d.geometry.Insets;
 import org.eclipse.draw2d.geometry.Point;
 import org.eclipse.draw2d.geometry.Rectangle;
 import org.eclipse.emf.ecore.EObject;
@@ -38,6 +42,8 @@ import org.eclipse.gef.commands.Command;
 import org.eclipse.gef.commands.CompoundCommand;
 import org.eclipse.gef.commands.UnexecutableCommand;
 import org.eclipse.gef.handles.AbstractHandle;
+import org.eclipse.gef.handles.MoveHandle;
+import org.eclipse.gef.handles.ResizableHandleKit;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gef.tools.ResizeTracker;
 import org.eclipse.gmf.runtime.common.core.command.CommandResult;
@@ -47,6 +53,7 @@ import org.eclipse.gmf.runtime.diagram.ui.requests.CreateViewAndElementRequest;
 import org.eclipse.gmf.runtime.diagram.ui.requests.RequestConstants;
 import org.eclipse.gmf.runtime.diagram.ui.tools.DragEditPartsTrackerEx;
 import org.eclipse.gmf.runtime.emf.commands.core.command.AbstractTransactionalCommand;
+import org.eclipse.gmf.runtime.notation.LineStyle;
 import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.Lane;
 import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
@@ -55,6 +62,7 @@ import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
+import org.eclipse.swt.SWT;
 
 /**
  * Resize edit policy for lanes: only the bottom lane and if it is not
@@ -204,8 +212,8 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
     protected Command getMoveCommand(ChangeBoundsRequest request) {
         ChangeBoundsRequest req = new ChangeBoundsRequest(REQ_MOVE_CHILDREN);
         req.setEditParts(request.getEditParts());
-        req.setMoveDelta(new Point(0,req.getMoveDelta().y));
-        req.setSizeDelta(new Dimension(0,req.getSizeDelta().height));
+        req.setMoveDelta(new Point(0,request.getMoveDelta().y));
+        req.setSizeDelta(new Dimension(0,request.getSizeDelta().height));
         req.setLocation(request.getLocation());
         req.setExtendedData(request.getExtendedData());
         req.setResizeDirection(PositionConstants.NORTH_SOUTH);
@@ -270,6 +278,52 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
                     }
                 }
             });
+        }
+    }
+    
+    /**
+     * Only allow for creating handles on north and south of the shape.
+     */
+    @Override
+    protected List createSelectionHandles() {
+        List<Handle> list = new ArrayList<Handle>();
+        ResizableHandleKit.addMoveHandle((GraphicalEditPart) getHost(),
+                list);
+        ((MoveHandle) list.get(0)).setBorder(new LaneResizeHandleBorder());
+        GraphicalEditPart part = (GraphicalEditPart) getHost();
+        list.add(createHandle(part, PositionConstants.SOUTH));
+        list.add(createHandle(part, PositionConstants.NORTH));
+
+        return list;
+    }
+    
+    /**
+     * A lean resize handle border to show it is possible to resize on south and north only.
+     * @author Antoine Toulme
+     *
+     */
+    private class LaneResizeHandleBorder extends LineBorder {
+        
+        public LaneResizeHandleBorder() {
+            super(1);
+            setStyle(SWT.LINE_SOLID);
+        }
+        /**
+         * @see org.eclipse.draw2d.Border#paint(IFigure, Graphics, Insets)
+         */
+        public void paint(IFigure figure, Graphics graphics, Insets insets) {
+                tempRect.setBounds(getPaintRectangle(figure, new Insets(1, 0, 1, 0)));
+                if (getWidth() % 2 == 1) {
+                        tempRect.width--;
+                        tempRect.height--;
+                }
+                tempRect.shrink(getWidth() / 2, getWidth() / 2);
+                graphics.setLineWidth(getWidth());
+                graphics.setLineStyle(getStyle());
+                if (getColor() != null)
+                        graphics.setForegroundColor(getColor());
+                graphics.drawLine(tempRect.getBottomLeft(), tempRect.getBottomRight());
+                graphics.drawLine(tempRect.getTopLeft(), tempRect.getTopRight());
         }
     }
 

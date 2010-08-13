@@ -28,6 +28,7 @@ import org.eclipse.stp.bpmn.Activity;
 import org.eclipse.stp.bpmn.ActivityType;
 import org.eclipse.stp.bpmn.commands.ElementTypeEx;
 import org.eclipse.stp.bpmn.diagram.edit.parts.ActivityEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.SubProcessSubProcessBodyCompartmentEditPart;
@@ -155,7 +156,7 @@ public class BpmnShapesDefaultSizes {
             // TODO
         }
         if (BpmnElementTypes.Lane_2007.getId().equals(elementTypeId)) {
-            // not implemented.
+            return LaneEditPart.DEFAULT_SIZE.getCopy();
         }
         return DEFAULT_SIZE;
     }

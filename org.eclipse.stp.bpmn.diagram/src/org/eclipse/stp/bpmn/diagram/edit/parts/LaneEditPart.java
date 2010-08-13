@@ -13,6 +13,7 @@ package org.eclipse.stp.bpmn.diagram.edit.parts;
 import org.eclipse.draw2d.IFigure;
 import org.eclipse.draw2d.RectangleFigure;
 import org.eclipse.draw2d.StackLayout;
+import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.gef.EditPart;
 import org.eclipse.gef.EditPolicy;
 import org.eclipse.gef.Request;
@@ -43,6 +44,11 @@ public class LaneEditPart extends ShapeNodeEditPart {
      * @generated
      */
     public static final int VISUAL_ID = 2007;
+
+    /**
+     * The default size of the lane.
+     */
+    public static final Dimension DEFAULT_SIZE = new Dimension(50, 60);
 
     /**
      * @generated

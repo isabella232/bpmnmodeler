@@ -65,6 +65,7 @@ import org.eclipse.stp.bpmn.diagram.BpmnDiagramMessages;
 import org.eclipse.stp.bpmn.diagram.edit.parts.Group2EditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.GroupEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.MessagingEdgeNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
@@ -328,6 +329,23 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
     		}
     	}
     	
+    	// added:
+    	// the pool cannot be smaller than the minimum size of its lanes:
+    	
+    	Rectangle dimLanes = new Rectangle();
+    	for (Object child : getHost().getChildren()) {
+    	    if (child instanceof LaneEditPart) {
+    	        IGraphicalEditPart part = (IGraphicalEditPart) child;
+    	        LaneNameEditPart namePart = (LaneNameEditPart) part.getChildBySemanticHint(Integer.toString(LaneNameEditPart.VISUAL_ID));
+    	        if (namePart != null) {
+    	            dimLanes.width += namePart.getFigure().getSize().width;
+    	            dimLanes.height += namePart.getFigure().getSize().height;
+    	        }
+    	    }
+    	}
+    	dim.width = Math.max(dim.width, dimLanes.width);
+    	dim.height = Math.max(dim.height, dimLanes.height);
+    	
     	// now calculate the delta.
     	dim.width = (int) (dim.width - initialdim.width + INSETS.getWidth());
     	dim.height = (int) (dim.height - initialdim.height + INSETS.getHeight());
@@ -397,6 +415,27 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
                 
             }
         }
+        if (request != null && request.getSizeDelta().height == 0) {
+            // now we need to change the bounds of the lanes since they may have moved on the y axis.
+            // lanes are ordered through their y coordinate. We use that.
+            Rectangle previous = null;
+            int height = 0;
+            for (Rectangle rect : orderedLaneBounds) {
+                if (previous != null) {
+                    rect.y = previous.y + previous.height;
+                } else {
+                    rect.y = 0;
+                }
+                previous = rect;
+                height += rect.height;
+            }
+            // take the remaining room.
+            if (previous != null && height < getHostFigure().getBounds().height) {
+                previous.height += getHostFigure().getBounds().height - height;
+            }
+        }
+        
+        
     }
     
     /**
@@ -476,105 +515,70 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
                 return;
             }
         } else if (request != null) {
-            
-            //decide if the resize is happening at the bottom of a lane or at the top
-            if (request.getMoveDelta().y != 0 &&
-                    request.getSizeDelta().height == -request.getMoveDelta().y) {
-                //it is the resize of the top of a lane
-                LinkedList<Rectangle> rects = new LinkedList<Rectangle>(set);
-                Rectangle prevLast = null;//rects.removeLast();
-                boolean foundTheFirst = false;
-                int beforeChangeTopY = -1;
-                int beforeChangeBottomY = -1;
-                while (!rects.isEmpty()) {
-                    Rectangle last = rects.removeLast();
-                    if (prevLast != null) {
-                        if (prevLast.y != last.y + last.height) {
-                            beforeChangeTopY = last.y;
-                            beforeChangeBottomY = last.y + last.height;
-                            last.height = prevLast.y - last.y;
-                            if (last.height <= 48) {
-                                last.height = 48;
-                                int prevBottomY = prevLast.y + prevLast.height;
-                                prevLast.y = last.y + last.height;
-                                prevLast.height = prevBottomY - prevLast.y;
-                            }
-                            
-                            //the following is dumb: 2 editparts are actually updated.
-                            //not one.
-                            /*
-                            if (true) {
-                                //found the first lane.
-                                //it is the lane being resized.
-                                //let's compute the the coeff of the resize.
-                                //then let's move all the shapes inside the lane
-                                //to keep them inside the lane
-                                foundTheFirst = true;
-                                for (EditPart child : (List<EditPart>)getHost().getChildren()) {
-                                    if (child instanceof ShapeEditPart && !(child instanceof LaneEditPart)) {
-                                        ShapeEditPart se = (ShapeEditPart)child;
-                                        Point topLeft = se.getFigure().getBounds().getTopLeft();
-                                        System.err.println(beforeChangeBottomY + " > " + topLeft.y + " >= " + beforeChangeTopY);
-                                        if (topLeft.y >= beforeChangeTopY &&
-                                                topLeft.y < beforeChangeBottomY) {
-                                            System.err.println("got one");
-                                            Rectangle newB =
-                                                se.getFigure().getBounds().getCopy();
-                                            
-                                            int beforeLaneHeight = beforeChangeBottomY - beforeChangeTopY;
-                                            int afterLaneHeight = last.height;
-                                            double coeff = 1.0*afterLaneHeight/beforeLaneHeight;
-                                            
-                                            int diffChildToBottom = -beforeChangeBottomY + topLeft.y;
-                                            double newDiff = diffChildToBottom * coeff;
-                                            
-                                            newB.y = topLeft.y + (int)Math.round(newDiff);
-                                            Command c = createChangeConstraintCommand(se, newB);
-                                            cc.add(c);
-                                        }
-                                    }
-                                }
-                                
-                            }*/
-                            
-                        }
-                    }
-                    prevLast = last;
-                }
+            if (request.getSizeDelta().height == 0) {
+                // moving a lane around. We can take the lane and change its position.
             } else {
-                //resize happening at the bottom.
-
-                // prevent lanes overlapping
-                Rectangle firstBounds = null;
-                for (Rectangle secondBounds : set) {
-                    if ((firstBounds != null &&
-                            firstBounds.y + firstBounds.height != secondBounds.y) ||
-                            secondBounds.y != INSETS.top){
-        //                int yDelta = firstBounds != null ?
-        //                    firstBounds.y + firstBounds.height - secondBounds.y :
-        //                        INSETS.top - secondBounds.y;
-                        int heightDelta = -secondBounds.y;
-                        if (firstBounds == null) {
-                            secondBounds.setLocation(0, INSETS.top);
-                        } else {
-                            secondBounds.setLocation(0, firstBounds.y + firstBounds.height);
+                //decide if the resize is happening at the bottom of a lane or at the top
+                if (request.getMoveDelta().y != 0 &&
+                        request.getSizeDelta().height == -request.getMoveDelta().y) {
+                    //it is the resize of the top of a lane
+                    LinkedList<Rectangle> rects = new LinkedList<Rectangle>(set);
+                    Rectangle prevLast = null;//rects.removeLast();
+                    boolean foundTheFirst = false;
+                    int beforeChangeTopY = -1;
+                    int beforeChangeBottomY = -1;
+                    while (!rects.isEmpty()) {
+                        Rectangle last = rects.removeLast();
+                        if (prevLast != null) {
+                            if (prevLast.y != last.y + last.height) {
+                                beforeChangeTopY = last.y;
+                                beforeChangeBottomY = last.y + last.height;
+                                last.height = prevLast.y - last.y;
+                                if (last.height <= 48) {
+                                    last.height = 48;
+                                    int prevBottomY = prevLast.y + prevLast.height;
+                                    prevLast.y = last.y + last.height;
+                                    prevLast.height = prevBottomY - prevLast.y;
+                                }
+                            }
                         }
-                        heightDelta += secondBounds.y;
-                        //reduce the height of the lane to accomodate the change:
-                        secondBounds.setSize(secondBounds.width, secondBounds.height - heightDelta);
+                        prevLast = last;
                     }
-                    firstBounds = secondBounds;
+                } else {
+                    //resize happening at the bottom.
+
+                    // prevent lanes overlapping
+                    Rectangle firstBounds = null;
+                    for (Rectangle secondBounds : set) {
+                        if ((firstBounds != null &&
+                                firstBounds.y + firstBounds.height != secondBounds.y) ||
+                                secondBounds.y != INSETS.top){
+                            //                int yDelta = firstBounds != null ?
+                            //                    firstBounds.y + firstBounds.height - secondBounds.y :
+                            //                        INSETS.top - secondBounds.y;
+                            int heightDelta = -secondBounds.y;
+                            if (firstBounds == null) {
+                                secondBounds.setLocation(0, INSETS.top);
+                            } else {
+                                secondBounds.setLocation(0, firstBounds.y + firstBounds.height);
+                            }
+                            heightDelta += secondBounds.y;
+                            //reduce the height of the lane to accomodate the change:
+                            secondBounds.setSize(secondBounds.width, secondBounds.height - heightDelta);
+                        }
+                        firstBounds = secondBounds;
+                    }
+                    //make sure the last entry actually fills the rest of the room:
+                    //make sure the last one is updated to be at the border of the pool:
+                    Point bottomLane = firstBounds.getBottom();
+                    Point bottomPool = getHostFigure().getBounds().getBottom();
+
+                    if (bottomLane.y != bottomPool.y - INSETS.bottom) {
+                        firstBounds.setSize(firstBounds.width, firstBounds.height
+                                + bottomPool.y - bottomLane.y - INSETS.bottom);
+                    }
+
                 }
-                //make sure the last entry actually fills the rest of the room:
-                //make sure the last one is updated to be at the border of the pool:
-                Point bottomLane = firstBounds.getBottom();
-                Point bottomPool = getHostFigure().getBounds().getBottom();
-                
-                if (bottomLane.y != bottomPool.y - INSETS.bottom) {
-                    firstBounds.setSize(firstBounds.width, firstBounds.height
-                            + bottomPool.y - bottomLane.y - INSETS.bottom);
-                }
-        
             }
         }
 
@@ -668,6 +672,7 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
         fillMapAndSet(map, set, null, null);
         Map<ViewDescriptor, Rectangle> descriptorsMap = new HashMap<ViewDescriptor, Rectangle>();
         Set<Rectangle> insertedRectangles = null;
+        CompoundCommand compoundCommand = new CompoundCommand();
         while (iter.hasNext()) {
             CreateViewRequest.ViewDescriptor viewDescriptor = (CreateViewRequest.ViewDescriptor) iter
                     .next();
@@ -682,27 +687,33 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
                 Point location = req.getLocation().getCopy();
                 getHostFigure().translateToRelative(location);
                 int ind = 0;
+                boolean addHeight = false;
                 for (Rectangle otherLane : set) {
 //                    System.err.println(otherLane.y + " compared " + location.y
 //                            + " upper " + otherLane.y + otherLane.height);
                     if (otherLane.y < location.y && otherLane.y + otherLane.height >= location.y) {
                         //ok we got the lane
-                        otherLane.height = otherLane.height / 2;
-                        rect.height = otherLane.height;
+//                        otherLane.height = otherLane.height / 2;
+                        rect.height = LaneEditPart.DEFAULT_SIZE.getCopy().height;
                         //see if we insert it before or after the lane
                         //where the creation request is made.
                         //if in the lower half we insert it after.
                         //if in the top half we insert it before.
-                        if (otherLane.y + otherLane.height >= location.y) {
+                        if (otherLane.height/2 >= location.y - otherLane.y) { // to revisit, this is not accurate. FIXME
                             rect.y = otherLane.y;
 //                          add +2 to make sure a command will be issued.
                             otherLane.y += rect.height + 2;
                         } else {
-                            rect.y = otherLane.y + rect.height + 2;
+                            rect.y = otherLane.y + otherLane.height + 2;
                         }
-                        break;
+                        addHeight = true;
+                        continue;
                     }
-                    ind++;
+                    if (!addHeight) {
+                        ind++;
+                    } else {
+                        otherLane.y += rect.height +2;
+                    }
                 }
                 
                 if (insertedRectangles == null) {
@@ -719,7 +730,21 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
                         - PoolPoolCompartmentEditPart.INSETS.top
                         - PoolPoolCompartmentEditPart.INSETS.bottom;
                 }
-                insertedRectangles.add(rect);                
+                insertedRectangles.add(rect);   
+                // add a command to resize the pool:
+                ChangeBoundsRequest poolResizeRequest = new ChangeBoundsRequest(REQ_RESIZE_CHILDREN);
+                poolResizeRequest.setEditParts(getHost().getParent());
+
+                poolResizeRequest.setMoveDelta(new Point(0, 0));
+                // we increase the pool by the height needed to see all the lanes:
+                int height = 0;
+                for (Rectangle r : set) {
+                    height += r.height;
+                }
+                height += rect.height;
+                poolResizeRequest.setSizeDelta(new Dimension(0, height - getHostFigure().getBounds().height +  PoolPoolCompartmentEditPart.INSETS.top + PoolPoolCompartmentEditPart.INSETS.bottom));
+                poolResizeRequest.setResizeDirection(PositionConstants.SOUTH);
+                compoundCommand.add(getHost().getParent().getParent().getCommand(poolResizeRequest));
             }
             descriptorsMap.put(viewDescriptor, rect);
         }
@@ -728,7 +753,7 @@ public class PoolPoolCompartmentXYLayoutEditPolicy extends XYLayoutEditPolicy {
             set.addAll(insertedRectangles);
         }
 
-        CompoundCommand compoundCommand = new CompoundCommand();
+        
         doLayout(null, map, set, compoundCommand, insertedRectangles);
         if (compoundCommand.canExecute()) {
             cc.compose(new CommandProxy(compoundCommand));

@@ -35,6 +35,7 @@ import org.eclipse.gef.editparts.ScalableFreeformRootEditPart;
 import org.eclipse.gef.requests.ChangeBoundsRequest;
 import org.eclipse.gmf.runtime.diagram.ui.editparts.IGraphicalEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.LaneEditPart;
+import org.eclipse.stp.bpmn.diagram.edit.parts.LaneNameEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolEditPart;
 import org.eclipse.stp.bpmn.diagram.edit.parts.PoolPoolCompartmentEditPart;
 import org.eclipse.swt.SWT;
@@ -67,13 +68,13 @@ public class PoolResizeTracker extends ActivityResizeTracker {
     protected void updateSourceRequest() {
         ChangeBoundsRequest request = (ChangeBoundsRequest) getSourceRequest();
         Dimension dragDelta = getDragMoveDelta();
-        
+
         Point location = new Point(getLocation());
         Point moveDelta = new Point(0, 0);
         Dimension resizeDelta = new Dimension(0, 0);
         int direction = getResizeDirection();
         List parts = getOperationSet();
-        
+
         request.setConstrainedResize(false);
         request.setCenteredResize(getCurrentInput().isModKeyDown(SWT.MOD1));
 
@@ -85,18 +86,15 @@ public class PoolResizeTracker extends ActivityResizeTracker {
         // When the length of a pool is modified, all pools, are modified to
         // have the same length.
         //
-        
+
         List<PoolEditPart> siblings = collectPoolEditParts(parts);
 
-        
-        if (siblings != null
-                && ((direction == PositionConstants.EAST)
-                        || (direction == PositionConstants.WEST)
-//                        || (direction == PositionConstants.NORTH_EAST)
-//                        || (direction == PositionConstants.NORTH_WEST)
-//                        || (direction == PositionConstants.SOUTH_EAST)
-//                        || (direction == PositionConstants.SOUTH_WEST)
-                        )) {
+        if (siblings != null && ((direction == PositionConstants.EAST) || (direction == PositionConstants.WEST)
+        // || (direction == PositionConstants.NORTH_EAST)
+                // || (direction == PositionConstants.NORTH_WEST)
+                // || (direction == PositionConstants.SOUTH_EAST)
+                // || (direction == PositionConstants.SOUTH_WEST)
+                )) {
             for (PoolEditPart s : siblings) {
                 if (!parts.contains(s)) {
                     parts.add(s);
@@ -110,15 +108,14 @@ public class PoolResizeTracker extends ActivityResizeTracker {
         Dimension figureSize = owner.getFigure().getSize();
         RootEditPart rootEditPart = owner.getRoot();
         if (rootEditPart instanceof ScalableFreeformRootEditPart) {
-            //compute the zoom
-            ScalableFreeformRootEditPart rootSc =
-                (ScalableFreeformRootEditPart) rootEditPart;
+            // compute the zoom
+            ScalableFreeformRootEditPart rootSc = (ScalableFreeformRootEditPart) rootEditPart;
             double zoom = rootSc.getZoomManager().getZoom();
             minSize.scale(zoom);
             siblingsMinSize.scale(zoom);
             figureSize.scale(zoom);
-            //compute the scroll.
-            Point pt = ((Viewport)rootSc.getFigure()).getViewLocation();
+            // compute the scroll.
+            Point pt = ((Viewport) rootSc.getFigure()).getViewLocation();
             figureSize.performTranslate(-pt.x, -pt.y);
             minSize.performTranslate(-pt.x, -pt.y);
             siblingsMinSize.performTranslate(-pt.x, -pt.y);
@@ -128,8 +125,7 @@ public class PoolResizeTracker extends ActivityResizeTracker {
             // prevents children shapes from clipping
             if (getCurrentInput().isControlKeyDown()) {
                 if (minSize.height > (figureSize.height - 2 * dragDelta.height)) {
-                    dragDelta.height =
-                            (figureSize.height - minSize.height) / 2;
+                    dragDelta.height = (figureSize.height - minSize.height) / 2;
                 }
                 resizeDelta.height -= dragDelta.height;
             } else if (minSize.height > (figureSize.height - dragDelta.height)) {
@@ -141,13 +137,12 @@ public class PoolResizeTracker extends ActivityResizeTracker {
         if (((direction & PositionConstants.SOUTH) != 0) && (parts.size() < 2)) {
             if (getCurrentInput().isControlKeyDown()) {
                 if (minSize.height > (figureSize.height + 2 * dragDelta.height)) {
-                    dragDelta.height =
-                            -(figureSize.height - minSize.height) / 2;
+                    dragDelta.height = -(figureSize.height - minSize.height) / 2;
                 }
                 moveDelta.y -= dragDelta.height;
                 resizeDelta.height += dragDelta.height;
             } else if (minSize.height > (figureSize.height + dragDelta.height)) {
-                dragDelta.height =  -(figureSize.height - minSize.height);
+                dragDelta.height = -(figureSize.height - minSize.height);
             }
             resizeDelta.height += dragDelta.height;
         }
@@ -177,31 +172,28 @@ public class PoolResizeTracker extends ActivityResizeTracker {
             rect.resize(resizeDelta);
             PrecisionRectangle result = new PrecisionRectangle();
 
-            snapToHelper.snapRectangle(request, request.getResizeDirection(),
-                    rect, result);
+            snapToHelper.snapRectangle(request, request.getResizeDirection(), rect, result);
             if (request.isCenteredResize()) {
                 if (result.preciseX != 0.0)
                     result.preciseWidth += -result.preciseX;
                 else if (result.preciseWidth != 0.0) {
                     result.preciseX = -result.preciseWidth;
-//                    result.preciseWidth *= 2.0;
+                    // result.preciseWidth *= 2.0;
                 }
 
                 if (result.preciseY != 0.0)
                     result.preciseHeight += -result.preciseY;
                 else if (result.preciseHeight != 0.0) {
                     result.preciseY = -result.preciseHeight;
-//                    result.preciseHeight *= 2.0;
+                    // result.preciseHeight *= 2.0;
                 }
                 result.updateInts();
             }
             moveDelta.x = 16 - getSourceRectangle().x;
-            	
+
             PrecisionPoint preciseMove = new PrecisionPoint(moveDelta.x, result.y + moveDelta.y);
 
-            PrecisionDimension preciseResize = new PrecisionDimension(
-                    result.width + resizeDelta.width, result.height
-                            + resizeDelta.height);
+            PrecisionDimension preciseResize = new PrecisionDimension(result.width + resizeDelta.width, result.height + resizeDelta.height);
 
             request.setMoveDelta(preciseMove);
             request.setSizeDelta(preciseResize);
@@ -209,20 +201,21 @@ public class PoolResizeTracker extends ActivityResizeTracker {
     }
 
     /**
-     * If it finds amongst the selected edit parts a pool. 
-     * collects all its sibling pools. Otherwise returns null
+     * If it finds amongst the selected edit parts a pool. collects all its
+     * sibling pools. Otherwise returns null
+     * 
      * @param selectedParts
      * @return
      */
     private List<PoolEditPart> collectPoolEditParts(List selectedParts) {
-        
+
         for (Object part : selectedParts) {
             if (part instanceof PoolEditPart) {
                 List<PoolEditPart> res = new ArrayList<PoolEditPart>();
-                PoolEditPart p = (PoolEditPart)part;
+                PoolEditPart p = (PoolEditPart) part;
                 for (Object child : p.getParent().getChildren()) {
                     if (child instanceof PoolEditPart) {
-                        res.add((PoolEditPart)child);
+                        res.add((PoolEditPart) child);
                     }
                 }
                 return res;
@@ -246,45 +239,49 @@ public class PoolResizeTracker extends ActivityResizeTracker {
         for (int i = 0; i < parts.size(); i++) {
             if (parts.get(i) instanceof PoolEditPart) {
                 PoolEditPart pool = (PoolEditPart) parts.get(i);
-                IGraphicalEditPart poolCompartment = pool
-                        .getChildBySemanticHint(Integer
-                                .toString(PoolPoolCompartmentEditPart.VISUAL_ID));
+                IGraphicalEditPart poolCompartment = pool.getChildBySemanticHint(Integer.toString(PoolPoolCompartmentEditPart.VISUAL_ID));
                 int nameWidth = poolCompartment.getFigure().getBounds().x + 1;
-                
+
                 // now take in account the shapes in the pool
                 Point minChildLocation = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
                 Dimension maxRoomOfChildren = new Dimension(0, 0);
+                Dimension minRoomOfLanes = new Dimension(0, 0);
                 for (Object ep : poolCompartment.getChildren()) {
-                	if (ep instanceof IGraphicalEditPart && !(ep instanceof LaneEditPart)) {
-                		// we use the figure as width and lengths may be 
-                		// not initialized on the views objects
-                		IFigure figure = ((IGraphicalEditPart) ep).getFigure();
-                		Rectangle bounds = figure.getBounds();
-                		maxRoomOfChildren.height = Math.max(bounds.y + 
-                				bounds.height, maxRoomOfChildren.height);
-                		maxRoomOfChildren.width = Math.max(bounds.x +
-                				bounds.width, maxRoomOfChildren.width);
-                		minChildLocation.x = Math.min(bounds.x, minChildLocation.x);
-                		minChildLocation.y = Math.min(bounds.y, minChildLocation.y);
-                	}
+                    if (ep instanceof IGraphicalEditPart) {
+                        if (ep instanceof LaneEditPart) {
+                            IGraphicalEditPart part = (IGraphicalEditPart) ep;
+                            LaneNameEditPart namePart = (LaneNameEditPart) part.getChildBySemanticHint(Integer.toString(LaneNameEditPart.VISUAL_ID));
+                            minRoomOfLanes.width += namePart.getFigure().getPreferredSize().width;
+                            minRoomOfLanes.height += namePart.getFigure().getPreferredSize().height +10; //+10 as 10 pixels are gobbled up by the delimitation
+                        } else {
+                            // we use the figure as width and lengths may be
+                            // not initialized on the views objects
+                            IFigure figure = ((IGraphicalEditPart) ep).getFigure();
+                            Rectangle bounds = figure.getBounds();
+                            maxRoomOfChildren.height = Math.max(bounds.y + bounds.height, maxRoomOfChildren.height);
+                            maxRoomOfChildren.width = Math.max(bounds.x + bounds.width, maxRoomOfChildren.width);
+                            minChildLocation.x = Math.min(bounds.x, minChildLocation.x);
+                            minChildLocation.y = Math.min(bounds.y, minChildLocation.y);
+                        }
+                    }
                 }
-                maxRoomOfChildren.expand(PoolPoolCompartmentEditPart.INSETS.
-                		getWidth(), PoolPoolCompartmentEditPart.INSETS.getHeight() + 2);
+                maxRoomOfChildren.width = Math.max(minRoomOfLanes.width, maxRoomOfChildren.width);
+                maxRoomOfChildren.height = Math.max(minRoomOfLanes.height, maxRoomOfChildren.height);
+                maxRoomOfChildren.expand(PoolPoolCompartmentEditPart.INSETS.getWidth(), PoolPoolCompartmentEditPart.INSETS.getHeight() + 2);
                 minChildLocation.x -= PoolPoolCompartmentEditPart.INSETS.getWidth();
                 minChildLocation.y -= PoolPoolCompartmentEditPart.INSETS.getHeight() + 2;
                 if (!north) {
-                result.height = Math.max(maxRoomOfChildren.height, result.height);
-                result.width = Math.max(maxRoomOfChildren.width + nameWidth, 
-                        result.width);
+                    result.height = Math.max(maxRoomOfChildren.height, result.height);
+                    result.width = Math.max(maxRoomOfChildren.width + nameWidth, result.width);
                 } else {
                     result.height = Math.max(poolCompartment.getFigure().getBounds().height - minChildLocation.y, result.height);
                     result.width = Math.max(poolCompartment.getFigure().getBounds().width - minChildLocation.x, result.width);
                 }
-                
+
             }
         }
 
         return result;
     }
-    
+
 }
