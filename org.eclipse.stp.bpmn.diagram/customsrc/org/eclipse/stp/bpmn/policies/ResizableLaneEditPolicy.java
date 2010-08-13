@@ -314,10 +314,7 @@ public class ResizableLaneEditPolicy extends ResizableShapeEditPolicyEx {
                         tempRect.height--;
                 }
                 tempRect.shrink(getWidth() / 2, getWidth() / 2);
-                graphics.setLineWidth(getWidth());
-                graphics.setLineStyle(getStyle());
-                if (getColor() != null)
-                        graphics.setForegroundColor(getColor());
+                
                 graphics.drawLine(tempRect.getBottomLeft(), tempRect.getBottomRight());
                 graphics.drawLine(tempRect.getTopLeft(), tempRect.getTopRight());
         }
